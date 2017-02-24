@@ -1,0 +1,675 @@
+BCSymbolMap Version: 2.0
+-[NSURLRequest(SRWebSocket) SR_SSLPinnedCertificates]
+-[NSMutableURLRequest(SRWebSocket) SR_SSLPinnedCertificates]
+-[NSMutableURLRequest(SRWebSocket) setSR_SSLPinnedCertificates:]
+Apple LLVM version 8.0.0 (clang-800.0.42.1)
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/NSURLRequest+SRWebSocket.m
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket
+import_NSURLRequest_SRWebSocket
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRSIMDHelpers.m
+SRMaskBytesSIMD
+SRMaskBytesManual
+SRShiftVector
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRError.m
+SRHTTPErrorWithCodeDescription
+SRErrorWithCodeDescriptionUnderlyingError
+SRErrorWithCodeDescription
+SRErrorWithDomainCodeDescription
+-[SRIOConsumer resetWithScanner:handler:bytesNeeded:readToCurrentFrame:unmaskBytes:]
+-[SRIOConsumer bytesNeeded]
+-[SRIOConsumer setBytesNeeded:]
+-[SRIOConsumer consumer]
+-[SRIOConsumer handler]
+-[SRIOConsumer readToCurrentFrame]
+-[SRIOConsumer unmaskBytes]
+-[SRIOConsumer .cxx_destruct]
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/IOConsumer/SRIOConsumer.m
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/IOConsumer/SRIOConsumer.h
+___SRHTTPConnectMessageCreate_block_invoke
+___SRHTTPConnectMessageCreate_block_invoke_2
+___block_descriptor_tmp
+___block_descriptor_tmp.48
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRHTTPConnectMessage.m
+__SRHTTPConnectMessageCreate_block_invoke_2
+__SRHTTPConnectMessageCreate_block_invoke
+SRHTTPConnectMessageCreate
+_SRHTTPConnectMessageHost
+-[SRPinningSecurityPolicy initWithCertificates:]
+-[SRPinningSecurityPolicy evaluateServerTrust:forDomain:]
+-[SRPinningSecurityPolicy pinnedCertificates]
+-[SRPinningSecurityPolicy .cxx_destruct]
+_OBJC_IVAR_$_SRPinningSecurityPolicy._pinnedCertificates
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Security/SRPinningSecurityPolicy.m
++[SRSecurityPolicy defaultPolicy]
++[SRSecurityPolicy pinnningPolicyWithCertificates:]
+-[SRSecurityPolicy initWithCertificateChainValidationEnabled:]
+-[SRSecurityPolicy init]
+-[SRSecurityPolicy updateSecurityOptionsInStream:]
+-[SRSecurityPolicy evaluateServerTrust:forDomain:]
+-[SRSecurityPolicy certificateChainValidationEnabled]
+_OBJC_IVAR_$_SRSecurityPolicy._certificateChainValidationEnabled
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/SRSecurityPolicy.m
+___SRDefaultBufferSize_block_invoke
+_SRDefaultBufferSize.size
+_SRDefaultBufferSize.onceToken
+___block_literal_global
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/SRConstants.m
+__SRDefaultBufferSize_block_invoke
+SRDefaultBufferSize
+_dispatch_once
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/usr/include/dispatch/once.h
++[NSRunLoop(SRWebSocket) SR_networkRunLoop]
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/NSRunLoop+SRWebSocket.m
+import_NSRunLoop_SRWebSocket
+_importCategories
+-[SRWebSocket initWithURLRequest:protocols:securityPolicy:]
+-[SRWebSocket initWithURLRequest:protocols:allowsUntrustedSSLCertificates:]
+-[SRWebSocket initWithURLRequest:securityPolicy:]
+-[SRWebSocket initWithURLRequest:protocols:]
+-[SRWebSocket initWithURLRequest:]
+-[SRWebSocket initWithURL:]
+-[SRWebSocket initWithURL:protocols:]
+-[SRWebSocket initWithURL:securityPolicy:]
+-[SRWebSocket initWithURL:protocols:allowsUntrustedSSLCertificates:]
+-[SRWebSocket assertOnWorkQueue]
+-[SRWebSocket dealloc]
+-[SRWebSocket setReadyState:]
+-[SRWebSocket readyState]
++[SRWebSocket automaticallyNotifiesObserversOfReadyState]
+-[SRWebSocket open]
+___19-[SRWebSocket open]_block_invoke
+___copy_helper_block_
+___destroy_helper_block_
+___19-[SRWebSocket open]_block_invoke.63
+___copy_helper_block_.66
+___destroy_helper_block_.67
+-[SRWebSocket _connectionDoneWithError:readStream:writeStream:]
+___63-[SRWebSocket _connectionDoneWithError:readStream:writeStream:]_block_invoke
+___copy_helper_block_.83
+___destroy_helper_block_.84
+___63-[SRWebSocket _connectionDoneWithError:readStream:writeStream:]_block_invoke.86
+___copy_helper_block_.87
+___destroy_helper_block_.88
+-[SRWebSocket _checkHandshake:]
+-[SRWebSocket _HTTPHeadersDidFinish]
+___36-[SRWebSocket _HTTPHeadersDidFinish]_block_invoke
+___copy_helper_block_.121
+___destroy_helper_block_.122
+-[SRWebSocket _readHTTPHeader]
+___30-[SRWebSocket _readHTTPHeader]_block_invoke
+___copy_helper_block_.137
+___destroy_helper_block_.138
+-[SRWebSocket didConnect]
+-[SRWebSocket _updateSecureStreamOptions]
+-[SRWebSocket scheduleInRunLoop:forMode:]
+-[SRWebSocket unscheduleFromRunLoop:forMode:]
+-[SRWebSocket close]
+-[SRWebSocket closeWithCode:reason:]
+___36-[SRWebSocket closeWithCode:reason:]_block_invoke
+___copy_helper_block_.186
+___destroy_helper_block_.187
+-[SRWebSocket _closeWithProtocolError:]
+___39-[SRWebSocket _closeWithProtocolError:]_block_invoke
+___39-[SRWebSocket _closeWithProtocolError:]_block_invoke_2
+___copy_helper_block_.189
+___destroy_helper_block_.190
+___copy_helper_block_.192
+___destroy_helper_block_.193
+-[SRWebSocket _failWithError:]
+___30-[SRWebSocket _failWithError:]_block_invoke
+___30-[SRWebSocket _failWithError:]_block_invoke_2
+___copy_helper_block_.199
+___destroy_helper_block_.200
+___copy_helper_block_.208
+___destroy_helper_block_.209
+-[SRWebSocket _writeData:]
+___Block_byref_object_copy_
+___Block_byref_object_dispose_
+___26-[SRWebSocket _writeData:]_block_invoke
+___copy_helper_block_.213
+___destroy_helper_block_.214
+-[SRWebSocket send:]
+-[SRWebSocket sendString:error:]
+___32-[SRWebSocket sendString:error:]_block_invoke
+___copy_helper_block_.231
+___destroy_helper_block_.232
+-[SRWebSocket sendData:error:]
+-[SRWebSocket sendDataNoCopy:error:]
+___36-[SRWebSocket sendDataNoCopy:error:]_block_invoke
+___copy_helper_block_.238
+___destroy_helper_block_.239
+-[SRWebSocket sendPing:error:]
+___30-[SRWebSocket sendPing:error:]_block_invoke
+___copy_helper_block_.245
+___destroy_helper_block_.246
+-[SRWebSocket _handlePingWithData:]
+___35-[SRWebSocket _handlePingWithData:]_block_invoke
+___35-[SRWebSocket _handlePingWithData:]_block_invoke_2
+___copy_helper_block_.250
+___destroy_helper_block_.251
+___copy_helper_block_.253
+___destroy_helper_block_.254
+-[SRWebSocket handlePong:]
+___26-[SRWebSocket handlePong:]_block_invoke
+___copy_helper_block_.260
+___destroy_helper_block_.261
+-[SRWebSocket handleCloseWithData:]
+___35-[SRWebSocket handleCloseWithData:]_block_invoke
+___copy_helper_block_.277
+___destroy_helper_block_.278
+-[SRWebSocket closeConnection]
+-[SRWebSocket _handleFrameWithData:opCode:]
+___43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke
+___copy_helper_block_.284
+___destroy_helper_block_.285
+___43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.289
+___copy_helper_block_.290
+___destroy_helper_block_.291
+___43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.295
+___copy_helper_block_.304
+___destroy_helper_block_.305
+___43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.309
+___copy_helper_block_.310
+___destroy_helper_block_.311
+-[SRWebSocket _handleFrameHeader:curData:]
+___42-[SRWebSocket _handleFrameHeader:curData:]_block_invoke
+-[SRWebSocket _readFrameContinue]
+___33-[SRWebSocket _readFrameContinue]_block_invoke
+___33-[SRWebSocket _readFrameContinue]_block_invoke_2
+___copy_helper_block_.349
+___destroy_helper_block_.350
+-[SRWebSocket _readFrameNew]
+___28-[SRWebSocket _readFrameNew]_block_invoke
+___copy_helper_block_.353
+___destroy_helper_block_.354
+-[SRWebSocket _pumpWriting]
+___27-[SRWebSocket _pumpWriting]_block_invoke
+___copy_helper_block_.360
+___destroy_helper_block_.361
+___27-[SRWebSocket _pumpWriting]_block_invoke.376
+___copy_helper_block_.379
+___destroy_helper_block_.380
+-[SRWebSocket _addConsumerWithScanner:callback:]
+-[SRWebSocket _addConsumerWithDataLength:callback:readToCurrentFrame:unmaskBytes:]
+-[SRWebSocket _addConsumerWithScanner:callback:dataLength:]
+-[SRWebSocket _scheduleCleanup]
+-[SRWebSocket _cleanupSelfReference:]
+___37-[SRWebSocket _cleanupSelfReference:]_block_invoke
+___copy_helper_block_.396
+___destroy_helper_block_.397
+-[SRWebSocket _readUntilHeaderCompleteWithCallback:]
+-[SRWebSocket _readUntilBytes:length:callback:]
+___47-[SRWebSocket _readUntilBytes:length:callback:]_block_invoke
+-[SRWebSocket _innerPumpScanner]
+___32-[SRWebSocket _innerPumpScanner]_block_invoke
+___copy_helper_block_.417
+___destroy_helper_block_.418
+___32-[SRWebSocket _innerPumpScanner]_block_invoke.420
+___copy_helper_block_.423
+___destroy_helper_block_.424
+___32-[SRWebSocket _innerPumpScanner]_block_invoke.428
+___copy_helper_block_.429
+___destroy_helper_block_.430
+-[SRWebSocket _pumpScanner]
+-[SRWebSocket _sendFrameWithOpcode:data:]
+-[SRWebSocket stream:handleEvent:]
+___34-[SRWebSocket stream:handleEvent:]_block_invoke
+___copy_helper_block_.455
+___destroy_helper_block_.456
+___34-[SRWebSocket stream:handleEvent:]_block_invoke.458
+___copy_helper_block_.459
+___destroy_helper_block_.460
+___34-[SRWebSocket stream:handleEvent:]_block_invoke.462
+___copy_helper_block_.465
+___destroy_helper_block_.466
+-[SRWebSocket safeHandleEvent:stream:]
+___38-[SRWebSocket safeHandleEvent:stream:]_block_invoke
+___38-[SRWebSocket safeHandleEvent:stream:]_block_invoke_2
+___copy_helper_block_.477
+___destroy_helper_block_.478
+___copy_helper_block_.480
+___destroy_helper_block_.481
+-[SRWebSocket delegate]
+-[SRWebSocket setDelegate:]
+-[SRWebSocket setDelegateDispatchQueue:]
+-[SRWebSocket delegateDispatchQueue]
+-[SRWebSocket setDelegateOperationQueue:]
+-[SRWebSocket delegateOperationQueue]
+-[SRWebSocket url]
+-[SRWebSocket receivedHTTPHeaders]
+-[SRWebSocket requestCookies]
+-[SRWebSocket setRequestCookies:]
+-[SRWebSocket protocol]
+-[SRWebSocket allowsUntrustedSSLCertificates]
+-[SRWebSocket setAllowsUntrustedSSLCertificates:]
+-[SRWebSocket delegateController]
+-[SRWebSocket .cxx_destruct]
+_OBJC_IVAR_$_SRWebSocket._url
+_OBJC_IVAR_$_SRWebSocket._urlRequest
+_OBJC_IVAR_$_SRWebSocket._requestedProtocols
+_OBJC_IVAR_$_SRWebSocket._securityPolicy
+_OBJC_IVAR_$_SRWebSocket._requestRequiresSSL
+_OBJC_IVAR_$_SRWebSocket._readyState
+_OBJC_IVAR_$_SRWebSocket._propertyLock
+_OBJC_IVAR_$_SRWebSocket._kvoLock
+_OBJC_IVAR_$_SRWebSocket._workQueue
+_OBJC_IVAR_$_SRWebSocket._delegateController
+_OBJC_IVAR_$_SRWebSocket._readBuffer
+_OBJC_IVAR_$_SRWebSocket._outputBuffer
+_OBJC_IVAR_$_SRWebSocket._currentFrameData
+_OBJC_IVAR_$_SRWebSocket._consumers
+_OBJC_IVAR_$_SRWebSocket._consumerPool
+_OBJC_IVAR_$_SRWebSocket._scheduledRunloops
+_OBJC_IVAR_$_SRWebSocket._inputStream
+_OBJC_IVAR_$_SRWebSocket._outputStream
+_OBJC_IVAR_$_SRWebSocket._receivedHTTPHeaders
+_OBJC_IVAR_$_SRWebSocket._selfRetain
+_OBJC_IVAR_$_SRWebSocket._proxyConnect
+___block_descriptor_tmp.69
+___block_descriptor_tmp.85
+___block_descriptor_tmp.89
+_OBJC_IVAR_$_SRWebSocket._secKey
+_OBJC_IVAR_$_SRWebSocket._protocol
+_OBJC_IVAR_$_SRWebSocket._didFail
+___block_descriptor_tmp.124
+___block_descriptor_tmp.140
+___block_descriptor_tmp.188
+___block_descriptor_tmp.191
+___block_descriptor_tmp.194
+_OBJC_IVAR_$_SRWebSocket._failed
+___block_descriptor_tmp.201
+___block_descriptor_tmp.210
+_OBJC_IVAR_$_SRWebSocket._closeWhenFinishedWriting
+___block_descriptor_tmp.215
+___block_descriptor_tmp.233
+___block_descriptor_tmp.240
+___block_descriptor_tmp.247
+___block_descriptor_tmp.252
+___block_descriptor_tmp.255
+___block_descriptor_tmp.262
+_OBJC_IVAR_$_SRWebSocket._closeCode
+_OBJC_IVAR_$_SRWebSocket._closeReason
+___block_descriptor_tmp.279
+___block_descriptor_tmp.286
+___block_descriptor_tmp.292
+___block_descriptor_tmp.306
+___block_descriptor_tmp.312
+_OBJC_IVAR_$_SRWebSocket._currentFrameOpcode
+_OBJC_IVAR_$_SRWebSocket._currentFrameCount
+___block_descriptor_tmp.329
+_OBJC_IVAR_$_SRWebSocket._currentReadMaskKey
+___block_descriptor_tmp.351
+___block_descriptor_tmp.352
+_OBJC_IVAR_$_SRWebSocket._readOpCount
+_OBJC_IVAR_$_SRWebSocket._currentStringScanPosition
+___block_descriptor_tmp.355
+_OBJC_IVAR_$_SRWebSocket._outputBufferOffset
+___block_descriptor_tmp.363
+_OBJC_IVAR_$_SRWebSocket._sentClose
+___block_descriptor_tmp.381
+_OBJC_IVAR_$_SRWebSocket._cleanupScheduled
+___block_descriptor_tmp.398
+_CRLFCRLFBytes
+___block_descriptor_tmp.403
+_OBJC_IVAR_$_SRWebSocket._readBufferOffset
+_OBJC_IVAR_$_SRWebSocket._currentReadMaskOffset
+___block_descriptor_tmp.419
+___block_descriptor_tmp.425
+___block_descriptor_tmp.431
+_OBJC_IVAR_$_SRWebSocket._isPumping
+_OBJC_IVAR_$_SRWebSocket._streamSecurityValidated
+___block_descriptor_tmp.457
+___block_descriptor_tmp.461
+___block_descriptor_tmp.467
+___block_descriptor_tmp.479
+___block_descriptor_tmp.482
+_OBJC_IVAR_$_SRWebSocket._requestCookies
+_OBJC_IVAR_$_SRWebSocket._allowsUntrustedSSLCertificates
+l_OBJC_PROTOCOL_$_NSObject
+l_OBJC_LABEL_PROTOCOL_$_NSObject
+l_OBJC_PROTOCOL_$_NSStreamDelegate
+l_OBJC_LABEL_PROTOCOL_$_NSStreamDelegate
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/SRWebSocket.m
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/SRWebSocket.h
+__destroy_helper_block_
+__copy_helper_block_
+__38-[SRWebSocket safeHandleEvent:stream:]_block_invoke_2
+__38-[SRWebSocket safeHandleEvent:stream:]_block_invoke
+__34-[SRWebSocket stream:handleEvent:]_block_invoke.462
+__34-[SRWebSocket stream:handleEvent:]_block_invoke.458
+__34-[SRWebSocket stream:handleEvent:]_block_invoke
+CFSwapInt64BigToHost
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFByteOrder.h
+_OSSwapInt64
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/usr/include/libkern/arm/OSByteOrder.h
+CFSwapInt16BigToHost
+_OSSwapInt16
+__32-[SRWebSocket _innerPumpScanner]_block_invoke.428
+__32-[SRWebSocket _innerPumpScanner]_block_invoke.420
+__32-[SRWebSocket _innerPumpScanner]_block_invoke
+validate_dispatch_data_partial_string
+NSMakeRange
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSRange.h
+__47-[SRWebSocket _readUntilBytes:length:callback:]_block_invoke
+__37-[SRWebSocket _cleanupSelfReference:]_block_invoke
+__27-[SRWebSocket _pumpWriting]_block_invoke.376
+__27-[SRWebSocket _pumpWriting]_block_invoke
+__28-[SRWebSocket _readFrameNew]_block_invoke
+__33-[SRWebSocket _readFrameContinue]_block_invoke_2
+__33-[SRWebSocket _readFrameContinue]_block_invoke
+__42-[SRWebSocket _handleFrameHeader:curData:]_block_invoke
+__43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.309
+__43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.295
+__43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke.289
+__43-[SRWebSocket _handleFrameWithData:opCode:]_block_invoke
+__35-[SRWebSocket handleCloseWithData:]_block_invoke
+closeCodeIsValid
+__26-[SRWebSocket handlePong:]_block_invoke
+__35-[SRWebSocket _handlePingWithData:]_block_invoke_2
+__35-[SRWebSocket _handlePingWithData:]_block_invoke
+__30-[SRWebSocket sendPing:error:]_block_invoke
+__36-[SRWebSocket sendDataNoCopy:error:]_block_invoke
+__32-[SRWebSocket sendString:error:]_block_invoke
+__26-[SRWebSocket _writeData:]_block_invoke
+__Block_byref_object_dispose_
+__Block_byref_object_copy_
+__30-[SRWebSocket _failWithError:]_block_invoke_2
+__30-[SRWebSocket _failWithError:]_block_invoke
+__39-[SRWebSocket _closeWithProtocolError:]_block_invoke_2
+__39-[SRWebSocket _closeWithProtocolError:]_block_invoke
+__36-[SRWebSocket closeWithCode:reason:]_block_invoke
+__30-[SRWebSocket _readHTTPHeader]_block_invoke
+__36-[SRWebSocket _HTTPHeadersDidFinish]_block_invoke
+__63-[SRWebSocket _connectionDoneWithError:readStream:writeStream:]_block_invoke.86
+__63-[SRWebSocket _connectionDoneWithError:readStream:writeStream:]_block_invoke
+__19-[SRWebSocket open]_block_invoke.63
+__19-[SRWebSocket open]_block_invoke
+importCategories
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRRandom.m
+SRRandomData
+-[SRIOConsumerPool initWithBufferCapacity:]
+-[SRIOConsumerPool init]
+-[SRIOConsumerPool consumerWithScanner:handler:bytesNeeded:readToCurrentFrame:unmaskBytes:]
+-[SRIOConsumerPool returnConsumer:]
+-[SRIOConsumerPool .cxx_destruct]
+_OBJC_IVAR_$_SRIOConsumerPool._poolSize
+_OBJC_IVAR_$_SRIOConsumerPool._bufferedConsumers
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/IOConsumer/SRIOConsumerPool.m
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRURLUtilities.m
+SRStreamNetworkServiceTypeFromURLRequest
+SRBasicAuthorizationHeaderFromURL
+SRURLRequiresSSL
+SRURLOrigin
+-[SRProxyConnect initWithURL:]
+-[SRProxyConnect dealloc]
+-[SRProxyConnect openNetworkStreamWithCompletion:]
+-[SRProxyConnect _didConnect]
+-[SRProxyConnect _failWithError:]
+-[SRProxyConnect _configureProxy]
+-[SRProxyConnect _readProxySettingWithType:settings:]
+-[SRProxyConnect _fetchPAC:withProxySettings:]
+___46-[SRProxyConnect _fetchPAC:withProxySettings:]_block_invoke
+-[SRProxyConnect _runPACScript:withProxySettings:]
+-[SRProxyConnect _openConnection]
+-[SRProxyConnect _initializeStreams]
+-[SRProxyConnect stream:handleEvent:]
+-[SRProxyConnect _proxyDidConnect]
+-[SRProxyConnect _processInputStream]
+-[SRProxyConnect _dequeueInput]
+-[SRProxyConnect _proxyProcessHTTPResponseWithData:]
+-[SRProxyConnect _proxyHTTPHeadersDidFinish]
+-[SRProxyConnect _writeData:]
+___29-[SRProxyConnect _writeData:]_block_invoke
+___copy_helper_block_.194
+___destroy_helper_block_.195
+-[SRProxyConnect url]
+-[SRProxyConnect setUrl:]
+-[SRProxyConnect inputStream]
+-[SRProxyConnect setInputStream:]
+-[SRProxyConnect outputStream]
+-[SRProxyConnect setOutputStream:]
+-[SRProxyConnect .cxx_destruct]
+_OBJC_IVAR_$_SRProxyConnect._url
+_OBJC_IVAR_$_SRProxyConnect._connectionRequiresSSL
+_OBJC_IVAR_$_SRProxyConnect._writeQueue
+_OBJC_IVAR_$_SRProxyConnect._inputQueue
+_OBJC_IVAR_$_SRProxyConnect._completion
+_OBJC_IVAR_$_SRProxyConnect._httpProxyHost
+_OBJC_IVAR_$_SRProxyConnect._receivedHTTPHeaders
+_OBJC_IVAR_$_SRProxyConnect._httpProxyPort
+_OBJC_IVAR_$_SRProxyConnect._socksProxyHost
+_OBJC_IVAR_$_SRProxyConnect._socksProxyPort
+_OBJC_IVAR_$_SRProxyConnect._socksProxyUsername
+_OBJC_IVAR_$_SRProxyConnect._socksProxyPassword
+_OBJC_IVAR_$_SRProxyConnect._inputStream
+___block_descriptor_tmp.197
+_OBJC_IVAR_$_SRProxyConnect._outputStream
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Proxy/SRProxyConnect.m
+__29-[SRProxyConnect _writeData:]_block_invoke
+__46-[SRProxyConnect _fetchPAC:withProxySettings:]_block_invoke
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRMutex.m
+SRMutexUnlock
+SRMutexLock
+SRMutexDestroy
+SRMutexInitRecursive
++[SRRunLoopThread sharedThread]
+___31+[SRRunLoopThread sharedThread]_block_invoke
+-[SRRunLoopThread init]
+-[SRRunLoopThread main]
+-[SRRunLoopThread runLoop]
+-[SRRunLoopThread setRunLoop:]
+-[SRRunLoopThread .cxx_destruct]
+_sharedThread.thread
+_sharedThread.onceToken
+_OBJC_IVAR_$_SRRunLoopThread._waitGroup
+_OBJC_IVAR_$_SRRunLoopThread._runLoop
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/RunLoop/SRRunLoopThread.m
+__31+[SRRunLoopThread sharedThread]_block_invoke
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRLog.m
+SRDebugLog
+SRErrorLog
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Utilities/SRHash.m
+SRBase64EncodedStringFromData
+SRSHA1HashFromBytes
+SRSHA1HashFromString
+-[SRDelegateController init]
+-[SRDelegateController setDelegate:]
+___36-[SRDelegateController setDelegate:]_block_invoke
+-[SRDelegateController delegate]
+___32-[SRDelegateController delegate]_block_invoke
+___copy_helper_block_.26
+___destroy_helper_block_.27
+-[SRDelegateController setDispatchQueue:]
+___41-[SRDelegateController setDispatchQueue:]_block_invoke
+___copy_helper_block_.29
+___destroy_helper_block_.30
+-[SRDelegateController dispatchQueue]
+___37-[SRDelegateController dispatchQueue]_block_invoke
+___copy_helper_block_.32
+___destroy_helper_block_.33
+-[SRDelegateController setOperationQueue:]
+___42-[SRDelegateController setOperationQueue:]_block_invoke
+___copy_helper_block_.35
+___destroy_helper_block_.36
+-[SRDelegateController operationQueue]
+___38-[SRDelegateController operationQueue]_block_invoke
+___copy_helper_block_.38
+___destroy_helper_block_.39
+-[SRDelegateController performDelegateBlock:]
+___45-[SRDelegateController performDelegateBlock:]_block_invoke
+___copy_helper_block_.43
+___destroy_helper_block_.44
+___45-[SRDelegateController performDelegateBlock:]_block_invoke.46
+___copy_helper_block_.47
+___destroy_helper_block_.48
+-[SRDelegateController performDelegateQueueBlock:]
+-[SRDelegateController availableDelegateMethods]
+-[SRDelegateController setAvailableDelegateMethods:]
+-[SRDelegateController accessQueue]
+-[SRDelegateController .cxx_destruct]
+_OBJC_IVAR_$_SRDelegateController._accessQueue
+_OBJC_IVAR_$_SRDelegateController._dispatchQueue
+_OBJC_IVAR_$_SRDelegateController._delegate
+___block_descriptor_tmp.28
+_OBJC_IVAR_$_SRDelegateController._operationQueue
+___block_descriptor_tmp.31
+___block_descriptor_tmp.34
+___block_descriptor_tmp.37
+___block_descriptor_tmp.40
+___block_descriptor_tmp.45
+___block_descriptor_tmp.49
+_OBJC_IVAR_$_SRDelegateController._availableDelegateMethods
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Delegate/SRDelegateController.m
+/Users/moozzyk/source/SignalR-Client-Swift/Carthage/Checkouts/SocketRocket/SocketRocket/Internal/Delegate/SRDelegateController.h
+__45-[SRDelegateController performDelegateBlock:]_block_invoke.46
+__45-[SRDelegateController performDelegateBlock:]_block_invoke
+__38-[SRDelegateController operationQueue]_block_invoke
+__42-[SRDelegateController setOperationQueue:]_block_invoke
+__37-[SRDelegateController dispatchQueue]_block_invoke
+__41-[SRDelegateController setDispatchQueue:]_block_invoke
+__32-[SRDelegateController delegate]_block_invoke
+__36-[SRDelegateController setDelegate:]_block_invoke
+__ZL15__ARCLite__loadv
+__ZL58__arclite_NSMutableDictionary__setObject_forKeyedSubscriptP19NSMutableDictionaryP13objc_selectorP11objc_objectS4_
+__ZL22add_image_hook_swiftV1PK11mach_headerl
+__ZL42__arclite_NSUndoManagerProxy_isKindOfClassP11objc_objectP13objc_selectorP10objc_class
+__ZL13replaceMethodP10objc_classP13objc_selectorPFP11objc_objectS4_S2_zEPS6_
+__ZL30__arclite_NSManagedObject_initP11objc_objectP13objc_selector
+__ZL41__arclite_NSManagedObject_allocWithEntityP11objc_objectP13objc_selectorS0_
+__ZL36__arclite_NSManagedObject_allocBatchP11objc_objectP13objc_selectorPS0_S0_j
+__ZL37__arclite_NSKKMS_fastIndexForKnownKeyP11objc_objectP13objc_selectorS0_
+__ZL28__arclite_NSKKMS_indexForKeyP11objc_objectP13objc_selectorS0_
+__ZL29__arclite_NSKKsD_objectForKeyP11objc_objectP13objc_selectorS0_
+__ZL35__arclite_NSKKsD_removeObjectForKeyP11objc_objectP13objc_selectorS0_
+__ZL33__arclite_NSKKsD_setObject_forKeyP11objc_objectP13objc_selectorS0_S0_
+__ZL41__arclite_NSKKsD_addEntriesFromDictionaryP11objc_objectP13objc_selectorP12NSDictionary
+__ZL28__arclite_objc_readClassPairP10objc_classPK15objc_image_info
+__ZL32__arclite_objc_allocateClassPairP10objc_classPKcm
+__ZL32__arclite_object_getIndexedIvarsP11objc_object
+__ZL23__arclite_objc_getClassPKc
+__ZL27__arclite_objc_getMetaClassPKc
+__ZL31__arclite_objc_getRequiredClassPKc
+__ZL26__arclite_objc_lookUpClassPKc
+__ZL26__arclite_objc_getProtocolPKc
+__ZL23__arclite_class_getNameP10objc_class
+__ZL26__arclite_protocol_getNameP8Protocol
+__ZL37__arclite_objc_copyClassNamesForImagePKcPj
+__ZL17transcribeMethodsP10objc_classP15glue_class_ro_t
+__ZL19transcribeProtocolsP10objc_classP15glue_class_ro_t
+__ZL20transcribePropertiesP10objc_classP15glue_class_ro_t
+__ZL14initialize_impP11objc_objectP13objc_selector
+__ZL18allocateMaybeSwiftP18glue_swift_class_tm
+__ZL22copySwiftV1MangledNamePKcb
+__ZL13demangledNamePKcb
+__ZL16scanMangledFieldRPKcS0_S1_Ri
+__ZL30arclite_uninitialized_functionv
+__ZL12cxxConstructP11objc_object
+__ZL20fixStringForCoreDataP11objc_object
+_OBJC_METACLASS_$___ARCLite__
+__ZL24OBJC_CLASS_$___ARCLite__
+__ZL31OBJC_METACLASS_RO_$___ARCLite__
+__non_lazy_classes
+__ZL27OBJC_CLASS_RO_$___ARCLite__
+__ZL11_class_name
+__ZL32OBJC_$_CLASS_METHODS___ARCLite__
+__ZL17_load_method_name
+__ZL17_load_method_type
+l_OBJC_PROTOCOL_$___ARCLiteKeyedSubscripting__
+l_OBJC_LABEL_PROTOCOL_$___ARCLiteKeyedSubscripting__
+l_OBJC_PROTOCOL_REFERENCE_$___ARCLiteKeyedSubscripting__
+__ZL30NSUndoManagerProxy_targetClass
+__ZL29original_NSManagedObject_init
+__ZL40original_NSManagedObject_allocWithEntity
+__ZL35original_NSManagedObject_allocBatch
+__ZL25NSMutableDictionary_class
+__ZL22NSConstantString_class
+__ZL14NSString_class
+__ZL36original_NSKKMS_fastIndexForKnownKey
+__ZL27original_NSKKMS_indexForKey
+__ZL28original_NSKKsD_objectForKey
+__ZL34original_NSKKsD_removeObjectForKey
+__ZL32original_NSKKsD_setObject_forKey
+__ZL40original_NSKKsD_addEntriesFromDictionary
+__ZZL22add_image_hook_swiftV1PK11mach_headerlE7patches
+__ZGVZL22add_image_hook_swiftV1PK11mach_headerlE7patches
+__ZL31original_objc_allocateClassPair
+__ZL31original_object_getIndexedIvars
+__ZL22original_objc_getClass
+__ZL26original_objc_getMetaClass
+__ZL30original_objc_getRequiredClass
+__ZL25original_objc_lookUpClass
+__ZL25original_objc_getProtocol
+__ZL22original_class_getName
+__ZL25original_protocol_getName
+__ZL36original_objc_copyClassNamesForImage
+__ZL12demangleLock
+__ZL9Demangled
+Apple LLVM version 8.0.0 (clang-800.0.42)
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c++ -arch arm64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=c++11 -Wno-trigraphs -fno-exceptions -fno-rtti -mpascal-strings -Os -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-arc-repeated-use-of-weak -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -Wno-c++11-extensions -D NDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.Internal.sdk -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Winvalid-offsetof -miphoneos-version-min=4.3 -g -fno-threadsafe-statics -Wno-sign-conversion -Wno-infinite-recursion -Wno-move -fembed-bitcode -iquote /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/arclite_iphoneos-generated-files.hmap -I /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/arclite_iphoneos-own-target-headers.hmap -I /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/arclite_iphoneos-all-target-headers.hmap -iquote /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/arclite_iphoneos-project-headers.hmap -I /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/Symbols/BuiltProducts/include -I /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/DerivedSources/arm64 -I /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/DerivedSources -F/Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/Symbols/BuiltProducts -F/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.Internal.sdk/System/Library/PrivateFrameworks -Wall -Wextra -Wno-gcc-compat -fgnu-inline-asm -Wno-error=incomplete-umbrella -Wno-error=incomplete-umbrella -MMD -MT dependencies -MF /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/Objects-normal/arm64/arclite.d --serialize-diagnostics /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/Objects-normal/arm64/arclite.dia -c /Library/Caches/com.apple.xbs/Sources/arclite_iOS/arclite-65/source/arclite.mm -o /Library/Caches/com.apple.xbs/Binaries/arclite_iOS/arclite_iOS-65~962/TempContent/Objects/arclite.build/arclite_iOS.build/Objects-normal/arm64/arclite.o -mlinker-version=274.1
+/Library/Caches/com.apple.xbs/Sources/arclite_iOS/arclite-65/source/arclite.mm
+/Library/Caches/com.apple.xbs/Sources/arclite_iOS/arclite-65
+fixStringForCoreData
+cxxConstruct
+arclite_uninitialized_function
+scanMangledField
+isdigit
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.Internal.sdk/usr/include/ctype.h
+__isctype
+demangledName
+copySwiftV1DemangledName
+copySwiftV1MangledName
+allocateMaybeSwift
+word_align
+isSwift
+initialize_imp
+transcribeProperties
+property_list_nth
+transcribeProtocols
+transcribeMethods
+data
+method_list_nth
+__arclite_objc_copyClassNamesForImage
+__arclite_protocol_getName
+__arclite_class_getName
+__arclite_objc_getProtocol
+__arclite_objc_lookUpClass
+__arclite_objc_getRequiredClass
+__arclite_objc_getMetaClass
+__arclite_objc_getClass
+__arclite_object_getIndexedIvars
+__arclite_objc_allocateClassPair
+metaclass
+__arclite_objc_readClassPair
+transcribeIvars
+ivar_list_nth
+max
+alignment
+ro
+fastFlags
+__arclite_NSKKsD_addEntriesFromDictionary
+__arclite_NSKKsD_setObject_forKey
+__arclite_NSKKsD_removeObjectForKey
+__arclite_NSKKsD_objectForKey
+__arclite_NSKKMS_indexForKey
+__arclite_NSKKMS_fastIndexForKnownKey
+__arclite_NSManagedObject_allocBatch
+__arclite_NSManagedObject_allocWithEntity
+__arclite_NSManagedObject_init
+replaceMethod
+__arclite_NSUndoManagerProxy_isKindOfClass
+add_image_hook_swiftV1
+patch_lazy_pointers
+patch_t<const char **(const char *, unsigned int *)>
+patch_t<const char *(Protocol *)>
+patch_t<const char *(Class)>
+patch_t<Protocol *(const char *)>
+patch_t<Class (const char *)>
+patch_t<void *(id)>
+patch_t<Class (Class, const char *, unsigned long)>
+patch_t<Class (Class, const objc_image_info *)>
+__arclite_NSMutableDictionary__setObject_forKeyedSubscript
+__ARCLite__load
+install_swiftV1
+install_dict_nil_value
+addOrReplaceMethod
+keyedGetter
