@@ -10,6 +10,8 @@
 		5A98035C1E5FE60E00BFFB0A /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5A9803611E5FE60E00BFFB0A /* SignalRClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
+		5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRClientTests.swift; sourceTree = "<group>"; };
 		5A9803621E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
+		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +77,7 @@
 			children = (
 				5A9803551E5FE60E00BFFB0A /* SignalRClient.h */,
 				5A9803561E5FE60E00BFFB0A /* Info.plist */,
+				5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -82,6 +87,7 @@
 			children = (
 				5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */,
 				5A9803621E5FE60E00BFFB0A /* Info.plist */,
+				5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -148,6 +154,7 @@
 				TargetAttributes = {
 					5A9803511E5FE60E00BFFB0A = {
 						CreatedOnToolsVersion = 8.1;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 					5A98035A1E5FE60E00BFFB0A = {
@@ -196,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A9803611E5FE60E00BFFB0A /* SignalRClientTests.swift in Sources */,
+				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +326,7 @@
 		5A9803671E5FE60E00BFFB0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -330,6 +340,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.SignalRClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -337,6 +348,7 @@
 		5A9803681E5FE60E00BFFB0A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -357,6 +369,7 @@
 		5A98036A1E5FE60E00BFFB0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SignalRClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -369,6 +382,7 @@
 		5A98036B1E5FE60E00BFFB0A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SignalRClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -397,6 +411,7 @@
 				5A9803681E5FE60E00BFFB0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A9803691E5FE60E00BFFB0A /* Build configuration list for PBXNativeTarget "SignalRClientTests" */ = {
 			isa = XCConfigurationList;
@@ -405,6 +420,7 @@
 				5A98036B1E5FE60E00BFFB0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
