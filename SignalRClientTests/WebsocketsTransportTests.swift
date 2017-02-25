@@ -9,8 +9,26 @@
 import XCTest
 @testable import SignalRClient
 
-class WebsocketsTransportTests: XCTestCase {
+class TestTransportDelegate: TransportDelegate {
+    var transportDidOpenHandler: (() -> Void)?
+    var transportDidCloseHandler: ((_ error: Error?) -> Void)?
+    var transportDidReceiveDataHandler: ((_ data: Data) -> Void)?
 
+
+    func transportDidOpen() -> Void {
+        transportDidOpenHandler?()
+    }
+
+    func transportDidClose(_ error: Error?) -> Void {
+        transportDidCloseHandler?(error)
+    }
+
+    func transportDidReceiveData(_ data: Data) -> Void {
+        transportDidReceiveDataHandler?(data)
+    }
+}
+
+class WebsocketsTransportTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -21,9 +39,41 @@ class WebsocketsTransportTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
+    func testThatWebsocketsTransportCanSendAndReceiveMessage() {
+        let didOpenExpectation = expectation(description: "transport opened")
+        let didReceiveDataExpectation = expectation(description: "transport received data")
+        let didCloseExpectation = expectation(description: "transport closed")
+
         let wsTransport = WebsocketsTransport()
-        XCTAssertEqual("test string", wsTransport.test())
+        let transportDelegate = TestTransportDelegate()
+        let message = "Hello, World!"
+
+        transportDelegate.transportDidOpenHandler = {
+            do {
+                try wsTransport.send(data: message.data(using: .utf8)!)
+                didOpenExpectation.fulfill()
+            }
+            catch {
+                print(error)
+            }
+        }
+
+        transportDelegate.transportDidReceiveDataHandler = {
+            (data) -> Void in
+            wsTransport.close()
+            XCTAssertEqual(message, String(data: data, encoding: .utf8))
+            didReceiveDataExpectation.fulfill()
+        }
+
+        transportDelegate.transportDidCloseHandler = {(error) -> Void in
+            didCloseExpectation.fulfill()
+        }
+
+        wsTransport.delegate = transportDelegate
+        // TODO: run locally
+        wsTransport.start(url: URL(string:"ws://echo.websocket.org")!)
+        
+        waitForExpectations(timeout: 50 /*seconds*/)
     }
 
     func testPerformanceExample() {
