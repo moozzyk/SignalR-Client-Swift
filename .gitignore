@@ -1,1 +1,16 @@
 xcuserdata/
+*DS_Store
+
+[Oo]bj/
+[Bb]in/
+*.sln.ide/
+_ReSharper.*/
+.vs/
+*.user
+*.suo
+_ReSharper.*
+project.lock.json
+launchSettings.json
+*.tmp
+.vscode/
+signalr-client/
