@@ -14,7 +14,6 @@
 		5A9A811C1E5FFA9E00FE62A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A811B1E5FFA9E00FE62A6 /* AppDelegate.swift */; };
 		5A9A811E1E5FFA9E00FE62A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A9A811D1E5FFA9E00FE62A6 /* Assets.xcassets */; };
 		5A9A81211E5FFA9E00FE62A6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A9A811F1E5FFA9E00FE62A6 /* MainMenu.xib */; };
-		5A9A812C1E5FFA9E00FE62A6 /* SignalRSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A812B1E5FFA9E00FE62A6 /* SignalRSampleTests.swift */; };
 		5A9A81341E5FFAC000FE62A6 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5A9A81351E5FFE2B00FE62A6 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5A9A81371E5FFE5900FE62A6 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -89,8 +88,6 @@
 		5A9A81201E5FFA9E00FE62A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5A9A81221E5FFA9E00FE62A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81271E5FFA9E00FE62A6 /* SignalRSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalRSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A9A812B1E5FFA9E00FE62A6 /* SignalRSampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRSampleTests.swift; sourceTree = "<group>"; };
-		5A9A812D1E5FFA9E00FE62A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
@@ -142,7 +139,6 @@
 				5A9803541E5FE60E00BFFB0A /* SignalRClient */,
 				5A98035F1E5FE60E00BFFB0A /* SignalRClientTests */,
 				5A9A811A1E5FFA9E00FE62A6 /* SignalRSample */,
-				5A9A812A1E5FFA9E00FE62A6 /* SignalRSampleTests */,
 				5A9803531E5FE60E00BFFB0A /* Products */,
 				5AD455E21E5FECC200732962 /* Frameworks */,
 			);
@@ -189,15 +185,6 @@
 				5A9A81221E5FFA9E00FE62A6 /* Info.plist */,
 			);
 			path = SignalRSample;
-			sourceTree = "<group>";
-		};
-		5A9A812A1E5FFA9E00FE62A6 /* SignalRSampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				5A9A812B1E5FFA9E00FE62A6 /* SignalRSampleTests.swift */,
-				5A9A812D1E5FFA9E00FE62A6 /* Info.plist */,
-			);
-			path = SignalRSampleTests;
 			sourceTree = "<group>";
 		};
 		5AD455E21E5FECC200732962 /* Frameworks */ = {
@@ -411,7 +398,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A9A812C1E5FFA9E00FE62A6 /* SignalRSampleTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
