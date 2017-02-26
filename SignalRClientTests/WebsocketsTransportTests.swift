@@ -70,10 +70,9 @@ class WebsocketsTransportTests: XCTestCase {
         }
 
         wsTransport.delegate = transportDelegate
-        // TODO: run locally
-        wsTransport.start(url: URL(string:"ws://echo.websocket.org")!)
+        wsTransport.start(url: URL(string:"ws://localhost:5000/echo/ws")!)
         
-        waitForExpectations(timeout: 50 /*seconds*/)
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     func testPerformanceExample() {
