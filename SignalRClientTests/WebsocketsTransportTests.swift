@@ -70,7 +70,7 @@ class WebsocketsTransportTests: XCTestCase {
         }
 
         wsTransport.delegate = transportDelegate
-        wsTransport.start(url: URL(string:"ws://localhost:5000/echo/ws")!)
+        wsTransport.start(url: URL(string:"http://localhost:5000/echo")!, query: "")
         
         waitForExpectations(timeout: 5 /*seconds*/)
     }

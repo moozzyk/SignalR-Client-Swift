@@ -13,8 +13,11 @@ public class WebsocketsTransport: NSObject, SRWebSocketDelegate {
     var webSocket: SRWebSocket? = nil
     weak var delegate: TransportDelegate? = nil
 
-    public func start(url:URL) {
-        self.webSocket = SRWebSocket(url:url)
+    public func start(url:URL, query: String) {
+
+        var queryComponents = URLComponents(url: url.appendingPathComponent("ws"), resolvingAgainstBaseURL: false)!
+        queryComponents.percentEncodedQuery = query
+        self.webSocket = SRWebSocket(url: queryComponents.url!)
         self.webSocket!.delegate = self
         self.webSocket!.open();
     }
@@ -43,5 +46,5 @@ public class WebsocketsTransport: NSObject, SRWebSocketDelegate {
 
     public func webSocket(_ webSocket: SRWebSocket, didFailWithError error: Error) {
         delegate?.transportDidClose(error)
-    }
+    }  
 }
