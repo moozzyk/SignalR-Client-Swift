@@ -52,6 +52,11 @@ public class Connection {
                 self.transport!.start(url: self.url, query: "id=\(contents)")
             }
             else {
+
+                if error != nil {
+                    print(error.debugDescription)
+                }
+
                 _ = self.changeState(from: nil, to: State.stopped)
                 // TODO: handle failures
                 // let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""

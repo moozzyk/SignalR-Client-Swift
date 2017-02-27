@@ -7,7 +7,10 @@ namespace TestServer
     {
         public async override Task OnConnectedAsync(Connection connection)
         {
-            await connection.Transport.Output.WriteAsync(await connection.Transport.Input.ReadAsync());
+            while (true)
+            {
+                await connection.Transport.Output.WriteAsync(await connection.Transport.Input.ReadAsync());
+            }
         }
     }
 }
