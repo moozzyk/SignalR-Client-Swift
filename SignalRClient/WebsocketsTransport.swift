@@ -14,7 +14,6 @@ public class WebsocketsTransport: NSObject, SRWebSocketDelegate {
     weak var delegate: TransportDelegate? = nil
 
     public func start(url:URL, query: String) {
-
         var queryComponents = URLComponents(url: url.appendingPathComponent("ws"), resolvingAgainstBaseURL: false)!
         queryComponents.percentEncodedQuery = query
         self.webSocket = SRWebSocket(url: queryComponents.url!)

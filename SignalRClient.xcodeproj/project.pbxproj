@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5A98035C1E5FE60E00BFFB0A /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
-		5A9803611E5FE60E00BFFB0A /* SignalRClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A9A81141E5FF99B00FE62A6 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A9A811C1E5FFA9E00FE62A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A811B1E5FFA9E00FE62A6 /* AppDelegate.swift */; };
@@ -18,6 +17,11 @@
 		5A9A81351E5FFE2B00FE62A6 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5A9A81371E5FFE5900FE62A6 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
+		5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* Connection.swift */; };
+		5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */; };
+		5A9A81411E639F7700FE62A6 /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */; };
+		5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */; };
+		5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81441E63B14000FE62A6 /* HttpResponse.swift */; };
 		5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */; };
 		5AD455E41E5FECC300732962 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
@@ -80,7 +84,6 @@
 		5A9803551E5FE60E00BFFB0A /* SignalRClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalRClient.h; sourceTree = "<group>"; };
 		5A9803561E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRClientTests.swift; sourceTree = "<group>"; };
 		5A9803621E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81191E5FFA9E00FE62A6 /* SignalRSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SignalRSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9A811B1E5FFA9E00FE62A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +92,11 @@
 		5A9A81221E5FFA9E00FE62A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81271E5FFA9E00FE62A6 /* SignalRSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalRSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
+		5A9A813A1E6397BE00FE62A6 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
+		5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTests.swift; sourceTree = "<group>"; };
+		5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
+		5A9A81441E63B14000FE62A6 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		5AD455E31E5FECC300732962 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
@@ -162,6 +170,10 @@
 				5A9803561E5FE60E00BFFB0A /* Info.plist */,
 				5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */,
 				5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */,
+				5A9A813A1E6397BE00FE62A6 /* Connection.swift */,
+				5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */,
+				5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */,
+				5A9A81441E63B14000FE62A6 /* HttpResponse.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -169,9 +181,9 @@
 		5A98035F1E5FE60E00BFFB0A /* SignalRClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				5A9803601E5FE60E00BFFB0A /* SignalRClientTests.swift */,
 				5A9803621E5FE60E00BFFB0A /* Info.plist */,
 				5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */,
+				5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -372,7 +384,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */,
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
+				5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */,
+				5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */,
+				5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */,
 				5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -381,8 +397,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A9803611E5FE60E00BFFB0A /* SignalRClientTests.swift in Sources */,
 				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
+				5A9A81411E639F7700FE62A6 /* ConnectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

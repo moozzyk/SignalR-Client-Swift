@@ -11,20 +11,19 @@ import XCTest
 
 class TestTransportDelegate: TransportDelegate {
     var transportDidOpenHandler: (() -> Void)?
-    var transportDidCloseHandler: ((_ error: Error?) -> Void)?
     var transportDidReceiveDataHandler: ((_ data: Data) -> Void)?
-
+    var transportDidCloseHandler: ((_ error: Error?) -> Void)?
 
     func transportDidOpen() -> Void {
         transportDidOpenHandler?()
     }
 
-    func transportDidClose(_ error: Error?) -> Void {
-        transportDidCloseHandler?(error)
-    }
-
     func transportDidReceiveData(_ data: Data) -> Void {
         transportDidReceiveDataHandler?(data)
+    }
+
+    func transportDidClose(_ error: Error?) -> Void {
+        transportDidCloseHandler?(error)
     }
 }
 
@@ -58,14 +57,13 @@ class WebsocketsTransportTests: XCTestCase {
             }
         }
 
-        transportDelegate.transportDidReceiveDataHandler = {
-            (data) -> Void in
+        transportDelegate.transportDidReceiveDataHandler = { data in
             wsTransport.close()
             XCTAssertEqual(message, String(data: data, encoding: .utf8))
             didReceiveDataExpectation.fulfill()
         }
 
-        transportDelegate.transportDidCloseHandler = {(error) -> Void in
+        transportDelegate.transportDidCloseHandler = { error in
             didCloseExpectation.fulfill()
         }
 
