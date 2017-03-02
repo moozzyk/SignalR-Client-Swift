@@ -10,12 +10,17 @@ import XCTest
 @testable import SignalRClient
 
 class TestConnectionDelegate: ConnectionDelegate {
-    var connectionDidOpenDidOpenHandler: ((_ connection: Connection) -> Void)?
+    var connectionDidOpenHandler: ((_ connection: Connection) -> Void)?
+    var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
     var connectionDidReceiveDataHandler: ((_ connection: Connection, _ data: Data) -> Void)?
 
     func connectionDidOpen(connection: Connection!) {
-        connectionDidOpenDidOpenHandler?(connection)
+        connectionDidOpenHandler?(connection)
+    }
+
+    func connectionDidFailToOpen(error: Error) {
+        connectionDidFailToOpenHandler?(error)
     }
 
     func connectionDidReceiveData(connection: Connection!, data: Data) {
@@ -46,7 +51,7 @@ class ConnectionTests: XCTestCase {
 
         let message = "Hello, World!"
         let connectionDelegate = TestConnectionDelegate()
-        connectionDelegate.connectionDidOpenDidOpenHandler = { connection in
+        connectionDelegate.connectionDidOpenHandler = { connection in
             do {
                 try connection.send(data: message.data(using: .utf8)!)
                 didOpenExpectation.fulfill()
@@ -70,6 +75,31 @@ class ConnectionTests: XCTestCase {
         let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
         connection.delegate = connectionDelegate
         connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatOpeningConnectionFailsIfConnectionNotInInitialState() {
+        let didFailToOpenExpectation = expectation(description: "connection failed to open")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            connection.stop()
+        }
+
+        connectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+        }
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpenExpectation.fulfill()
+        }
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        connection.delegate = connectionDelegate
+        connection.start();
+        connection.start();
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }

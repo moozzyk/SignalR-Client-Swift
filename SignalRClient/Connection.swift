@@ -8,6 +8,10 @@
 
 import Foundation
 
+enum ConnectionError : Error {
+    case invalidState
+}
+
 public class Connection {
     private let connectionQueue: DispatchQueue
     private var transportDelegate: TransportDelegate?
@@ -35,7 +39,8 @@ public class Connection {
     public func start() {
 
         if !changeState(from: State.initial, to: State.connecting) {
-            // TODO: handle
+            delegate?.connectionDidFailToOpen(error: ConnectionError.invalidState)
+            return;
         }
 
         // TODO: introduce transport protocol and default to Websockets transport instead of hardcoding it

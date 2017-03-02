@@ -85,6 +85,10 @@ class EchoConnectionDelegate: ConnectionDelegate {
         app?.toggleSend(isEnabled: true)
     }
 
+    func connectionDidFailToOpen(error: Error) {
+        app?.appendLog(string: "Error")
+    }
+
     func connectionDidReceiveData(connection: Connection!, data: Data) {
         app?.appendLog(string: "Received: " + String(data: data, encoding: .utf8)!)
     }
