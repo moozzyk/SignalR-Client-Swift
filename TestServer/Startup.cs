@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,11 @@ namespace TestServer
             app.UseSockets(options => options.MapEndpoint<EchoEndPoint>("/echo"));
             app.Run(async (context) =>
             {
+                if (context.Request.Path.Value.EndsWith("/throw/negotiate"))
+                {
+                    throw new InvalidOperationException("Unexpected error");
+                }
+
                 await context.Response.WriteAsync("Hello World!");
             });
         }

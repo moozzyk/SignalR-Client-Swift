@@ -104,6 +104,38 @@ class ConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionDidFailToOpenInvokedIfCantConnectToServer() {
+        let didFailToOpenExpectation = expectation(description: "connection failed to open")
+
+        let connectionDelegate = TestConnectionDelegate()
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpenExpectation.fulfill()
+        }
+
+        let connection = Connection(url: URL(string: "http://localhost:1000/echo")!)
+        connection.delegate = connectionDelegate
+        connection.start();
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionDidFailToOpenInvokedIfHttpResponseNotOK() {
+        let didFailToOpenExpectation = expectation(description: "connection failed to open")
+
+        let connectionDelegate = TestConnectionDelegate()
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpenExpectation.fulfill()
+        }
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/throw")!)
+        connection.delegate = connectionDelegate
+        connection.start();
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

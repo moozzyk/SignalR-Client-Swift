@@ -10,6 +10,7 @@ import Foundation
 
 enum ConnectionError : Error {
     case invalidState
+    case webError(statusCode: Int)
 }
 
 public class Connection {
@@ -39,7 +40,7 @@ public class Connection {
     public func start() {
 
         if !changeState(from: State.initial, to: State.connecting) {
-            delegate?.connectionDidFailToOpen(error: ConnectionError.invalidState)
+            failOpenWithError(error: ConnectionError.invalidState)
             return;
         }
 
@@ -52,22 +53,26 @@ public class Connection {
         let negotiateUrl = url.appendingPathComponent("negotiate")
 
         httpClient.get(url:negotiateUrl, completionHandler: {(httpResponse, error) in
-            if httpResponse?.statusCode == 200 {
+            if error != nil {
+                print(error.debugDescription)
+                self.failOpenWithError(error: error!)
+                return
+            }
+
+            if httpResponse!.statusCode == 200 {
                 let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
                 self.transport!.start(url: self.url, query: "id=\(contents)")
             }
             else {
-
-                if error != nil {
-                    print(error.debugDescription)
-                }
-
-                _ = self.changeState(from: nil, to: State.stopped)
-                // TODO: handle failures
-                // let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
-                // completionHandler(error ?? WebError(statusCode: httpResponse!.statusCode, description: contents))
+                print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(httpResponse!.contents)")
+                self.failOpenWithError(error: ConnectionError.webError(statusCode: httpResponse!.statusCode))
             }
         })
+    }
+
+    private func failOpenWithError(error: Error) {
+        _ = self.changeState(from: nil, to: State.stopped)
+        delegate?.connectionDidFailToOpen(error: ConnectionError.invalidState)
     }
 
     public func send(data: Data) throws {
