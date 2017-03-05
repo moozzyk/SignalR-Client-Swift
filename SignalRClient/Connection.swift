@@ -22,7 +22,7 @@ public class Connection: SocketConnection {
     private var query: String
     private var transport: WebsocketsTransport?
 
-    public weak var delegate: ConnectionDelegate!
+    public weak var delegate: SocketConnectionDelegate!
 
     private enum State {
         case initial

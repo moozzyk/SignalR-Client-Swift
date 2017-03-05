@@ -8,8 +8,8 @@
 
 import Foundation
 
-public protocol HubDelegate: class {
-    func connectionDidOpen(connection: HubConnection!);
+public protocol HubConnectionDelegate: class {
+    func connectionDidOpen(hubConnection: HubConnection!);
     func connectionDidFailToOpen(error: Error);
 
     // func On ?

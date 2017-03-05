@@ -14,12 +14,13 @@
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
 		5A73DFED1E6B8960007F3913 /* HubConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */; };
 		5A73DFEF1E6B8B3D007F3913 /* SocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */; };
+		5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */; };
 		5A98035C1E5FE60E00BFFB0A /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A9A81141E5FF99B00FE62A6 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
 		5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* Connection.swift */; };
-		5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */; };
+		5A9A813D1E63982400FE62A6 /* SocketConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */; };
 		5A9A81411E639F7700FE62A6 /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */; };
 		5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */; };
 		5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81441E63B14000FE62A6 /* HttpResponse.swift */; };
@@ -89,6 +90,7 @@
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
 		5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketConnection.swift; sourceTree = "<group>"; };
+		5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionTests.swift; sourceTree = "<group>"; };
 		5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9803551E5FE60E00BFFB0A /* SignalRClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalRClient.h; sourceTree = "<group>"; };
 		5A9803561E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,7 +98,7 @@
 		5A9803621E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
 		5A9A813A1E6397BE00FE62A6 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
+		5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketConnectionDelegate.swift; sourceTree = "<group>"; };
 		5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTests.swift; sourceTree = "<group>"; };
 		5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
 		5A9A81441E63B14000FE62A6 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
@@ -171,7 +173,7 @@
 				5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */,
 				5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */,
 				5A9A813A1E6397BE00FE62A6 /* Connection.swift */,
-				5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */,
+				5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */,
 				5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */,
 				5A9A81441E63B14000FE62A6 /* HttpResponse.swift */,
 				5A73DFEA1E6B8867007F3913 /* HubConnection.swift */,
@@ -187,6 +189,7 @@
 				5A9803621E5FE60E00BFFB0A /* Info.plist */,
 				5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */,
 				5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */,
+				5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -362,7 +365,7 @@
 				5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */,
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
 				5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */,
-				5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */,
+				5A9A813D1E63982400FE62A6 /* SocketConnectionDelegate.swift in Sources */,
 				5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */,
 				5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */,
 				5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */,
@@ -374,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
+				5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */,
 				5A9A81411E639F7700FE62A6 /* ConnectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

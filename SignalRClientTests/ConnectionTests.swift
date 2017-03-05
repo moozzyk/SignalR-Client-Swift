@@ -9,13 +9,13 @@
 import XCTest
 @testable import SignalRClient
 
-class TestConnectionDelegate: ConnectionDelegate {
-    var connectionDidOpenHandler: ((_ connection: Connection) -> Void)?
+class TestConnectionDelegate: SocketConnectionDelegate {
+    var connectionDidOpenHandler: ((_ connection: SocketConnection) -> Void)?
     var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
-    var connectionDidReceiveDataHandler: ((_ connection: Connection, _ data: Data) -> Void)?
+    var connectionDidReceiveDataHandler: ((_ connection: SocketConnection, _ data: Data) -> Void)?
 
-    func connectionDidOpen(connection: Connection!) {
+    func connectionDidOpen(connection: SocketConnection!) {
         connectionDidOpenHandler?(connection)
     }
 
@@ -23,7 +23,7 @@ class TestConnectionDelegate: ConnectionDelegate {
         connectionDidFailToOpenHandler?(error)
     }
 
-    func connectionDidReceiveData(connection: Connection!, data: Data) {
+    func connectionDidReceiveData(connection: SocketConnection!, data: Data) {
         connectionDidReceiveDataHandler?(connection, data)
     }
 
@@ -38,7 +38,7 @@ class ConnectionTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
-    
+
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
