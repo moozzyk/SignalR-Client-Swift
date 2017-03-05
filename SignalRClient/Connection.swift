@@ -13,7 +13,7 @@ enum ConnectionError : Error {
     case webError(statusCode: Int)
 }
 
-public class Connection {
+public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
     private var transportDelegate: TransportDelegate?
 

@@ -1,0 +1,16 @@
+//
+//  SocketConnection.swift
+//  SignalRClient
+//
+//  Created by Pawel Kadluczka on 3/4/17.
+//  Copyright © 2017 Pawel Kadluczka. All rights reserved.
+//
+
+import Foundation
+
+public protocol SocketConnection {
+    var delegate: ConnectionDelegate! {get set}
+    func start() -> Void
+    func send(data: Data) throws -> Void
+    func stop() -> Void
+}
