@@ -26,6 +26,11 @@ namespace TestServer
             }
 
             app.UseSockets(options => options.MapEndpoint<EchoEndPoint>("/echo"));
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<TestHub>("/testhub");
+            });
+
             app.Run(async (context) =>
             {
                 if (context.Request.Path.Value.EndsWith("/throw/negotiate"))
