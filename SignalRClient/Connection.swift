@@ -19,6 +19,7 @@ public class Connection {
 
     private var state: State
     private let url: URL
+    private var query: String
     private var transport: WebsocketsTransport?
 
     public weak var delegate: ConnectionDelegate!
@@ -31,10 +32,15 @@ public class Connection {
         case stopped
     }
 
-    public init(url: URL) {
+    init(url: URL, query: String?) {
         connectionQueue = DispatchQueue(label: "SignalR.queue")
         self.url = url
         self.state = State.initial
+        self.query  = (query ?? "").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+    }
+
+    convenience init(url: URL) {
+        self.init(url: url, query: "")
     }
 
     public func start() {
@@ -50,9 +56,11 @@ public class Connection {
         transport!.delegate = transportDelegate
 
         let httpClient = DefaultHttpClient()
-        let negotiateUrl = url.appendingPathComponent("negotiate")
 
-        httpClient.get(url:negotiateUrl, completionHandler: {(httpResponse, error) in
+        var negotiateUrlComponents = URLComponents(url: url.appendingPathComponent("negotiate"), resolvingAgainstBaseURL: false)!
+        negotiateUrlComponents.percentEncodedQuery = query
+
+        httpClient.get(url:negotiateUrlComponents.url!, completionHandler: {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
                 self.failOpenWithError(error: error!)
@@ -61,7 +69,13 @@ public class Connection {
 
             if httpResponse!.statusCode == 200 {
                 let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
-                self.transport!.start(url: self.url, query: "id=\(contents)")
+
+                if self.query != "" {
+                    self.query += "&"
+                }
+                self.query += "id=\(contents)"
+
+                self.transport!.start(url: self.url, query: self.query)
             }
             else {
                 print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(httpResponse!.contents)")
