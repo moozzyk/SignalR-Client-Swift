@@ -8,11 +8,6 @@
 
 import Foundation
 
-enum ConnectionError : Error {
-    case invalidState
-    case webError(statusCode: Int)
-}
-
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
     private var transportDelegate: TransportDelegate?
@@ -33,7 +28,7 @@ public class Connection: SocketConnection {
     }
 
     init(url: URL, query: String?) {
-        connectionQueue = DispatchQueue(label: "SignalR.queue")
+        connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         self.url = url
         self.state = State.initial
         self.query  = (query ?? "").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
@@ -46,7 +41,7 @@ public class Connection: SocketConnection {
     public func start() {
 
         if !changeState(from: State.initial, to: State.connecting) {
-            failOpenWithError(error: ConnectionError.invalidState)
+            failOpenWithError(error: SignalRError.invalidState)
             return;
         }
 
@@ -79,14 +74,14 @@ public class Connection: SocketConnection {
             }
             else {
                 print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(httpResponse!.contents)")
-                self.failOpenWithError(error: ConnectionError.webError(statusCode: httpResponse!.statusCode))
+                self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse!.statusCode))
             }
         })
     }
 
     private func failOpenWithError(error: Error) {
         _ = self.changeState(from: nil, to: State.stopped)
-        delegate?.connectionDidFailToOpen(error: ConnectionError.invalidState)
+        delegate?.connectionDidFailToOpen(error: SignalRError.invalidState)
     }
 
     public func send(data: Data) throws {

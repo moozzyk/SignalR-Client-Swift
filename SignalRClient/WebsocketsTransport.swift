@@ -38,6 +38,10 @@ public class WebsocketsTransport: NSObject, SRWebSocketDelegate {
         delegate?.transportDidReceiveData(data)
     }
 
+    public func webSocket(_ webSocket: SRWebSocket, didReceiveMessageWith string: String) {
+        delegate?.transportDidReceiveData(string.data(using: .utf8)!)
+    }
+
     public func webSocket(_ webSocket: SRWebSocket, didCloseWithCode code: Int, reason: String?, wasClean: Bool) {
         // TODO: Handle error codes
         delegate?.transportDidClose(nil)

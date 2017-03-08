@@ -42,22 +42,20 @@ class HubConnectionTests: XCTestCase {
 
     func testThatHubMethodCanBeInvoked() {
         let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
 
-        // let message = "Hello, World!"
+        let message = "Hello, World!"
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
-            hubConnection.stop()
 
-            // TODO:
-            /*
-            do {
-                didOpenExpectation.fulfill()
-            }
-            catch {
-                print(error)
-            }*/
+            hubConnection.invoke(method: "Echo", arguments: [message], returnType: String.self, invocationDidComplete: { result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual(message, result)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            })
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -65,7 +63,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
