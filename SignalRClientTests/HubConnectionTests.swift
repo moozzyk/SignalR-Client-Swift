@@ -70,6 +70,44 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatExceptionsInHubMethodsAreTrunedIntoErrors() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "ErrorMethod", arguments: [], returnType: String.self, invocationDidComplete: { result, error in
+                XCTAssertNotNil(error)
+
+                switch (error as! SignalRError) {
+                case .hubInvocationError(let errorMessage):
+                    XCTAssertEqual("Error occurred.", errorMessage)
+                    break
+                default:
+                    XCTAssertTrue(false)
+                    break
+                }
+
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

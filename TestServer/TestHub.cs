@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,11 @@ namespace TestServer
         {
             _logger.LogInformation("Echo invoked: " + message);
             return message;
+        }
+
+        public void ErrorMethod()
+        {
+            throw new InvalidOperationException("Error occurred.");
         }
     }
 }
