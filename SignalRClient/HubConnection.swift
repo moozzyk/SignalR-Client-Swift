@@ -63,8 +63,9 @@ public class HubConnection {
         }
 
         let invocationDescriptor = InvocationDescriptor(id: id, method: method, arguments: arguments)
-        let invocationData = jsonSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
+
         do {
+            let invocationData = try jsonSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
             try connection.send(data: invocationData)
         }
         catch {

@@ -9,32 +9,15 @@
 import Foundation
 
 class JSONInvocationSerializer {
-    func writeInvocationDescriptor(invocationDescriptor: InvocationDescriptor) -> Data {
-        // TODO: figure out how to write JSON correctly
+    func writeInvocationDescriptor(invocationDescriptor: InvocationDescriptor) throws -> Data {
+        let payload: [String: Any] = [
+            "Id": invocationDescriptor.id,
+            "Method": invocationDescriptor.method,
+            // TODO custom type resolver
+            "Arguments": invocationDescriptor.arguments
+        ];
 
-        let argString = serializeArguments(arguments: invocationDescriptor.arguments)
-        let payload =
-            "{ \"Id\": \(invocationDescriptor.id), \"Method\": \"\(invocationDescriptor.method)\", \"Arguments\": [\(argString)] }"
-
-        return payload.data(using: .utf8)!
-    }
-
-    private func serializeArguments(arguments: [Any?]) -> String {
-
-        var argString = ""
-
-        for arg in arguments {
-            if arg == nil {
-                argString += "null"
-            }
-            else if arg is String {
-                argString += "\"\(arg!)\""
-            }
-
-            // argumentString += ", "
-        }
-
-        return argString
+        return try JSONSerialization.data(withJSONObject: payload)
     }
 
     func processIncomingData(data: Data) throws -> AnyObject {
