@@ -24,5 +24,10 @@ namespace TestServer
         {
             throw new InvalidOperationException("Error occurred.");
         }
+
+        public Task VoidMethod()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

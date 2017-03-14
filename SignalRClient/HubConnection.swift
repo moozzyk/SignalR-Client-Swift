@@ -38,6 +38,12 @@ public class HubConnection {
         connection.stop()
     }
 
+    public func invoke(method: String, arguments: [Any?], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
+        invoke(method: method, arguments: arguments, returnType: Any.self, invocationDidComplete: {_, error in
+            invocationDidComplete(error)
+        })
+    }
+
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void) {
         var id:Int = 0
 
