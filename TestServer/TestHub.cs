@@ -29,5 +29,9 @@ namespace TestServer
         {
             return Task.CompletedTask;
         }
+
+        public async Task InvokeGetNumber(int number) {
+            await Clients.Client(Context.Connection.ConnectionId).InvokeAsync("GetNumber", number);
+        }
     }
 }

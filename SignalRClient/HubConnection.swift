@@ -14,6 +14,7 @@ public class HubConnection {
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
     private var pendingCalls = [Int: (InvocationResult?, Error?)->Void]()
+    private var callbacks = [String: ([Any?]) -> Void]()
     private let jsonSerializer: JSONInvocationSerializer = JSONInvocationSerializer()
 
     private var connection: SocketConnection!
@@ -36,6 +37,13 @@ public class HubConnection {
 
     public func stop() {
         connection.stop()
+    }
+
+    public func on(method: String, callback: @escaping (_ arguments: [Any?]) -> Void) {
+        hubConnectionQueue.sync {
+            // TODO: warn for conflicts?
+            callbacks[method] = callback
+        }
     }
 
     public func invoke(method: String, arguments: [Any?], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
@@ -91,18 +99,36 @@ public class HubConnection {
     fileprivate func hubConnectionDidReceiveData(data: Data) {
         do {
             let incomingMessage = try jsonSerializer.processIncomingData(data: data)
-            if let invocationResult = incomingMessage as? InvocationResult {
+            switch incomingMessage {
+            case let invocationResult as InvocationResult:
                 var callback: ((InvocationResult?, Error?)->Void)?
                 self.hubConnectionQueue.sync {
                     callback = self.pendingCalls.removeValue(forKey: invocationResult.id)
                 }
 
-                if callback == nil {
+                if callback != nil {
+                    //TODO: dispatch invoking user code to a different thread
+                    callback!(invocationResult, nil)
+                }
+                else {
                     print("Could not find callback with id \(invocationResult.id)")
-                    return
+                }
+            case let invocationDescriptor as InvocationDescriptor:
+                var callback: (([Any?])->Void)?
+
+                self.hubConnectionQueue.sync {
+                    callback = self.callbacks[invocationDescriptor.method]
                 }
 
-                callback!(invocationResult, nil)
+                if callback != nil {
+                    //TODO: dispatch invoking user code to a different thread
+                    callback!(invocationDescriptor.arguments)
+                }
+                else {
+                    print("No handler registered for method \(invocationDescriptor.method)")
+                }
+            default:
+                print("Unexpected type")
             }
         }
         catch {

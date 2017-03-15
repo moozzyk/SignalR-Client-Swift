@@ -79,7 +79,6 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-
     func testThatExceptionsInHubMethodsAreTurnedIntoErrors() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
@@ -157,6 +156,42 @@ class HubConnectionTests: XCTestCase {
             invocationCancelledExpectation.fulfill()
         })
         testSocketConnection.delegate?.connectionDidClose(error: testError)
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatClientMethodsCanBeInvoked() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "GetNumber", callbac k: { args in
+            XCTAssertNotNil(args)
+            XCTAssertEqual(1, args.count)
+            XCTAssertEqual(42, args[0] as! Int)
+            didInvokeClientMethod.fulfill()
+            hubConnection.stop()
+        })
+
+        hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }

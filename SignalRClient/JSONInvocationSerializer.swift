@@ -29,6 +29,13 @@ class JSONInvocationSerializer {
                 let result = message.object(forKey: "Result")
                 return JSONInvocationResult(id: Int(id as! String)!, error: error as? String, result: result as AnyObject?)
             }
+
+            let rawArguments = message.object(forKey: "Arguments")
+            if rawArguments == nil || rawArguments as? NSArray != nil {
+                let method = message.object(forKey: "Method")
+                let arguments = rawArguments as? NSArray
+                return InvocationDescriptor(id: -1, method: method as! String, arguments: arguments as? [Any?] ?? [])
+            }
         }
 
         throw SignalRError.unexpectedMessage
