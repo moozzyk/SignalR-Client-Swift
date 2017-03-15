@@ -9,25 +9,6 @@
 import XCTest
 @testable import SignalRClient
 
-
-class TestHubConnectionDelegate: HubConnectionDelegate {
-    var connectionDidOpenHandler: ((_ hubConnection: HubConnection) -> Void)?
-    var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
-    var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
-
-    func connectionDidOpen(hubConnection: HubConnection!) {
-        connectionDidOpenHandler?(hubConnection)
-    }
-
-    func connectionDidFailToOpen(error: Error) {
-        connectionDidFailToOpenHandler?(error)
-    }
-
-    func connectionDidClose(error: Error?) {
-        connectionDidCloseHandler?(error)
-    }
-}
-
 class HubConnectionTests: XCTestCase {
 
     override func setUp() {
@@ -99,7 +80,7 @@ class HubConnectionTests: XCTestCase {
     }
 
 
-    func testThatExceptionsInHubMethodsAreTrunedIntoErrors() {
+    func testThatExceptionsInHubMethodsAreTurnedIntoErrors() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -137,11 +118,85 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatPendingInvocationsAreCancelledWhenConnectionIsClosed() {
+        let invocationCancelledExpectation = expectation(description: "invocation cancelled")
+
+        let testSocketConnection = TestSocketConnection()
+        let hubConnection = HubConnection(connection: testSocketConnection)
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+        hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
+            XCTAssertNotNil(error)
+
+            switch (error as! SignalRError) {
+            case .hubInvocationCancelled:
+                invocationCancelledExpectation.fulfill()
+                break
+            default:
+                XCTAssertTrue(false)
+                break
+            }
+        })
+        hubConnection.stop()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatPendingInvocationsAreAbortedWhenConnectionIsClosedWithError() {
+        let invocationCancelledExpectation = expectation(description: "invocation cancelled")
+        let testError = NSError()
+
+        let testSocketConnection = TestSocketConnection()
+        let hubConnection = HubConnection(connection: testSocketConnection)
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+        hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
+            XCTAssertEqual(testError, error as! NSError)
+            invocationCancelledExpectation.fulfill()
+        })
+        testSocketConnection.delegate?.connectionDidClose(error: testError)
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
             // Put the code you want to measure the time of here.
         }
     }
+}
 
+class TestHubConnectionDelegate: HubConnectionDelegate {
+    var connectionDidOpenHandler: ((_ hubConnection: HubConnection) -> Void)?
+    var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
+    var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
+
+    func connectionDidOpen(hubConnection: HubConnection!) {
+        connectionDidOpenHandler?(hubConnection)
+    }
+
+    func connectionDidFailToOpen(error: Error) {
+        connectionDidFailToOpenHandler?(error)
+    }
+
+    func connectionDidClose(error: Error?) {
+        connectionDidCloseHandler?(error)
+    }
+}
+
+class TestSocketConnection: SocketConnection {
+    var delegate: SocketConnectionDelegate!
+    func start() -> Void {
+        delegate?.connectionDidOpen(connection: self)
+    }
+
+    func send(data: Data) throws -> Void {
+    }
+
+    func stop() -> Void {
+        delegate?.connectionDidClose(error: nil)
+    }
 }

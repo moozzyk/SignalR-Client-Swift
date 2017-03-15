@@ -13,7 +13,7 @@ public class HubConnection {
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
-    private var pendingCalls = [Int: (InvocationResult)->Void]()
+    private var pendingCalls = [Int: (InvocationResult?, Error?)->Void]()
     private let jsonSerializer: JSONInvocationSerializer = JSONInvocationSerializer()
 
     private var connection: SocketConnection!
@@ -47,19 +47,24 @@ public class HubConnection {
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void) {
         var id:Int = 0
 
-        let callback: (InvocationResult)->Void = { invocationResult in
+        let callback: (InvocationResult?, Error?)->Void = { invocationResult, error in
 
-                if let hubInvocationError = invocationResult.error {
-                    invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
-                    return
-                }
+            if error != nil {
+                invocationDidComplete(nil, error!)
+                return
+            }
 
-                do {
-                    try invocationDidComplete(invocationResult.getResult(type: T.self), nil);
-                }
-                catch {
-                    invocationDidComplete(nil, error)
-                }
+            if let hubInvocationError = invocationResult!.error {
+                invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
+                return
+            }
+
+            do {
+                try invocationDidComplete(invocationResult!.getResult(type: T.self), nil);
+            }
+            catch {
+                invocationDidComplete(nil, error)
+            }
         };
 
         hubConnectionQueue.sync {
@@ -87,7 +92,7 @@ public class HubConnection {
         do {
             let incomingMessage = try jsonSerializer.processIncomingData(data: data)
             if let invocationResult = incomingMessage as? InvocationResult {
-                var callback: ((InvocationResult)->Void)?
+                var callback: ((InvocationResult?, Error?)->Void)?
                 self.hubConnectionQueue.sync {
                     callback = self.pendingCalls.removeValue(forKey: invocationResult.id)
                 }
@@ -97,12 +102,27 @@ public class HubConnection {
                     return
                 }
 
-                callback!(invocationResult)
+                callback!(invocationResult, nil)
             }
         }
         catch {
             print(error)
         }
+    }
+
+    fileprivate func hubConnectionDidClose(error: Error?) {
+
+        let invocationError = error ?? SignalRError.hubInvocationCancelled
+        hubConnectionQueue.sync {
+            for callback in pendingCalls.values {
+                hubConnectionQueue.async {
+                    callback(nil, invocationError)
+                }
+            }
+            pendingCalls.removeAll()
+        }
+
+        delegate.connectionDidClose(error: error)
     }
 }
 
@@ -126,7 +146,7 @@ public class HubSocketConnectionDelegate : SocketConnectionDelegate {
     }
 
     public func connectionDidClose(error: Error?) {
-        hubConnection?.delegate.connectionDidClose(error: error)
+        hubConnection?.hubConnectionDidClose(error: error)
     }
 }
 
