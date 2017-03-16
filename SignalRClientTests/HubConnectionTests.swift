@@ -183,7 +183,7 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetNumber", callbac k: { args in
+        hubConnection.on(method: "GetNumber", callback: { args in
             XCTAssertNotNil(args)
             XCTAssertEqual(1, args.count)
             XCTAssertEqual(42, args[0] as! Int)
