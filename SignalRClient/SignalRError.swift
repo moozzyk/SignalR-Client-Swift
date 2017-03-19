@@ -14,4 +14,5 @@ enum SignalRError : Error {
     case hubInvocationError(message: String)
     case hubInvocationCancelled
     case unexpectedMessage
+    case unsupportedType
 }

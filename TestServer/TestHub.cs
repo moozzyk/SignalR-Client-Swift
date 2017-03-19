@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -32,6 +34,11 @@ namespace TestServer
 
         public async Task InvokeGetNumber(int number) {
             await Clients.Client(Context.Connection.ConnectionId).InvokeAsync("GetNumber", number);
+        }
+
+        public IEnumerable<Person> SortByName(Person[] people)
+        {
+            return people.OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
         }
     }
 }

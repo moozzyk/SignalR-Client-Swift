@@ -8,7 +8,7 @@
 
 import Foundation
 
-class InvocationDescriptor {
+public class InvocationDescriptor {
     let id: Int
     let method: String
     let arguments: [Any?]
@@ -20,7 +20,7 @@ class InvocationDescriptor {
     }
 }
 
-protocol InvocationResult {
+public protocol InvocationResult {
     var id: Int { get }
     var error: String? { get }
     func getResult<T>(type: T.Type) throws -> T?

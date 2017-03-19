@@ -196,6 +196,122 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    enum Sex {
+        case Male
+        case Female
+    }
+
+    class User {
+        public let firstName: String
+        let lastName: String
+        let age: Int?
+        let height: Double?
+        let sex: Sex?
+
+        init(firstName: String, lastName: String, age: Int?, height: Double?, sex: Sex?) {
+            self.firstName = firstName
+            self.lastName = lastName
+            self.age = age
+            self.height = height
+            self.sex = sex
+        }
+    }
+
+    class PersonTypeConverter: JSONTypeConverter {
+        override func convertToWireType(obj: Any?) throws -> Any? {
+            if let user = obj as? User? {
+                return convertUser(user: user)
+            }
+
+            if let users = obj as? [User?] {
+                return users.map({u in convertUser(user:u)})
+            }
+
+            return try super.convertToWireType(obj: obj)
+        }
+
+        private func convertUser(user: User?) -> [String: Any?]? {
+
+            if let u = user {
+                return [
+                    "FirstName": u.firstName,
+                    "LastName": u.lastName,
+                    "Age": u.age,
+                    "Height": u.height,
+                    "Sex": u.sex == Sex.Male ? 0 : 1]
+            }
+
+            return nil
+        }
+
+        override func convertFromWireType<T>(obj: Any?, targetType: T.Type) throws -> T? {
+
+            if let userArray = obj as? [[String: Any?]?] {
+
+                let result: [User?] = userArray.map({userDictionary in
+                    if userDictionary == nil {
+                        return nil
+                    }
+
+                    let user = userDictionary!
+
+                    return User(firstName: user["FirstName"] as! String, lastName: user["LastName"] as! String, age: user["Age"] as! Int?, height: user["Height"] as! Double?, sex: user["Sex"] as! Int == 0 ? Sex.Male : Sex.Female)
+                })
+
+                return result as? T
+            }
+
+            return try super.convertFromWireType(obj: obj, targetType: targetType)
+        }
+    }
+
+    func testThatHubMethodUsingComplexTypesCanBeInvoked() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let input = [User(firstName: "Klara", lastName: "Smetana", age: nil, height: 166.5, sex: Sex.Female),
+                         User(firstName: "Jerzy", lastName: "Meteor", age: 34, height: 179.0, sex: Sex.Male)]
+
+            hubConnection.invoke(method: "SortByName", arguments: [input], returnType: [User].self, invocationDidComplete: { people, error in
+                XCTAssertNil(error)
+                XCTAssertNotNil(people)
+                XCTAssertEqual(2, people!.count)
+
+                XCTAssertEqual("Jerzy", people![0].firstName)
+                XCTAssertEqual("Meteor", people![0].lastName)
+                XCTAssertEqual(34, people![0].age)
+                XCTAssertEqual(179.0, people![0].height)
+                XCTAssertEqual(Sex.Male, people![0].sex)
+
+                XCTAssertEqual("Klara", people![1].firstName)
+                XCTAssertEqual("Smetana", people![1].lastName)
+                XCTAssertNil(people![1].age)
+                XCTAssertEqual(166.5, people![1].height)
+                XCTAssertEqual(Sex.Female, people![1].sex)
+
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let invocationSerializer = JSONInvocationSerializer(typeConverter: PersonTypeConverter())
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json", invocationSerializer: invocationSerializer)
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

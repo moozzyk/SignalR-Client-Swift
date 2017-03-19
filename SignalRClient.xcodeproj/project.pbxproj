@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
+		5A341EBA1E7D94B300F6D41D /* InvocationSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A73DFE31E63E2CF007F3913 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5A73DFE41E63E2CF007F3913 /* SocketRocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -90,6 +92,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
+		5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvocationSerializer.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -188,6 +192,8 @@
 				5A73DFF41E6E5116007F3913 /* InvocationDescriptor.swift */,
 				5A73DFF81E6E92FA007F3913 /* JSONInvocationSerializer.swift */,
 				5A4F86C41E71A54900D9A13F /* SignalRError.swift */,
+				5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */,
+				5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -374,6 +380,8 @@
 				5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */,
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
 				5A73DFF51E6E5116007F3913 /* InvocationDescriptor.swift in Sources */,
+				5A341EBA1E7D94B300F6D41D /* InvocationSerializer.swift in Sources */,
+				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
 				5A73DFF91E6E92FA007F3913 /* JSONInvocationSerializer.swift in Sources */,
 				5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */,
 				5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */,

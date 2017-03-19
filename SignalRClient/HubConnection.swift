@@ -15,17 +15,18 @@ public class HubConnection {
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
     private var pendingCalls = [Int: (InvocationResult?, Error?)->Void]()
     private var callbacks = [String: ([Any?]) -> Void]()
-    private let jsonSerializer: JSONInvocationSerializer = JSONInvocationSerializer()
 
     private var connection: SocketConnection!
+    private var invocationSerializer: InvocationSerializer!
     public weak var delegate: HubConnectionDelegate!
 
-    public convenience init(url: URL, query: String) {
-        self.init(connection: Connection(url: url, query: query))
+    public convenience init(url: URL, query: String, invocationSerializer: InvocationSerializer? = nil) {
+        self.init(connection: Connection(url: url, query: query), invocationSerializer: invocationSerializer)
     }
 
-    public init(connection: SocketConnection!) {
+    public init(connection: SocketConnection!, invocationSerializer: InvocationSerializer? = nil) {
         self.connection = connection
+        self.invocationSerializer = invocationSerializer ?? JSONInvocationSerializer()
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
         socketConnectionDelegate = HubSocketConnectionDelegate(hubConnection: self)
         self.connection.delegate = socketConnectionDelegate
@@ -84,7 +85,7 @@ public class HubConnection {
         let invocationDescriptor = InvocationDescriptor(id: id, method: method, arguments: arguments)
 
         do {
-            let invocationData = try jsonSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
+            let invocationData = try invocationSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
             try connection.send(data: invocationData)
         }
         catch {
@@ -98,7 +99,7 @@ public class HubConnection {
 
     fileprivate func hubConnectionDidReceiveData(data: Data) {
         do {
-            let incomingMessage = try jsonSerializer.processIncomingData(data: data)
+            let incomingMessage = try invocationSerializer.processIncomingData(data: data)
             switch incomingMessage {
             case let invocationResult as InvocationResult:
                 var callback: ((InvocationResult?, Error?)->Void)?
