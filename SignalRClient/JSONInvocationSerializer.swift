@@ -8,8 +8,8 @@
 
 import Foundation
 
-class JSONTypeConverter: TypeConverter {
-    func convertToWireType(obj: Any?) throws -> Any? {
+public class JSONTypeConverter: TypeConverter {
+    public func convertToWireType(obj: Any?) throws -> Any? {
         if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj: obj!) {
             return obj
         }
@@ -25,7 +25,7 @@ class JSONTypeConverter: TypeConverter {
             obj is Bool || obj is Bool? || obj is [Bool] || obj is [Bool?];
     }
 
-    func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
+    public func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
         if obj == nil {
             return nil
         }
@@ -38,7 +38,7 @@ class JSONTypeConverter: TypeConverter {
     }
 }
 
-class JSONInvocationSerializer: InvocationSerializer {
+public class JSONInvocationSerializer: InvocationSerializer {
 
     private let typeConverter: TypeConverter
 
@@ -46,7 +46,7 @@ class JSONInvocationSerializer: InvocationSerializer {
         self.typeConverter = typeConverter ?? JSONTypeConverter()
     }
 
-    func writeInvocationDescriptor(invocationDescriptor: InvocationDescriptor) throws -> Data {
+    public func writeInvocationDescriptor(invocationDescriptor: InvocationDescriptor) throws -> Data {
         let convertedArguments = try invocationDescriptor.arguments.map{ arg -> Any? in
             return try typeConverter.convertToWireType(obj: arg)
         }
@@ -60,7 +60,7 @@ class JSONInvocationSerializer: InvocationSerializer {
         return try JSONSerialization.data(withJSONObject: payload)
     }
 
-    func processIncomingData(data: Data) throws -> AnyObject {
+    public func processIncomingData(data: Data) throws -> AnyObject {
         let json = try JSONSerialization.jsonObject(with: data)
         if let message = json as? NSDictionary {
             if message.object(forKey: "Result") != nil {
