@@ -33,6 +33,13 @@
 		5A9A81601E63CAE100FE62A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A9A815F1E63CAE100FE62A6 /* Assets.xcassets */; };
 		5A9A81631E63CAE100FE62A6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A9A81611E63CAE100FE62A6 /* MainMenu.xib */; };
 		5AA884F61E80E25400FAF9C4 /* JSONTypeConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA884F51E80E25400FAF9C4 /* JSONTypeConverterTests.swift */; };
+		5AA9F0011E835AC200C5E248 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA9F0001E835AC200C5E248 /* AppDelegate.swift */; };
+		5AA9F0031E835AC200C5E248 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0021E835AC200C5E248 /* Assets.xcassets */; };
+		5AA9F0061E835AC200C5E248 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0041E835AC200C5E248 /* MainMenu.xib */; };
+		5AA9F00B1E835C6200C5E248 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
+		5AA9F00E1E8381DD00C5E248 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5AA9F0121E8381E100C5E248 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
+		5AA9F0131E8381E100C5E248 /* SocketRocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */; };
 		5AD455E41E5FECC300732962 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
@@ -49,6 +56,13 @@
 			remoteInfo = SignalRClient;
 		};
 		5A98035D1E5FE60E00BFFB0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A9803491E5FE60E00BFFB0A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A9803511E5FE60E00BFFB0A;
+			remoteInfo = SignalRClient;
+		};
+		5AA9F00F1E8381DD00C5E248 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5A9803491E5FE60E00BFFB0A /* Project object */;
 			proxyType = 1;
@@ -78,6 +92,18 @@
 			files = (
 				5A9A81141E5FF99B00FE62A6 /* SocketRocket.framework in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AA9F0111E8381DD00C5E248 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5AA9F00E1E8381DD00C5E248 /* SignalRClient.framework in Embed Frameworks */,
+				5AA9F0131E8381E100C5E248 /* SocketRocket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5AD455E51E5FED3700732962 /* CopyFiles */ = {
@@ -119,6 +145,11 @@
 		5A9A81621E63CAE100FE62A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5A9A81641E63CAE100FE62A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5AA884F51E80E25400FAF9C4 /* JSONTypeConverterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTypeConverterTests.swift; sourceTree = "<group>"; };
+		5AA9EFFE1E835AC200C5E248 /* HubSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AA9F0001E835AC200C5E248 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5AA9F0021E835AC200C5E248 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5AA9F0051E835AC200C5E248 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5AA9F0071E835AC200C5E248 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		5AD455E31E5FECC300732962 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
@@ -152,6 +183,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AA9EFFB1E835AC200C5E248 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AA9F00B1E835C6200C5E248 /* SignalRClient.framework in Frameworks */,
+				5AA9F0121E8381E100C5E248 /* SocketRocket.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -162,6 +202,7 @@
 				5A9803541E5FE60E00BFFB0A /* SignalRClient */,
 				5A98035F1E5FE60E00BFFB0A /* SignalRClientTests */,
 				5A9A815C1E63CAE100FE62A6 /* SocketsSample */,
+				5AA9EFFF1E835AC200C5E248 /* HubSample */,
 				5A9803531E5FE60E00BFFB0A /* Products */,
 				5AD455E21E5FECC200732962 /* Frameworks */,
 			);
@@ -173,6 +214,7 @@
 				5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */,
 				5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */,
 				5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */,
+				5AA9EFFE1E835AC200C5E248 /* HubSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +263,17 @@
 				5A9A81641E63CAE100FE62A6 /* Info.plist */,
 			);
 			path = SocketsSample;
+			sourceTree = "<group>";
+		};
+		5AA9EFFF1E835AC200C5E248 /* HubSample */ = {
+			isa = PBXGroup;
+			children = (
+				5AA9F0001E835AC200C5E248 /* AppDelegate.swift */,
+				5AA9F0021E835AC200C5E248 /* Assets.xcassets */,
+				5AA9F0041E835AC200C5E248 /* MainMenu.xib */,
+				5AA9F0071E835AC200C5E248 /* Info.plist */,
+			);
+			path = HubSample;
 			sourceTree = "<group>";
 		};
 		5AD455E21E5FECC200732962 /* Frameworks */ = {
@@ -302,6 +355,25 @@
 			productReference = 5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5AA9EFFD1E835AC200C5E248 /* HubSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AA9F00A1E835AC300C5E248 /* Build configuration list for PBXNativeTarget "HubSample" */;
+			buildPhases = (
+				5AA9EFFA1E835AC200C5E248 /* Sources */,
+				5AA9EFFB1E835AC200C5E248 /* Frameworks */,
+				5AA9EFFC1E835AC200C5E248 /* Resources */,
+				5AA9F0111E8381DD00C5E248 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5AA9F0101E8381DD00C5E248 /* PBXTargetDependency */,
+			);
+			name = HubSample;
+			productName = HubSample;
+			productReference = 5AA9EFFE1E835AC200C5E248 /* HubSample.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -325,6 +397,10 @@
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
+					5AA9EFFD1E835AC200C5E248 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 5A98034C1E5FE60E00BFFB0A /* Build configuration list for PBXProject "SignalRClient" */;
@@ -343,6 +419,7 @@
 				5A9803511E5FE60E00BFFB0A /* SignalRClient */,
 				5A98035A1E5FE60E00BFFB0A /* SignalRClientTests */,
 				5A9A815A1E63CAE100FE62A6 /* SocketsSample */,
+				5AA9EFFD1E835AC200C5E248 /* HubSample */,
 			);
 		};
 /* End PBXProject section */
@@ -368,6 +445,15 @@
 			files = (
 				5A9A81601E63CAE100FE62A6 /* Assets.xcassets in Resources */,
 				5A9A81631E63CAE100FE62A6 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AA9EFFC1E835AC200C5E248 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AA9F0031E835AC200C5E248 /* Assets.xcassets in Resources */,
+				5AA9F0061E835AC200C5E248 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +500,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AA9EFFA1E835AC200C5E248 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AA9F0011E835AC200C5E248 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -427,6 +521,11 @@
 			target = 5A9803511E5FE60E00BFFB0A /* SignalRClient */;
 			targetProxy = 5A98035D1E5FE60E00BFFB0A /* PBXContainerItemProxy */;
 		};
+		5AA9F0101E8381DD00C5E248 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A9803511E5FE60E00BFFB0A /* SignalRClient */;
+			targetProxy = 5AA9F00F1E8381DD00C5E248 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -434,6 +533,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				5A9A81621E63CAE100FE62A6 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		5AA9F0041E835AC200C5E248 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AA9F0051E835AC200C5E248 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -658,6 +765,42 @@
 			};
 			name = Release;
 		};
+		5AA9F0081E835AC200C5E248 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = HubSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		5AA9F0091E835AC200C5E248 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = HubSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -696,6 +839,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		5AA9F00A1E835AC300C5E248 /* Build configuration list for PBXNativeTarget "HubSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AA9F0081E835AC200C5E248 /* Debug */,
+				5AA9F0091E835AC200C5E248 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

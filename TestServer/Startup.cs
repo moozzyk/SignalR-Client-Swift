@@ -29,6 +29,7 @@ namespace TestServer
             app.UseSignalR(routes =>
             {
                 routes.MapHub<TestHub>("/testhub");
+                routes.MapHub<ChatHub>("/chat");
             });
 
             app.Run(async (context) =>

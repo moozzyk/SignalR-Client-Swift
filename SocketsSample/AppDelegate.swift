@@ -18,6 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var sendBtn: NSButton!
     @IBOutlet weak var closeBtn: NSButton!
 
+    @IBAction func btnSendClick(_ sender: Any) {
+        @IBOutlet weak var chatTableView: NSTableView!
+    }
     @IBOutlet weak var urlTextField: NSTextField!
     @IBOutlet weak var msgTextField: NSTextField!
     @IBOutlet weak var logTextField: NSTextField!
@@ -43,6 +46,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @IBAction func btnSend(sender: AnyObject) {
+        @IBAction func btnSend(_ sender: Any) {
+        }
         do {
             appendLog(string: "Sending: " + msgTextField.stringValue)
             try echoConnection?.send(data: msgTextField.stringValue.data(using: .utf8)!)
