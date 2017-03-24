@@ -10,7 +10,7 @@ import Cocoa
 import SignalRClient
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate {
 
     @IBOutlet weak var window: NSWindow!
 
@@ -20,8 +20,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var chatHubConnection: HubConnection?
     var chatHubConnectionDelegate: ChatHubConnectionDelegate?
+    var messages: [String] = []
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        chatTableView.delegate = self
+        chatTableView.dataSource = self
+
         sendBtn.isEnabled = false
         msgTextField.isEnabled = false
 
@@ -31,12 +35,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!, query: "")
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args in
-            /*
-            self.chatTableView.beginUpdates()
-            self.chatTableView.insertText("test")
-            self.chatTableView.endUpdates()
-            */
-            
+            self.messages.append("\(args[0]!): \(args[1]!)")
+            self.appendMessage()
+
         })
         chatHubConnection!.start()
     }
@@ -50,13 +51,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         msgTextField.isEnabled = true
     }
 
+    func appendMessage() {
+        self.chatTableView.beginUpdates()
+        let index = IndexSet(integer: self.messages.count - 1)
+        self.chatTableView.insertRows(at: index)
+        self.chatTableView.endUpdates()
+        self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
+    }
+
     @IBAction func btnSend(sender: AnyObject) {
         let message = msgTextField.stringValue
         if msgTextField.stringValue != "" {
             chatHubConnection?.invoke(method: "Broadcast", arguments: ["Swift", message], invocationDidComplete: {error in
-                // TODO: print error
+                if error != nil {
+                    self.messages.append("Error: \(error)")
+                    self.appendMessage()
+                }
             })
+            msgTextField.stringValue = ""
         }
+    }
+
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return messages.count
+    }
+
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        if tableView != chatTableView {
+            return nil
+        }
+
+        if tableColumn == chatTableView.tableColumns[0] {
+
+            if let cellView = tableView.make(withIdentifier: "MessageID", owner: self) as? NSTableCellView {
+                cellView.textField?.stringValue = messages[row]
+                return cellView
+            }
+        }
+
+        return nil
     }
 }
 
