@@ -32,6 +32,8 @@ namespace TestServer
                 routes.MapHub<ChatHub>("/chat");
             });
 
+            app.UseFileServer();
+
             app.Run(async (context) =>
             {
                 if (context.Request.Path.Value.EndsWith("/throw/negotiate"))

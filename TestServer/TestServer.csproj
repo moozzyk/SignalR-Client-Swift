@@ -12,6 +12,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.2.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.2.0-*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.2.0-*" />
   </ItemGroup>
 
+ <Target Name="CopyClient" BeforeTargets="AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\signalr-client\dist\browser\signalr-client.js"
+          DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
+  </Target>
 </Project>
