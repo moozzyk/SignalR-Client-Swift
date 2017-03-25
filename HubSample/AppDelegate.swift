@@ -18,6 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     @IBOutlet weak var msgTextField: NSTextField!
     @IBOutlet weak var chatTableView: NSTableView!
 
+    private let dispatchQueue = DispatchQueue(label: "hubsample.queue.dispatcheueuq")
+
     var chatHubConnection: HubConnection?
     var chatHubConnectionDelegate: ChatHubConnectionDelegate?
     var messages: [String] = []
@@ -35,7 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!, query: "")
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args in
-            self.messages.append("\(args[0]!): \(args[1]!)")
+            self.dispatchQueue.sync {
+                self.messages.append("\(args[0]!): \(args[1]!)")
+            }
             self.appendMessage()
 
         })
@@ -53,7 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     func appendMessage() {
         self.chatTableView.beginUpdates()
-        let index = IndexSet(integer: self.messages.count - 1)
+        let index = IndexSet(integer: self.chatTableView.numberOfRows)
         self.chatTableView.insertRows(at: index)
         self.chatTableView.endUpdates()
         self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
@@ -73,7 +77,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return messages.count
+        var count = -1
+        dispatchQueue.sync {
+            count = self.messages.count
+        }
+        return count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
