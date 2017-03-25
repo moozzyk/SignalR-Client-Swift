@@ -37,10 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!, query: "")
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args in
-            self.dispatchQueue.sync {
-                self.messages.append("\(args[0]!): \(args[1]!)")
-            }
-            self.appendMessage()
+            self.appendMessage(message: "\(args[0]!): \(args[1]!)")
 
         })
         chatHubConnection!.start()
@@ -51,27 +48,52 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     }
 
     func connectionDidStart() {
-        sendBtn.isEnabled = true
-        msgTextField.isEnabled = true
+        toggleUI(isEnabled: true)
     }
 
-    func appendMessage() {
-        self.chatTableView.beginUpdates()
-        let index = IndexSet(integer: self.chatTableView.numberOfRows)
-        self.chatTableView.insertRows(at: index)
-        self.chatTableView.endUpdates()
-        self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
+    func connectionDidFailToOpen(error: Error)
+    {
+        appendMessage(message: "Connection failed to start. Error \(error)")
+        toggleUI(isEnabled: false)
+    }
+
+    func connectionDidClose(error: Error?) {
+        var message = "Connection closed."
+        if error != nil {
+            message.append(" Error: \(error)")
+        }
+        appendMessage(message: message)
+        toggleUI(isEnabled: false)
+    }
+
+    func toggleUI(isEnabled: Bool) {
+        sendBtn.isEnabled = isEnabled
+        msgTextField.isEnabled = isEnabled
+    }
+
+    func appendMessage(message: String) {
+        self.dispatchQueue.sync {
+            self.messages.append(message)
+        }
+
+        DispatchQueue.main.async {
+            self.chatTableView.beginUpdates()
+            let index = IndexSet(integer: self.chatTableView.numberOfRows)
+            self.chatTableView.insertRows(at: index)
+            self.chatTableView.endUpdates()
+            self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
+        }
     }
 
     @IBAction func btnSend(sender: AnyObject) {
         let message = msgTextField.stringValue
         if msgTextField.stringValue != "" {
-            chatHubConnection?.invoke(method: "Broadcast", arguments: ["Swift", message], invocationDidComplete: {error in
-                if error != nil {
-                    self.messages.append("Error: \(error)")
-                    self.appendMessage()
-                }
-            })
+            chatHubConnection?.invoke(method: "Broadcast", arguments: ["Swift", message], invocationDidComplete:
+                {error in
+                    if error != nil {
+                        self.appendMessage(message: "Error: \(error)")
+                    }
+                })
             msgTextField.stringValue = ""
         }
     }
@@ -113,9 +135,11 @@ class ChatHubConnectionDelegate: HubConnectionDelegate {
     }
 
     func connectionDidFailToOpen(error: Error) {
+        app?.connectionDidFailToOpen(error: error)
     }
 
     func connectionDidClose(error: Error?) {
+        app?.connectionDidClose(error: error)
     }
 }
 

@@ -81,7 +81,7 @@ public class Connection: SocketConnection {
 
     private func failOpenWithError(error: Error) {
         _ = self.changeState(from: nil, to: State.stopped)
-        delegate?.connectionDidFailToOpen(error: SignalRError.invalidState)
+        delegate?.connectionDidFailToOpen(error: error)
     }
 
     public func send(data: Data) throws {
