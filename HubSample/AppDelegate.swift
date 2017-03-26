@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     var chatHubConnection: HubConnection?
     var chatHubConnectionDelegate: ChatHubConnectionDelegate?
+    var name = ""
     var messages: [String] = []
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -30,6 +31,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
         sendBtn.isEnabled = false
         msgTextField.isEnabled = false
+
+        name = getName()
 
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
 
@@ -41,6 +44,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
         })
         chatHubConnection!.start()
+    }
+
+    func getName() -> String {
+        let alert = NSAlert()
+        alert.messageText = "Enter your Name"
+        alert.addButton(withTitle: "OK")
+
+        let textField = NSTextField(string: nil)
+        textField.placeholderString = "Name"
+        textField.setFrameSize(NSSize(width: 250, height: textField.frame.height))
+
+        alert.accessoryView = textField
+
+        alert.runModal()
+
+        return textField.stringValue
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -88,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     @IBAction func btnSend(sender: AnyObject) {
         let message = msgTextField.stringValue
         if msgTextField.stringValue != "" {
-            chatHubConnection?.invoke(method: "Broadcast", arguments: ["Swift", message], invocationDidComplete:
+            chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message], invocationDidComplete:
                 {error in
                     if error != nil {
                         self.appendMessage(message: "Error: \(error)")
