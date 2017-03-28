@@ -32,8 +32,8 @@ public class HubConnection {
         self.connection.delegate = socketConnectionDelegate
     }
 
-    public func start() {
-        connection.start()
+    public func start(transport: Transport? = nil) {
+        connection.start(transport: transport)
     }
 
     public func stop() {

@@ -10,7 +10,7 @@ import Foundation
 
 public protocol SocketConnection {
     var delegate: SocketConnectionDelegate! {get set}
-    func start() -> Void
+    func start(transport: Transport?) -> Void
     func send(data: Data) throws -> Void
     func stop() -> Void
 }

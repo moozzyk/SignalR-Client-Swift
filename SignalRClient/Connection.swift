@@ -37,16 +37,15 @@ public class Connection: SocketConnection {
         self.init(url: url, query: "")
     }
 
-    public func start() {
+    public func start(transport: Transport? = nil) {
 
         if !changeState(from: State.initial, to: State.connecting) {
             failOpenWithError(error: SignalRError.invalidState)
             return;
         }
 
-        // TODO: allow passing transport
-        transport = WebsocketsTransport()
-        transport!.delegate = self
+        self.transport = transport ?? WebsocketsTransport()
+        self.transport!.delegate = self
 
         let httpClient = DefaultHttpClient()
 

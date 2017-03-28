@@ -340,7 +340,7 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 
 class TestSocketConnection: SocketConnection {
     var delegate: SocketConnectionDelegate!
-    func start() -> Void {
+    func start(transport: Transport? = nil) -> Void {
         delegate?.connectionDidOpen(connection: self)
     }
 
