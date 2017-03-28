@@ -9,9 +9,9 @@
 import Foundation
 import SocketRocket
 
-public class WebsocketsTransport: NSObject, SRWebSocketDelegate {
+public class WebsocketsTransport: NSObject, Transport, SRWebSocketDelegate {
     var webSocket: SRWebSocket? = nil
-    weak var delegate: TransportDelegate? = nil
+    public weak var delegate: TransportDelegate! = nil
 
     public func start(url:URL, query: String) {
         var queryComponents = URLComponents(url: url.appendingPathComponent("ws"), resolvingAgainstBaseURL: false)!

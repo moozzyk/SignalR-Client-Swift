@@ -40,6 +40,7 @@
 		5AA9F00E1E8381DD00C5E248 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5AA9F0121E8381E100C5E248 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5AA9F0131E8381E100C5E248 /* SocketRocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC1AE391E89E737006262B3 /* Transport.swift */; };
 		5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */; };
 		5AD455E41E5FECC300732962 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
@@ -150,6 +151,7 @@
 		5AA9F0021E835AC200C5E248 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5AA9F0051E835AC200C5E248 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5AA9F0071E835AC200C5E248 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AC1AE391E89E737006262B3 /* Transport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		5AD455E31E5FECC300732962 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				5A4F86C41E71A54900D9A13F /* SignalRError.swift */,
 				5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */,
 				5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */,
+				5AC1AE391E89E737006262B3 /* Transport.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				5A73DFF51E6E5116007F3913 /* InvocationDescriptor.swift in Sources */,
 				5A341EBA1E7D94B300F6D41D /* InvocationSerializer.swift in Sources */,
 				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
+				5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */,
 				5A73DFF91E6E92FA007F3913 /* JSONInvocationSerializer.swift in Sources */,
 				5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */,
 				5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */,
@@ -847,6 +851,7 @@
 				5AA9F0091E835AC200C5E248 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

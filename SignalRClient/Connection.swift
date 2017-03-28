@@ -10,12 +10,11 @@ import Foundation
 
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
-    private var transportDelegate: TransportDelegate?
 
     private var state: State
     private let url: URL
     private var query: String
-    private var transport: WebsocketsTransport?
+    private var transport: Transport?
 
     public weak var delegate: SocketConnectionDelegate!
 
@@ -45,10 +44,9 @@ public class Connection: SocketConnection {
             return;
         }
 
-        // TODO: introduce transport protocol and default to Websockets transport instead of hardcoding it
-        transportDelegate = ConnectionTransportDelegate(connection: self)
+        // TODO: allow passing transport
         transport = WebsocketsTransport()
-        transport!.delegate = transportDelegate
+        transport!.delegate = self
 
         let httpClient = DefaultHttpClient()
 
@@ -105,36 +103,18 @@ public class Connection: SocketConnection {
 
         return result
     }
+}
 
-    fileprivate func transportDidOpen() {
+extension Connection: TransportDelegate {
+    public func transportDidOpen() {
         delegate?.connectionDidOpen(connection: self)
     }
 
-    fileprivate func transportDidReceiveData(_ data: Data) {
+    public func transportDidReceiveData(_ data: Data) {
         delegate?.connectionDidReceiveData(connection: self, data: data)
     }
 
-    fileprivate func transportDidClose(_ error: Error?) {
-        delegate?.connectionDidClose(error: error)
-    }
-}
-
-public class ConnectionTransportDelegate: TransportDelegate {
-    private weak var connection: Connection?
-
-    fileprivate init(connection: Connection!) {
-        self.connection = connection
-    }
-
-    public func transportDidOpen() {
-        connection?.transportDidOpen()
-    }
-
-    public func transportDidReceiveData(_ data: Data) {
-        connection?.transportDidReceiveData(data)
-    }
-
     public func transportDidClose(_ error: Error?) {
-        connection?.transportDidClose(error)
+        delegate?.connectionDidClose(error: error)
     }
 }

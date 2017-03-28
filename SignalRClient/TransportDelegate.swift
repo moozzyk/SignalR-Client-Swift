@@ -10,7 +10,6 @@ import Foundation
 
 public protocol TransportDelegate: class {
     func transportDidOpen() -> Void
-    // TODO: needs message type?
     func transportDidReceiveData(_ data: Data) -> Void
     func transportDidClose(_ error: Error?) -> Void
 }
