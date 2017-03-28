@@ -10,6 +10,7 @@ import Foundation
 
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
+    private var transportDelegate: TransportDelegate?
 
     private var state: State
     private let url: URL
@@ -45,7 +46,8 @@ public class Connection: SocketConnection {
         }
 
         self.transport = transport ?? WebsocketsTransport()
-        self.transport!.delegate = self
+        transportDelegate = ConnectionTransportDelegate(connection: self)
+        self.transport!.delegate = transportDelegate
 
         let httpClient = DefaultHttpClient()
 
@@ -102,18 +104,36 @@ public class Connection: SocketConnection {
 
         return result
     }
-}
 
-extension Connection: TransportDelegate {
-    public func transportDidOpen() {
+    fileprivate func transportDidOpen() {
         delegate?.connectionDidOpen(connection: self)
     }
 
-    public func transportDidReceiveData(_ data: Data) {
+    fileprivate func transportDidReceiveData(_ data: Data) {
         delegate?.connectionDidReceiveData(connection: self, data: data)
     }
 
-    public func transportDidClose(_ error: Error?) {
+    fileprivate func transportDidClose(_ error: Error?) {
         delegate?.connectionDidClose(error: error)
+    }
+}
+
+public class ConnectionTransportDelegate: TransportDelegate {
+    private weak var connection: Connection?
+
+    fileprivate init(connection: Connection!) {
+        self.connection = connection
+    }
+
+    public func transportDidOpen() {
+        connection?.transportDidOpen()
+    }
+
+    public func transportDidReceiveData(_ data: Data) {
+        connection?.transportDidReceiveData(data)
+    }
+
+    public func transportDidClose(_ error: Error?) {
+        connection?.transportDidClose(error)
     }
 }
