@@ -95,8 +95,7 @@ class JSONTypeConverterTests: XCTestCase {
             XCTAssert(false)
 
         } catch SignalRError.unsupportedType {
-        }
-        catch {
+        } catch {
             XCTAssert(false)
         }
     }

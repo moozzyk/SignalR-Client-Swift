@@ -51,8 +51,7 @@ class WebsocketsTransportTests: XCTestCase {
             do {
                 try wsTransport.send(data: message.data(using: .utf8)!)
                 didOpenExpectation.fulfill()
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }

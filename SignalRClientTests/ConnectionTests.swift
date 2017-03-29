@@ -55,8 +55,7 @@ class ConnectionTests: XCTestCase {
             do {
                 try connection.send(data: message.data(using: .utf8)!)
                 didOpenExpectation.fulfill()
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -136,10 +135,68 @@ class ConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testThatSendThrowsIfInvokedBeforeStartingConnection() {
+        let connection = Connection(url: URL(string: "http://fakeuri.org")!)
+
+        XCTAssertThrowsError(try connection.send(data: "".data(using: .utf8)!), "", { error in
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
+        })
+    }
+
+    func testThatSendThrowsIfInvokedAfterConnectionFailedToStart() {
+        let sendFailedExpectation = expectation(description: "send failed")
+        let connection = Connection(url: URL(string: "http://localhost:5000/throw")!)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            do {
+                try connection.send(data: "".data(using: .utf8)!)
+            } catch SignalRError.invalidState {
+                sendFailedExpectation.fulfill()
+            } catch {
+                print(error)
+            }
         }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatSendThrowsIfInvokedAfterConnectionClosed() {
+        let sendFailedExpectation = expectation(description: "send failed")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        let testTransport = TestTransport()
+        let connectionDelegate = TestConnectionDelegate()
+
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            testTransport.delegate.transportDidClose(nil)
+        }
+
+        connectionDelegate.connectionDidCloseHandler = { error in
+            do {
+                try connection.send(data: "".data(using: .utf8)!)
+            } catch SignalRError.invalidState {
+                sendFailedExpectation.fulfill()
+            } catch {
+                print(error)
+            }
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start(transport: testTransport)
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatSendThrowsIfInvokedAfterConnectionStopped() {
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        connection.start()
+        connection.stop()
+
+        XCTAssertThrowsError(try connection.send(data: "".data(using: .utf8)!), "", { error in
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
+        })
     }
 }

@@ -32,6 +32,7 @@ public class Connection: SocketConnection {
         self.url = url
         self.state = State.initial
         self.query  = (query ?? "").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
 
     convenience init(url: URL) {
@@ -39,15 +40,10 @@ public class Connection: SocketConnection {
     }
 
     public func start(transport: Transport? = nil) {
-
         if !changeState(from: State.initial, to: State.connecting) {
             failOpenWithError(error: SignalRError.invalidState)
             return;
         }
-
-        self.transport = transport ?? WebsocketsTransport()
-        transportDelegate = ConnectionTransportDelegate(connection: self)
-        self.transport!.delegate = transportDelegate
 
         let httpClient = DefaultHttpClient()
 
@@ -67,7 +63,12 @@ public class Connection: SocketConnection {
                 if self.query != "" {
                     self.query += "&"
                 }
+
+                // TODO: verify if contents is valid id/characters?
                 self.query += "id=\(contents)"
+
+                self.transport = transport ?? WebsocketsTransport()
+                self.transport!.delegate = self.transportDelegate
 
                 self.transport!.start(url: self.url, query: self.query)
             }
@@ -84,12 +85,28 @@ public class Connection: SocketConnection {
     }
 
     public func send(data: Data) throws {
-        // TODO: don't allow to send if the connection is not running
+        if state != State.connected {
+            throw SignalRError.invalidState
+        }
         try transport!.send(data: data)
     }
 
     public func stop() {
         transport?.close()
+    }
+
+    fileprivate func transportDidOpen() {
+        _ = self.changeState(from: nil, to: State.connected)
+        delegate?.connectionDidOpen(connection: self)
+    }
+
+    fileprivate func transportDidReceiveData(_ data: Data) {
+        delegate?.connectionDidReceiveData(connection: self, data: data)
+    }
+
+    fileprivate func transportDidClose(_ error: Error?) {
+        _ = self.changeState(from: nil, to: State.stopped)
+        delegate?.connectionDidClose(error: error)
     }
 
     private func changeState(from: State?, to: State!) -> Bool {
@@ -103,18 +120,6 @@ public class Connection: SocketConnection {
         }
 
         return result
-    }
-
-    fileprivate func transportDidOpen() {
-        delegate?.connectionDidOpen(connection: self)
-    }
-
-    fileprivate func transportDidReceiveData(_ data: Data) {
-        delegate?.connectionDidReceiveData(connection: self, data: data)
-    }
-
-    fileprivate func transportDidClose(_ error: Error?) {
-        delegate?.connectionDidClose(error: error)
     }
 }
 

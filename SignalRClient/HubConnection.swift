@@ -70,8 +70,7 @@ public class HubConnection {
 
             do {
                 try invocationDidComplete(invocationResult!.getResult(type: T.self), nil);
-            }
-            catch {
+            } catch {
                 invocationDidComplete(nil, error)
             }
         };
@@ -87,8 +86,7 @@ public class HubConnection {
         do {
             let invocationData = try invocationSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
             try connection.send(data: invocationData)
-        }
-        catch {
+        } catch {
             hubConnectionQueue.sync {
                 _ = pendingCalls.removeValue(forKey: id)
             }
@@ -131,8 +129,7 @@ public class HubConnection {
             default:
                 print("Unexpected type")
             }
-        }
-        catch {
+        } catch {
             print(error)
         }
     }

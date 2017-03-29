@@ -52,8 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             appendLog(string: "Sending: " + msgTextField.stringValue)
             try echoConnection?.send(data: msgTextField.stringValue.data(using: .utf8)!)
             msgTextField.stringValue = ""
-        }
-        catch {
+        } catch {
             // TODO: Add to log
             print(error)
         }
