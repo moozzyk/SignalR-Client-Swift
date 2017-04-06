@@ -10,6 +10,7 @@ import Foundation
 
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
+
     private var transportDelegate: TransportDelegate?
 
     private var state: State
@@ -23,7 +24,6 @@ public class Connection: SocketConnection {
         case initial
         case connecting
         case connected
-        case stopping
         case stopped
     }
 
@@ -40,8 +40,8 @@ public class Connection: SocketConnection {
     }
 
     public func start(transport: Transport? = nil) {
-        if !changeState(from: State.initial, to: State.connecting) {
-            failOpenWithError(error: SignalRError.invalidState)
+        if changeState(from: State.initial, to: State.connecting) == nil {
+            failOpenWithError(error: SignalRError.invalidState, changeState: false)
             return;
         }
 
@@ -50,10 +50,10 @@ public class Connection: SocketConnection {
         var negotiateUrlComponents = URLComponents(url: url.appendingPathComponent("negotiate"), resolvingAgainstBaseURL: false)!
         negotiateUrlComponents.percentEncodedQuery = query
 
-        httpClient.get(url:negotiateUrlComponents.url!, completionHandler: {(httpResponse, error) in
+        httpClient.get(url:negotiateUrlComponents.url!) {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
-                self.failOpenWithError(error: error!)
+                self.failOpenWithError(error: error!, changeState: true)
                 return
             }
 
@@ -74,13 +74,16 @@ public class Connection: SocketConnection {
             }
             else {
                 print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(httpResponse!.contents)")
-                self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse!.statusCode))
+                self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse!.statusCode), changeState: true)
             }
-        })
+        }
     }
 
-    private func failOpenWithError(error: Error) {
-        _ = self.changeState(from: nil, to: State.stopped)
+    private func failOpenWithError(error: Error, changeState: Bool) {
+        if changeState {
+            _ = self.changeState(from: nil, to: State.stopped)
+        }
+
         delegate?.connectionDidFailToOpen(error: error)
     }
 
@@ -92,11 +95,19 @@ public class Connection: SocketConnection {
     }
 
     public func stop() {
+        let previousState = self.changeState(from: nil, to: State.stopped)
+        if previousState == State.initial || previousState == State.stopped {
+            return
+        }
+
         transport?.close()
     }
 
     fileprivate func transportDidOpen() {
-        _ = self.changeState(from: nil, to: State.connected)
+        let previousState = self.changeState(from: nil, to: State.connected)
+
+        assert(previousState == State.connecting)
+
         delegate?.connectionDidOpen(connection: self)
     }
 
@@ -109,17 +120,17 @@ public class Connection: SocketConnection {
         delegate?.connectionDidClose(error: error)
     }
 
-    private func changeState(from: State?, to: State!) -> Bool {
-        var result = false
+    private func changeState(from: State?, to: State!) -> State? {
+        var previousState: State? = nil
 
         connectionQueue.sync {
             if from == nil || from == state {
+                previousState = state
                 state = to
-                result = true
             }
         }
 
-        return result
+        return previousState
     }
 }
 

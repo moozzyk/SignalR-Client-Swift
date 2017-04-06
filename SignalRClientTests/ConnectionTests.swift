@@ -97,8 +97,8 @@ class ConnectionTests: XCTestCase {
 
         let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
         connection.delegate = connectionDelegate
-        connection.start();
-        connection.start();
+        connection.start()
+        connection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -114,7 +114,7 @@ class ConnectionTests: XCTestCase {
 
         let connection = Connection(url: URL(string: "http://localhost:1000/echo")!)
         connection.delegate = connectionDelegate
-        connection.start();
+        connection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -130,7 +130,7 @@ class ConnectionTests: XCTestCase {
 
         let connection = Connection(url: URL(string: "http://localhost:5000/throw")!)
         connection.delegate = connectionDelegate
-        connection.start();
+        connection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -198,5 +198,81 @@ class ConnectionTests: XCTestCase {
         XCTAssertThrowsError(try connection.send(data: "".data(using: .utf8)!), "", { error in
             XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
         })
+    }
+
+    func testThatCantStartConnectionAfterItWasStopped() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didCloseExpectation = expectation(description: "connection closed")
+        let didFailToOpen = expectation(description: "connection failed to open")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            didOpenExpectation.fulfill()
+            connection.stop()
+        }
+        connectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+            XCTAssertNil(error)
+            connection.start()
+        }
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpen.fulfill()
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatCantStartConnectionThatIsStarting() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didFailToOpen = expectation(description: "connection failed to open")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            didOpenExpectation.fulfill()
+            connection.stop()
+        }
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpen.fulfill()
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+        connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatCantStartConnectionThatIsAlreadyRunning() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didCloseExpectation = expectation(description: "connection closed")
+        let didFailToOpen = expectation(description: "connection failed to open")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            didOpenExpectation.fulfill()
+            connection.start(transport: nil)
+        }
+        connectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+            XCTAssertNil(error)
+        }
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpen.fulfill()
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
+            connection.stop()
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 }
