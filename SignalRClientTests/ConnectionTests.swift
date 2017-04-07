@@ -52,12 +52,13 @@ class ConnectionTests: XCTestCase {
         let message = "Hello, World!"
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
-            do {
-                try connection.send(data: message.data(using: .utf8)!)
-                didOpenExpectation.fulfill()
-            } catch {
-                print(error)
+
+            connection.send(data: message.data(using: .utf8)!) { error in
+                if let e = error {
+                    print(e)
+                }
             }
+            didOpenExpectation.fulfill()
         }
 
         connectionDelegate.connectionDidReceiveDataHandler = { connection, data in
@@ -136,11 +137,16 @@ class ConnectionTests: XCTestCase {
     }
 
     func testThatSendThrowsIfInvokedBeforeStartingConnection() {
+        let sendFailedExpectation = expectation(description: "send fails expectation")
         let connection = Connection(url: URL(string: "http://fakeuri.org")!)
 
-        XCTAssertThrowsError(try connection.send(data: "".data(using: .utf8)!), "", { error in
-            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
-        })
+        connection.send(data: "".data(using: .utf8)!) { error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual(String(describing: error!), String(describing: SignalRError.invalidState))
+            sendFailedExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     func testThatSendThrowsIfInvokedAfterConnectionFailedToStart() {
@@ -148,14 +154,12 @@ class ConnectionTests: XCTestCase {
         let connection = Connection(url: URL(string: "http://localhost:5000/throw")!)
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
-            do {
-                try connection.send(data: "".data(using: .utf8)!)
-            } catch SignalRError.invalidState {
-                sendFailedExpectation.fulfill()
-            } catch {
-                print(error)
+                connection.send(data: "".data(using: .utf8)!) { sendError in
+                    XCTAssertNotNil(sendError)
+                    XCTAssertEqual(String(describing: sendError!), String(describing: SignalRError.invalidState))
+                    sendFailedExpectation.fulfill()
+                }
             }
-        }
 
         connection.delegate = connectionDelegate
         connection.start()
@@ -175,12 +179,10 @@ class ConnectionTests: XCTestCase {
         }
 
         connectionDelegate.connectionDidCloseHandler = { error in
-            do {
-                try connection.send(data: "".data(using: .utf8)!)
-            } catch SignalRError.invalidState {
+            connection.send(data: "".data(using: .utf8)!) { sendError in
+                XCTAssertNotNil(sendError)
+                XCTAssertEqual(String(describing: sendError!), String(describing: SignalRError.invalidState))
                 sendFailedExpectation.fulfill()
-            } catch {
-                print(error)
             }
         }
 
@@ -191,13 +193,19 @@ class ConnectionTests: XCTestCase {
     }
 
     func testThatSendThrowsIfInvokedAfterConnectionStopped() {
+        let sendFailedExpectation = expectation(description: "send failed")
+
         let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
         connection.start()
         connection.stop()
 
-        XCTAssertThrowsError(try connection.send(data: "".data(using: .utf8)!), "", { error in
-            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidState))
-        })
+        connection.send(data: "".data(using: .utf8)!) { sendError in
+            XCTAssertNotNil(sendError)
+            XCTAssertEqual(String(describing: sendError!), String(describing: SignalRError.invalidState))
+            sendFailedExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     func testThatCantStartConnectionAfterItWasStopped() {

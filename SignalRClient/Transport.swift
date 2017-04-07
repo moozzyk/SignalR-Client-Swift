@@ -11,6 +11,6 @@ import Foundation
 public protocol Transport: class {
     var delegate: TransportDelegate! {get set}
     func start(url:URL, query: String) -> Void
-    func send(data: Data) throws -> Void
+    func send(data: Data, sendDidComplete: (_ error:Error?) -> Void)
     func close() -> Void
 }

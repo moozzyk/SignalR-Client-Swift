@@ -27,7 +27,7 @@ public class Connection: SocketConnection {
         case stopped
     }
 
-    init(url: URL, query: String?) {
+    public init(url: URL, query: String?) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         self.url = url
         self.state = State.initial
@@ -35,7 +35,7 @@ public class Connection: SocketConnection {
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
 
-    convenience init(url: URL) {
+    public convenience init(url: URL) {
         self.init(url: url, query: "")
     }
 
@@ -87,11 +87,12 @@ public class Connection: SocketConnection {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
-    public func send(data: Data) throws {
+    public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
         if state != State.connected {
-            throw SignalRError.invalidState
+            sendDidComplete(SignalRError.invalidState)
+            return
         }
-        try transport!.send(data: data)
+        transport!.send(data: data, sendDidComplete: sendDidComplete)
     }
 
     public func stop() {

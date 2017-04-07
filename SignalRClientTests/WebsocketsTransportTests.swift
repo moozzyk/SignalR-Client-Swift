@@ -48,12 +48,13 @@ class WebsocketsTransportTests: XCTestCase {
         let message = "Hello, World!"
 
         transportDelegate.transportDidOpenHandler = {
-            do {
-                try wsTransport.send(data: message.data(using: .utf8)!)
-                didOpenExpectation.fulfill()
-            } catch {
-                print(error)
+
+            wsTransport.send(data: message.data(using: .utf8)!) { error in
+                if let e = error {
+                    print(e)
+                }
             }
+            didOpenExpectation.fulfill()
         }
 
         transportDelegate.transportDidReceiveDataHandler = { data in

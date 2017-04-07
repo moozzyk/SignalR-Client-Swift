@@ -22,8 +22,13 @@ public class WebsocketsTransport: NSObject, Transport, SRWebSocketDelegate {
     }
 
     // TODO: message type?
-    public func send(data: Data) throws {
-        try webSocket?.send(data: data)
+    public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
+        do {
+            try webSocket?.send(data: data)
+            sendDidComplete(nil)
+        } catch {
+            sendDidComplete(error)
+        }
     }
 
     public func close() {

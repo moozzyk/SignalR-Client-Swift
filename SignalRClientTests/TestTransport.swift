@@ -17,7 +17,7 @@ class TestTransport: Transport {
         delegate?.transportDidOpen()
     }
 
-    func send(data: Data) throws -> Void {
+    func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
     }
 
     func close() -> Void {

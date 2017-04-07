@@ -85,14 +85,22 @@ public class HubConnection {
 
         do {
             let invocationData = try invocationSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
-            try connection.send(data: invocationData)
-        } catch {
-            hubConnectionQueue.sync {
-                _ = pendingCalls.removeValue(forKey: id)
+            connection.send(data: invocationData) { error in
+                if let e = error {
+                    failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: invocationId, error: e)
+                }
             }
-
-            invocationDidComplete(nil, error)
+        } catch {
+            failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: invocationId, error: error)
         }
+    }
+
+    fileprivate func failInvocationWithError<T>(invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void, invocationId: Int, error: Error) {
+        hubConnectionQueue.sync {
+            _ = pendingCalls.removeValue(forKey: invocationId)
+        }
+
+        invocationDidComplete(nil, error)
     }
 
     fileprivate func hubConnectionDidReceiveData(data: Data) {

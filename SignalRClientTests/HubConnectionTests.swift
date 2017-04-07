@@ -344,7 +344,7 @@ class TestSocketConnection: SocketConnection {
         delegate?.connectionDidOpen(connection: self)
     }
 
-    func send(data: Data) throws -> Void {
+    func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
     }
 
     func stop() -> Void {
