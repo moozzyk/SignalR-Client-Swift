@@ -10,6 +10,7 @@ import Foundation
 
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
+    private let startDispatchGroup: DispatchGroup
 
     private var transportDelegate: TransportDelegate?
 
@@ -29,6 +30,8 @@ public class Connection: SocketConnection {
 
     public init(url: URL, query: String?) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
+        startDispatchGroup = DispatchGroup()
+
         self.url = url
         self.state = State.initial
         self.query  = (query ?? "").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
@@ -45,6 +48,8 @@ public class Connection: SocketConnection {
             return;
         }
 
+        startDispatchGroup.enter()
+
         let httpClient = DefaultHttpClient()
 
         var negotiateUrlComponents = URLComponents(url: url.appendingPathComponent("negotiate"), resolvingAgainstBaseURL: false)!
@@ -53,11 +58,20 @@ public class Connection: SocketConnection {
         httpClient.get(url:negotiateUrlComponents.url!) {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
+                self.startDispatchGroup.leave()
+
                 self.failOpenWithError(error: error!, changeState: true)
                 return
             }
 
             if httpResponse!.statusCode == 200 {
+                // connection is being stopped even though start has not finished yet
+                if (self.state != State.connecting) {
+                    self.startDispatchGroup.leave()
+                    self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+                    return
+                }
+
                 let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
 
                 if self.query != "" {
@@ -73,6 +87,8 @@ public class Connection: SocketConnection {
                 self.transport!.start(url: self.url, query: self.query)
             }
             else {
+                self.startDispatchGroup.leave()
+
                 print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(httpResponse!.contents)")
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse!.statusCode), changeState: true)
             }
@@ -96,18 +112,34 @@ public class Connection: SocketConnection {
     }
 
     public func stop() {
-        let previousState = self.changeState(from: nil, to: State.stopped)
-        if previousState == State.initial || previousState == State.stopped {
+        if state == State.stopped {
             return
         }
 
-        transport?.close()
+        let previousState = self.changeState(from: nil, to: State.stopped)
+        if previousState == State.initial {
+            return
+        }
+
+        connectionQueue.async {
+            self.startDispatchGroup.wait()
+            // the transport can be nil if connection was stopped immediately after starting
+            // in this case we need to call connectionDidClose ourselves
+            if let t = self.transport {
+                t.close()
+            }
+            else {
+                self.delegate?.connectionDidClose(error: nil)
+            }
+        }
     }
 
     fileprivate func transportDidOpen() {
         let previousState = self.changeState(from: nil, to: State.connected)
 
         assert(previousState == State.connecting)
+
+        self.startDispatchGroup.leave()
 
         delegate?.connectionDidOpen(connection: self)
     }
@@ -118,7 +150,15 @@ public class Connection: SocketConnection {
 
     fileprivate func transportDidClose(_ error: Error?) {
         _ = self.changeState(from: nil, to: State.stopped)
-        delegate?.connectionDidClose(error: error)
+
+        connectionQueue.async {
+            // wait in case the transport failed immediately after being started to avoid
+            // calling connectionDidClose before connectionDidOpen
+            self.startDispatchGroup.wait()
+            DispatchQueue.main.async {
+                self.delegate?.connectionDidClose(error: error)
+            }
+        }
     }
 
     private func changeState(from: State?, to: State!) -> State? {

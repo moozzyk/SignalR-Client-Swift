@@ -52,7 +52,6 @@ class ConnectionTests: XCTestCase {
         let message = "Hello, World!"
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
-
             connection.send(data: message.data(using: .utf8)!) { error in
                 if let e = error {
                     print(e)
@@ -208,7 +207,7 @@ class ConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCantStartConnectionAfterItWasStopped() {
+    func testThatCannotStartConnectionAfterItWasStopped() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
         let didFailToOpen = expectation(description: "connection failed to open")
@@ -280,6 +279,53 @@ class ConnectionTests: XCTestCase {
 
         connection.delegate = connectionDelegate
         connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatCanStopConnectionThatIsStarting() {
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+        let connectionDelegate = TestConnectionDelegate()
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.connectionIsBeingClosed))
+        }
+
+        connectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+            XCTAssertNil(error)
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+        connection.stop()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatCanStopConnectionThatFailsNegotiation() {
+        let didFailToOpen = expectation(description: "connection did fail to open")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let connection = Connection(url: URL(string: "httpx://localhost:5000/")!)
+        let connectionDelegate = TestConnectionDelegate()
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpen.fulfill()
+            XCTAssertNotNil(error)
+        }
+
+        connectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+            XCTAssertNil(error)
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
+        connection.stop()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }

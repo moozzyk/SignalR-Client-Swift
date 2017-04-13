@@ -15,4 +15,5 @@ enum SignalRError : Error {
     case hubInvocationCancelled
     case unexpectedMessage
     case unsupportedType
+    case connectionIsBeingClosed
 }
