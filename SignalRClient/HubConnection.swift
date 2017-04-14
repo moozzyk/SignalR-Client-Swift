@@ -114,8 +114,9 @@ public class HubConnection {
                 }
 
                 if callback != nil {
-                    //TODO: dispatch invoking user code to a different thread
-                    callback!(invocationResult, nil)
+                    Util.dispatchToMainThread {
+                        callback!(invocationResult, nil)
+                    }
                 }
                 else {
                     print("Could not find callback with id \(invocationResult.id)")
@@ -128,8 +129,9 @@ public class HubConnection {
                 }
 
                 if callback != nil {
-                    //TODO: dispatch invoking user code to a different thread
-                    callback!(invocationDescriptor.arguments)
+                    Util.dispatchToMainThread {
+                        callback!(invocationDescriptor.arguments)
+                    }
                 }
                 else {
                     print("No handler registered for method \(invocationDescriptor.method)")
@@ -147,7 +149,7 @@ public class HubConnection {
         let invocationError = error ?? SignalRError.hubInvocationCancelled
         hubConnectionQueue.sync {
             for callback in pendingCalls.values {
-                hubConnectionQueue.async {
+                Util.dispatchToMainThread {
                     callback(nil, invocationError)
                 }
             }
@@ -158,7 +160,7 @@ public class HubConnection {
     }
 }
 
-public class HubSocketConnectionDelegate : SocketConnectionDelegate {
+fileprivate class HubSocketConnectionDelegate : SocketConnectionDelegate {
     private weak var hubConnection: HubConnection?
 
     fileprivate init(hubConnection: HubConnection!) {

@@ -100,7 +100,9 @@ public class Connection: SocketConnection {
             _ = self.changeState(from: nil, to: State.stopped)
         }
 
-        delegate?.connectionDidFailToOpen(error: error)
+        Util.dispatchToMainThread {
+            self.delegate?.connectionDidFailToOpen(error: error)
+        }
     }
 
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
@@ -129,7 +131,9 @@ public class Connection: SocketConnection {
                 t.close()
             }
             else {
-                self.delegate?.connectionDidClose(error: nil)
+                Util.dispatchToMainThread {
+                    self.delegate?.connectionDidClose(error: nil)
+                }
             }
         }
     }
@@ -141,11 +145,15 @@ public class Connection: SocketConnection {
 
         self.startDispatchGroup.leave()
 
-        delegate?.connectionDidOpen(connection: self)
+        Util.dispatchToMainThread {
+            self.delegate?.connectionDidOpen(connection: self)
+        }
     }
 
     fileprivate func transportDidReceiveData(_ data: Data) {
-        delegate?.connectionDidReceiveData(connection: self, data: data)
+        Util.dispatchToMainThread {
+            self.delegate?.connectionDidReceiveData(connection: self, data: data)
+        }
     }
 
     fileprivate func transportDidClose(_ error: Error?) {
@@ -155,7 +163,7 @@ public class Connection: SocketConnection {
             // wait in case the transport failed immediately after being started to avoid
             // calling connectionDidClose before connectionDidOpen
             self.startDispatchGroup.wait()
-            DispatchQueue.main.async {
+            Util.dispatchToMainThread {
                 self.delegate?.connectionDidClose(error: error)
             }
         }

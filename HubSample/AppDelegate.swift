@@ -95,13 +95,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
             self.messages.append(message)
         }
 
-        DispatchQueue.main.async {
-            self.chatTableView.beginUpdates()
-            let index = IndexSet(integer: self.chatTableView.numberOfRows)
-            self.chatTableView.insertRows(at: index)
-            self.chatTableView.endUpdates()
-            self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
-        }
+        self.chatTableView.beginUpdates()
+        let index = IndexSet(integer: self.chatTableView.numberOfRows)
+        self.chatTableView.insertRows(at: index)
+        self.chatTableView.endUpdates()
+        self.chatTableView.scrollRowToVisible(self.chatTableView.numberOfRows - 1)
     }
 
     @IBAction func btnSend(sender: AnyObject) {
