@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,10 +9,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.2.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.2.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.2.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0-*" />
   </ItemGroup>
 
  <Target Name="CopyClient" BeforeTargets="AfterBuild">

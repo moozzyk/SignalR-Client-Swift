@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "signalr-client": "^0.1.0-preview1-24120"
+    "signalr-client": "^0.1.0-preview2-24898"
   }
 }
