@@ -23,17 +23,18 @@
 <script src="js/signalr-client.js" ></script>
 <script type="text/javascript">
     let name = prompt('Enter your name:', '');
-    let connection = new signalR.HubConnection(`http://${document.location.host}/chat`, 'formatType=json&format=text');
-    connection.on('NewMessage', (sender, message) => {
+    let httpConnection = new signalR.HttpConnection(`http://${document.location.host}/chat`);
+    let hubConnection = new signalR.HubConnection(httpConnection);
+    hubConnection.on('NewMessage', (sender, message) => {
         var child = document.createElement('li');
         child.innerHTML = `<strong>${sender}</strong>:&nbsp;&nbsp;${message}</li>`;
         document.getElementById('discussion').appendChild(child);
     });
 
-    connection.start().then(()=>{
+    hubConnection.start().then(()=>{
         document.getElementById('sendmessage').addEventListener('click', event => {
             let messageTextBox = document.getElementById('message');
-            connection.invoke('Broadcast', name, messageTextBox.value);
+            hubConnection.invoke('Broadcast', name, messageTextBox.value);
             messageTextBox.value = "";
             event.preventDefault();
         });

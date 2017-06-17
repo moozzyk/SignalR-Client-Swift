@@ -25,11 +25,11 @@ namespace TestServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSockets(options => options.MapEndpoint<EchoEndPoint>("/echo"));
-            app.UseSignalR(routes =>
+            app.UseSockets(options => options.MapEndPoint<EchoEndPoint>("echo"));
+            app.UseSignalR(options =>
             {
-                routes.MapHub<TestHub>("/testhub");
-                routes.MapHub<ChatHub>("/chat");
+                options.MapHub<TestHub>("testhub");
+                options.MapHub<ChatHub>("chat");
             });
 
             app.UseFileServer();
