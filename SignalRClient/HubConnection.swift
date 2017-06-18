@@ -20,8 +20,8 @@ public class HubConnection {
     private var invocationSerializer: InvocationSerializer!
     public weak var delegate: HubConnectionDelegate!
 
-    public convenience init(url: URL, query: String = "", invocationSerializer: InvocationSerializer? = nil) {
-        self.init(connection: Connection(url: url, query: query), invocationSerializer: invocationSerializer)
+    public convenience init(url: URL, invocationSerializer: InvocationSerializer? = nil) {
+        self.init(connection: Connection(url: url), invocationSerializer: invocationSerializer)
     }
 
     public init(connection: SocketConnection!, invocationSerializer: InvocationSerializer? = nil) {

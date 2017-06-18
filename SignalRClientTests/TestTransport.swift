@@ -13,7 +13,7 @@ class TestTransport: Transport {
 
     weak var delegate: TransportDelegate!
 
-    func start(url:URL, query: String) -> Void {
+    func start(url:URL) -> Void {
         delegate?.transportDidOpen()
     }
 

@@ -10,7 +10,7 @@ import Foundation
 
 public protocol Transport: class {
     var delegate: TransportDelegate! {get set}
-    func start(url:URL, query: String) -> Void
+    func start(url:URL) -> Void
     func send(data: Data, sendDidComplete: (_ error:Error?) -> Void)
     func close() -> Void
 }

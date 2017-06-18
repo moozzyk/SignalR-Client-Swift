@@ -44,7 +44,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -72,7 +72,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -110,7 +110,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -181,7 +181,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json")
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetNumber", callback: { args in
             XCTAssertNotNil(args)
@@ -266,6 +266,10 @@ class HubConnectionTests: XCTestCase {
     }
 
     func testThatHubMethodUsingComplexTypesCanBeInvoked() {
+        // TODO: needs to be fixed
+        XCTAssertFalse(true)
+        return
+
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -305,7 +309,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let invocationSerializer = JSONInvocationSerializer(typeConverter: PersonTypeConverter())
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, query: "formatType=json", invocationSerializer: invocationSerializer)
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, invocationSerializer: invocationSerializer)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 

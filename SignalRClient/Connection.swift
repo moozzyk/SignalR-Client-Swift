@@ -15,8 +15,7 @@ public class Connection: SocketConnection {
     private var transportDelegate: TransportDelegate?
 
     private var state: State
-    private let url: URL
-    private var query: String
+    private var url: URL
     private var transport: Transport?
 
     public weak var delegate: SocketConnectionDelegate!
@@ -28,18 +27,13 @@ public class Connection: SocketConnection {
         case stopped
     }
 
-    public init(url: URL, query: String?) {
+    public init(url: URL) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
         self.url = url
         self.state = State.initial
-        self.query  = (query ?? "").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
-    }
-
-    public convenience init(url: URL) {
-        self.init(url: url, query: "")
     }
 
     public func start(transport: Transport? = nil) {
@@ -52,10 +46,7 @@ public class Connection: SocketConnection {
 
         let httpClient = DefaultHttpClient()
 
-        var negotiateUrlComponents = URLComponents(url: url.appendingPathComponent("negotiate"), resolvingAgainstBaseURL: false)!
-        negotiateUrlComponents.percentEncodedQuery = query
-
-        httpClient.get(url:negotiateUrlComponents.url!) {(httpResponse, error) in
+        httpClient.options(url: self.url) {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
                 self.startDispatchGroup.leave()
@@ -72,19 +63,19 @@ public class Connection: SocketConnection {
                     return
                 }
 
-                let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
+                // TODO: parse negotiate response to get connection id and transports
+                // let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
+                let connectionId = ""
 
-                if self.query != "" {
-                    self.query += "&"
-                }
-
-                // TODO: verify if contents is valid id/characters?
-                self.query += "id=\(contents)"
+                let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+                var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
+                queryItems.append(URLQueryItem(name: "connectionId", value: connectionId))
+                self.url = urlComponents.url!
 
                 self.transport = transport ?? WebsocketsTransport()
                 self.transport!.delegate = self.transportDelegate
 
-                self.transport!.start(url: self.url, query: self.query)
+                self.transport!.start(url: self.url)
             }
             else {
                 self.startDispatchGroup.leave()
