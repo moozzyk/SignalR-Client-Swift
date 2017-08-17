@@ -9,8 +9,8 @@ namespace TestServer
         {
             while (true)
             {
-                await connectionContext.Transport.Output.WriteAsync(
-                    await connectionContext.Transport.Input.ReadAsync());
+                await connectionContext.Transport.Out.WriteAsync(
+                    await connectionContext.Transport.In.ReadAsync());
             }
         }
     }
