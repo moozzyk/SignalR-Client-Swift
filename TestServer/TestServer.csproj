@@ -17,7 +17,7 @@
   </ItemGroup>
 
  <Target Name="CopyClient" BeforeTargets="AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\signalr-client\dist\browser\signalr-client.js"
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@aspnet\signalr-client\dist\browser\signalr-client.js"
           DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
   </Target>
 </Project>

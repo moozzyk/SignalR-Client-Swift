@@ -14,5 +14,5 @@ launchSettings.json
 *.tmp
 .vscode/
 signalr-client/
-npm_modules
+node_modules/
 TestServer/wwwroot/js/
