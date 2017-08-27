@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@aspnet/signalr-client": "0.1.0-alpha1-26751"
+    "@aspnet/signalr-client": "^0.1.0-alpha1-0"
   }
 }
