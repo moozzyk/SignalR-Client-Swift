@@ -36,6 +36,19 @@ public class HubConnection {
         connection.start(transport: transport)
     }
 
+    fileprivate func connectionStarted() {
+        // TODO: support custom protcols
+        // TODO: add negative test (e.g. invalid protocol)
+        connection.send(data: "{ protocol: \"json\" }".data(using: .utf8)!) { error in
+            if let e = error {
+                delegate.connectionDidFailToOpen(error: e)
+            }
+            else {
+                delegate.connectionDidOpen(hubConnection: self)
+            }
+        }
+    }
+
     public func stop() {
         connection.stop()
     }
@@ -168,7 +181,7 @@ fileprivate class HubSocketConnectionDelegate : SocketConnectionDelegate {
     }
 
     public func connectionDidOpen(connection: SocketConnection!) {
-        hubConnection?.delegate.connectionDidOpen(hubConnection: hubConnection!)
+        hubConnection?.connectionStarted()
     }
 
     public func connectionDidFailToOpen(error: Error) {
