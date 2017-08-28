@@ -11,6 +11,8 @@
 		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A341EBA1E7D94B300F6D41D /* InvocationSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */; };
 		5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C82D1F52A774003EEC55 /* HubProtocol.swift */; };
+		5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */; };
+		5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A73DFE31E63E2CF007F3913 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5A73DFE41E63E2CF007F3913 /* SocketRocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -127,6 +129,8 @@
 		5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		5A341EB91E7D94B300F6D41D /* InvocationSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvocationSerializer.swift; sourceTree = "<group>"; };
 		5A45C82D1F52A774003EEC55 /* HubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocol.swift; sourceTree = "<group>"; };
+		5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocol.swift; sourceTree = "<group>"; };
+		5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocolTests.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 				5AC1AE391E89E737006262B3 /* Transport.swift */,
 				5A01C02B1EA0562D0091082D /* Util.swift */,
 				5A45C82D1F52A774003EEC55 /* HubProtocol.swift */,
+				5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -262,6 +267,7 @@
 				5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */,
 				5AA884F51E80E25400FAF9C4 /* JSONTypeConverterTests.swift */,
 				5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */,
+				5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -483,6 +489,7 @@
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
 				5A73DFF51E6E5116007F3913 /* InvocationDescriptor.swift in Sources */,
 				5A341EBA1E7D94B300F6D41D /* InvocationSerializer.swift in Sources */,
+				5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */,
 				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
 				5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */,
 				5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */,
@@ -501,6 +508,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
+				5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */,
 				5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */,
 				5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */,
 				5AA884F61E80E25400FAF9C4 /* JSONTypeConverterTests.swift in Sources */,

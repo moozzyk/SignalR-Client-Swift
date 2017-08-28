@@ -16,13 +16,13 @@ public enum ProtocolType: Int {
 public protocol HubProtocol {
     var name: String { get }
     var type: ProtocolType { get }
-    func parseMessages(input: Data) -> [HubMessage]
-    func writeMessage(message: HubMessage) -> Data
+    func parseMessages(input: Data) throws -> [HubMessage]
+    func writeMessage(message: HubMessage) throws -> Data
 }
 
 public enum MessageType: Int {
     case Invocation = 1
-    case Result
+    case StreamItem
     case Completion
 }
 
@@ -35,10 +35,10 @@ public class InvocationMessage: HubMessage {
     public let messageType = MessageType.Invocation
     public let invocationId: String
     public let target: String
-    public let arguments: [Any]
+    public let arguments: [Any?]
     public let nonBlocking: Bool
 
-    init(invocationId: String, target: String, arguments: [Any], nonBlocking: Bool) {
+    init(invocationId: String, target: String, arguments: [Any?], nonBlocking: Bool) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
@@ -47,7 +47,7 @@ public class InvocationMessage: HubMessage {
 }
 
 public class StreamItemMessage: HubMessage {
-    public let messageType = MessageType.Result
+    public let messageType = MessageType.StreamItem
     public let invocationId: String
     public let item: Any?
 
@@ -62,7 +62,7 @@ public class CompletionMessage: HubMessage {
     public let invocationId: String
     public let result: Any?
     public let error: String?
-    public let hasResult: Bool
+    public let hasResult: Bool?
 
     init(invocationId: String) {
         self.invocationId = invocationId
@@ -82,6 +82,6 @@ public class CompletionMessage: HubMessage {
         self.invocationId = invocationId
         self.error = error
         self.result = nil
-        self.hasResult = false
+        self.hasResult = nil
     }
 }

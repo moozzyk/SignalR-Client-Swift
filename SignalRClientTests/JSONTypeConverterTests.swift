@@ -92,11 +92,11 @@ class JSONTypeConverterTests: XCTestCase {
     func testThatConvertToWireTypeThrowsForUnhandledTypes() {
         do {
             _ = try jsonTypeConverter.convertToWireType(obj: NSObject())
-            XCTAssert(false)
+            XCTFail()
 
         } catch SignalRError.unsupportedType {
         } catch {
-            XCTAssert(false)
+            XCTFail()
         }
     }
 
@@ -149,10 +149,10 @@ class JSONTypeConverterTests: XCTestCase {
 
         do {
             _ = try jsonTypeConverter.convertFromWireType(obj: 42, targetType: Bool.self)
-            XCTAssert(false)
+            XCTFail()
         } catch SignalRError.unsupportedType {
         } catch {
-            XCTAssert(false)
+            XCTFail()
         }
     }
 }

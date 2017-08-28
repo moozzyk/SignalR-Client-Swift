@@ -13,7 +13,9 @@ enum SignalRError : Error {
     case webError(statusCode: Int)
     case hubInvocationError(message: String)
     case hubInvocationCancelled
-    case unexpectedMessage
+    case unknownMessageType
+    case invalidMessage
     case unsupportedType
     case connectionIsBeingClosed
+    case invalidOperation(message: String)
 }

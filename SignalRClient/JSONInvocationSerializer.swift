@@ -78,7 +78,7 @@ public class JSONInvocationSerializer: InvocationSerializer {
             }
         }
 
-        throw SignalRError.unexpectedMessage
+        throw SignalRError.unknownMessageType
     }
 }
 

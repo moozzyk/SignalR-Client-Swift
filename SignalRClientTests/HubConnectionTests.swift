@@ -96,7 +96,7 @@ class HubConnectionTests: XCTestCase {
                     XCTAssertEqual("Error occurred.", errorMessage)
                     break
                 default:
-                    XCTAssertTrue(false)
+                    XCTFail()
                     break
                 }
 
@@ -133,7 +133,7 @@ class HubConnectionTests: XCTestCase {
                 invocationCancelledExpectation.fulfill()
                 break
             default:
-                XCTAssertTrue(false)
+                XCTFail()
                 break
             }
         })
@@ -267,7 +267,7 @@ class HubConnectionTests: XCTestCase {
 
     func testThatHubMethodUsingComplexTypesCanBeInvoked() {
         // TODO: needs to be fixed
-        XCTAssertFalse(true)
+        XCTFail()
         return
 
         let didOpenExpectation = expectation(description: "connection opened")
