@@ -13,20 +13,22 @@ public class HubConnection {
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
-    private var pendingCalls = [Int: (InvocationResult?, Error?)->Void]()
+    private var pendingCalls = [String: (CompletionMessage?, Error?)->Void]()
     private var callbacks = [String: ([Any?]) -> Void]()
 
     private var connection: SocketConnection!
-    private var invocationSerializer: InvocationSerializer!
+    private var hubProtocol: HubProtocol!
     public weak var delegate: HubConnectionDelegate!
 
-    public convenience init(url: URL, invocationSerializer: InvocationSerializer? = nil) {
-        self.init(connection: Connection(url: url), invocationSerializer: invocationSerializer)
+    // TODO: pass converter?
+    public convenience init(url: URL) {
+        self.init(connection: Connection(url: url))
     }
 
-    public init(connection: SocketConnection!, invocationSerializer: InvocationSerializer? = nil) {
+    // TODO: pass converter?
+    public init(connection: SocketConnection!) {
         self.connection = connection
-        self.invocationSerializer = invocationSerializer ?? JSONInvocationSerializer()
+        self.hubProtocol = JSONHubProtocol()
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
         socketConnectionDelegate = HubSocketConnectionDelegate(hubConnection: self)
         self.connection.delegate = socketConnectionDelegate
@@ -34,12 +36,13 @@ public class HubConnection {
 
     public func start(transport: Transport? = nil) {
         connection.start(transport: transport)
+
     }
 
     fileprivate func connectionStarted() {
         // TODO: support custom protcols
         // TODO: add negative test (e.g. invalid protocol)
-        connection.send(data: "{ protocol: \"json\" }".data(using: .utf8)!) { error in
+        connection.send(data: "{ \"protocol\": \"json\" }\u{1e}".data(using: .utf8)!) { error in
             if let e = error {
                 delegate.connectionDidFailToOpen(error: e)
             }
@@ -53,6 +56,7 @@ public class HubConnection {
         connection.stop()
     }
 
+    // TODO: Add typed arguments
     public func on(method: String, callback: @escaping (_ arguments: [Any?]) -> Void) {
         hubConnectionQueue.sync {
             // TODO: warn for conflicts?
@@ -67,48 +71,48 @@ public class HubConnection {
     }
 
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void) {
-        var id:Int = 0
 
-        let callback: (InvocationResult?, Error?)->Void = { invocationResult, error in
+        // TODO: Should it be just result and converter instead of Completion message?
+        let callback: (CompletionMessage?, Error?)->Void = { completionMessage, error in
 
             if error != nil {
                 invocationDidComplete(nil, error!)
                 return
             }
 
-            if let hubInvocationError = invocationResult!.error {
+            if let hubInvocationError = completionMessage!.error {
                 invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
                 return
             }
 
             do {
-                try invocationDidComplete(invocationResult!.getResult(type: T.self), nil);
+                try invocationDidComplete(completionMessage!.getResult(type: T.self), nil)
             } catch {
                 invocationDidComplete(nil, error)
             }
-        };
+        }
 
+        var id:String = ""
         hubConnectionQueue.sync {
             invocationId = invocationId + 1
-            id = invocationId
+            id = "\(invocationId)"
             pendingCalls[id] = callback
         }
 
-        let invocationDescriptor = InvocationDescriptor(id: id, method: method, arguments: arguments)
-
+        let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments, nonBlocking: false)
         do {
-            let invocationData = try invocationSerializer.writeInvocationDescriptor(invocationDescriptor: invocationDescriptor)
+            let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData) { error in
                 if let e = error {
-                    failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: invocationId, error: e)
+                    failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: id, error: e)
                 }
             }
         } catch {
-            failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: invocationId, error: error)
+            failInvocationWithError(invocationDidComplete: invocationDidComplete, invocationId: id, error: error)
         }
     }
 
-    fileprivate func failInvocationWithError<T>(invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void, invocationId: Int, error: Error) {
+    fileprivate func failInvocationWithError<T>(invocationDidComplete: @escaping (_ result: T?, _ error: Error?)->Void, invocationId: String, error: Error) {
         hubConnectionQueue.sync {
             _ = pendingCalls.removeValue(forKey: invocationId)
         }
@@ -118,42 +122,57 @@ public class HubConnection {
 
     fileprivate func hubConnectionDidReceiveData(data: Data) {
         do {
-            let incomingMessage = try invocationSerializer.processIncomingData(data: data)
-            switch incomingMessage {
-            case let invocationResult as InvocationResult:
-                var callback: ((InvocationResult?, Error?)->Void)?
-                self.hubConnectionQueue.sync {
-                    callback = self.pendingCalls.removeValue(forKey: invocationResult.id)
+            let messages = try hubProtocol.parseMessages(input: data)
+            for incomingMessage in messages {
+                switch(incomingMessage.messageType) {
+                case MessageType.Completion:
+                    try handleInvocationCompletion(message: incomingMessage as! CompletionMessage)
+                case MessageType.StreamItem:
+                    try handleStreamItem(message: incomingMessage as! StreamItemMessage)
+                case MessageType.Invocation:
+                    try handleInvocation(message: incomingMessage as! InvocationMessage)
+                default:
+                    print("Unexpected message")
                 }
-
-                if callback != nil {
-                    Util.dispatchToMainThread {
-                        callback!(invocationResult, nil)
-                    }
-                }
-                else {
-                    print("Could not find callback with id \(invocationResult.id)")
-                }
-            case let invocationDescriptor as InvocationDescriptor:
-                var callback: (([Any?])->Void)?
-
-                self.hubConnectionQueue.sync {
-                    callback = self.callbacks[invocationDescriptor.method]
-                }
-
-                if callback != nil {
-                    Util.dispatchToMainThread {
-                        callback!(invocationDescriptor.arguments)
-                    }
-                }
-                else {
-                    print("No handler registered for method \(invocationDescriptor.method)")
-                }
-            default:
-                print("Unexpected type")
             }
         } catch {
             print(error)
+        }
+    }
+
+    fileprivate func handleInvocationCompletion(message: CompletionMessage) throws {
+        var callback: ((CompletionMessage?, Error?)->Void)?
+        self.hubConnectionQueue.sync {
+            callback = self.pendingCalls.removeValue(forKey: message.invocationId)
+        }
+
+        if callback != nil {
+            Util.dispatchToMainThread {
+                callback!(message, nil)
+            }
+        }
+        else {
+            print("Could not find callback with id \(message.invocationId)")
+        }
+    }
+
+    fileprivate func handleStreamItem(message: StreamItemMessage) throws {
+        throw SignalRError.invalidOperation(message: "Not supported")
+    }
+
+    fileprivate func handleInvocation(message: InvocationMessage) throws {
+        var callback: (([Any?])->Void)?
+
+        self.hubConnectionQueue.sync {
+            callback = self.callbacks[message.target]
+        }
+
+        if callback != nil {
+            Util.dispatchToMainThread {
+                callback!(message.arguments)
+            }
+        } else {
+            print("No handler registered for method \(message.target)")
         }
     }
 

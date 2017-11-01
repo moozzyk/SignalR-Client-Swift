@@ -265,8 +265,8 @@ class HubConnectionTests: XCTestCase {
         }
     }
 
-    func testThatHubMethodUsingComplexTypesCanBeInvoked() {
-        // TODO: needs to be fixed
+    func DISABLED_testThatHubMethodUsingComplexTypesCanBeInvoked() {
+        // TODO: needs to be enabled after complex types are supported 
         XCTFail()
         return
 

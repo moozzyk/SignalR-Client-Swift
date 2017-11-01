@@ -8,8 +8,39 @@
 
 import Foundation
 
+public class JSONTypeConverter: TypeConverter {
+    public func convertToWireType(obj: Any?) throws -> Any? {
+        if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj: obj!) {
+            return obj
+        }
+
+        throw SignalRError.unsupportedType
+    }
+
+    private func isKnownType(obj: Any?) -> Bool {
+        return obj == nil ||
+            obj is Int || obj is Int? || obj is [Int] || obj is [Int?] ||
+            obj is Double || obj is Double? || obj is [Double] || obj is [Double?] ||
+            obj is String || obj is String? || obj is [String] || obj is [String?] ||
+            obj is Bool || obj is Bool? || obj is [Bool] || obj is [Bool?];
+    }
+
+    public func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
+        if obj == nil {
+            return nil
+        }
+
+        if let converted = obj as? T? {
+            return converted
+        }
+
+        throw SignalRError.unsupportedType
+    }
+}
+
 public class JSONHubProtocol: HubProtocol {
     private let recordSeparator = "\u{1e}"
+    private let typeConverter: TypeConverter = JSONTypeConverter()
     public let name = "json"
     public let type = ProtocolType.Text
 
@@ -31,7 +62,8 @@ public class JSONHubProtocol: HubProtocol {
     private func createHubMessage(payload: String) throws -> HubMessage {
         // TODO: try to avoid double conversion (Data -> String -> Data)
         let json = try JSONSerialization.jsonObject(with: payload.data(using: .utf8)!)
-        if let message = json as? NSDictionary, let rawMessageType = message.object(forKey: "messageType") as? Int, let messageType = MessageType(rawValue: rawMessageType) {
+
+        if let message = json as? NSDictionary, let rawMessageType = message.object(forKey: "type") as? Int, let messageType = MessageType(rawValue: rawMessageType) {
             switch messageType {
             case .Invocation:
                 return try createInvocationMessage(message: message)
@@ -54,8 +86,10 @@ public class JSONHubProtocol: HubProtocol {
         
         let nonBlocking = (message.value(forKey: "nonBlocking") as? Bool) ?? false
 
-        // TODO: handle arguments
-        return InvocationMessage(invocationId: invocationId, target: target, arguments: [], nonBlocking: nonBlocking)
+        let arguments = message.object(forKey: "arguments") as? NSArray
+
+        // TODO: handle argument type conversion/resolution
+        return InvocationMessage(invocationId: invocationId, target: target, arguments: arguments as? [Any?] ?? [], nonBlocking: nonBlocking)
     }
 
     private func createStreamItemMessage(message: NSDictionary) throws -> StreamItemMessage {
@@ -71,16 +105,11 @@ public class JSONHubProtocol: HubProtocol {
             return CompletionMessage(invocationId: invocationId, error: error)
         }
 
-        guard let hasResult = message.value(forKey: "hasResult") as? Bool else {
-            throw SignalRError.invalidMessage
+        if let result = message.value(forKey: "result") {
+            return CompletionMessage(invocationId: invocationId, result: result is NSNull ? nil : result, typeConverter: typeConverter)
         }
 
-        if !hasResult {
-            return CompletionMessage(invocationId: invocationId)
-        }
-
-        // TODO: handle result
-        return CompletionMessage(invocationId: invocationId, result: nil)
+        return CompletionMessage(invocationId: invocationId)
     }
 
     private func getInvocationId(message: NSDictionary) throws -> String {
@@ -93,17 +122,22 @@ public class JSONHubProtocol: HubProtocol {
 
     public func writeMessage(message: HubMessage) throws -> Data {
         guard message.messageType == .Invocation else {
-            throw SignalRError.invalidOperation(message: "Unexpected messageType.")
+            throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
         }
 
         let invocationMessage = message as! InvocationMessage
         let invocationJSONObject : [String: Any] = [
-            "messageType": invocationMessage.messageType.rawValue,
+            "type": invocationMessage.messageType.rawValue,
             "invocationId": invocationMessage.invocationId,
             "target": invocationMessage.target,
+            "arguments": try invocationMessage.arguments.map{ arg -> Any? in
+                return try typeConverter.convertToWireType(obj: arg)
+            },
             // TODO: handle arguments
             "nonBlocking": invocationMessage.nonBlocking]
 
-        return try JSONSerialization.data(withJSONObject: invocationJSONObject)
+        var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)
+        payload.append(recordSeparator.data(using: .utf8)!)
+        return payload
     }
 }

@@ -58,30 +58,43 @@ public class StreamItemMessage: HubMessage {
 }
 
 public class CompletionMessage: HubMessage {
+    private let result: Any?
+    private let typeConverter: TypeConverter?
+
     public let messageType = MessageType.Completion
     public let invocationId: String
-    public let result: Any?
     public let error: String?
-    public let hasResult: Bool?
+    public let hasResult: Bool
 
     init(invocationId: String) {
         self.invocationId = invocationId
         self.result = nil
         self.error = nil
         self.hasResult = false
+        self.typeConverter = nil
     }
 
-    init(invocationId: String, result: Any?) {
+    init(invocationId: String, result: Any?, typeConverter: TypeConverter) {
         self.invocationId = invocationId
         self.result = result
         self.error = nil
         self.hasResult = true
+        self.typeConverter = typeConverter
     }
 
     init(invocationId: String, error: String) {
         self.invocationId = invocationId
         self.error = error
         self.result = nil
-        self.hasResult = nil
+        self.hasResult = false
+        self.typeConverter = nil
+    }
+
+    func getResult<T>(type: T.Type) throws -> T? {
+        if !hasResult {
+            return nil
+        }
+        
+        return try typeConverter!.convertFromWireType(obj: result, targetType: type)
     }
 }

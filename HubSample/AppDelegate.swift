@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
 
         // TODO: query should not be needed
-        chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!, query: "")
+        chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!)
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args in
             self.appendMessage(message: "\(args[0]!): \(args[1]!)")
