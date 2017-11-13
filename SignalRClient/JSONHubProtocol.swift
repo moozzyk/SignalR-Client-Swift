@@ -40,9 +40,17 @@ public class JSONTypeConverter: TypeConverter {
 
 public class JSONHubProtocol: HubProtocol {
     private let recordSeparator = "\u{1e}"
-    private let typeConverter: TypeConverter = JSONTypeConverter()
+    private let typeConverter: TypeConverter
     public let name = "json"
     public let type = ProtocolType.Text
+
+    public convenience init() {
+        self.init(typeConverter: JSONTypeConverter())
+    }
+
+    public init(typeConverter: TypeConverter) {
+        self.typeConverter = typeConverter
+    }
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
         let dataString = String(data: input, encoding: .utf8)!

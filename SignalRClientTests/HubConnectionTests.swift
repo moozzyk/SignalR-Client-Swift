@@ -13,11 +13,9 @@ class HubConnectionTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
 
@@ -234,11 +232,11 @@ class HubConnectionTests: XCTestCase {
 
             if let u = user {
                 return [
-                    "FirstName": u.firstName,
-                    "LastName": u.lastName,
-                    "Age": u.age,
-                    "Height": u.height,
-                    "Sex": u.sex == Sex.Male ? 0 : 1]
+                    "firstName": u.firstName,
+                    "lastName": u.lastName,
+                    "age": u.age,
+                    "height": u.height,
+                    "sex": u.sex == Sex.Male ? 0 : 1]
             }
 
             return nil
@@ -255,7 +253,7 @@ class HubConnectionTests: XCTestCase {
 
                     let user = userDictionary!
 
-                    return User(firstName: user["FirstName"] as! String, lastName: user["LastName"] as! String, age: user["Age"] as! Int?, height: user["Height"] as! Double?, sex: user["Sex"] as! Int == 0 ? Sex.Male : Sex.Female)
+                    return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
                 })
 
                 return result as? T
@@ -265,10 +263,7 @@ class HubConnectionTests: XCTestCase {
         }
     }
 
-    func DISABLED_testThatHubMethodUsingComplexTypesCanBeInvoked() {
-        // TODO: needs to be enabled after complex types are supported 
-        XCTFail()
-        return
+    func testThatHubMethodUsingComplexTypesCanBeInvoked() {
 
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
@@ -308,12 +303,11 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        /*
-        let invocationSerializer = JSONInvocationSerializer(typeConverter: PersonTypeConverter())
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, invocationSerializer: invocationSerializer)
+
+        let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
- */
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
