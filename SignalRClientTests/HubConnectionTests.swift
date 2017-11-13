@@ -121,7 +121,7 @@ class HubConnectionTests: XCTestCase {
         let invocationCancelledExpectation = expectation(description: "invocation cancelled")
 
         let testSocketConnection = TestSocketConnection()
-        let hubConnection = HubConnection(connection: testSocketConnection)
+        let hubConnection = HubConnection(connection: testSocketConnection, hubProtocol: JSONHubProtocol())
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -147,7 +147,7 @@ class HubConnectionTests: XCTestCase {
         let testError = NSError()
 
         let testSocketConnection = TestSocketConnection()
-        let hubConnection = HubConnection(connection: testSocketConnection)
+        let hubConnection = HubConnection(connection: testSocketConnection, hubProtocol: JSONHubProtocol())
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -308,19 +308,14 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
+        /*
         let invocationSerializer = JSONInvocationSerializer(typeConverter: PersonTypeConverter())
         let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, invocationSerializer: invocationSerializer)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
+ */
 
         waitForExpectations(timeout: 5 /*seconds*/)
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
     }
 }
 

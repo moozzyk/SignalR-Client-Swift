@@ -20,15 +20,17 @@ public class HubConnection {
     private var hubProtocol: HubProtocol!
     public weak var delegate: HubConnectionDelegate!
 
-    // TODO: pass converter?
     public convenience init(url: URL) {
-        self.init(connection: Connection(url: url))
+        self.init(connection: Connection(url: url), hubProtocol: JSONHubProtocol())
     }
 
-    // TODO: pass converter?
-    public init(connection: SocketConnection!) {
+    public convenience init(url: URL, hubProtocol: HubProtocol) {
+        self.init(connection: Connection(url: url), hubProtocol: hubProtocol)
+    }
+
+    public init(connection: SocketConnection!, hubProtocol: HubProtocol) {
         self.connection = connection
-        self.hubProtocol = JSONHubProtocol()
+        self.hubProtocol = hubProtocol
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
         socketConnectionDelegate = HubSocketConnectionDelegate(hubConnection: self)
         self.connection.delegate = socketConnectionDelegate
@@ -36,13 +38,12 @@ public class HubConnection {
 
     public func start(transport: Transport? = nil) {
         connection.start(transport: transport)
-
     }
 
     fileprivate func connectionStarted() {
         // TODO: support custom protcols
         // TODO: add negative test (e.g. invalid protocol)
-        connection.send(data: "{ \"protocol\": \"json\" }\u{1e}".data(using: .utf8)!) { error in
+        connection.send(data: "{ \"protocol\": \"\(hubProtocol.name)\" }\u{1e}".data(using: .utf8)!) { error in
             if let e = error {
                 delegate.connectionDidFailToOpen(error: e)
             }
