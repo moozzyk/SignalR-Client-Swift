@@ -40,7 +40,7 @@ public class JSONTypeConverter: TypeConverter {
 
 public class JSONHubProtocol: HubProtocol {
     private let recordSeparator = "\u{1e}"
-    private let typeConverter: TypeConverter
+    public let typeConverter: TypeConverter
     public let name = "json"
     public let type = ProtocolType.Text
 
@@ -114,7 +114,7 @@ public class JSONHubProtocol: HubProtocol {
         }
 
         if let result = message.value(forKey: "result") {
-            return CompletionMessage(invocationId: invocationId, result: result is NSNull ? nil : result, typeConverter: typeConverter)
+            return CompletionMessage(invocationId: invocationId, result: result is NSNull ? nil : result)
         }
 
         return CompletionMessage(invocationId: invocationId)

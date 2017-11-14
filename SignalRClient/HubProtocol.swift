@@ -16,6 +16,7 @@ public enum ProtocolType: Int {
 public protocol HubProtocol {
     var name: String { get }
     var type: ProtocolType { get }
+    var typeConverter: TypeConverter { get }
     func parseMessages(input: Data) throws -> [HubMessage]
     func writeMessage(message: HubMessage) throws -> Data
 }
@@ -58,28 +59,24 @@ public class StreamItemMessage: HubMessage {
 }
 
 public class CompletionMessage: HubMessage {
-    private let result: Any?
-    private let typeConverter: TypeConverter?
-
     public let messageType = MessageType.Completion
     public let invocationId: String
     public let error: String?
     public let hasResult: Bool
+    public let result: Any?
 
     init(invocationId: String) {
         self.invocationId = invocationId
         self.result = nil
         self.error = nil
         self.hasResult = false
-        self.typeConverter = nil
     }
 
-    init(invocationId: String, result: Any?, typeConverter: TypeConverter) {
+    init(invocationId: String, result: Any?) {
         self.invocationId = invocationId
         self.result = result
         self.error = nil
         self.hasResult = true
-        self.typeConverter = typeConverter
     }
 
     init(invocationId: String, error: String) {
@@ -87,14 +84,5 @@ public class CompletionMessage: HubMessage {
         self.error = error
         self.result = nil
         self.hasResult = false
-        self.typeConverter = nil
-    }
-
-    func getResult<T>(type: T.Type) throws -> T? {
-        if !hasResult {
-            return nil
-        }
-        
-        return try typeConverter!.convertFromWireType(obj: result, targetType: type)
     }
 }

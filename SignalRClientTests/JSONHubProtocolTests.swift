@@ -100,7 +100,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertEqual("Error occurred", msg.error)
         XCTAssertFalse(msg.hasResult)
-        XCTAssertNil(try! msg.getResult(type: Int.self))
+        XCTAssertNil(msg.result)
     }
 
     func testThatCanParseVoidCompletionMessage() {
@@ -113,7 +113,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertFalse(msg.hasResult)
         XCTAssertNil(msg.error)
-        XCTAssertNil(try! msg.getResult(type: String.self))
+        XCTAssertNil(msg.result)
     }
 
     func testThatCanParseNonVoidCompletionMessage() {
@@ -125,7 +125,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(MessageType.Completion, msg.messageType)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertTrue(msg.hasResult)
-        XCTAssertEqual(42, try! msg.getResult(type: Int.self))
+        XCTAssertEqual(42, msg.result as! Int)
         XCTAssertNil(msg.error)
     }
 
@@ -138,7 +138,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(MessageType.Completion, msg.messageType)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertTrue(msg.hasResult)
-        XCTAssertEqual(nil, try msg.getResult(type: String.self))
+        XCTAssertNil(nil)
         XCTAssertNil(msg.error)
     }
 

@@ -86,8 +86,14 @@ public class HubConnection {
                 return
             }
 
+            if !completionMessage!.hasResult {
+                invocationDidComplete(nil, nil)
+                return
+            }
+
             do {
-                try invocationDidComplete(completionMessage!.getResult(type: T.self), nil)
+                let result = try self.hubProtocol.typeConverter.convertFromWireType(obj: completionMessage!.result, targetType: T.self)
+                invocationDidComplete(result, nil)
             } catch {
                 invocationDidComplete(nil, error)
             }
