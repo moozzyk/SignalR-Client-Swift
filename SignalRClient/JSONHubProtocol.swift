@@ -141,7 +141,6 @@ public class JSONHubProtocol: HubProtocol {
             "arguments": try invocationMessage.arguments.map{ arg -> Any? in
                 return try typeConverter.convertToWireType(obj: arg)
             },
-            // TODO: handle arguments
             "nonBlocking": invocationMessage.nonBlocking]
 
         var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)

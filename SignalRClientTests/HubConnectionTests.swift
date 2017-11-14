@@ -194,6 +194,82 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatClientMethodsCanBeInvokedWithTypedArguments() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "GetNumber", arg1Type: Int.self, callback: { number in
+            XCTAssertNotNil(number)
+            XCTAssertEqual(42, number)
+            didInvokeClientMethod.fulfill()
+            hubConnection.stop()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatClientMethodsCanBeInvokedWithTypedStructuralArgument() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let person = User(firstName: "Jerzy", lastName: "Meteor", age: 34, height: 179.0, sex: Sex.Male)
+            hubConnection.invoke(method: "InvokeGetPerson", arguments: [person], invocationDidComplete: { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "GetPerson", arg1Type: User.self, callback: { person in
+            XCTAssertNotNil(person)
+            XCTAssertEqual("Jerzy", person!.firstName)
+            XCTAssertEqual("Meteor", person!.lastName)
+            XCTAssertEqual(34, person!.age)
+            XCTAssertEqual(179.0, person!.height)
+            XCTAssertEqual(Sex.Male, person!.sex)
+            didInvokeClientMethod.fulfill()
+            hubConnection.stop()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     enum Sex {
         case Male
         case Female
@@ -244,22 +320,30 @@ class HubConnectionTests: XCTestCase {
 
         override func convertFromWireType<T>(obj: Any?, targetType: T.Type) throws -> T? {
 
+            if let userDictionary = obj as? [String: Any?]? {
+                return materializeUser(userDictionary: userDictionary) as? T
+            }
+
             if let userArray = obj as? [[String: Any?]?] {
 
                 let result: [User?] = userArray.map({userDictionary in
-                    if userDictionary == nil {
-                        return nil
-                    }
-
-                    let user = userDictionary!
-
-                    return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
+                    return materializeUser(userDictionary: userDictionary)
                 })
 
                 return result as? T
             }
 
             return try super.convertFromWireType(obj: obj, targetType: targetType)
+        }
+
+        private func materializeUser(userDictionary: [String: Any?]?) -> User? {
+            if userDictionary == nil {
+                return nil
+            }
+
+            let user = userDictionary!
+
+            return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
         }
     }
 
