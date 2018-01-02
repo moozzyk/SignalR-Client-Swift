@@ -181,45 +181,10 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetNumber", callback: { args in
+        hubConnection.on(method: "GetNumber", callback: { args, _ in
             XCTAssertNotNil(args)
             XCTAssertEqual(1, args.count)
             XCTAssertEqual(42, args[0] as! Int)
-            didInvokeClientMethod.fulfill()
-            hubConnection.stop()
-        })
-
-        hubConnection.start()
-
-        waitForExpectations(timeout: 5 /*seconds*/)
-    }
-
-    func testThatClientMethodsCanBeInvokedWithTypedArguments() {
-        let didOpenExpectation = expectation(description: "connection opened")
-        let didReceiveInvocationResult = expectation(description: "received invocation result")
-        let didInvokeClientMethod = expectation(description: "client method invoked")
-        let didCloseExpectation = expectation(description: "connection closed")
-
-        let hubConnectionDelegate = TestHubConnectionDelegate()
-        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
-            didOpenExpectation.fulfill()
-
-            hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
-                XCTAssertNil(error)
-                didReceiveInvocationResult.fulfill()
-            })
-        }
-
-        hubConnectionDelegate.connectionDidCloseHandler = { error in
-            XCTAssertNil(error)
-            didCloseExpectation.fulfill()
-        }
-
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
-        hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetNumber", arg1Type: Int.self, callback: { number in
-            XCTAssertNotNil(number)
-            XCTAssertEqual(42, number)
             didInvokeClientMethod.fulfill()
             hubConnection.stop()
         })
@@ -254,8 +219,9 @@ class HubConnectionTests: XCTestCase {
         let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
         let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetPerson", arg1Type: User.self, callback: { person in
-            XCTAssertNotNil(person)
+        hubConnection.on(method: "GetPerson", callback: { arguments, typeConverter in
+            XCTAssertNotNil(arguments)
+            let person = try! typeConverter.convertFromWireType(obj: arguments[0], targetType: User.self)
             XCTAssertEqual("Jerzy", person!.firstName)
             XCTAssertEqual("Meteor", person!.lastName)
             XCTAssertEqual(34, person!.age)
@@ -337,13 +303,12 @@ class HubConnectionTests: XCTestCase {
         }
 
         private func materializeUser(userDictionary: [String: Any?]?) -> User? {
-            if userDictionary == nil {
-                return nil
+            if let user = userDictionary {
+                return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
+
             }
 
-            let user = userDictionary!
-
-            return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
+            return nil
         }
     }
 

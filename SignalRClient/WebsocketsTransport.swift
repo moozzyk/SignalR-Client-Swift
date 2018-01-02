@@ -19,7 +19,6 @@ public class WebsocketsTransport: NSObject, Transport, SRWebSocketDelegate {
         self.webSocket!.open();
     }
 
-    // TODO: message type?
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
         do {
             try webSocket?.send(data: data)

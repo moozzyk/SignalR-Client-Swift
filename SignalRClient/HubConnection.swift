@@ -14,7 +14,7 @@ public class HubConnection {
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
     private var pendingCalls = [String: (CompletionMessage?, Error?)->Void]()
-    private var callbacks = [String: ([Any?]) -> Void]()
+    private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
 
     private var connection: SocketConnection!
     private var hubProtocol: HubProtocol!
@@ -57,32 +57,12 @@ public class HubConnection {
         connection.stop()
     }
 
-    public func on(method: String, callback: @escaping (_ arguments: [Any?]) -> Void) {
+    public func on(method: String, callback: @escaping (_ arguments: [Any?], _ typeConverter: TypeConverter) -> Void) {
         hubConnectionQueue.sync {
             // TODO: warn for conflicts?
             callbacks[method] = callback
         }
     }
-
-    // TODO: is this the right way of doing this?
-    public func on<T1>(method: String, arg1Type: T1.Type, callback: @escaping(_ arg1: T1?) -> Void) {
-        let callbackWrapper: ([Any?]) -> Void = { arguments  in
-            if (arguments.count != 1) {
-                print("Argument count does not match")
-                return
-            }
-
-            do {
-                let arg1Value = try self.hubProtocol.typeConverter.convertFromWireType(obj: arguments[0], targetType: arg1Type)
-                callback(arg1Value)
-            } catch {
-                print(error)
-            }
-        }
-
-        on(method: method, callback: callbackWrapper)
-    }
-
 
     public func invoke(method: String, arguments: [Any?], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
         invoke(method: method, arguments: arguments, returnType: Any.self, invocationDidComplete: {_, error in
@@ -187,7 +167,7 @@ public class HubConnection {
     }
 
     fileprivate func handleInvocation(message: InvocationMessage) throws {
-        var callback: (([Any?]) -> Void)?
+        var callback: (([Any?], TypeConverter) -> Void)?
 
         self.hubConnectionQueue.sync {
             callback = self.callbacks[message.target]
@@ -195,7 +175,7 @@ public class HubConnection {
 
         if callback != nil {
             Util.dispatchToMainThread {
-                callback!(message.arguments)
+                callback!(message.arguments, self.hubProtocol.typeConverter)
             }
         } else {
             print("No handler registered for method \'\(message.target)\'")
