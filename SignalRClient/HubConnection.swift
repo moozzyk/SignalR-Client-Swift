@@ -64,6 +64,22 @@ public class HubConnection {
         }
     }
 
+    public func send(method: String, arguments:[Any?], sendDidComplete: @escaping (_ error: Error?) -> Void) {
+        var id:String = ""
+        hubConnectionQueue.sync {
+            invocationId = invocationId + 1
+            id = "\(invocationId)"
+        }
+
+        let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments, nonBlocking: true)
+        do {
+            let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
+            connection.send(data: invocationData, sendDidComplete: sendDidComplete)
+        } catch {
+            sendDidComplete(error)
+        }
+    }
+
     public func invoke(method: String, arguments: [Any?], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
         invoke(method: method, arguments: arguments, returnType: Any.self, invocationDidComplete: {_, error in
             invocationDidComplete(error)

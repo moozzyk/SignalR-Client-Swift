@@ -236,6 +236,42 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatSendInvokesMethodsOnServer() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let sendCompletedExpectation = expectation(description: "send completed")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.send(method: "InvokeGetNumber", arguments: [42], sendDidComplete: { error in
+                XCTAssertNil(error)
+                sendCompletedExpectation.fulfill()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "GetNumber", callback: { args, _ in
+            XCTAssertNotNil(args)
+            XCTAssertEqual(1, args.count)
+            XCTAssertEqual(42, args[0] as! Int)
+            didInvokeClientMethod.fulfill()
+            hubConnection.stop()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     enum Sex {
         case Male
         case Female
