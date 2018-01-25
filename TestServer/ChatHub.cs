@@ -7,7 +7,7 @@ namespace TestServer
     {
         public Task Broadcast(string sender, string message)
         {
-            return Clients.All.InvokeAsync("NewMessage", sender, message);
+            return Clients.All.SendAsync("NewMessage", sender, message);
         }
     }
 }

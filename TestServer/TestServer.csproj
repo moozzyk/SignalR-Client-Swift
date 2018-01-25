@@ -8,15 +8,15 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-preview1-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.0-preview1-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.0-preview1-*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-*" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0-preview1-*" />
   </ItemGroup>
 
  <Target Name="CopyClient" BeforeTargets="AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@aspnet\signalr-client\dist\browser\signalr-client-1.0.0-alpha2-final.js"
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@aspnet\signalr\dist\browser\signalr.js"
           DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
   </Target>
 </Project>

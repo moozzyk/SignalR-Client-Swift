@@ -34,12 +34,12 @@ namespace TestServer
 
         public Task InvokeGetNumber(int number)
         {
-            return Clients.Client(Context.Connection.ConnectionId).InvokeAsync("GetNumber", number);
+            return Clients.Client(Context.Connection.ConnectionId).SendAsync("GetNumber", number);
         }
 
         public Task InvokeGetPerson(Person person)
         {
-            return Clients.Client(Context.Connection.ConnectionId).InvokeAsync("GetPerson", person);
+            return Clients.Client(Context.Connection.ConnectionId).SendAsync("GetPerson", person);
         }
 
         public IEnumerable<Person> SortByName(Person[] people)
