@@ -36,7 +36,7 @@ namespace TestServer
 
             app.Run(async (context) =>
             {
-                if (context.Request.Path.Value.EndsWith("/throw"))
+                if (context.Request.Path.Value.Contains("/throw"))
                 {
                     throw new InvalidOperationException("Unexpected error");
                 }

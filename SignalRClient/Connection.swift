@@ -44,9 +44,13 @@ public class Connection: SocketConnection {
 
         startDispatchGroup.enter()
 
+        // TODO: negotiate not needed if the user explicitly asks for WebSockets
         let httpClient = DefaultHttpClient()
 
-        httpClient.options(url: self.url) {(httpResponse, error) in
+        var negotiateUrl = self.url
+        negotiateUrl.appendPathComponent("negotiate");
+
+        httpClient.post(url: negotiateUrl) {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
                 self.startDispatchGroup.leave()

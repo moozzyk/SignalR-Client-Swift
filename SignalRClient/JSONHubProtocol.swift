@@ -86,18 +86,13 @@ public class JSONHubProtocol: HubProtocol {
     }
 
     private func createInvocationMessage(message: NSDictionary) throws -> InvocationMessage {
-        let invocationId = try getInvocationId(message: message)
-
+        // client side invocations are never blocking so the server never sends invocationId
         guard let target = message.value(forKey: "target") as? String else {
             throw SignalRError.invalidMessage
         }
-        
-        let nonBlocking = (message.value(forKey: "nonBlocking") as? Bool) ?? false
 
         let arguments = message.object(forKey: "arguments") as? NSArray
-
-        // TODO: handle argument type conversion/resolution
-        return InvocationMessage(invocationId: invocationId, target: target, arguments: arguments as? [Any?] ?? [], nonBlocking: nonBlocking)
+        return InvocationMessage(target: target, arguments: arguments as? [Any?] ?? [])
     }
 
     private func createStreamItemMessage(message: NSDictionary) throws -> StreamItemMessage {
@@ -134,14 +129,15 @@ public class JSONHubProtocol: HubProtocol {
         }
 
         let invocationMessage = message as! InvocationMessage
-        let invocationJSONObject : [String: Any] = [
+        var invocationJSONObject : [String: Any] = [
             "type": invocationMessage.messageType.rawValue,
-            "invocationId": invocationMessage.invocationId,
             "target": invocationMessage.target,
             "arguments": try invocationMessage.arguments.map{ arg -> Any? in
                 return try typeConverter.convertToWireType(obj: arg)
-            },
-            "nonBlocking": invocationMessage.nonBlocking]
+            }]
+        if (invocationMessage.invocationId != nil) {
+            invocationJSONObject["invocationId"] = invocationMessage.invocationId
+        }
 
         var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)
         payload.append(recordSeparator.data(using: .utf8)!)

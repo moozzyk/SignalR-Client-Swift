@@ -65,13 +65,7 @@ public class HubConnection {
     }
 
     public func send(method: String, arguments:[Any?], sendDidComplete: @escaping (_ error: Error?) -> Void) {
-        var id:String = ""
-        hubConnectionQueue.sync {
-            invocationId = invocationId + 1
-            id = "\(invocationId)"
-        }
-
-        let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments, nonBlocking: true)
+        let invocationMessage = InvocationMessage(target: method, arguments: arguments)
         do {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
@@ -121,7 +115,7 @@ public class HubConnection {
             pendingCalls[id] = callback
         }
 
-        let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments, nonBlocking: false)
+        let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments)
         do {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData) { error in

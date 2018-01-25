@@ -41,27 +41,14 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanParseInvocationMessage() {
-        let payload = "{ \"type\": 1, \"invocationId\": \"12\", \"target\": \"method\", \"nonBlocking\": true }\u{001e}"
+        let payload = "{ \"type\": 1, \"target\": \"method\" }\u{001e}"
 
         let hubMessages = try! JSONHubProtocol().parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! InvocationMessage
         XCTAssertEqual(MessageType.Invocation, msg.messageType)
-        XCTAssertEqual("12", msg.invocationId)
+        XCTAssertNil(msg.invocationId)
         XCTAssertEqual("method", msg.target)
-        XCTAssertTrue(msg.nonBlocking)
-    }
-
-    func testThatCanParseInvocationMessageWithoutNonBlocking() {
-        let payload = "{ \"type\": 1, \"invocationId\": \"12\", \"target\": \"method\"}\u{001e}"
-
-        let hubMessages = try! JSONHubProtocol().parseMessages(input: payload.data(using: .utf8)!)
-        XCTAssertEqual(1, hubMessages.count)
-        let msg = hubMessages[0] as! InvocationMessage
-        XCTAssertEqual(MessageType.Invocation, msg.messageType)
-        XCTAssertEqual("12", msg.invocationId)
-        XCTAssertEqual("method", msg.target)
-        XCTAssertFalse(msg.nonBlocking)
     }
 
     func testThatParsingInvocationMessageFailsIfInvocationIdMissing() {
@@ -166,15 +153,26 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteInvocationMessage() {
-        let invocationMessage = InvocationMessage(invocationId: "12", target: "myMethod", arguments: [], nonBlocking: true)
+        let invocationMessage = InvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
+        let payload = try! JSONHubProtocol().writeMessage(message: invocationMessage)
+        var message = String(data: payload, encoding: .utf8)!
+        message = message.substring(to: message.index(before: message.endIndex))
+        let json = (try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!) as? NSDictionary)!
+
+        XCTAssertEqual(1, json["type"] as! Int)
+        XCTAssertEqual("12", json["invocationId"] as! String)
+        XCTAssertEqual("myMethod", json["target"] as! String)
+    }
+
+    func testThatCanWriteInvocationMessageWithoutInvocationId() {
+        let invocationMessage = InvocationMessage(target: "myMethod", arguments: [])
         let message = try! JSONHubProtocol().writeMessage(message: invocationMessage)
 
         let deserializedMessage = try! JSONHubProtocol().parseMessages(input: message)[0] as! InvocationMessage
 
         XCTAssertEqual(invocationMessage.messageType, deserializedMessage.messageType)
-        XCTAssertEqual(invocationMessage.invocationId, deserializedMessage.invocationId)
+        XCTAssertNil(deserializedMessage.invocationId)
         XCTAssertEqual(invocationMessage.target, deserializedMessage.target)
-        XCTAssertEqual(invocationMessage.nonBlocking, deserializedMessage.nonBlocking)
     }
 
     func testThatWritingStreamItemMessageIsNotSupported() {

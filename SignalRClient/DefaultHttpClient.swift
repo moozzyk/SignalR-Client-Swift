@@ -17,10 +17,6 @@ class DefaultHttpClient {
         sendHttpRequest(url:url, method: "POST", completionHandler: completionHandler)
     }
 
-    func options(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
-        sendHttpRequest(url: url, method: "OPTIONS", completionHandler: completionHandler)
-    }
-
     func sendHttpRequest(url:URL, method:String, completionHandler: @escaping (HttpResponse?, Error?) -> Swift.Void) {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method

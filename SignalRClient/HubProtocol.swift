@@ -29,21 +29,24 @@ public enum MessageType: Int {
 
 public protocol HubMessage {
     var messageType: MessageType { get }
-    var invocationId: String { get }
 }
 
 public class InvocationMessage: HubMessage {
     public let messageType = MessageType.Invocation
-    public let invocationId: String
+    public let invocationId: String?
     public let target: String
     public let arguments: [Any?]
-    public let nonBlocking: Bool
 
-    init(invocationId: String, target: String, arguments: [Any?], nonBlocking: Bool) {
+    init(target: String, arguments: [Any?]) {
+        self.invocationId = nil
+        self.target = target
+        self.arguments = arguments
+    }
+
+    init(invocationId: String, target: String, arguments: [Any?]) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
-        self.nonBlocking = nonBlocking
     }
 }
 
