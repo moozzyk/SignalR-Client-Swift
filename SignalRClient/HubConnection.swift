@@ -147,6 +147,9 @@ public class HubConnection {
                     try handleStreamItem(message: incomingMessage as! StreamItemMessage)
                 case MessageType.Invocation:
                     try handleInvocation(message: incomingMessage as! InvocationMessage)
+                case MessageType.Ping:
+                    // no action required for ping messages
+                    break;
                 default:
                     print("Unexpected message")
                 }

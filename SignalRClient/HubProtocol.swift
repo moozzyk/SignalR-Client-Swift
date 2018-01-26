@@ -25,6 +25,7 @@ public enum MessageType: Int {
     case Invocation = 1
     case StreamItem
     case Completion
+    case Ping = 6
 }
 
 public protocol HubMessage {
@@ -88,4 +89,11 @@ public class CompletionMessage: HubMessage {
         self.result = nil
         self.hasResult = false
     }
+}
+
+public class PingMessage : HubMessage {
+    public let messageType = MessageType.Ping
+    private init() { }
+
+    static let instance = PingMessage()
 }

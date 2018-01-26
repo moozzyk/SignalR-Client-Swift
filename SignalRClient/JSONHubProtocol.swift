@@ -79,6 +79,8 @@ public class JSONHubProtocol: HubProtocol {
                 return try createStreamItemMessage(message: message)
             case .Completion:
                 return try createCompletionMessage(message: message)
+            case .Ping:
+                return PingMessage.instance;
             }
         }
 

@@ -152,6 +152,14 @@ class JSONHubProtocolTests: XCTestCase {
         }
     }
 
+    func testThatCanParsePingMessage() {
+        let payload = "{ \"type\": 6 }\u{001e}"
+
+        let hubMessages = try! JSONHubProtocol().parseMessages(input: payload.data(using: .utf8)!)
+        XCTAssertEqual(1, hubMessages.count)
+        XCTAssertEqual(MessageType.Ping, hubMessages[0].messageType)
+    }
+
     func testThatCanWriteInvocationMessage() {
         let invocationMessage = InvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
         let payload = try! JSONHubProtocol().writeMessage(message: invocationMessage)
