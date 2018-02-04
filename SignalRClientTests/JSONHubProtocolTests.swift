@@ -183,6 +183,29 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(invocationMessage.target, deserializedMessage.target)
     }
 
+    func testThatCanWriteStreamInvocationMessage() {
+        let streamInvocationMessage = StreamInvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
+        let payload = try! JSONHubProtocol().writeMessage(message: streamInvocationMessage)
+        var message = String(data: payload, encoding: .utf8)!
+        message = message.substring(to: message.index(before: message.endIndex))
+        let json = (try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!) as? NSDictionary)!
+
+        XCTAssertEqual(4, json["type"] as! Int)
+        XCTAssertEqual("12", json["invocationId"] as! String)
+        XCTAssertEqual("myMethod", json["target"] as! String)
+    }
+
+    func testThatCanWriteCancelInvocationMessage() {
+        let cancelInvocationMessage = CancelInvocationMessage(invocationId: "42")
+        let payload = try! JSONHubProtocol().writeMessage(message: cancelInvocationMessage)
+        var message = String(data: payload, encoding: .utf8)!
+        message = message.substring(to: message.index(before: message.endIndex))
+        let json = (try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!) as? NSDictionary)!
+
+        XCTAssertEqual(4, json["type"] as! Int)
+        XCTAssertEqual("42", json["invocationId"] as! String)
+    }
+
     func testThatWritingStreamItemMessageIsNotSupported() {
         let streamItemMessage = StreamItemMessage(invocationId: "12", item: nil)
 

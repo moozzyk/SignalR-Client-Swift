@@ -104,7 +104,7 @@ public class StreamInvocationMessage: HubMessage {
     }
 }
 
-public class CancelInvocation: HubMessage {
+public class CancelInvocationMessage: HubMessage {
     public let messageType = MessageType.CancelInvocation
     public let invocationId: String
 
