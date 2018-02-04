@@ -23,8 +23,10 @@ public protocol HubProtocol {
 
 public enum MessageType: Int {
     case Invocation = 1
-    case StreamItem
-    case Completion
+    case StreamItem = 2
+    case Completion = 3
+    case StreamInvocation = 4
+    case CancelInvocation = 5
     case Ping = 6
 }
 
@@ -38,13 +40,11 @@ public class InvocationMessage: HubMessage {
     public let target: String
     public let arguments: [Any?]
 
-    init(target: String, arguments: [Any?]) {
-        self.invocationId = nil
-        self.target = target
-        self.arguments = arguments
+    convenience init(target: String, arguments: [Any?]) {
+        self.init(invocationId: nil, target: target, arguments: arguments)
     }
 
-    init(invocationId: String, target: String, arguments: [Any?]) {
+    init(invocationId: String?, target: String, arguments: [Any?]) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
@@ -88,6 +88,28 @@ public class CompletionMessage: HubMessage {
         self.error = error
         self.result = nil
         self.hasResult = false
+    }
+}
+
+public class StreamInvocationMessage: HubMessage {
+    public let messageType = MessageType.StreamInvocation
+    public let invocationId: String
+    public let target: String
+    public let arguments: [Any?]
+
+    init(invocationId: String, target: String, arguments: [Any?]) {
+        self.invocationId = invocationId
+        self.target = target
+        self.arguments = arguments
+    }
+}
+
+public class CancelInvocation: HubMessage {
+    public let messageType = MessageType.CancelInvocation
+    public let invocationId: String
+
+    init(invocationId: String) {
+        self.invocationId = invocationId
     }
 }
 

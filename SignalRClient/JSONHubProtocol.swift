@@ -81,6 +81,8 @@ public class JSONHubProtocol: HubProtocol {
                 return try createCompletionMessage(message: message)
             case .Ping:
                 return PingMessage.instance;
+            default:
+                print("Unsupported messageType: \(messageType)")
             }
         }
 
