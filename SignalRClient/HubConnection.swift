@@ -13,7 +13,7 @@ public class HubConnection {
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
-    private var pendingCalls = [String: (HubMessage?, Error?)->Void]()
+    private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
 
     private var connection: SocketConnection!
@@ -82,42 +82,13 @@ public class HubConnection {
 
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
 
-        // TODO: Should it be just result and converter instead of Completion message?
-        let callback: (HubMessage?, Error?) -> Void = { message, error in
-
-            if error != nil {
-                invocationDidComplete(nil, error!)
-                return
-            }
-
-            guard let completionMessage = message as? CompletionMessage else {
-                invocationDidComplete(nil, SignalRError.protocolViolation)
-                return
-            }
-
-            if let hubInvocationError = completionMessage.error {
-                invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
-                return
-            }
-
-            if !completionMessage.hasResult {
-                invocationDidComplete(nil, nil)
-                return
-            }
-
-            do {
-                let result = try self.hubProtocol.typeConverter.convertFromWireType(obj: completionMessage.result, targetType: T.self)
-                invocationDidComplete(result, nil)
-            } catch {
-                invocationDidComplete(nil, error)
-            }
-        }
+        let invocationHandler = InvocationHandler<T>(typeConverter: self.hubProtocol.typeConverter, invocationDidComplete: invocationDidComplete)
 
         var id:String = ""
         hubConnectionQueue.sync {
             invocationId = invocationId + 1
             id = "\(invocationId)"
-            pendingCalls[id] = callback
+            pendingCalls[id] = invocationHandler
         }
 
         let invocationMessage = InvocationMessage(invocationId: id, target: method, arguments: arguments)
@@ -165,14 +136,14 @@ public class HubConnection {
     }
 
     fileprivate func handleInvocationCompletion(message: CompletionMessage) throws {
-        var callback: ((CompletionMessage?, Error?)->Void)?
+        var serverInvocationHandler: ServerInvocationHandler?
         self.hubConnectionQueue.sync {
-            callback = self.pendingCalls.removeValue(forKey: message.invocationId)
+            serverInvocationHandler = self.pendingCalls.removeValue(forKey: message.invocationId)
         }
 
-        if callback != nil {
+        if serverInvocationHandler != nil {
             Util.dispatchToMainThread {
-                callback!(message, nil)
+                serverInvocationHandler!.processMessage(message: message, error: nil)
             }
         }
         else {
@@ -204,9 +175,9 @@ public class HubConnection {
 
         let invocationError = error ?? SignalRError.hubInvocationCancelled
         hubConnectionQueue.sync {
-            for callback in pendingCalls.values {
+            for serverInvocationHandler in pendingCalls.values {
                 Util.dispatchToMainThread {
-                    callback(nil, invocationError)
+                    serverInvocationHandler.processMessage(message: nil, error: invocationError)
                 }
             }
             pendingCalls.removeAll()
