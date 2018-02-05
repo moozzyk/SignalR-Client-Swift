@@ -202,7 +202,7 @@ class JSONHubProtocolTests: XCTestCase {
         message = message.substring(to: message.index(before: message.endIndex))
         let json = (try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!) as? NSDictionary)!
 
-        XCTAssertEqual(4, json["type"] as! Int)
+        XCTAssertEqual(5, json["type"] as! Int)
         XCTAssertEqual("42", json["invocationId"] as! String)
     }
 

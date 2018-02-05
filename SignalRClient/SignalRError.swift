@@ -18,4 +18,5 @@ enum SignalRError : Error {
     case unsupportedType
     case connectionIsBeingClosed
     case invalidOperation(message: String)
+    case protocolViolation
 }

@@ -13,7 +13,7 @@ public class HubConnection {
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
-    private var pendingCalls = [String: (CompletionMessage?, Error?)->Void]()
+    private var pendingCalls = [String: (HubMessage?, Error?)->Void]()
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
 
     private var connection: SocketConnection!
@@ -83,25 +83,30 @@ public class HubConnection {
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
 
         // TODO: Should it be just result and converter instead of Completion message?
-        let callback: (CompletionMessage?, Error?) -> Void = { completionMessage, error in
+        let callback: (HubMessage?, Error?) -> Void = { message, error in
 
             if error != nil {
                 invocationDidComplete(nil, error!)
                 return
             }
 
-            if let hubInvocationError = completionMessage!.error {
+            guard let completionMessage = message as? CompletionMessage else {
+                invocationDidComplete(nil, SignalRError.protocolViolation)
+                return
+            }
+
+            if let hubInvocationError = completionMessage.error {
                 invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
                 return
             }
 
-            if !completionMessage!.hasResult {
+            if !completionMessage.hasResult {
                 invocationDidComplete(nil, nil)
                 return
             }
 
             do {
-                let result = try self.hubProtocol.typeConverter.convertFromWireType(obj: completionMessage!.result, targetType: T.self)
+                let result = try self.hubProtocol.typeConverter.convertFromWireType(obj: completionMessage.result, targetType: T.self)
                 invocationDidComplete(result, nil)
             } catch {
                 invocationDidComplete(nil, error)
