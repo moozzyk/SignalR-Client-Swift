@@ -118,7 +118,7 @@ public class HubConnection {
             for incomingMessage in messages {
                 switch(incomingMessage.messageType) {
                 case MessageType.Completion:
-                    try handleInvocationCompletion(message: incomingMessage as! CompletionMessage)
+                    try handleCompletion(message: incomingMessage as! CompletionMessage)
                 case MessageType.StreamItem:
                     try handleStreamItem(message: incomingMessage as! StreamItemMessage)
                 case MessageType.Invocation:
@@ -135,7 +135,7 @@ public class HubConnection {
         }
     }
 
-    fileprivate func handleInvocationCompletion(message: CompletionMessage) throws {
+    fileprivate func handleCompletion(message: CompletionMessage) throws {
         var serverInvocationHandler: ServerInvocationHandler?
         self.hubConnectionQueue.sync {
             serverInvocationHandler = self.pendingCalls.removeValue(forKey: message.invocationId)
@@ -143,15 +143,15 @@ public class HubConnection {
 
         if serverInvocationHandler != nil {
             Util.dispatchToMainThread {
-                serverInvocationHandler!.processMessage(message: message, error: nil)
+                serverInvocationHandler!.processCompletion(completionMessage: message)
             }
-        }
-        else {
+        } else {
             print("Could not find callback with id \(message.invocationId)")
         }
     }
 
     fileprivate func handleStreamItem(message: StreamItemMessage) throws {
+        // TODO: return a handle to make the stream cancellable
         throw SignalRError.invalidOperation(message: "Not supported")
     }
 
@@ -174,13 +174,16 @@ public class HubConnection {
     fileprivate func hubConnectionDidClose(error: Error?) {
 
         let invocationError = error ?? SignalRError.hubInvocationCancelled
+        var invocationHandlers: [ServerInvocationHandler] = []
         hubConnectionQueue.sync {
-            for serverInvocationHandler in pendingCalls.values {
-                Util.dispatchToMainThread {
-                    serverInvocationHandler.processMessage(message: nil, error: invocationError)
-                }
-            }
+            invocationHandlers = [ServerInvocationHandler](pendingCalls.values)
             pendingCalls.removeAll()
+        }
+
+        for serverInvocationHandler in invocationHandlers {
+            Util.dispatchToMainThread {
+                serverInvocationHandler.raiseError(error: invocationError)
+            }
         }
 
         delegate.connectionDidClose(error: error)
@@ -210,4 +213,3 @@ fileprivate class HubSocketConnectionDelegate : SocketConnectionDelegate {
         hubConnection?.hubConnectionDidClose(error: error)
     }
 }
-

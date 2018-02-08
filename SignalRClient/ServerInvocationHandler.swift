@@ -9,7 +9,8 @@
 import Foundation
 
 internal protocol ServerInvocationHandler {
-    func processMessage(message: HubMessage?, error: Error?)
+    func processCompletion(completionMessage: CompletionMessage)
+    func raiseError(error: Error)
 }
 
 internal class InvocationHandler<T>: ServerInvocationHandler {
@@ -21,17 +22,7 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
         self.invocationDidComplete = invocationDidComplete
     }
 
-    func processMessage(message: HubMessage?, error: Error?) {
-        if error != nil {
-            invocationDidComplete(nil, error!)
-            return
-        }
-
-        guard let completionMessage = message as? CompletionMessage else {
-            invocationDidComplete(nil, SignalRError.protocolViolation)
-            return
-        }
-
+    func processCompletion(completionMessage: CompletionMessage) {
         if let hubInvocationError = completionMessage.error {
             invocationDidComplete(nil, SignalRError.hubInvocationError(message: hubInvocationError))
             return
@@ -48,5 +39,33 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
         } catch {
             invocationDidComplete(nil, error)
         }
+    }
+
+    func raiseError(error: Error) {
+        invocationDidComplete(nil, error)
+    }
+}
+
+internal class StreamInvocationHandler<T>: ServerInvocationHandler {
+    private let typeConverter: TypeConverter
+    private let streamItemReceived: (T?) -> Void
+    private let invocationDidComplete: (Error?) -> Void
+
+    init(typeConverter: TypeConverter, streamItemReceived: @escaping (T?) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
+        self.typeConverter = typeConverter
+        self.streamItemReceived = streamItemReceived
+        self.invocationDidComplete = invocationDidComplete
+    }
+
+    func processCompletion(completionMessage: CompletionMessage) {
+        if let invocationError = completionMessage.error {
+            invocationDidComplete(SignalRError.hubInvocationError(message: invocationError))
+        } else {
+            invocationDidComplete(nil)
+        }
+    }
+
+    func raiseError(error: Error) {
+        invocationDidComplete(error)
     }
 }
