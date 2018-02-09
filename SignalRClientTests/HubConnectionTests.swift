@@ -142,7 +142,7 @@ class HubConnectionTests: XCTestCase {
 
     func testThatPendingInvocationsAreAbortedWhenConnectionIsClosedWithError() {
         let invocationCancelledExpectation = expectation(description: "invocation cancelled")
-        let testError = NSError()
+        let testError = SignalRError.invalidOperation(message: "testError")
 
         let testSocketConnection = TestSocketConnection()
         let hubConnection = HubConnection(connection: testSocketConnection, hubProtocol: JSONHubProtocol())
@@ -150,7 +150,14 @@ class HubConnectionTests: XCTestCase {
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
         hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
-            XCTAssertEqual(testError, error as! NSError)
+            switch (error as! SignalRError) {
+            case .invalidOperation(let errorMessage):
+                XCTAssertEqual("testError", errorMessage)
+                break
+            default:
+                XCTFail()
+                break
+            }
             invocationCancelledExpectation.fulfill()
         })
         testSocketConnection.delegate?.connectionDidClose(error: testError)
