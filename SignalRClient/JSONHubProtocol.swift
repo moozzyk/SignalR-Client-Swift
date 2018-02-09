@@ -10,7 +10,7 @@ import Foundation
 
 public class JSONTypeConverter: TypeConverter {
     public func convertToWireType(obj: Any?) throws -> Any? {
-        if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj: obj!) {
+        if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj!) {
             return obj
         }
 
@@ -58,7 +58,7 @@ public class JSONHubProtocol: HubProtocol {
         var hubMessages = [HubMessage]()
 
         if let range = dataString.range(of: recordSeparator, options: .backwards) {
-            let messages = dataString.substring(to: range.lowerBound).components(separatedBy: recordSeparator)
+            let messages = dataString[..<range.lowerBound].components(separatedBy: recordSeparator)
             for message in messages {
                 hubMessages.append(try createHubMessage(payload: message))
             }
