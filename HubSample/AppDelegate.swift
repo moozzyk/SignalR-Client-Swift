@@ -51,7 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         alert.messageText = "Enter your Name"
         alert.addButton(withTitle: "OK")
 
-        let textField = NSTextField(string: nil)
+        let textField = NSTextField(string: "")
         textField.placeholderString = "Name"
         textField.setFrameSize(NSSize(width: 250, height: textField.frame.height))
 
@@ -78,8 +78,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     func connectionDidClose(error: Error?) {
         var message = "Connection closed."
-        if error != nil {
-            message.append(" Error: \(error)")
+        if let e = error {
+            message.append(" Error: \(e)")
         }
         appendMessage(message: message)
         toggleUI(isEnabled: false)
@@ -107,8 +107,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         if msgTextField.stringValue != "" {
             chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message], invocationDidComplete:
                 {error in
-                    if error != nil {
-                        self.appendMessage(message: "Error: \(error)")
+                    if let e = error {
+                        self.appendMessage(message: "Error: \(e)")
                     }
                 })
             msgTextField.stringValue = ""
@@ -130,7 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
         if tableColumn == chatTableView.tableColumns[0] {
 
-            if let cellView = tableView.make(withIdentifier: "MessageID", owner: self) as? NSTableCellView {
+            if let cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "MessageID"), owner: self) as? NSTableCellView {
                 cellView.textField?.stringValue = messages[row]
                 return cellView
             }
