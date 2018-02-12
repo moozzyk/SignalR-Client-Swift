@@ -66,6 +66,15 @@
 		5AD455E41E5FECC300732962 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
 		5AD455E71E5FF31600732962 /* SocketRocket.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AD455E61E5FF31600732962 /* SocketRocket.framework.dSYM */; };
 		5AD455E81E5FF66C00732962 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AD455E31E5FECC300732962 /* SocketRocket.framework */; };
+		5AEC70F020310E3E00616DD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */; };
+		5AEC70F220310E3E00616DD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70F120310E3E00616DD2 /* ViewController.swift */; };
+		5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F320310E3E00616DD2 /* Main.storyboard */; };
+		5AEC70F720310E3E00616DD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F620310E3E00616DD2 /* Assets.xcassets */; };
+		5AEC70FA20310E3E00616DD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */; };
+		5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; };
+		5AEC7100203111F900616DD2 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5AEC7104203121CB00616DD2 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F582030FA0A0055671E /* SocketRocket.framework */; };
+		5AEC7105203121CB00616DD2 /* SocketRocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F582030FA0A0055671E /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +98,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 5A9803511E5FE60E00BFFB0A;
 			remoteInfo = SignalRClient;
+		};
+		5AEC7101203111F900616DD2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A9803491E5FE60E00BFFB0A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A406F3D2030F4960055671E;
+			remoteInfo = "iOS SignalRClient";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -137,6 +153,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AEC7103203111F900616DD2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5AEC7100203111F900616DD2 /* SignalRClient.framework in Embed Frameworks */,
+				5AEC7105203121CB00616DD2 /* SocketRocket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -181,6 +209,13 @@
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		5AD455E31E5FECC300732962 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		5AD455E61E5FF31600732962 /* SocketRocket.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SocketRocket.framework.dSYM; path = Carthage/Build/Mac/SocketRocket.framework.dSYM; sourceTree = "<group>"; };
+		5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSamplePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5AEC70F120310E3E00616DD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5AEC70F420310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5AEC70F620310E3E00616DD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5AEC70F920310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5AEC70FB20310E3F00616DD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +262,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AEC70EA20310E3E00616DD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */,
+				5AEC7104203121CB00616DD2 /* SocketRocket.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -238,6 +282,7 @@
 				5A98035F1E5FE60E00BFFB0A /* SignalRClientTests */,
 				5A9A815C1E63CAE100FE62A6 /* SocketsSample */,
 				5AA9EFFF1E835AC200C5E248 /* HubSample */,
+				5AEC70EE20310E3E00616DD2 /* HubSamplePhone */,
 				5A9803531E5FE60E00BFFB0A /* Products */,
 				5AD455E21E5FECC200732962 /* Frameworks */,
 			);
@@ -251,6 +296,7 @@
 				5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */,
 				5AA9EFFE1E835AC200C5E248 /* HubSample.app */,
 				5A406F3E2030F4960055671E /* SignalRClient.framework */,
+				5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,6 +369,19 @@
 				5AD455E31E5FECC300732962 /* SocketRocket.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5AEC70EE20310E3E00616DD2 /* HubSamplePhone */ = {
+			isa = PBXGroup;
+			children = (
+				5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */,
+				5AEC70F120310E3E00616DD2 /* ViewController.swift */,
+				5AEC70F320310E3E00616DD2 /* Main.storyboard */,
+				5AEC70F620310E3E00616DD2 /* Assets.xcassets */,
+				5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */,
+				5AEC70FB20310E3F00616DD2 /* Info.plist */,
+			);
+			path = HubSamplePhone;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -440,13 +499,32 @@
 			productReference = 5AA9EFFE1E835AC200C5E248 /* HubSample.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5AEC70EC20310E3E00616DD2 /* HubSamplePhone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AEC70FE20310E3F00616DD2 /* Build configuration list for PBXNativeTarget "HubSamplePhone" */;
+			buildPhases = (
+				5AEC70E920310E3E00616DD2 /* Sources */,
+				5AEC70EA20310E3E00616DD2 /* Frameworks */,
+				5AEC70EB20310E3E00616DD2 /* Resources */,
+				5AEC7103203111F900616DD2 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5AEC7102203111F900616DD2 /* PBXTargetDependency */,
+			);
+			name = HubSamplePhone;
+			productName = HubSamplePhone;
+			productReference = 5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		5A9803491E5FE60E00BFFB0A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0810;
+				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Pawel Kadluczka";
 				TargetAttributes = {
@@ -474,6 +552,10 @@
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
+					5AEC70EC20310E3E00616DD2 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 5A98034C1E5FE60E00BFFB0A /* Build configuration list for PBXProject "SignalRClient" */;
@@ -494,6 +576,7 @@
 				5A9A815A1E63CAE100FE62A6 /* SocketsSample */,
 				5AA9EFFD1E835AC200C5E248 /* HubSample */,
 				5A406F3D2030F4960055671E /* iOS SignalRClient */,
+				5AEC70EC20310E3E00616DD2 /* HubSamplePhone */,
 			);
 		};
 /* End PBXProject section */
@@ -535,6 +618,16 @@
 			files = (
 				5AA9F0031E835AC200C5E248 /* Assets.xcassets in Resources */,
 				5AA9F0061E835AC200C5E248 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AEC70EB20310E3E00616DD2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AEC70FA20310E3E00616DD2 /* LaunchScreen.storyboard in Resources */,
+				5AEC70F720310E3E00616DD2 /* Assets.xcassets in Resources */,
+				5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,6 +709,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5AEC70E920310E3E00616DD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AEC70F220310E3E00616DD2 /* ViewController.swift in Sources */,
+				5AEC70F020310E3E00616DD2 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -634,6 +736,11 @@
 			target = 5A9803511E5FE60E00BFFB0A /* macOS SignalRClient */;
 			targetProxy = 5AA9F00F1E8381DD00C5E248 /* PBXContainerItemProxy */;
 		};
+		5AEC7102203111F900616DD2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A406F3D2030F4960055671E /* iOS SignalRClient */;
+			targetProxy = 5AEC7101203111F900616DD2 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -651,6 +758,22 @@
 				5AA9F0051E835AC200C5E248 /* Base */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		5AEC70F320310E3E00616DD2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AEC70F420310E3E00616DD2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AEC70F920310E3E00616DD2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -994,6 +1117,59 @@
 			};
 			name = Release;
 		};
+		5AEC70FC20310E3F00616DD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = HubSamplePhone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5AEC70FD20310E3F00616DD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = HubSamplePhone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1047,6 +1223,15 @@
 			buildConfigurations = (
 				5AA9F0081E835AC200C5E248 /* Debug */,
 				5AA9F0091E835AC200C5E248 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5AEC70FE20310E3F00616DD2 /* Build configuration list for PBXNativeTarget "HubSamplePhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AEC70FC20310E3F00616DD2 /* Debug */,
+				5AEC70FD20310E3F00616DD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -104,7 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     @IBAction func btnSend(sender: AnyObject) {
         let message = msgTextField.stringValue
-        if msgTextField.stringValue != "" {
+        if message != "" {
             chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message], invocationDidComplete:
                 {error in
                     if let e = error {
@@ -129,7 +129,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         }
 
         if tableColumn == chatTableView.tableColumns[0] {
-
             if let cellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "MessageID"), owner: self) as? NSTableCellView {
                 cellView.textField?.stringValue = messages[row]
                 return cellView
