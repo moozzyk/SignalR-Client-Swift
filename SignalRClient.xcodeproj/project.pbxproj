@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A004A032028293400A26C0B /* ServerInvocationHandler.swift */; };
 		5A01C02C1EA0562D0091082D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A01C02B1EA0562D0091082D /* Util.swift */; };
+		5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */; };
 		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A406F472030F6240055671E /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5A406F482030F6320055671E /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
@@ -170,6 +171,7 @@
 /* Begin PBXFileReference section */
 		5A004A032028293400A26C0B /* ServerInvocationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandler.swift; sourceTree = "<group>"; };
 		5A01C02B1EA0562D0091082D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
 		5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A406F582030FA0A0055671E /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				5AA884F51E80E25400FAF9C4 /* JSONTypeConverterTests.swift */,
 				5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */,
 				5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */,
+				5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -684,6 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */,
 				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
 				5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */,
 				5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */,

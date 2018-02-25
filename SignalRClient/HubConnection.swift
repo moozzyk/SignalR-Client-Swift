@@ -151,8 +151,16 @@ public class HubConnection {
     }
 
     fileprivate func handleStreamItem(message: StreamItemMessage) throws {
-        // TODO: return a handle to make the stream cancellable
-        throw SignalRError.invalidOperation(message: "Not supported")
+        var serverInvocationHandler: ServerInvocationHandler?
+        self.hubConnectionQueue.sync {
+            serverInvocationHandler = self.pendingCalls[message.invocationId]
+        }
+
+        if serverInvocationHandler != nil {
+            throw SignalRError.invalidOperation(message: "Not supported")
+        } else {
+            print("Could not find callback with id \(message.invocationId)")
+        }
     }
 
     fileprivate func handleInvocation(message: InvocationMessage) throws {
