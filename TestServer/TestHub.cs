@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -45,6 +46,38 @@ namespace TestServer
         public IEnumerable<Person> SortByName(Person[] people)
         {
             return people.OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
+        }
+
+        public ChannelReader<int> StreamNumbers(int count, int delay)
+        {
+            var channel = Channel.CreateUnbounded<int>();
+
+            Task.Run(async () =>
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    await channel.Writer.WriteAsync(i);
+                    await Task.Delay(delay);
+                }
+
+                channel.Writer.TryComplete();
+            });
+
+            return channel.Reader;
+        }
+
+        public ChannelReader<string> ErrorStreamMethod()
+        {
+            var channel = Channel.CreateUnbounded<string>();
+
+            Task.Run(async () =>
+            {
+                await channel.Writer.WriteAsync("abc");
+                await channel.Writer.WriteAsync(null);
+                channel.Writer.TryComplete(new InvalidOperationException("Error occurred while streaming."));
+            });
+
+            return channel.Reader;
         }
     }
 }

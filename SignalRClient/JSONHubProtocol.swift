@@ -26,7 +26,7 @@ public class JSONTypeConverter: TypeConverter {
     }
 
     public func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
-        if obj == nil {
+        if obj == nil || obj is NSNull {
             return nil
         }
 
@@ -101,9 +101,7 @@ public class JSONHubProtocol: HubProtocol {
 
     private func createStreamItemMessage(message: NSDictionary) throws -> StreamItemMessage {
         let invocationId = try getInvocationId(message: message)
-
-        // TODO: handle stream item
-        return StreamItemMessage(invocationId: invocationId, item: nil)
+        return StreamItemMessage(invocationId: invocationId, item: message.value(forKey: "item"))
     }
 
     private func createCompletionMessage(message: NSDictionary) throws -> CompletionMessage {

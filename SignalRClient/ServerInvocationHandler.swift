@@ -9,6 +9,8 @@
 import Foundation
 
 internal protocol ServerInvocationHandler {
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage
+    func processStreamItem(streamItemMessage: StreamItemMessage) -> Error?
     func processCompletion(completionMessage: CompletionMessage)
     func raiseError(error: Error)
 }
@@ -20,6 +22,14 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
     init(typeConverter: TypeConverter, invocationDidComplete: @escaping (T?, Error?) -> Void) {
         self.typeConverter = typeConverter
         self.invocationDidComplete = invocationDidComplete
+    }
+
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage {
+        return InvocationMessage(invocationId: invocationId, target: method, arguments: arguments)
+    }
+
+    func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
+        return SignalRError.protocolViolation;
     }
 
     func processCompletion(completionMessage: CompletionMessage) {
@@ -55,6 +65,20 @@ internal class StreamInvocationHandler<T>: ServerInvocationHandler {
         self.typeConverter = typeConverter
         self.streamItemReceived = streamItemReceived
         self.invocationDidComplete = invocationDidComplete
+    }
+
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage {
+        return StreamInvocationMessage(invocationId: invocationId, target: method, arguments: arguments)
+    }
+
+    func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
+        do {
+            let value = try typeConverter.convertFromWireType(obj: streamItemMessage.item, targetType: T.self)
+            streamItemReceived(value)
+            return nil
+        } catch {
+            return error
+        }
     }
 
     func processCompletion(completionMessage: CompletionMessage) {
