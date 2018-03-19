@@ -84,16 +84,36 @@ public class HubConnection {
 
         let invocationHandler = InvocationHandler<T>(typeConverter: self.hubProtocol.typeConverter, invocationDidComplete: invocationDidComplete)
 
-        invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
+        _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
 
-    public func stream<T>(method: String, arguments: [Any?], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) {
+    public func stream<T>(method: String, arguments: [Any?], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
         let streamInvocationHandler = StreamInvocationHandler<T>(typeConverter: self.hubProtocol.typeConverter, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
-        invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
+        let id = invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
+
+        return StreamHandle(invocationId: id)
     }
 
-    fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Any?]) {
+    public func cancelStreamInvocation(streamHandle: StreamHandle, cancelDidFail: @escaping (_ error: Error) -> Void) {
+        hubConnectionQueue.sync {
+            _ = pendingCalls.removeValue(forKey: streamHandle.invocationId)
+        }
+
+        let cancelInvocationMessage = CancelInvocationMessage(invocationId: streamHandle.invocationId)
+        do {
+            let cancelInvocationData = try hubProtocol.writeMessage(message: cancelInvocationMessage)
+            connection.send(data: cancelInvocationData, sendDidComplete: {error in
+                if error != nil {
+                    cancelDidFail(error!)
+                }
+            })
+        } catch {
+            cancelDidFail(error)
+        }
+    }
+
+    fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Any?]) -> String {
         var id:String = ""
         hubConnectionQueue.sync {
             invocationId = invocationId + 1
@@ -112,6 +132,8 @@ public class HubConnection {
         } catch {
             failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: error)
         }
+
+        return id
     }
 
     fileprivate func failInvocationWithError(invocationHandler: ServerInvocationHandler, invocationId: String, error: Error) {
