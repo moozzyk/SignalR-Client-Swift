@@ -11,13 +11,14 @@ import Foundation
 public class Connection: SocketConnection {
     private let connectionQueue: DispatchQueue
     private let startDispatchGroup: DispatchGroup
-
+    
     private var transportDelegate: TransportDelegate?
 
     private var state: State
     private var url: URL
     private var transport: Transport?
-
+    private var headers: [HTTPHeader]
+    
     public weak var delegate: SocketConnectionDelegate!
 
     private enum State {
@@ -27,12 +28,13 @@ public class Connection: SocketConnection {
         case stopped
     }
 
-    public init(url: URL) {
+    public init(url: URL, headers: [HTTPHeader] = []) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
         self.url = url
         self.state = State.initial
+        self.headers = headers
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
 
@@ -50,7 +52,7 @@ public class Connection: SocketConnection {
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate");
 
-        httpClient.post(url: negotiateUrl) {(httpResponse, error) in
+        httpClient.post(url: negotiateUrl, headers: headers) {(httpResponse, error) in
             if error != nil {
                 print(error.debugDescription)
                 self.startDispatchGroup.leave()
@@ -79,7 +81,7 @@ public class Connection: SocketConnection {
                 self.transport = transport ?? WebsocketsTransport()
                 self.transport!.delegate = self.transportDelegate
 
-                self.transport!.start(url: self.url)
+                self.transport?.start(url: self.url, headers: self.headers)
             }
             else {
                 self.startDispatchGroup.leave()
