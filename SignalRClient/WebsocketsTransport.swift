@@ -10,11 +10,21 @@ import Foundation
 import SocketRocket
 
 public class WebsocketsTransport: NSObject, Transport, SRWebSocketDelegate {
+    
     var webSocket: SRWebSocket? = nil
     public weak var delegate: TransportDelegate! = nil
 
     public func start(url:URL) {
         self.webSocket = SRWebSocket(url: url)
+        self.webSocket!.delegate = self
+        self.webSocket!.open();
+    }
+    
+    public func start(url: URL, headers: [HTTPHeader]) {
+        var urlRequest = URLRequest(url: url)
+        headers.forEach{ urlRequest.setValue($0.value, forHTTPHeaderField: $0.header) }
+
+        self.webSocket = SRWebSocket(urlRequest: urlRequest)
         self.webSocket!.delegate = self
         self.webSocket!.open();
     }

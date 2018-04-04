@@ -27,6 +27,10 @@ public class HubConnection {
     public convenience init(url: URL, hubProtocol: HubProtocol) {
         self.init(connection: Connection(url: url), hubProtocol: hubProtocol)
     }
+    
+    public convenience init(url: URL, hubProtocol: HubProtocol = JSONHubProtocol(), headers: [HTTPHeader]) {
+        self.init(connection: Connection(url: url, headers: headers), hubProtocol: hubProtocol)
+    }
 
     public init(connection: SocketConnection!, hubProtocol: HubProtocol) {
         self.connection = connection
