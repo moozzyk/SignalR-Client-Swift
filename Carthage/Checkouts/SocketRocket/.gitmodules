@@ -1,3 +1,0 @@
-[submodule "Vendor/xctoolchain"]
-	path = Vendor/xctoolchain
-	url = https://github.com/ParsePlatform/xctoolchain.git
