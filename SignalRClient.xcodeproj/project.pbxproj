@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */; };
+		2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */; };
+		3EE477C9B88482D1A4CDC1BB /* Pods_macOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */; };
+		49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */; };
 		5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A004A032028293400A26C0B /* ServerInvocationHandler.swift */; };
 		5A01C02C1EA0562D0091082D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A01C02B1EA0562D0091082D /* Util.swift */; };
 		5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */; };
@@ -67,6 +71,7 @@
 		5AEC70FA20310E3E00616DD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */; };
 		5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; };
 		5AEC7100203111F900616DD2 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B78FA54D0EE70533533B492A /* Pods_iOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C0C5B2F05BA5316F39301E /* Pods_iOS_SignalRClient.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,6 +160,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSamplePhone.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone.release.xcconfig"; sourceTree = "<group>"; };
+		43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.release.xcconfig"; sourceTree = "<group>"; };
 		5A004A032028293400A26C0B /* ServerInvocationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandler.swift; sourceTree = "<group>"; };
 		5A01C02B1EA0562D0091082D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
@@ -204,6 +213,17 @@
 		5AEC70F620310E3E00616DD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5AEC70F920310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5AEC70FB20310E3F00616DD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		76C3C56B8D6155C4063779D7 /* Pods-HubSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.debug.xcconfig"; sourceTree = "<group>"; };
+		8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.release.xcconfig"; sourceTree = "<group>"; };
+		8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.debug.xcconfig"; sourceTree = "<group>"; };
+		A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS SignalRClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-macOS SignalRClient/Pods-macOS SignalRClient.debug.xcconfig"; sourceTree = "<group>"; };
+		A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HubSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS SignalRClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS SignalRClient/Pods-iOS SignalRClient.release.xcconfig"; sourceTree = "<group>"; };
+		CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HubSamplePhone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E362DBC384D3EDCD93D938CF /* Pods-macOS SignalRClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS SignalRClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-macOS SignalRClient/Pods-macOS SignalRClient.release.xcconfig"; sourceTree = "<group>"; };
+		E5A68745A1B87B62015E6E63 /* Pods-iOS SignalRClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS SignalRClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOS SignalRClient/Pods-iOS SignalRClient.debug.xcconfig"; sourceTree = "<group>"; };
+		E727A959866B76D6C3A7D6EF /* Pods-HubSamplePhone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSamplePhone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone.debug.xcconfig"; sourceTree = "<group>"; };
+		F1C0C5B2F05BA5316F39301E /* Pods_iOS_SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B78FA54D0EE70533533B492A /* Pods_iOS_SignalRClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +239,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EE477C9B88482D1A4CDC1BB /* Pods_macOS_SignalRClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A73DFE61E63E2D4007F3913 /* SignalRClient.framework in Frameworks */,
+				49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AA9F00B1E835C6200C5E248 /* SignalRClient.framework in Frameworks */,
+				0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */,
+				2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +291,7 @@
 				5AEC70EE20310E3E00616DD2 /* HubSamplePhone */,
 				5A9803531E5FE60E00BFFB0A /* Products */,
 				5AD455E21E5FECC200732962 /* Frameworks */,
+				CF54909841A9ABBC83150856 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -350,6 +376,11 @@
 			children = (
 				5A406F582030FA0A0055671E /* SocketRocket.framework */,
 				5AD455E31E5FECC300732962 /* SocketRocket.framework */,
+				A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */,
+				CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */,
+				43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */,
+				F1C0C5B2F05BA5316F39301E /* Pods_iOS_SignalRClient.framework */,
+				08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -365,6 +396,23 @@
 				5AEC70FB20310E3F00616DD2 /* Info.plist */,
 			);
 			path = HubSamplePhone;
+			sourceTree = "<group>";
+		};
+		CF54909841A9ABBC83150856 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				76C3C56B8D6155C4063779D7 /* Pods-HubSample.debug.xcconfig */,
+				8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */,
+				E727A959866B76D6C3A7D6EF /* Pods-HubSamplePhone.debug.xcconfig */,
+				1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */,
+				8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */,
+				519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */,
+				E5A68745A1B87B62015E6E63 /* Pods-iOS SignalRClient.debug.xcconfig */,
+				BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */,
+				A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */,
+				E362DBC384D3EDCD93D938CF /* Pods-macOS SignalRClient.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,6 +440,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A406F452030F4970055671E /* Build configuration list for PBXNativeTarget "iOS SignalRClient" */;
 			buildPhases = (
+				7BB6876F3521A24B6FC1DF29 /* [CP] Check Pods Manifest.lock */,
 				5A406F392030F4960055671E /* Sources */,
 				5A406F3A2030F4960055671E /* Frameworks */,
 				5A406F3B2030F4960055671E /* Headers */,
@@ -410,6 +459,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A9803661E5FE60E00BFFB0A /* Build configuration list for PBXNativeTarget "macOS SignalRClient" */;
 			buildPhases = (
+				B47D6EA92AB645824692CB40 /* [CP] Check Pods Manifest.lock */,
 				5A98034D1E5FE60E00BFFB0A /* Sources */,
 				5A98034E1E5FE60E00BFFB0A /* Frameworks */,
 				5A98034F1E5FE60E00BFFB0A /* Headers */,
@@ -448,10 +498,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "SocketsSample" */;
 			buildPhases = (
+				887F336C28EB27B62399DE50 /* [CP] Check Pods Manifest.lock */,
 				5A9A81571E63CAE100FE62A6 /* Sources */,
 				5A9A81581E63CAE100FE62A6 /* Frameworks */,
 				5A9A81591E63CAE100FE62A6 /* Resources */,
 				5A73DFE51E63E2CF007F3913 /* Embed Frameworks */,
+				6FA5F404FC0798A286023685 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -467,10 +519,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5AA9F00A1E835AC300C5E248 /* Build configuration list for PBXNativeTarget "HubSample" */;
 			buildPhases = (
+				75D3869AEC191660116EC962 /* [CP] Check Pods Manifest.lock */,
 				5AA9EFFA1E835AC200C5E248 /* Sources */,
 				5AA9EFFB1E835AC200C5E248 /* Frameworks */,
 				5AA9EFFC1E835AC200C5E248 /* Resources */,
 				5AA9F0111E8381DD00C5E248 /* Embed Frameworks */,
+				4BCEE3EBA86F19ED445D7D2A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -486,10 +540,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5AEC70FE20310E3F00616DD2 /* Build configuration list for PBXNativeTarget "HubSamplePhone" */;
 			buildPhases = (
+				5CD905B189219788E6F400CA /* [CP] Check Pods Manifest.lock */,
 				5AEC70E920310E3E00616DD2 /* Sources */,
 				5AEC70EA20310E3E00616DD2 /* Frameworks */,
 				5AEC70EB20310E3E00616DD2 /* Resources */,
 				5AEC7103203111F900616DD2 /* Embed Frameworks */,
+				C75F95C6637064505799D5B6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -615,6 +671,153 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4BCEE3EBA86F19ED445D7D2A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HubSample/Pods-HubSample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftWebSocket-macOS/SwiftWebSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftWebSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HubSample/Pods-HubSample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5CD905B189219788E6F400CA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HubSamplePhone-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6FA5F404FC0798A286023685 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftWebSocket-macOS/SwiftWebSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftWebSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		75D3869AEC191660116EC962 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HubSample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7BB6876F3521A24B6FC1DF29 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-iOS SignalRClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		887F336C28EB27B62399DE50 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SocketsSample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B47D6EA92AB645824692CB40 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-macOS SignalRClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C75F95C6637064505799D5B6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftWebSocket-iOS/SwiftWebSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftWebSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5A406F392030F4960055671E /* Sources */ = {
@@ -767,6 +970,7 @@
 /* Begin XCBuildConfiguration section */
 		5A406F432030F4970055671E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5A68745A1B87B62015E6E63 /* Pods-iOS SignalRClient.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -797,6 +1001,7 @@
 		};
 		5A406F442030F4970055671E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -942,6 +1147,7 @@
 		};
 		5A9803671E5FE60E00BFFB0A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -967,6 +1173,7 @@
 		};
 		5A9803681E5FE60E00BFFB0A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E362DBC384D3EDCD93D938CF /* Pods-macOS SignalRClient.release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -1027,6 +1234,7 @@
 		};
 		5A9A81661E63CAE100FE62A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1043,6 +1251,7 @@
 		};
 		5A9A81671E63CAE100FE62A6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1059,6 +1268,7 @@
 		};
 		5AA9F0081E835AC200C5E248 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76C3C56B8D6155C4063779D7 /* Pods-HubSample.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1078,6 +1288,7 @@
 		};
 		5AA9F0091E835AC200C5E248 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1097,6 +1308,7 @@
 		};
 		5AEC70FC20310E3F00616DD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E727A959866B76D6C3A7D6EF /* Pods-HubSamplePhone.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1123,6 +1335,7 @@
 		};
 		5AEC70FD20310E3F00616DD2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
