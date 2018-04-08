@@ -14,6 +14,7 @@
 		5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A004A032028293400A26C0B /* ServerInvocationHandler.swift */; };
 		5A01C02C1EA0562D0091082D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A01C02B1EA0562D0091082D /* Util.swift */; };
 		5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */; };
+		5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A406F472030F6240055671E /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5A406F482030F6320055671E /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
@@ -35,13 +36,11 @@
 		5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */; };
 		5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
-		5A73DFE61E63E2D4007F3913 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
 		5A73DFED1E6B8960007F3913 /* HubConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */; };
 		5A73DFEF1E6B8B3D007F3913 /* SocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */; };
 		5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */; };
-		5A98035C1E5FE60E00BFFB0A /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
 		5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* Connection.swift */; };
@@ -56,7 +55,6 @@
 		5AA9F0011E835AC200C5E248 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA9F0001E835AC200C5E248 /* AppDelegate.swift */; };
 		5AA9F0031E835AC200C5E248 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0021E835AC200C5E248 /* Assets.xcassets */; };
 		5AA9F0061E835AC200C5E248 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0041E835AC200C5E248 /* MainMenu.xib */; };
-		5AA9F00B1E835C6200C5E248 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; };
 		5AA9F00E1E8381DD00C5E248 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC1AE391E89E737006262B3 /* Transport.swift */; };
 		5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */; };
@@ -69,8 +67,7 @@
 		5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F320310E3E00616DD2 /* Main.storyboard */; };
 		5AEC70F720310E3E00616DD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F620310E3E00616DD2 /* Assets.xcassets */; };
 		5AEC70FA20310E3E00616DD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */; };
-		5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; };
-		5AEC7100203111F900616DD2 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8CA9EEB3E27586F414B72852 /* Pods_SignalRClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 109C6D06F4621E30F0A59B16 /* Pods_SignalRClientTests.framework */; };
 		B78FA54D0EE70533533B492A /* Pods_iOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C0C5B2F05BA5316F39301E /* Pods_iOS_SignalRClient.framework */; };
 /* End PBXBuildFile section */
 
@@ -152,7 +149,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5AEC7100203111F900616DD2 /* SignalRClient.framework in Embed Frameworks */,
+				5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -161,7 +158,9 @@
 
 /* Begin PBXFileReference section */
 		08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macOS_SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		109C6D06F4621E30F0A59B16 /* Pods_SignalRClientTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SignalRClientTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSamplePhone.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone.release.xcconfig"; sourceTree = "<group>"; };
+		2B834CCBD18A464AD4A954B8 /* Pods-SignalRClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SignalRClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 		43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.release.xcconfig"; sourceTree = "<group>"; };
 		5A004A032028293400A26C0B /* ServerInvocationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandler.swift; sourceTree = "<group>"; };
@@ -169,7 +168,6 @@
 		5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
 		5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A406F582030FA0A0055671E /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		5A45C82D1F52A774003EEC55 /* HubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocol.swift; sourceTree = "<group>"; };
 		5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocol.swift; sourceTree = "<group>"; };
 		5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocolTests.swift; sourceTree = "<group>"; };
@@ -204,7 +202,6 @@
 		5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTransport.swift; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
-		5AD455E31E5FECC300732962 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		5AE82B94204FC93100F0D15D /* StreamHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandle.swift; sourceTree = "<group>"; };
 		5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSamplePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -214,6 +211,7 @@
 		5AEC70F920310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5AEC70FB20310E3F00616DD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		76C3C56B8D6155C4063779D7 /* Pods-HubSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.debug.xcconfig"; sourceTree = "<group>"; };
+		7A3E83A6A659DA0EB659A919 /* Pods-SignalRClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SignalRClientTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.release.xcconfig"; sourceTree = "<group>"; };
 		8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.debug.xcconfig"; sourceTree = "<group>"; };
 		A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS SignalRClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-macOS SignalRClient/Pods-macOS SignalRClient.debug.xcconfig"; sourceTree = "<group>"; };
@@ -247,7 +245,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A98035C1E5FE60E00BFFB0A /* SignalRClient.framework in Frameworks */,
+				8CA9EEB3E27586F414B72852 /* Pods_SignalRClientTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +253,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A73DFE61E63E2D4007F3913 /* SignalRClient.framework in Frameworks */,
 				49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,7 +261,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AA9F00B1E835C6200C5E248 /* SignalRClient.framework in Frameworks */,
 				0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +269,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AEC70FF203111F900616DD2 /* SignalRClient.framework in Frameworks */,
 				2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,13 +369,12 @@
 		5AD455E21E5FECC200732962 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5A406F582030FA0A0055671E /* SocketRocket.framework */,
-				5AD455E31E5FECC300732962 /* SocketRocket.framework */,
 				A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */,
 				CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */,
 				43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */,
 				F1C0C5B2F05BA5316F39301E /* Pods_iOS_SignalRClient.framework */,
 				08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */,
+				109C6D06F4621E30F0A59B16 /* Pods_SignalRClientTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -411,6 +405,8 @@
 				BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */,
 				A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */,
 				E362DBC384D3EDCD93D938CF /* Pods-macOS SignalRClient.release.xcconfig */,
+				2B834CCBD18A464AD4A954B8 /* Pods-SignalRClientTests.debug.xcconfig */,
+				7A3E83A6A659DA0EB659A919 /* Pods-SignalRClientTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -479,10 +475,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A9803691E5FE60E00BFFB0A /* Build configuration list for PBXNativeTarget "SignalRClientTests" */;
 			buildPhases = (
+				0BFE39DBC8F5350DA2EE70DE /* [CP] Check Pods Manifest.lock */,
 				5A9803571E5FE60E00BFFB0A /* Sources */,
 				5A9803581E5FE60E00BFFB0A /* Frameworks */,
 				5A9803591E5FE60E00BFFB0A /* Resources */,
 				5A9A81131E5FF98100FE62A6 /* CopyFiles */,
+				58289E49FE78FD7DB124281D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -673,6 +671,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0BFE39DBC8F5350DA2EE70DE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SignalRClientTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		4BCEE3EBA86F19ED445D7D2A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -689,6 +705,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HubSample/Pods-HubSample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		58289E49FE78FD7DB124281D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftWebSocket-macOS/SwiftWebSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftWebSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5CD905B189219788E6F400CA /* [CP] Check Pods Manifest.lock */ = {
@@ -981,10 +1015,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = SignalRClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1012,10 +1043,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = SignalRClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1198,13 +1226,11 @@
 		};
 		5A98036A1E5FE60E00BFFB0A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B834CCBD18A464AD4A954B8 /* Pods-SignalRClientTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SignalRClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.SignalRClientTests;
@@ -1216,13 +1242,11 @@
 		};
 		5A98036B1E5FE60E00BFFB0A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A3E83A6A659DA0EB659A919 /* Pods-SignalRClientTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SignalRClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.SignalRClientTests;
@@ -1273,10 +1297,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = HubSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;
@@ -1293,10 +1314,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = HubSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;

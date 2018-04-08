@@ -24,3 +24,8 @@ target 'SocketsSample' do
   use_frameworks!
   platform :osx, '10.13'
 end
+
+target 'SignalRClientTests' do
+  use_frameworks!
+  platform :osx, '10.13'
+end

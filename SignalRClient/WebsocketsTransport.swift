@@ -7,48 +7,61 @@
 //
 
 import Foundation
+import SwiftWebSocket
 
 public class WebsocketsTransport: Transport {
-//    var webSocket: SRWebSocket? = nil
+    var webSocket:WebSocket? = nil
     public weak var delegate: TransportDelegate! = nil
 
-    public func start(url:URL) {
-//        self.webSocket = SRWebSocket(url: url)
-//        self.webSocket!.delegate = self
-//        self.webSocket!.open();
+    public func start(url: URL) {
+        webSocket = WebSocket(url: convertUrl(url: url))
+
+        webSocket!.event.open = {
+            self.delegate?.transportDidOpen()
+        }
+
+        webSocket!.event.close = { code, reason, clean in
+            if clean {
+                self.delegate?.transportDidClose(nil)
+            } else {
+                // TODO: Error/reason
+                self.delegate?.transportDidClose(nil)
+            }
+        }
+
+        webSocket!.event.error = { error in
+            self.delegate!.transportDidClose(error)
+        }
+
+        webSocket!.event.message = { message in
+            if let text = message as? String {
+                self.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
+            } else {
+                self.delegate?.transportDidReceiveData(message as! Data)
+            }
+        }
+        webSocket!.open()
     }
 
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
-//        do {
-//            try webSocket?.send(data: data)
-//            sendDidComplete(nil)
-//        } catch {
-//            sendDidComplete(error)
-//        }
+        webSocket?.send(data: data)
+        sendDidComplete(nil)
     }
 
     public func close() {
-//        webSocket?.close()
+        webSocket?.close()
     }
 
-//    public func webSocketDidOpen(_ webSocket: SRWebSocket) {
-//        delegate?.transportDidOpen()
-//    }
-//
-//    public func webSocket(_ webSocket: SRWebSocket, didReceiveMessageWith data: Data) {
-//        delegate?.transportDidReceiveData(data)
-//    }
-//
-//    public func webSocket(_ webSocket: SRWebSocket, didReceiveMessageWith string: String) {
-//        delegate?.transportDidReceiveData(string.data(using: .utf8)!)
-//    }
-//
-//    public func webSocket(_ webSocket: SRWebSocket, didCloseWithCode code: Int, reason: String?, wasClean: Bool) {
-//        // TODO: Handle error codes
-//        delegate?.transportDidClose(nil)
-//    }
-//
-//    public func webSocket(_ webSocket: SRWebSocket, didFailWithError error: Error) {
-//        delegate?.transportDidClose(error)
-//    }
+    private func convertUrl(url: URL) -> URL {
+        if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            if (components.scheme == "http") {
+                components.scheme = "ws"
+            } else if (components.scheme == "https") {
+                components.scheme = "wss"
+            }
+            return components.url!
+        }
+
+        return url
+    }
 }
