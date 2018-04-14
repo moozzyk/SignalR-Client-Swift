@@ -11,9 +11,9 @@ namespace TestServer
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSockets();
+            services.AddConnections();
             services.AddSignalR();
-            services.AddSingleton<EchoEndPoint>();
+            services.AddSingleton<EchoConnectionHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -25,7 +25,7 @@ namespace TestServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSockets(options => options.MapEndPoint<EchoEndPoint>("/echo"));
+            app.UseConnections(options => options.MapConnectionHandler<EchoConnectionHandler>("/echo"));
             app.UseSignalR(options =>
             {
                 options.MapHub<TestHub>("/testhub");
