@@ -14,6 +14,10 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("json", JSONHubProtocol().name)
     }
 
+    func testThatHubProtocolReturnsCorrectVersion() {
+        XCTAssertEqual(1, JSONHubProtocol().version)
+    }
+
     func testThatMessagesWithoutSeparatorAreNotParsed() {
         XCTAssertEqual(0, try JSONHubProtocol().parseMessages(input: "abc".data(using: .utf8)!).count)
     }

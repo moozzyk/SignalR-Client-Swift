@@ -10,7 +10,7 @@ import Foundation
 
 class HandshakeProtocol {
     static func createHandshakeRequest(hubProtocol: HubProtocol) -> String {
-        return "{\"protocol\": \"\(hubProtocol.name)\", \"version\": 1}\u{1e}"
+        return "{\"protocol\": \"\(hubProtocol.name)\", \"version\": \(hubProtocol.version)}\u{1e}"
     }
 
     static func parseHandshakeResponse(handshakeResponse: String) -> Error? {

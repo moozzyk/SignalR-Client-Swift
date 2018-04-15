@@ -42,6 +42,7 @@ public class JSONHubProtocol: HubProtocol {
     private let recordSeparator = "\u{1e}"
     public let typeConverter: TypeConverter
     public let name = "json"
+    public let version = 1
     public let type = ProtocolType.Text
 
     public convenience init() {

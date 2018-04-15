@@ -23,7 +23,7 @@ class HandshakeProtocolTests: XCTestCase {
 
     public func testThatHandshakeProtocolWritesCorrectHandshakeMessage() {
         let handshakeMessage = HandshakeProtocol.createHandshakeRequest(hubProtocol: HubProtocolFake())
-        XCTAssertEqual("{\"protocol\": \"fakeProtocol\", \"version\": 1}\u{1e}", handshakeMessage)
+        XCTAssertEqual("{\"protocol\": \"fakeProtocol\", \"version\": 42}\u{1e}", handshakeMessage)
     }
 
     public func testThatHandshakeProtocolReturnsNilForEmptyHandshakeResponse() {
@@ -66,6 +66,7 @@ class HandshakeProtocolTests: XCTestCase {
 
     class HubProtocolFake: HubProtocol {
         let name = "fakeProtocol"
+        let version = 42
         let type = ProtocolType.Binary
         let typeConverter: TypeConverter = JSONTypeConverter()
 

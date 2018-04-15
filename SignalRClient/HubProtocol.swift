@@ -15,6 +15,7 @@ public enum ProtocolType: Int {
 
 public protocol HubProtocol {
     var name: String { get }
+    var version: Int { get }
     var type: ProtocolType { get }
     var typeConverter: TypeConverter { get }
     func parseMessages(input: Data) throws -> [HubMessage]
