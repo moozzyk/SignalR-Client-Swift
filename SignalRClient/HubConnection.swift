@@ -43,11 +43,12 @@ public class HubConnection {
     fileprivate func connectionStarted() {
         // TODO: support custom protcols
         // TODO: add negative test (e.g. invalid protocol)
-        connection.send(data: "{ \"protocol\": \"\(hubProtocol.name)\" }\u{1e}".data(using: .utf8)!) { error in
+        connection.send(data: "\(HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol))".data(using: .utf8)!) { error in
             if let e = error {
                 delegate.connectionDidFailToOpen(error: e)
             }
             else {
+                // TODO: parse handshake response and return error
                 delegate.connectionDidOpen(hubConnection: self)
             }
         }

@@ -19,4 +19,5 @@ public enum SignalRError : Error {
     case connectionIsBeingClosed
     case invalidOperation(message: String)
     case protocolViolation
+    case handshakeError(message: String)
 }
