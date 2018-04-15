@@ -27,12 +27,12 @@ class HandshakeProtocolTests: XCTestCase {
     }
 
     public func testThatHandshakeProtocolReturnsNilForEmptyHandshakeResponse() {
-        XCTAssertNil(HandshakeProtocol.parseHandshakeResponse(handshakeResponse: "{}"))
-        XCTAssertNil(HandshakeProtocol.parseHandshakeResponse(handshakeResponse: "{ }"))
+        XCTAssertNil(HandshakeProtocol.parseHandshakeResponse(data: "{}\u{1e}".data(using: .utf8)!).0)
+        XCTAssertNil(HandshakeProtocol.parseHandshakeResponse(data: "{ }\u{1e}".data(using: .utf8)!).0)
     }
 
-    public func testThatHandshakeProtocolReturnsErroForErrorHandshakeResponse() {
-        let error = HandshakeProtocol.parseHandshakeResponse(handshakeResponse: "{ \"error\": \"handshake failed\"}")
+    public func testThatHandshakeProtocolReturnsErroHandshakeResponse() {
+        let (error, _) = HandshakeProtocol.parseHandshakeResponse(data: "{ \"error\": \"handshake failed\"}\u{1e}".data(using: .utf8)!)
         switch (error as? SignalRError) {
         case .handshakeError(let errorMessage)?:
             XCTAssertEqual("handshake failed", errorMessage)
@@ -43,11 +43,11 @@ class HandshakeProtocolTests: XCTestCase {
         }
     }
 
-    public func testThatHandshakeProtocolReturnsErroForErrorForUnexpectedResponse() {
-        let testResponses = ["{ \"message\": \"hello\"}", "{ \"message\": \"hello\", \"answer\": 42 }", "[]"]
+    public func testThatHandshakeProtocolReturnsErroForUnexpectedResponse() {
+        let testResponses = ["{ \"message\": \"hello\"}\u{1e}", "{ \"message\": \"hello\", \"answer\": 42 }\u{1e}", "[]\u{1e}"]
 
         testResponses.forEach {
-            let error = HandshakeProtocol.parseHandshakeResponse(handshakeResponse: $0)
+            let (error, _) = HandshakeProtocol.parseHandshakeResponse(data: $0.data(using: .utf8)!)
             switch (error as? SignalRError) {
             case .handshakeError(let errorMessage)?:
                 XCTAssertEqual("Invalid handshake response.", errorMessage)
@@ -60,22 +60,35 @@ class HandshakeProtocolTests: XCTestCase {
     }
 
     public func testThatHandshakeProtocolReturnsErroForInvalidJson() {
-        let error = HandshakeProtocol.parseHandshakeResponse(handshakeResponse: "{")
+        let error = HandshakeProtocol.parseHandshakeResponse(data: "{\u{1e}".data(using: .utf8)!)
         XCTAssertNotNil(error)
     }
 
-    class HubProtocolFake: HubProtocol {
-        let name = "fakeProtocol"
-        let version = 42
-        let type = ProtocolType.Binary
-        let typeConverter: TypeConverter = JSONTypeConverter()
+    public func testThatHandshakeProtocolReturnsErroForPartialHandshakePayload() {
+        let testResponses = ["", "{"]
 
-        func parseMessages(input: Data) throws -> [HubMessage] {
-            throw NSError(domain: "Not supported", code: -1)
+        testResponses.forEach {
+            let data = $0.data(using: .utf8)!
+            let (error, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
+            switch (error as? SignalRError) {
+            case .handshakeError(let errorMessage)?:
+                XCTAssertEqual("Received partial handshake response.", errorMessage)
+                XCTAssertTrue(remainingData.elementsEqual(data))
+                break
+            default:
+                XCTFail()
+                break
+            }
         }
+    }
 
-        func writeMessage(message: HubMessage) throws -> Data {
-            throw NSError(domain: "Not supported", code: -1)
+    public func testThatHandshakeProtocolReturnsRemainingDataAfterParsing() {
+        let testResponses = ["{}\u{1e}abc", "{\"error\": \"error occurred\"}\u{1e}123"]
+
+        testResponses.forEach {
+            let data = $0.data(using: .utf8)!
+            let (_, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
+            XCTAssertTrue(remainingData.elementsEqual(data[(data.endIndex - 3)...]))
         }
     }
 }

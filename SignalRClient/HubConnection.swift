@@ -15,6 +15,7 @@ public class HubConnection {
     private var socketConnectionDelegate: HubSocketConnectionDelegate?
     private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
+    private var handshakeHandled = false
 
     private var connection: SocketConnection!
     private var hubProtocol: HubProtocol!
@@ -46,10 +47,6 @@ public class HubConnection {
         connection.send(data: "\(HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol))".data(using: .utf8)!) { error in
             if let e = error {
                 delegate.connectionDidFailToOpen(error: e)
-            }
-            else {
-                // TODO: parse handshake response and return error
-                delegate.connectionDidOpen(hubConnection: self)
             }
         }
     }
@@ -148,6 +145,17 @@ public class HubConnection {
     }
 
     fileprivate func hubConnectionDidReceiveData(data: Data) {
+        var data = data
+        if !handshakeHandled {
+            let (error, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
+            handshakeHandled = true
+            data = remainingData
+            if let e = error {
+                delegate.connectionDidFailToOpen(error: e)
+                return
+            }
+            delegate.connectionDidOpen(hubConnection: self)
+        }
         do {
             let messages = try hubProtocol.parseMessages(input: data)
             for incomingMessage in messages {
@@ -170,7 +178,7 @@ public class HubConnection {
         }
     }
 
-    fileprivate func handleCompletion(message: CompletionMessage) throws {
+    private func handleCompletion(message: CompletionMessage) throws {
         var serverInvocationHandler: ServerInvocationHandler?
         self.hubConnectionQueue.sync {
             serverInvocationHandler = self.pendingCalls.removeValue(forKey: message.invocationId)

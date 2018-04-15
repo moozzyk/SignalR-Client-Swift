@@ -18,6 +18,7 @@
 		5A32F4EB20829F700091C185 /* HandshakeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A32F4EA20829F700091C185 /* HandshakeProtocol.swift */; };
 		5A32F4EC20829F700091C185 /* HandshakeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A32F4EA20829F700091C185 /* HandshakeProtocol.swift */; };
 		5A32F4EE2082BE690091C185 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A32F4ED2082BE690091C185 /* HandshakeProtocolTests.swift */; };
+		5A32F4F02084195A0091C185 /* HubProtocolFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A32F4EF2084195A0091C185 /* HubProtocolFake.swift */; };
 		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A406F472030F6240055671E /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5A406F482030F6320055671E /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
@@ -171,6 +172,7 @@
 		5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
 		5A32F4EA20829F700091C185 /* HandshakeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandshakeProtocol.swift; sourceTree = "<group>"; };
 		5A32F4ED2082BE690091C185 /* HandshakeProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandshakeProtocolTests.swift; sourceTree = "<group>"; };
+		5A32F4EF2084195A0091C185 /* HubProtocolFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubProtocolFake.swift; sourceTree = "<group>"; };
 		5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A45C82D1F52A774003EEC55 /* HubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocol.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */,
 				5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */,
 				5A32F4ED2082BE690091C185 /* HandshakeProtocolTests.swift */,
+				5A32F4EF2084195A0091C185 /* HubProtocolFake.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -918,6 +921,7 @@
 				5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */,
 				5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */,
 				5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */,
+				5A32F4F02084195A0091C185 /* HubProtocolFake.swift in Sources */,
 				5A32F4EE2082BE690091C185 /* HandshakeProtocolTests.swift in Sources */,
 				5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */,
 				5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */,

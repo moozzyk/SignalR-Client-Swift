@@ -19,6 +19,35 @@ class HubConnectionTests: XCTestCase {
         super.tearDown()
     }
 
+    func testThatOpeningHubConnectionFailsIfHandshakeFails() {
+        let didFailToOpenExpectation = expectation(description: "connection failed to open")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { _ in XCTFail() }
+        hubConnectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpenExpectation.fulfill()
+            switch (error as? SignalRError) {
+            case .handshakeError(let errorMessage)?:
+                XCTAssertEqual("The protocol 'fakeProtocol' is not supported.", errorMessage)
+                break
+            default:
+                XCTFail()
+                break
+            }
+        }
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            didCloseExpectation.fulfill()
+            XCTAssertNil(error)
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: HubProtocolFake())
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 500 /*seconds*/)
+    }
+
     func testThatHubMethodCanBeInvoked() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
@@ -563,7 +592,6 @@ class HubConnectionTests: XCTestCase {
         }
 
         private func convertUser(user: User?) -> [String: Any?]? {
-
             if let u = user {
                 return [
                     "firstName": u.firstName,
@@ -577,7 +605,6 @@ class HubConnectionTests: XCTestCase {
         }
 
         override func convertFromWireType<T>(obj: Any?, targetType: T.Type) throws -> T? {
-
             if let userDictionary = obj as? [String: Any?]? {
                 return materializeUser(userDictionary: userDictionary) as? T
             }
@@ -605,7 +632,6 @@ class HubConnectionTests: XCTestCase {
     }
 
     func testThatHubMethodUsingComplexTypesCanBeInvoked() {
-
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
