@@ -12,7 +12,10 @@ namespace TestServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddConnections();
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
             services.AddSingleton<EchoConnectionHandler>();
         }
 

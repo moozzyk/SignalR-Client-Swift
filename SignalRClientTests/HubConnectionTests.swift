@@ -91,7 +91,7 @@ class HubConnectionTests: XCTestCase {
 
                 switch (error as! SignalRError) {
                 case .hubInvocationError(let errorMessage):
-                    XCTAssertEqual("Error occurred.", errorMessage)
+                    XCTAssertEqual("An unexpected error occurred invoking 'ErrorMethod' on the server. InvalidOperationException: Error occurred.", errorMessage)
                     break
                 default:
                     XCTFail()
@@ -210,7 +210,7 @@ class HubConnectionTests: XCTestCase {
 
                 switch (error as! SignalRError) {
                 case .hubInvocationError(let errorMessage):
-                    XCTAssertEqual("Error occurred while streaming.", errorMessage)
+                    XCTAssertEqual("An error occurred on the server while streaming results. InvalidOperationException: Error occurred while streaming.", errorMessage)
                     break
                 default:
                     XCTFail()
