@@ -39,7 +39,7 @@ public class JSONTypeConverter: TypeConverter {
 }
 
 public class JSONHubProtocol: HubProtocol {
-    private let recordSeparator = "\u{1e}"
+    private let recordSeparator = UInt8(0x1e)
     public let typeConverter: TypeConverter
     public let name = "json"
     public let version = 1
@@ -54,23 +54,18 @@ public class JSONHubProtocol: HubProtocol {
     }
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
-        let dataString = String(data: input, encoding: .utf8)!
-
-        var hubMessages = [HubMessage]()
-
-        if let range = dataString.range(of: recordSeparator, options: .backwards) {
-            let messages = dataString[..<range.lowerBound].components(separatedBy: recordSeparator)
-            for message in messages {
-                hubMessages.append(try createHubMessage(payload: message))
-            }
+        let payloads = input.split(separator: recordSeparator)
+        // do not try to parse the last payload if it is not terminated with record sparator
+        // TODO: log that if payloads was received ?
+        var count = payloads.count
+        if count > 0 && input.last != recordSeparator {
+            count = count - 1
         }
-
-        return hubMessages
+        return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
     }
 
-    private func createHubMessage(payload: String) throws -> HubMessage {
-        // TODO: try to avoid double conversion (Data -> String -> Data)
-        let json = try JSONSerialization.jsonObject(with: payload.data(using: .utf8)!)
+    private func createHubMessage(payload: Data) throws -> HubMessage {
+        let json = try JSONSerialization.jsonObject(with: payload)
 
         if let message = json as? NSDictionary, let rawMessageType = message.object(forKey: "type") as? Int, let messageType = MessageType(rawValue: rawMessageType) {
             switch messageType {
@@ -129,7 +124,7 @@ public class JSONHubProtocol: HubProtocol {
     public func writeMessage(message: HubMessage) throws -> Data {
         let invocationJSONObject = try createMessageJSONObject(message: message)
         var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)
-        payload.append(recordSeparator.data(using: .utf8)!)
+        payload.append(recordSeparator)
         return payload
     }
 
