@@ -2,13 +2,13 @@
 
 Swift SignalR Client for Asp.Net Core SignalR server
 
-## Installation
+## Installation (for version compatible with SignalR 1.0.0-preview1)
 
 - Install/Update the Carthage package manager
 - Create a new file called `Cartfile` in the application folder
 - Add the following line to the `Cartfile` to get the latest bits
   
-  ```github "moozzyk/SignalR-Client-Swift" master``` 
+  ```github "moozzyk/SignalR-Client-Swift" d9d46bd87ab99e3b2c063a231fbf4cc4fd700199``` 
   
 - In terminal go to the application folder and run (`--platform` can be skipped to install for available platforms):
   
