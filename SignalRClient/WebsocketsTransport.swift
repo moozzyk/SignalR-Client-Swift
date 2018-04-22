@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SwiftWebSocket
+// import SwiftWebSocket
 
 public class WebsocketsTransport: Transport {
     var webSocket:WebSocket? = nil
