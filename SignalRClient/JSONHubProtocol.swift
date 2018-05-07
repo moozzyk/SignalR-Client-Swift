@@ -77,6 +77,8 @@ public class JSONHubProtocol: HubProtocol {
                 return try createCompletionMessage(message: message)
             case .Ping:
                 return PingMessage.instance
+            case .Close:
+                return createCloseMessage(message: message)
             default:
                 print("Unsupported messageType: \(messageType)")
             }
@@ -119,6 +121,11 @@ public class JSONHubProtocol: HubProtocol {
         }
 
         return invocationId
+    }
+
+    private func createCloseMessage(message: NSDictionary) -> CloseMessage {
+        let error = message.value(forKey: "error") as? String
+        return CloseMessage(error: error)
     }
 
     public func writeMessage(message: HubMessage) throws -> Data {

@@ -29,6 +29,7 @@ public enum MessageType: Int {
     case StreamInvocation = 4
     case CancelInvocation = 5
     case Ping = 6
+    case Close = 7
 }
 
 public protocol HubMessage {
@@ -119,4 +120,13 @@ public class PingMessage : HubMessage {
     private init() { }
 
     static let instance = PingMessage()
+}
+
+public class CloseMessage: HubMessage {
+    public let messageType = MessageType.Close
+    public let error: String?
+
+    init(error: String?) {
+        self.error = error
+    }
 }

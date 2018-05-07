@@ -164,6 +164,22 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(MessageType.Ping, hubMessages[0].messageType)
     }
 
+    func testThatCanParseCloseMessageWithoutError() {
+        let payload = "{ \"type\": 7 }\u{001e}"
+        let hubMessages = try! JSONHubProtocol().parseMessages(input: payload.data(using: .utf8)!)
+        XCTAssertEqual(1, hubMessages.count)
+        XCTAssertEqual(MessageType.Close, hubMessages[0].messageType)
+        XCTAssertNil((hubMessages[0] as! CloseMessage).error)
+    }
+
+    func testThatCanParseCloseMessageWithError() {
+        let payload = "{ \"type\": 7, \"error\": \"Error occurred\" }\u{001e}"
+        let hubMessages = try! JSONHubProtocol().parseMessages(input: payload.data(using: .utf8)!)
+        XCTAssertEqual(1, hubMessages.count)
+        XCTAssertEqual(MessageType.Close, hubMessages[0].messageType)
+        XCTAssertEqual("Error occurred", (hubMessages[0] as! CloseMessage).error)
+    }
+
     func testThatCanWriteInvocationMessage() {
         let invocationMessage = InvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
         let payload = try! JSONHubProtocol().writeMessage(message: invocationMessage)
