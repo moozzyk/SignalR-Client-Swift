@@ -31,4 +31,4 @@ The samples require a running server. To start the server go to the `TestServer`
 dotnet run
 ```
 
-(Requires [.NET Core SDK 2.1.300-RC1](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300-rc1) or later)
+(Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later)
