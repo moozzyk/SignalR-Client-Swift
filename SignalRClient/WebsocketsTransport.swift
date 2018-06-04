@@ -7,7 +7,6 @@
 //
 
 import Foundation
-// import SwiftWebSocket
 
 public class WebsocketsTransport: Transport {
     var webSocket:WebSocket? = nil
@@ -24,8 +23,7 @@ public class WebsocketsTransport: Transport {
             if clean {
                 self.delegate?.transportDidClose(nil)
             } else {
-                // TODO: Error/reason
-                self.delegate?.transportDidClose(nil)
+                self.delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: code, reason: reason))
             }
         }
 
@@ -64,4 +62,8 @@ public class WebsocketsTransport: Transport {
 
         return url
     }
+}
+
+fileprivate enum WebSocketsTransportError: Error {
+    case webSocketClosed(statusCode: Int, reason: String)
 }
