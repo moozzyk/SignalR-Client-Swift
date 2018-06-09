@@ -22,11 +22,15 @@ public class HubConnection {
     public weak var delegate: HubConnectionDelegate!
 
     public convenience init(url: URL) {
-        self.init(connection: Connection(url: url), hubProtocol: JSONHubProtocol())
+        self.init(connection: Connection(url: url, headers: nil), hubProtocol: JSONHubProtocol())
     }
 
     public convenience init(url: URL, hubProtocol: HubProtocol) {
-        self.init(connection: Connection(url: url), hubProtocol: hubProtocol)
+        self.init(connection: Connection(url: url, headers: nil), hubProtocol: hubProtocol )
+    }
+    
+    public convenience init(url: URL, hubProtocol: HubProtocol, headers: [String: String]) {
+        self.init(connection: Connection(url: url, headers: headers), hubProtocol: hubProtocol)
     }
 
     public init(connection: SocketConnection!, hubProtocol: HubProtocol) {
