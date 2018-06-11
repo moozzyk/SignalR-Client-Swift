@@ -36,7 +36,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.name = alert.textFields?.first?.text ?? "John Doe"
 
             self.chatHubConnectionDelegate = ChatHubConnectionDelegate(controller: self)
-            self.chatHubConnection = HubConnection(url: URL(string: self.serverUrl)!, hubProtocol: JSONHubProtocol(), headers: ["Authorization": "Bearer MyToken"])
+            self.chatHubConnection = HubConnection(url: URL(string: self.serverUrl)!)
             self.chatHubConnection!.delegate = self.chatHubConnectionDelegate
             self.chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in
                 let user = try! typeConverter.convertFromWireType(obj: args[0], targetType: String.self)

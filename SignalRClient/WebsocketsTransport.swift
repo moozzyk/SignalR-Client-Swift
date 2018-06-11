@@ -12,11 +12,10 @@ public class WebsocketsTransport: Transport {
     var webSocket:WebSocket? = nil
     public weak var delegate: TransportDelegate! = nil
 
-    public func start(url: URL, headers: [String : String]?) {
+    public func start(url: URL, headers: [String : String] = [:]) {
         var request = URLRequest(url: convertUrl(url: url))
-        if (headers != nil) {
-            populateHeaders(headers: headers!, request: &request)
-        }
+        
+        populateHeaders(headers: headers, request: &request)
         
         webSocket = WebSocket(request: request)
 
@@ -67,9 +66,10 @@ public class WebsocketsTransport: Transport {
 
         return url
     }
-    private func populateHeaders(headers: [String : String], request: inout URLRequest) {
-        for header in headers {
-            request.addValue(header.value, forHTTPHeaderField: header.key)
+    
+    @inline(__always) private func populateHeaders(headers: [String : String], request: inout URLRequest) {
+        headers.forEach { (key, value) in
+            request.addValue(value, forHTTPHeaderField: key)
         }
     }
 }

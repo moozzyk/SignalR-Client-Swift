@@ -17,7 +17,7 @@ public class Connection: SocketConnection {
     private var state: State
     private var url: URL
     private var transport: Transport?
-    private var headers: [String: String]?
+    private var headers: [String: String]
 
     public weak var delegate: SocketConnectionDelegate!
 
@@ -28,7 +28,7 @@ public class Connection: SocketConnection {
         case stopped
     }
 
-    public init(url: URL, headers: [String: String]?) {
+    public init(url: URL, headers: [String: String] = [:]) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
@@ -47,7 +47,7 @@ public class Connection: SocketConnection {
         startDispatchGroup.enter()
 
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        let httpClient = DefaultHttpClient()
+        let httpClient = DefaultHttpClient(headers: self.headers)
 
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate");
@@ -176,6 +176,10 @@ public class Connection: SocketConnection {
         }
 
         return previousState
+    }
+    
+    public func getHeaders() -> [String : String] {
+        return self.headers
     }
 }
 
