@@ -678,6 +678,17 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+    
+    func testThatHubConnectionContainsHeaders() {
+        let expectedHeaderKey = "Authorization"
+        let expectedHeaderValue = "Bearer Token"
+        
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: JSONHubProtocol(), headers: [expectedHeaderKey: expectedHeaderValue])
+        
+        let authValue = hubConnection.getConnectionHeaders()[expectedHeaderKey]
+        
+        XCTAssertEqual(authValue, expectedHeaderValue)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {
@@ -711,5 +722,9 @@ class TestSocketConnection: SocketConnection {
 
     func stop() -> Void {
         delegate?.connectionDidClose(error: nil)
+    }
+    
+    func getHeaders() -> [String : String] {
+        return [:]
     }
 }

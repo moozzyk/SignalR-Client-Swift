@@ -10,10 +10,10 @@ import Foundation
 @testable import SignalRClient
 
 class TestTransport: Transport {
-
+ 
     weak var delegate: TransportDelegate!
 
-    func start(url:URL) -> Void {
+    func start(url:URL, headers: [String : String] = [:]) -> Void {
         delegate?.transportDidOpen()
     }
 

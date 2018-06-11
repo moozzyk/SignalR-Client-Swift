@@ -28,6 +28,10 @@ public class HubConnection {
     public convenience init(url: URL, hubProtocol: HubProtocol) {
         self.init(connection: Connection(url: url), hubProtocol: hubProtocol)
     }
+    
+    public convenience init(url: URL, hubProtocol: HubProtocol, headers: [String: String]) {
+        self.init(connection: Connection(url: url, headers: headers), hubProtocol: hubProtocol)
+    }
 
     public init(connection: SocketConnection!, hubProtocol: HubProtocol) {
         self.connection = connection
@@ -109,6 +113,10 @@ public class HubConnection {
         } catch {
             cancelDidFail(error)
         }
+    }
+    
+    public func getConnectionHeaders() -> [String : String] {
+        return self.connection.getHeaders();
     }
 
     fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Any?]) -> String {
