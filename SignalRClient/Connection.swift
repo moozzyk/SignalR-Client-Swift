@@ -18,6 +18,7 @@ public class Connection: SocketConnection {
     private var url: URL
     private var transport: Transport?
     private var headers: [String: String]
+    private var stopError: Error?
 
     public weak var delegate: SocketConnectionDelegate!
 
@@ -109,7 +110,7 @@ public class Connection: SocketConnection {
         transport!.send(data: data, sendDidComplete: sendDidComplete)
     }
 
-    public func stop() {
+    public func stop(stopError: Error? = nil) {
         if state == State.stopped {
             return
         }
@@ -124,11 +125,11 @@ public class Connection: SocketConnection {
             // the transport can be nil if connection was stopped immediately after starting
             // in this case we need to call connectionDidClose ourselves
             if let t = self.transport {
+                self.stopError = stopError
                 t.close()
-            }
-            else {
+            } else {
                 Util.dispatchToMainThread {
-                    self.delegate?.connectionDidClose(error: nil)
+                    self.delegate?.connectionDidClose(error: stopError)
                 }
             }
         }
@@ -160,7 +161,7 @@ public class Connection: SocketConnection {
             // calling connectionDidClose before connectionDidOpen
             self.startDispatchGroup.wait()
             Util.dispatchToMainThread {
-                self.delegate?.connectionDidClose(error: error)
+                self.delegate?.connectionDidClose(error: self.stopError ?? error)
             }
         }
     }

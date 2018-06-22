@@ -17,9 +17,9 @@ public class HubConnection {
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
     private var handshakeHandled = false
 
-    private var connection: SocketConnection!
-    private var hubProtocol: HubProtocol!
-    public weak var delegate: HubConnectionDelegate!
+    private var connection: SocketConnection
+    private var hubProtocol: HubProtocol
+    public weak var delegate: HubConnectionDelegate?
 
     public convenience init(url: URL, headers: [String: String] = [:]) {
         self.init(connection: Connection(url: url, headers: headers), hubProtocol: JSONHubProtocol())
@@ -33,7 +33,7 @@ public class HubConnection {
         self.init(connection: Connection(url: url, headers: headers), hubProtocol: hubProtocol)
     }
 
-    public init(connection: SocketConnection!, hubProtocol: HubProtocol) {
+    public init(connection: SocketConnection, hubProtocol: HubProtocol) {
         self.connection = connection
         self.hubProtocol = hubProtocol
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
@@ -50,13 +50,13 @@ public class HubConnection {
         // TODO: add negative test (e.g. invalid protocol)
         connection.send(data: "\(HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol))".data(using: .utf8)!) { error in
             if let e = error {
-                delegate.connectionDidFailToOpen(error: e)
+                delegate?.connectionDidFailToOpen(error: e)
             }
         }
     }
 
     public func stop() {
-        connection.stop()
+        connection.stop(stopError: nil)
     }
 
     public func on(method: String, callback: @escaping (_ arguments: [Any?], _ typeConverter: TypeConverter) -> Void) {
@@ -155,10 +155,10 @@ public class HubConnection {
             handshakeHandled = true
             data = remainingData
             if let e = error {
-                delegate.connectionDidFailToOpen(error: e)
+                delegate?.connectionDidFailToOpen(error: e)
                 return
             }
-            delegate.connectionDidOpen(hubConnection: self)
+            delegate?.connectionDidOpen(hubConnection: self)
         }
         do {
             let messages = try hubProtocol.parseMessages(input: data)
@@ -244,7 +244,7 @@ public class HubConnection {
             }
         }
 
-        delegate.connectionDidClose(error: error)
+        delegate?.connectionDidClose(error: error)
     }
 }
 
@@ -260,7 +260,7 @@ fileprivate class HubSocketConnectionDelegate : SocketConnectionDelegate {
     }
 
     public func connectionDidFailToOpen(error: Error) {
-        hubConnection?.delegate.connectionDidFailToOpen(error: error)
+        hubConnection?.delegate?.connectionDidFailToOpen(error: error)
     }
 
     public func connectionDidReceiveData(connection: SocketConnection!, data: Data) {

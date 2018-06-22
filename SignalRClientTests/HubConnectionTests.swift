@@ -14,7 +14,7 @@ class HubConnectionTests: XCTestCase {
     override func setUp() {
         super.setUp()
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }
@@ -670,7 +670,6 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-
         let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
         let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
         hubConnection.delegate = hubConnectionDelegate
@@ -700,6 +699,22 @@ class HubConnectionTests: XCTestCase {
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStopDoesNotPassStopErrorToUnderlyingConnection() {
+        class FakeSocketConnection: Connection {
+            var stopCalled: Bool = false
+
+            override func stop(stopError: Error?) {
+                XCTAssertNil(stopError)
+                stopCalled = true
+            }
+        }
+
+        let fakeConnection = FakeSocketConnection(url: URL(string: "http://tempuri.org")!)
+        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol())
+        hubConnection.stop()
+        XCTAssertTrue(fakeConnection.stopCalled)
     }
 }
 
@@ -732,7 +747,7 @@ class TestSocketConnection: SocketConnection {
         sendDelegate?(data, sendDidComplete)
     }
 
-    func stop() -> Void {
-        delegate?.connectionDidClose(error: nil)
+    func stop(stopError: Error? = nil) -> Void {
+        delegate?.connectionDidClose(error: stopError)
     }
 }

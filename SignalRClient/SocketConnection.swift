@@ -12,5 +12,5 @@ public protocol SocketConnection {
     var delegate: SocketConnectionDelegate! {get set}
     func start(transport: Transport?) -> Void
     func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) -> Void
-    func stop() -> Void
+    func stop(stopError: Error?) -> Void
 }

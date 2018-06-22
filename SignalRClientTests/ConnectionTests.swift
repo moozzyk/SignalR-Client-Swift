@@ -63,7 +63,7 @@ class ConnectionTests: XCTestCase {
         connectionDelegate.connectionDidReceiveDataHandler = { connection, data in
             XCTAssertEqual(message, String(data: data, encoding: .utf8))
             didReceiveMessageExpectation.fulfill()
-            connection.stop()
+            connection.stop(stopError: nil)
         }
 
         connectionDelegate.connectionDidCloseHandler = { error in
@@ -84,7 +84,7 @@ class ConnectionTests: XCTestCase {
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
-            connection.stop()
+            connection.stop(stopError: nil)
         }
 
         connectionDelegate.connectionDidCloseHandler = { error in
@@ -216,7 +216,7 @@ class ConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
-            connection.stop()
+            connection.stop(stopError: nil)
         }
         connectionDelegate.connectionDidCloseHandler = { error in
             didCloseExpectation.fulfill()
@@ -242,7 +242,7 @@ class ConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
-            connection.stop()
+            connection.stop(stopError: nil)
         }
         connectionDelegate.connectionDidFailToOpenHandler = { error in
             didFailToOpen.fulfill()
@@ -310,7 +310,7 @@ class ConnectionTests: XCTestCase {
         let didFailToOpen = expectation(description: "connection did fail to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let connection = Connection(url: URL(string: "httpx://localhost:5000/")!)
+        let connection = Connection(url: URL(string: "http://localhost:5000/")!)
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidFailToOpenHandler = { error in
@@ -326,6 +326,30 @@ class ConnectionTests: XCTestCase {
         connection.delegate = connectionDelegate
         connection.start()
         connection.stop()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionStoppedWithErrorPassesErrorToDelegate() {
+        enum testError: Error {
+            case stopError
+        }
+
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let connection = Connection(url: URL(string: "http://localhost:5000/echo")!)
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertEqual(testError.stopError, error as! testError)
+            didCloseExpectation.fulfill()
+        }
+        connectionDelegate.connectionDidOpenHandler = { _ in
+            connection.stop(stopError: testError.stopError)
+        }
+
+        connection.delegate = connectionDelegate
+        connection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
