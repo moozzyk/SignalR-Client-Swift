@@ -678,16 +678,28 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
-    
-    func testThatHubConnectionContainsHeaders() {
-        let expectedHeaderKey = "Authorization"
-        let expectedHeaderValue = "Bearer Token"
-        
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: JSONHubProtocol(), headers: [expectedHeaderKey: expectedHeaderValue])
-        
-        let authValue = hubConnection.getConnectionHeaders()[expectedHeaderKey]
-        
-        XCTAssertEqual(authValue, expectedHeaderValue)
+
+    func testThatHubConnectionSendsHeaders() {
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.invoke(method: "GetHeader", arguments: ["TestHeader"], returnType: String.self, invocationDidComplete: { result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual("header", result)
+                hubConnection.stop()
+            })
+        }
+
+        let didCloseExpectation = expectation(description: "connection closed")
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, headers: ["TestHeader": "header"])
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 }
 
@@ -722,9 +734,5 @@ class TestSocketConnection: SocketConnection {
 
     func stop() -> Void {
         delegate?.connectionDidClose(error: nil)
-    }
-    
-    func getHeaders() -> [String : String] {
-        return [:]
     }
 }

@@ -79,5 +79,11 @@ namespace TestServer
 
             return channel.Reader;
         }
+
+        public string GetHeader(string name)
+        {
+            Context.GetHttpContext().Request.Headers.TryGetValue(name, out var header);
+            return header;
+        }
     }
 }

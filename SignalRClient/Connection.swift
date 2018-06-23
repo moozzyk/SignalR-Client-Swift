@@ -177,10 +177,6 @@ public class Connection: SocketConnection {
 
         return previousState
     }
-    
-    public func getHeaders() -> [String : String] {
-        return self.headers
-    }
 }
 
 public class ConnectionTransportDelegate: TransportDelegate {

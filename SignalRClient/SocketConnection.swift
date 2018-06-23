@@ -13,5 +13,4 @@ public protocol SocketConnection {
     func start(transport: Transport?) -> Void
     func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) -> Void
     func stop() -> Void
-    func getHeaders() -> [String : String]
 }
