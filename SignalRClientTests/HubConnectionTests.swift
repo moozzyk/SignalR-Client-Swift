@@ -716,6 +716,27 @@ class HubConnectionTests: XCTestCase {
         hubConnection.stop()
         XCTAssertTrue(fakeConnection.stopCalled)
     }
+
+    func testThatHubConnectionClosesConnectionUponReceivingCloseMessage() {
+        class FakeSocketConnection: Connection {
+            var stopError: Error?
+
+            override func start(transport: Transport?) {
+                delegate?.connectionDidOpen(connection: self)
+            }
+
+            override func stop(stopError: Error?) {
+                self.stopError = stopError
+            }
+        }
+
+        let fakeConnection = FakeSocketConnection(url: URL(string: "http://tempuri.org")!)
+        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol())
+        hubConnection.start()
+        let payload = "{}\u{1e}{ \"type\": 7, \"error\": \"Server Error\" }\u{1e}"
+        fakeConnection.delegate.connectionDidReceiveData(connection: fakeConnection, data: payload.data(using: .utf8)!)
+        XCTAssertEqual(String(describing: SignalRError.serverClose(message: "Server Error")), String(describing: fakeConnection.stopError!))
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {

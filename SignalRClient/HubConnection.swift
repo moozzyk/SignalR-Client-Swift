@@ -170,6 +170,8 @@ public class HubConnection {
                     try handleStreamItem(message: incomingMessage as! StreamItemMessage)
                 case MessageType.Invocation:
                     try handleInvocation(message: incomingMessage as! InvocationMessage)
+                case MessageType.Close:
+                    connection.stop(stopError: SignalRError.serverClose(message: (incomingMessage as! CloseMessage).error))
                 case MessageType.Ping:
                     // no action required for ping messages
                     break;
