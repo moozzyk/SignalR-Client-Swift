@@ -22,13 +22,13 @@
 		5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A406F472030F6240055671E /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5A406F482030F6320055671E /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
-		5A406F492030F6360055671E /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* Connection.swift */; };
-		5A406F4A2030F6390055671E /* SocketConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */; };
+		5A406F492030F6360055671E /* HttpConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* HttpConnection.swift */; };
+		5A406F4A2030F6390055671E /* ConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */; };
 		5A406F4B2030F63D0055671E /* DefaultHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */; };
 		5A406F4C2030F6420055671E /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81441E63B14000FE62A6 /* HttpResponse.swift */; };
 		5A406F4D2030F6450055671E /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
 		5A406F4E2030F6490055671E /* HubConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */; };
-		5A406F4F2030F64C0055671E /* SocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */; };
+		5A406F4F2030F64C0055671E /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* Connection.swift */; };
 		5A406F502030F6500055671E /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A406F512030F6540055671E /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */; };
 		5A406F522030F6580055671E /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC1AE391E89E737006262B3 /* Transport.swift */; };
@@ -47,12 +47,12 @@
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
 		5A73DFED1E6B8960007F3913 /* HubConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */; };
-		5A73DFEF1E6B8B3D007F3913 /* SocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */; };
+		5A73DFEF1E6B8B3D007F3913 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEE1E6B8B3D007F3913 /* Connection.swift */; };
 		5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */; };
-		5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* Connection.swift */; };
-		5A9A813D1E63982400FE62A6 /* SocketConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */; };
+		5A9A813B1E6397BE00FE62A6 /* HttpConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813A1E6397BE00FE62A6 /* HttpConnection.swift */; };
+		5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */; };
 		5A9A81411E639F7700FE62A6 /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */; };
 		5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */; };
 		5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A81441E63B14000FE62A6 /* HttpResponse.swift */; };
@@ -188,7 +188,7 @@
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
-		5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketConnection.swift; sourceTree = "<group>"; };
+		5A73DFEE1E6B8B3D007F3913 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		5A73DFF21E6B95E4007F3913 /* HubConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionTests.swift; sourceTree = "<group>"; };
 		5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9803551E5FE60E00BFFB0A /* SignalRClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalRClient.h; sourceTree = "<group>"; };
@@ -196,12 +196,12 @@
 		5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9803621E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
-		5A9A813A1E6397BE00FE62A6 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketConnectionDelegate.swift; sourceTree = "<group>"; };
+		5A9A813A1E6397BE00FE62A6 /* HttpConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpConnection.swift; sourceTree = "<group>"; };
+		5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		5A9A81401E639F7700FE62A6 /* ConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTests.swift; sourceTree = "<group>"; };
 		5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
 		5A9A81441E63B14000FE62A6 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
-		5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocketsSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A9A815B1E63CAE100FE62A6 /* ConnectionSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConnectionSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9A815D1E63CAE100FE62A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5A9A815F1E63CAE100FE62A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A9A81621E63CAE100FE62A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -297,7 +297,7 @@
 			children = (
 				5A9803541E5FE60E00BFFB0A /* SignalRClient */,
 				5A98035F1E5FE60E00BFFB0A /* SignalRClientTests */,
-				5A9A815C1E63CAE100FE62A6 /* SocketsSample */,
+				5A9A815C1E63CAE100FE62A6 /* ConnectionSample */,
 				5AA9EFFF1E835AC200C5E248 /* HubSample */,
 				5AEC70EE20310E3E00616DD2 /* HubSamplePhone */,
 				5A9803531E5FE60E00BFFB0A /* Products */,
@@ -311,7 +311,7 @@
 			children = (
 				5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */,
 				5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */,
-				5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */,
+				5A9A815B1E63CAE100FE62A6 /* ConnectionSample.app */,
 				5AA9EFFE1E835AC200C5E248 /* HubSample.app */,
 				5A406F3E2030F4960055671E /* SignalRClient.framework */,
 				5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */,
@@ -328,13 +328,13 @@
 				5A9803561E5FE60E00BFFB0A /* Info.plist */,
 				5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */,
 				5A9A81381E61E40500FE62A6 /* TransportDelegate.swift */,
-				5A9A813A1E6397BE00FE62A6 /* Connection.swift */,
-				5A9A813C1E63982400FE62A6 /* SocketConnectionDelegate.swift */,
+				5A9A813A1E6397BE00FE62A6 /* HttpConnection.swift */,
+				5A9A813C1E63982400FE62A6 /* ConnectionDelegate.swift */,
 				5A9A81421E63B0E900FE62A6 /* DefaultHttpClient.swift */,
 				5A9A81441E63B14000FE62A6 /* HttpResponse.swift */,
 				5A73DFEA1E6B8867007F3913 /* HubConnection.swift */,
 				5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */,
-				5A73DFEE1E6B8B3D007F3913 /* SocketConnection.swift */,
+				5A73DFEE1E6B8B3D007F3913 /* Connection.swift */,
 				5A4F86C41E71A54900D9A13F /* SignalRError.swift */,
 				5A341EB71E7CDCA400F6D41D /* TypeConverter.swift */,
 				5AC1AE391E89E737006262B3 /* Transport.swift */,
@@ -364,7 +364,7 @@
 			path = SignalRClientTests;
 			sourceTree = "<group>";
 		};
-		5A9A815C1E63CAE100FE62A6 /* SocketsSample */ = {
+		5A9A815C1E63CAE100FE62A6 /* ConnectionSample */ = {
 			isa = PBXGroup;
 			children = (
 				5A9A815D1E63CAE100FE62A6 /* AppDelegate.swift */,
@@ -372,7 +372,7 @@
 				5A9A81611E63CAE100FE62A6 /* MainMenu.xib */,
 				5A9A81641E63CAE100FE62A6 /* Info.plist */,
 			);
-			path = SocketsSample;
+			path = ConnectionSample;
 			sourceTree = "<group>";
 		};
 		5AA9EFFF1E835AC200C5E248 /* HubSample */ = {
@@ -513,9 +513,9 @@
 			productReference = 5A98035B1E5FE60E00BFFB0A /* SignalRClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		5A9A815A1E63CAE100FE62A6 /* SocketsSample */ = {
+		5A9A815A1E63CAE100FE62A6 /* ConnectionSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "SocketsSample" */;
+			buildConfigurationList = 5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "ConnectionSample" */;
 			buildPhases = (
 				887F336C28EB27B62399DE50 /* [CP] Check Pods Manifest.lock */,
 				5A9A81571E63CAE100FE62A6 /* Sources */,
@@ -528,9 +528,9 @@
 			dependencies = (
 				5A73DFE91E63E2D4007F3913 /* PBXTargetDependency */,
 			);
-			name = SocketsSample;
+			name = ConnectionSample;
 			productName = SocketsSample;
-			productReference = 5A9A815B1E63CAE100FE62A6 /* SocketsSample.app */;
+			productReference = 5A9A815B1E63CAE100FE62A6 /* ConnectionSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 		5AA9EFFD1E835AC200C5E248 /* HubSample */ = {
@@ -628,7 +628,7 @@
 			targets = (
 				5A9803511E5FE60E00BFFB0A /* macOS SignalRClient */,
 				5A98035A1E5FE60E00BFFB0A /* SignalRClientTests */,
-				5A9A815A1E63CAE100FE62A6 /* SocketsSample */,
+				5A9A815A1E63CAE100FE62A6 /* ConnectionSample */,
 				5AA9EFFD1E835AC200C5E248 /* HubSample */,
 				5A406F3D2030F4960055671E /* iOS SignalRClient */,
 				5AEC70EC20310E3E00616DD2 /* HubSamplePhone */,
@@ -805,15 +805,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A406F4E2030F6490055671E /* HubConnectionDelegate.swift in Sources */,
-				5A406F4F2030F64C0055671E /* SocketConnection.swift in Sources */,
+				5A406F4F2030F64C0055671E /* Connection.swift in Sources */,
 				5A406F4C2030F6420055671E /* HttpResponse.swift in Sources */,
 				5A406F542030F65F0055671E /* HubProtocol.swift in Sources */,
 				5A406F552030F6620055671E /* JSONHubProtocol.swift in Sources */,
 				5A406F482030F6320055671E /* TransportDelegate.swift in Sources */,
 				5AE82B96204FC93100F0D15D /* StreamHandle.swift in Sources */,
-				5A406F4A2030F6390055671E /* SocketConnectionDelegate.swift in Sources */,
+				5A406F4A2030F6390055671E /* ConnectionDelegate.swift in Sources */,
 				5A406F562030F6660055671E /* ServerInvocationHandler.swift in Sources */,
-				5A406F492030F6360055671E /* Connection.swift in Sources */,
+				5A406F492030F6360055671E /* HttpConnection.swift in Sources */,
 				5A406F512030F6540055671E /* TypeConverter.swift in Sources */,
 				5A406F532030F65B0055671E /* Util.swift in Sources */,
 				5A406F522030F6580055671E /* Transport.swift in Sources */,
@@ -831,7 +831,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A73DFED1E6B8960007F3913 /* HubConnectionDelegate.swift in Sources */,
-				5A73DFEF1E6B8B3D007F3913 /* SocketConnection.swift in Sources */,
+				5A73DFEF1E6B8B3D007F3913 /* Connection.swift in Sources */,
 				5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */,
 				5A01C02C1EA0562D0091082D /* Util.swift in Sources */,
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
@@ -840,11 +840,11 @@
 				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
 				5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */,
 				5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */,
-				5A9A813B1E6397BE00FE62A6 /* Connection.swift in Sources */,
+				5A9A813B1E6397BE00FE62A6 /* HttpConnection.swift in Sources */,
 				5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */,
 				5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */,
 				5A4292F4208D2945008B30EF /* WebSocket.swift in Sources */,
-				5A9A813D1E63982400FE62A6 /* SocketConnectionDelegate.swift in Sources */,
+				5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */,
 				5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */,
 				5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */,
 				5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */,
@@ -1366,7 +1366,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "SocketsSample" */ = {
+		5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "ConnectionSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5A9A81661E63CAE100FE62A6 /* Debug */,

@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  SocketsSample
+//  ConnectionSample
 //
 //  Created by Pawel Kadluczka on 2/26/17.
 //  Copyright © 2017 Pawel Kadluczka. All rights reserved.
@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var historyTextField: NSTextField!
 
     var echoConnection: Connection?
-    var echoConnectionDelegate: SocketConnectionDelegate?
+    var echoConnectionDelegate: ConnectionDelegate?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         toggleSend(isEnabled: false)
@@ -32,15 +32,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        echoConnection?.stop()
+        echoConnection?.stop(stopError: nil)
     }
 
     @IBAction func btnOpen(sender: AnyObject) {
         let url = URL(string: urlTextField.stringValue)!
-        echoConnection = Connection(url: url)
+        echoConnection = HttpConnection(url: url)
         echoConnectionDelegate = EchoConnectionDelegate(app: self)
         echoConnection!.delegate = echoConnectionDelegate
-        echoConnection!.start()
+        echoConnection!.start(transport: nil)
     }
 
     @IBAction func btnSend(sender: AnyObject) {
@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @IBAction func btnClose(sender: AnyObject) {
-        echoConnection?.stop()
+        echoConnection?.stop(stopError: nil)
     }
 
     func toggleSend(isEnabled: Bool) {
@@ -71,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-class EchoConnectionDelegate: SocketConnectionDelegate {
+class EchoConnectionDelegate: ConnectionDelegate {
 
     weak var app: AppDelegate?
 
@@ -79,7 +79,7 @@ class EchoConnectionDelegate: SocketConnectionDelegate {
         self.app = app
     }
 
-    func connectionDidOpen(connection: SocketConnection!) {
+    func connectionDidOpen(connection: Connection!) {
         app?.appendLog(string: "Connection started")
         app?.toggleSend(isEnabled: true)
     }
@@ -88,7 +88,7 @@ class EchoConnectionDelegate: SocketConnectionDelegate {
         app?.appendLog(string: "Error")
     }
 
-    func connectionDidReceiveData(connection: SocketConnection!, data: Data) {
+    func connectionDidReceiveData(connection: Connection!, data: Data) {
         app?.appendLog(string: "Received: " + String(data: data, encoding: .utf8)!)
     }
 

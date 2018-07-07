@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class HubConnection: SocketConnectionDelegate {
+public class HubConnection: ConnectionDelegate {
 
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
@@ -16,23 +16,23 @@ public class HubConnection: SocketConnectionDelegate {
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
     private var handshakeHandled = false
 
-    private var connection: SocketConnection
+    private var connection: Connection
     private var hubProtocol: HubProtocol
     public weak var delegate: HubConnectionDelegate?
 
     public convenience init(url: URL, headers: [String: String] = [:]) {
-        self.init(connection: Connection(url: url, headers: headers), hubProtocol: JSONHubProtocol())
+        self.init(connection: HttpConnection(url: url, headers: headers), hubProtocol: JSONHubProtocol())
     }
 
     public convenience init(url: URL, hubProtocol: HubProtocol) {
-        self.init(connection: Connection(url: url), hubProtocol: hubProtocol)
+        self.init(connection: HttpConnection(url: url), hubProtocol: hubProtocol)
     }
 
     public convenience init(url: URL, hubProtocol: HubProtocol, headers: [String: String]) {
-        self.init(connection: Connection(url: url, headers: headers), hubProtocol: hubProtocol)
+        self.init(connection: HttpConnection(url: url, headers: headers), hubProtocol: hubProtocol)
     }
 
-    public init(connection: SocketConnection, hubProtocol: HubProtocol) {
+    public init(connection: Connection, hubProtocol: HubProtocol) {
         self.connection = connection
         self.hubProtocol = hubProtocol
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
@@ -247,7 +247,7 @@ public class HubConnection: SocketConnectionDelegate {
         delegate?.connectionDidClose(error: error)
     }
 
-    public func connectionDidOpen(connection: SocketConnection!) {
+    public func connectionDidOpen(connection: Connection!) {
         connectionStarted()
     }
 
@@ -255,7 +255,7 @@ public class HubConnection: SocketConnectionDelegate {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
-    public func connectionDidReceiveData(connection: SocketConnection!, data: Data) {
+    public func connectionDidReceiveData(connection: Connection!, data: Data) {
         hubConnectionDidReceiveData(data: data)
     }
 
