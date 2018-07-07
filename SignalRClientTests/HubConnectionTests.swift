@@ -694,7 +694,34 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, headers: ["TestHeader": "header"])
+        let options = HttpConnectionOptions()
+        options.headers["TestHeader"] = "header"
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, options: options)
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatHubConnectionSendsAuthToken() {
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.invoke(method: "GetHeader", arguments: ["Authorization"], returnType: String.self, invocationDidComplete: { result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual("Bearer abc", result)
+                hubConnection.stop()
+            })
+        }
+
+        let didCloseExpectation = expectation(description: "connection closed")
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let options = HttpConnectionOptions()
+        options.accessTokenProvider = { return "abc" }
+        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, options: options)
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 

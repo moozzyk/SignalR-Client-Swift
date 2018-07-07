@@ -13,7 +13,7 @@ class TestTransport: Transport {
  
     weak var delegate: TransportDelegate!
 
-    func start(url:URL, headers: [String : String] = [:]) -> Void {
+    func start(url:URL, options: HttpConnectionOptions = HttpConnectionOptions()) -> Void {
         delegate?.transportDidOpen()
     }
 

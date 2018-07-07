@@ -9,10 +9,10 @@
 import Foundation
 
 class DefaultHttpClient {
-    private var headers: [String: String]
+    private let options: HttpConnectionOptions
 
-    public init(headers: [String: String] = [:]) {
-        self.headers = headers
+    public init(options: HttpConnectionOptions) {
+        self.options = options
     }
     
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
@@ -27,7 +27,8 @@ class DefaultHttpClient {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method
         
-        populateHeaders(headers: self.headers, request: &urlRequest)
+        populateHeaders(headers: options.headers, request: &urlRequest)
+        setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &urlRequest)
         
         let session = URLSession.shared
 
@@ -45,6 +46,12 @@ class DefaultHttpClient {
     @inline(__always) private func populateHeaders(headers: [String : String], request: inout URLRequest) {
         headers.forEach { (key, value) in
             request.addValue(value, forHTTPHeaderField: key)
+        }
+    }
+
+    @inline(__always) private func setAccessToken(accessTokenProvider: () -> String?, request: inout URLRequest) {
+        if let accessToken = accessTokenProvider() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
     }
 }

@@ -12,10 +12,11 @@ public class WebsocketsTransport: Transport {
     var webSocket:WebSocket? = nil
     public weak var delegate: TransportDelegate! = nil
 
-    public func start(url: URL, headers: [String : String] = [:]) {
+    public func start(url: URL, options: HttpConnectionOptions) {
         var request = URLRequest(url: convertUrl(url: url))
         
-        populateHeaders(headers: headers, request: &request)
+        populateHeaders(headers: options.headers, request: &request)
+        setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
         
         webSocket = WebSocket(request: request)
 
@@ -70,6 +71,12 @@ public class WebsocketsTransport: Transport {
     @inline(__always) private func populateHeaders(headers: [String : String], request: inout URLRequest) {
         headers.forEach { (key, value) in
             request.addValue(value, forHTTPHeaderField: key)
+        }
+    }
+
+    @inline(__always) private func setAccessToken(accessTokenProvider: () -> String?, request: inout URLRequest) {
+        if let accessToken = accessTokenProvider() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
     }
 }

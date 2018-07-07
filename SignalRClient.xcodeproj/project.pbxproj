@@ -43,6 +43,8 @@
 		5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C82D1F52A774003EEC55 /* HubProtocol.swift */; };
 		5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */; };
 		5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */; };
+		5A489E3220F148F400A232C4 /* HttpConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */; };
+		5A489E3320F148F400A232C4 /* HttpConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
@@ -185,6 +187,7 @@
 		5A45C82D1F52A774003EEC55 /* HubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocol.swift; sourceTree = "<group>"; };
 		5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocol.swift; sourceTree = "<group>"; };
 		5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocolTests.swift; sourceTree = "<group>"; };
+		5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpConnectionOptions.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -343,6 +346,7 @@
 				5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */,
 				5A004A032028293400A26C0B /* ServerInvocationHandler.swift */,
 				5AE82B94204FC93100F0D15D /* StreamHandle.swift */,
+				5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -814,6 +818,7 @@
 				5A406F4A2030F6390055671E /* ConnectionDelegate.swift in Sources */,
 				5A406F562030F6660055671E /* ServerInvocationHandler.swift in Sources */,
 				5A406F492030F6360055671E /* HttpConnection.swift in Sources */,
+				5A489E3320F148F400A232C4 /* HttpConnectionOptions.swift in Sources */,
 				5A406F512030F6540055671E /* TypeConverter.swift in Sources */,
 				5A406F532030F65B0055671E /* Util.swift in Sources */,
 				5A406F522030F6580055671E /* Transport.swift in Sources */,
@@ -840,6 +845,7 @@
 				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
 				5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */,
 				5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */,
+				5A489E3220F148F400A232C4 /* HttpConnectionOptions.swift in Sources */,
 				5A9A813B1E6397BE00FE62A6 /* HttpConnection.swift in Sources */,
 				5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */,
 				5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */,
@@ -1218,9 +1224,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = SocketsSample/Info.plist;
+				INFOPLIST_FILE = ConnectionSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.SocketsSample;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.ConnectionSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
@@ -1235,9 +1241,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = SocketsSample/Info.plist;
+				INFOPLIST_FILE = ConnectionSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.SocketsSample;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.ConnectionSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

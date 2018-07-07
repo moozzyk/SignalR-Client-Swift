@@ -17,7 +17,7 @@ public class HttpConnection: Connection {
     private var state: State
     private var url: URL
     private var transport: Transport?
-    private var headers: [String: String]
+    private let options: HttpConnectionOptions
     private var stopError: Error?
 
     public weak var delegate: ConnectionDelegate!
@@ -29,12 +29,12 @@ public class HttpConnection: Connection {
         case stopped
     }
 
-    public init(url: URL, headers: [String: String] = [:]) {
+    public init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions()) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
         self.url = url
-        self.headers = headers
+        self.options = options
         self.state = State.initial
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
@@ -48,7 +48,7 @@ public class HttpConnection: Connection {
         startDispatchGroup.enter()
 
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        let httpClient = DefaultHttpClient(headers: self.headers)
+        let httpClient = DefaultHttpClient(options: options)
 
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate");
@@ -82,7 +82,7 @@ public class HttpConnection: Connection {
                 self.transport = transport ?? WebsocketsTransport()
                 self.transport!.delegate = self.transportDelegate
 
-                self.transport!.start(url: self.url, headers: self.headers)
+                self.transport!.start(url: self.url, options: self.options)
             }
             else {
                 self.startDispatchGroup.leave()

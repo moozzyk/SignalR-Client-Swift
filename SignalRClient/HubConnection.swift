@@ -20,16 +20,16 @@ public class HubConnection: ConnectionDelegate {
     private var hubProtocol: HubProtocol
     public weak var delegate: HubConnectionDelegate?
 
-    public convenience init(url: URL, headers: [String: String] = [:]) {
-        self.init(connection: HttpConnection(url: url, headers: headers), hubProtocol: JSONHubProtocol())
+    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions()) {
+        self.init(connection: HttpConnection(url: url, options: options), hubProtocol: JSONHubProtocol())
     }
 
     public convenience init(url: URL, hubProtocol: HubProtocol) {
         self.init(connection: HttpConnection(url: url), hubProtocol: hubProtocol)
     }
 
-    public convenience init(url: URL, hubProtocol: HubProtocol, headers: [String: String]) {
-        self.init(connection: HttpConnection(url: url, headers: headers), hubProtocol: hubProtocol)
+    public convenience init(url: URL, hubProtocol: HubProtocol, options: HttpConnectionOptions) {
+        self.init(connection: HttpConnection(url: url, options: options), hubProtocol: hubProtocol)
     }
 
     public init(connection: Connection, hubProtocol: HubProtocol) {
