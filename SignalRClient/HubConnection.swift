@@ -8,11 +8,10 @@
 
 import Foundation
 
-public class HubConnection {
+public class HubConnection: SocketConnectionDelegate {
 
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
-    private var socketConnectionDelegate: HubSocketConnectionDelegate?
     private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
     private var handshakeHandled = false
@@ -37,8 +36,7 @@ public class HubConnection {
         self.connection = connection
         self.hubProtocol = hubProtocol
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
-        socketConnectionDelegate = HubSocketConnectionDelegate(hubConnection: self)
-        self.connection.delegate = socketConnectionDelegate
+        self.connection.delegate = self
     }
 
     public func start(transport: Transport? = nil) {
@@ -248,28 +246,20 @@ public class HubConnection {
 
         delegate?.connectionDidClose(error: error)
     }
-}
-
-fileprivate class HubSocketConnectionDelegate : SocketConnectionDelegate {
-    private weak var hubConnection: HubConnection?
-
-    fileprivate init(hubConnection: HubConnection!) {
-        self.hubConnection = hubConnection
-    }
 
     public func connectionDidOpen(connection: SocketConnection!) {
-        hubConnection?.connectionStarted()
+        connectionStarted()
     }
 
     public func connectionDidFailToOpen(error: Error) {
-        hubConnection?.delegate?.connectionDidFailToOpen(error: error)
+        delegate?.connectionDidFailToOpen(error: error)
     }
 
     public func connectionDidReceiveData(connection: SocketConnection!, data: Data) {
-        hubConnection?.hubConnectionDidReceiveData(data: data)
+        hubConnectionDidReceiveData(data: data)
     }
 
     public func connectionDidClose(error: Error?) {
-        hubConnection?.hubConnectionDidClose(error: error)
+        hubConnectionDidClose(error: error)
     }
 }
