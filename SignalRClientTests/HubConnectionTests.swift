@@ -41,7 +41,9 @@ class HubConnectionTests: XCTestCase {
             XCTAssertNil(error)
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: HubProtocolFake())
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withHubProtocol(hubProtocol: HubProtocolFake())
+            .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -71,7 +73,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -99,7 +101,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -137,7 +139,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -217,7 +219,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -259,7 +261,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -295,7 +297,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -356,7 +358,7 @@ class HubConnectionTests: XCTestCase {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         var lastItem = -1
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
@@ -464,7 +466,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetNumber", callback: { args, _ in
             XCTAssertNotNil(args)
@@ -501,8 +503,10 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withJSONHubProtocol(typeConverter: PersonTypeConverter())
+            .build()
+
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetPerson", callback: { arguments, typeConverter in
             XCTAssertNotNil(arguments)
@@ -542,7 +546,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetNumber", callback: { args, _ in
             XCTAssertNotNil(args)
@@ -624,9 +628,7 @@ class HubConnectionTests: XCTestCase {
         private func materializeUser(userDictionary: [String: Any?]?) -> User? {
             if let user = userDictionary {
                 return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
-
             }
-
             return nil
         }
     }
@@ -670,8 +672,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubProtocol = JSONHubProtocol(typeConverter: PersonTypeConverter())
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, hubProtocol: hubProtocol)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withJSONHubProtocol(typeConverter: PersonTypeConverter())
+            .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -694,9 +697,12 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let options = HttpConnectionOptions()
-        options.headers["TestHeader"] = "header"
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, options: options)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withHttpConnectionOptions() { httpConnectionOptions in
+                httpConnectionOptions.headers["TestHeader"] = "header"
+            }
+            .build()
+
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -719,9 +725,12 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let options = HttpConnectionOptions()
-        options.accessTokenProvider = { return "abc" }
-        let hubConnection = HubConnection(url: URL(string: "http://localhost:5000/testhub")!, options: options)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withHttpConnectionOptions() { httpConnectionOptions in
+                httpConnectionOptions.accessTokenProvider = { return "abc" }
+            }
+            .build()
+
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 

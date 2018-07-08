@@ -45,6 +45,8 @@
 		5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */; };
 		5A489E3220F148F400A232C4 /* HttpConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */; };
 		5A489E3320F148F400A232C4 /* HttpConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */; };
+		5A489E3820F292B400A232C4 /* HubConnectionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */; };
+		5A489E3920F292B400A232C4 /* HubConnectionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
@@ -188,6 +190,7 @@
 		5A45C82F1F53392E003EEC55 /* JSONHubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocol.swift; sourceTree = "<group>"; };
 		5A45C8311F5AFDB6003EEC55 /* JSONHubProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocolTests.swift; sourceTree = "<group>"; };
 		5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpConnectionOptions.swift; sourceTree = "<group>"; };
+		5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubConnectionBuilder.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -347,6 +350,7 @@
 				5A004A032028293400A26C0B /* ServerInvocationHandler.swift */,
 				5AE82B94204FC93100F0D15D /* StreamHandle.swift */,
 				5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */,
+				5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -825,6 +829,7 @@
 				5A4292F5208D2945008B30EF /* WebSocket.swift in Sources */,
 				5A406F4B2030F63D0055671E /* DefaultHttpClient.swift in Sources */,
 				5A406F4D2030F6450055671E /* HubConnection.swift in Sources */,
+				5A489E3920F292B400A232C4 /* HubConnectionBuilder.swift in Sources */,
 				5A406F472030F6240055671E /* WebsocketsTransport.swift in Sources */,
 				5A406F502030F6500055671E /* SignalRError.swift in Sources */,
 				5A32F4EC20829F700091C185 /* HandshakeProtocol.swift in Sources */,
@@ -852,6 +857,7 @@
 				5A4292F4208D2945008B30EF /* WebSocket.swift in Sources */,
 				5A9A813D1E63982400FE62A6 /* ConnectionDelegate.swift in Sources */,
 				5A9A81431E63B0E900FE62A6 /* DefaultHttpClient.swift in Sources */,
+				5A489E3820F292B400A232C4 /* HubConnectionBuilder.swift in Sources */,
 				5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */,
 				5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */,
 				5A32F4EB20829F700091C185 /* HandshakeProtocol.swift in Sources */,

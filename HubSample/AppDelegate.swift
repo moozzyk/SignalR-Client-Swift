@@ -36,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
 
-        chatHubConnection = HubConnection(url: URL(string:"http://localhost:5000/chat")!)
+        chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!).build()
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in
             let user = try! typeConverter.convertFromWireType(obj: args[0], targetType: String.self)

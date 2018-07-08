@@ -8,7 +8,9 @@
 
 import Foundation
 
-public class JSONTypeConverter: TypeConverter {
+open class JSONTypeConverter: TypeConverter {
+    public init() {}
+
     public func convertToWireType(obj: Any?) throws -> Any? {
         if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj!) {
             return obj
@@ -45,11 +47,7 @@ public class JSONHubProtocol: HubProtocol {
     public let version = 1
     public let type = ProtocolType.Text
 
-    public convenience init() {
-        self.init(typeConverter: JSONTypeConverter())
-    }
-
-    public init(typeConverter: TypeConverter) {
+    public init(typeConverter: TypeConverter = JSONTypeConverter()) {
         self.typeConverter = typeConverter
     }
 
