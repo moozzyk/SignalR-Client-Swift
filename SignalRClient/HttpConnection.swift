@@ -53,7 +53,7 @@ public class HttpConnection: Connection {
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate");
 
-        httpClient.post(url: negotiateUrl) {(httpResponse, error) in
+        httpClient.post(url: negotiateUrl) {httpResponse, error in
             if error != nil {
                 print(error.debugDescription)
                 self.startDispatchGroup.leave()
@@ -62,7 +62,12 @@ public class HttpConnection: Connection {
                 return
             }
 
-            if httpResponse!.statusCode == 200 {
+            guard let httpResponse = httpResponse else {
+                self.failOpenWithError(error: SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."), changeState: true)
+                return
+            }
+
+            if httpResponse.statusCode == 200 {
                 // connection is being stopped even though start has not finished yet
                 if (self.state != State.connecting) {
                     self.startDispatchGroup.leave()
@@ -70,26 +75,33 @@ public class HttpConnection: Connection {
                     return
                 }
 
-                // TODO: parse negotiate response to get connection id and transports
-                // let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
-                let connectionId = ""
+                let negotiationResponse: NegotiationResponse
+                do {
+                    negotiationResponse = try NegotiationResponse.parse(payload: httpResponse.contents)
+                } catch {
+                    self.failOpenWithError(error: error, changeState: true)
+                    return
+                }
 
-                let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
-                var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
-                queryItems.append(URLQueryItem(name: "connectionId", value: connectionId))
-                self.url = urlComponents.url!
+                let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
 
                 self.transport = transport ?? WebsocketsTransport()
                 self.transport!.delegate = self.transportDelegate
-
-                self.transport!.start(url: self.url, options: self.options)
+                self.transport!.start(url: startUrl, options: self.options)
             }
             else {
                 self.startDispatchGroup.leave()
-                print("HTTP request error. statusCode: \(httpResponse!.statusCode)\ndescription: \(String(data: (httpResponse!.contents)!, encoding: .utf8)!)")
-                self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse!.statusCode), changeState: true)
+                print("HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription: \(String(data: (httpResponse.contents)!, encoding: .utf8)!)")
+                self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)
             }
         }
+    }
+
+    private func createStartUrl(connectionId: String) -> URL {
+        let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+        var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
+        queryItems.append(URLQueryItem(name: "id", value: connectionId))
+        return urlComponents.url!
     }
 
     private func failOpenWithError(error: Error, changeState: Bool) {
