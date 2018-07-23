@@ -8,12 +8,12 @@
 import Foundation
 
 internal class TransportDescription {
-    // TODO: these need to be converted to enums
-    let transport: String
+    let transportType: TransportType
+    // TODO: this needs to be converted to enum
     let transferFormats: [String]
 
-    init(transport: String, transferFormats: [String]) {
-        self.transport = transport
+    init(transportType: TransportType, transferFormats: [String]) {
+        self.transportType = transportType
         self.transferFormats = transferFormats
     }
 }
@@ -67,7 +67,8 @@ internal class NegotiationResponse {
     }
 
     private static func parseTransport(transportJSON: [String: Any?]) throws -> TransportDescription {
-        guard let transport = transportJSON["transport"] as? String else {
+        guard let transportName = transportJSON["transport"] as? String,
+            let transportType = try? TransportType.fromString(transportName: transportName) else {
             throw SignalRError.invalidNegotiationResponse(message: "transport property not found or invalid")
         }
 
@@ -90,6 +91,6 @@ internal class NegotiationResponse {
             throw SignalRError.invalidNegotiationResponse(message: "empty list of transfer formats")
         }
 
-        return TransportDescription(transport: transport, transferFormats: transferFormats)
+        return TransportDescription(transportType: transportType, transferFormats: transferFormats)
     }
 }
