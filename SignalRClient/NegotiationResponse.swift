@@ -9,10 +9,9 @@ import Foundation
 
 internal class TransportDescription {
     let transportType: TransportType
-    // TODO: this needs to be converted to enum
-    let transferFormats: [String]
+    let transferFormats: [TransferFormat]
 
-    init(transportType: TransportType, transferFormats: [String]) {
+    init(transportType: TransportType, transferFormats: [TransferFormat]) {
         self.transportType = transportType
         self.transferFormats = transferFormats
     }
@@ -76,15 +75,11 @@ internal class NegotiationResponse {
             throw SignalRError.invalidNegotiationResponse(message: "transferFormats property not found or invalid")
         }
 
-        let transferFormats = try transferFormatsJSON.map { transferFormat -> String in
-            switch transferFormat {
-            case "Text":
-                return "Text"
-            case "Binary":
-                return "Binary"
-            default:
-                throw SignalRError.invalidNegotiationResponse(message: "invalid transfer format '\(transferFormat)'")
+        let transferFormats = try transferFormatsJSON.map { (transferFormatName) -> TransferFormat in
+            guard let transferFormat = TransferFormat.init(rawValue: transferFormatName) else {
+                throw SignalRError.invalidNegotiationResponse(message: "invalid transfer format '\(transferFormatName)'")
             }
+            return transferFormat
         }
 
         if (transferFormats.count == 0) {

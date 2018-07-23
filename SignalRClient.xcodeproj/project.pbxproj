@@ -17,6 +17,8 @@
 		5A0D4ABA210580E1000C7514 /* TransportType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4AB9210580E1000C7514 /* TransportType.swift */; };
 		5A0D4ABB210580E1000C7514 /* TransportType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4AB9210580E1000C7514 /* TransportType.swift */; };
 		5A0D4ABD2105862F000C7514 /* TransportTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4ABC2105862F000C7514 /* TransportTypeTests.swift */; };
+		5A0D4ABF2105969E000C7514 /* TransferFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4ABE2105969E000C7514 /* TransferFormat.swift */; };
+		5A0D4AC02105969E000C7514 /* TransferFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4ABE2105969E000C7514 /* TransferFormat.swift */; };
 		5A15C04420435C0300101E9F /* ServerInvocationHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */; };
 		5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A32F4EB20829F700091C185 /* HandshakeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A32F4EA20829F700091C185 /* HandshakeProtocol.swift */; };
@@ -186,6 +188,7 @@
 		5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegotiationResponseTests.swift; sourceTree = "<group>"; };
 		5A0D4AB9210580E1000C7514 /* TransportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportType.swift; sourceTree = "<group>"; };
 		5A0D4ABC2105862F000C7514 /* TransportTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportTypeTests.swift; sourceTree = "<group>"; };
+		5A0D4ABE2105969E000C7514 /* TransferFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFormat.swift; sourceTree = "<group>"; };
 		5A15C04320435C0300101E9F /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
 		5A32F4EA20829F700091C185 /* HandshakeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandshakeProtocol.swift; sourceTree = "<group>"; };
 		5A32F4ED2082BE690091C185 /* HandshakeProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandshakeProtocolTests.swift; sourceTree = "<group>"; };
@@ -363,6 +366,7 @@
 				5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */,
 				5A489E3A20F2E78500A232C4 /* NegotiationResponse.swift */,
 				5A0D4AB9210580E1000C7514 /* TransportType.swift */,
+				5A0D4ABE2105969E000C7514 /* TransferFormat.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -839,6 +843,7 @@
 				5A406F492030F6360055671E /* HttpConnection.swift in Sources */,
 				5A489E3320F148F400A232C4 /* HttpConnectionOptions.swift in Sources */,
 				5A406F512030F6540055671E /* TypeConverter.swift in Sources */,
+				5A0D4AC02105969E000C7514 /* TransferFormat.swift in Sources */,
 				5A406F532030F65B0055671E /* Util.swift in Sources */,
 				5A406F522030F6580055671E /* Transport.swift in Sources */,
 				5A489E3C20F2E78500A232C4 /* NegotiationResponse.swift in Sources */,
@@ -869,6 +874,7 @@
 				5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */,
 				5A489E3220F148F400A232C4 /* HttpConnectionOptions.swift in Sources */,
 				5A9A813B1E6397BE00FE62A6 /* HttpConnection.swift in Sources */,
+				5A0D4ABF2105969E000C7514 /* TransferFormat.swift in Sources */,
 				5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */,
 				5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */,
 				5A489E3B20F2E78500A232C4 /* NegotiationResponse.swift in Sources */,

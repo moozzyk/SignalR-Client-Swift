@@ -12,8 +12,8 @@ import XCTest
 class NegotiationResponseTests: XCTestCase {
     public func testThatCanCreateNegotiationResponse() {
         let availableTransports = [
-            TransportDescription(transportType: .webSockets, transferFormats: ["Text", "Binary"]),
-            TransportDescription(transportType: .longPolling, transferFormats: ["Binary"])]
+            TransportDescription(transportType: .webSockets, transferFormats: [.text, .binary]),
+            TransportDescription(transportType: .longPolling, transferFormats: [.binary])]
         let negotiationResponse = NegotiationResponse(connectionId: "connectionId", availableTransports: availableTransports)
 
         XCTAssertEqual("connectionId", negotiationResponse.connectionId)
@@ -28,13 +28,13 @@ class NegotiationResponseTests: XCTestCase {
         XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", negotiationResponse.connectionId)
         XCTAssertEqual(3, negotiationResponse.availableTransports.count)
         XCTAssertEqual(.webSockets, negotiationResponse.availableTransports[0].transportType)
-        XCTAssertEqual(["Text", "Binary"], negotiationResponse.availableTransports[0].transferFormats)
+        XCTAssertEqual([.text, .binary], negotiationResponse.availableTransports[0].transferFormats)
 
         XCTAssertEqual(.serverSentEvents, negotiationResponse.availableTransports[1].transportType)
-        XCTAssertEqual(["Text"], negotiationResponse.availableTransports[1].transferFormats)
+        XCTAssertEqual([.text], negotiationResponse.availableTransports[1].transferFormats)
 
         XCTAssertEqual(.longPolling, negotiationResponse.availableTransports[2].transportType)
-        XCTAssertEqual(["Text", "Binary"], negotiationResponse.availableTransports[2].transferFormats)
+        XCTAssertEqual([.text, .binary], negotiationResponse.availableTransports[2].transferFormats)
     }
 
     public func testThatParseThrowsForInvalidPayloads() {
