@@ -20,27 +20,35 @@ public class WebsocketsTransport: Transport {
         
         webSocket = WebSocket(request: request)
 
-        webSocket!.event.open = {
-            self.delegate?.transportDidOpen()
+        webSocket!.event.open = { [weak self] in
+            guard let welf = self else { return }
+            
+            welf.delegate?.transportDidOpen()
         }
 
-        webSocket!.event.close = { code, reason, clean in
+        webSocket!.event.close = { [weak self] (code, reason, clean) in
+            guard let welf = self else { return }
+            
             if clean {
-                self.delegate?.transportDidClose(nil)
+                welf.delegate?.transportDidClose(nil)
             } else {
-                self.delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: code, reason: reason))
+                welf.delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: code, reason: reason))
             }
         }
 
-        webSocket!.event.error = { error in
-            self.delegate!.transportDidClose(error)
+        webSocket!.event.error = { [weak self] error in
+            guard let welf = self else { return }
+            
+            welf.delegate?.transportDidClose(error)
         }
 
-        webSocket!.event.message = { message in
+        webSocket!.event.message = { [weak self] message in
+            guard let welf = self else { return }
+            
             if let text = message as? String {
-                self.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
+                welf.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
             } else {
-                self.delegate?.transportDidReceiveData(message as! Data)
+                welf.delegate?.transportDidReceiveData(message as! Data)
             }
         }
         webSocket!.open()

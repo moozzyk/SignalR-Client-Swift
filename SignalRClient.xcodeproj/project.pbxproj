@@ -10,7 +10,6 @@
 		0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */; };
 		2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */; };
 		3EE477C9B88482D1A4CDC1BB /* Pods_macOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */; };
-		49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */; };
 		5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A004A032028293400A26C0B /* ServerInvocationHandler.swift */; };
 		5A01C02C1EA0562D0091082D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A01C02B1EA0562D0091082D /* Util.swift */; };
 		5A0D4AB820FF0379000C7514 /* NegotiationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */; };
@@ -182,7 +181,6 @@
 		1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSamplePhone.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSamplePhone/Pods-HubSamplePhone.release.xcconfig"; sourceTree = "<group>"; };
 		2B834CCBD18A464AD4A954B8 /* Pods-SignalRClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SignalRClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 		43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.release.xcconfig"; sourceTree = "<group>"; };
 		5A004A032028293400A26C0B /* ServerInvocationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandler.swift; sourceTree = "<group>"; };
 		5A01C02B1EA0562D0091082D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegotiationResponseTests.swift; sourceTree = "<group>"; };
@@ -246,7 +244,6 @@
 		76C3C56B8D6155C4063779D7 /* Pods-HubSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.debug.xcconfig"; sourceTree = "<group>"; };
 		7A3E83A6A659DA0EB659A919 /* Pods-SignalRClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SignalRClientTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HubSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-HubSample/Pods-HubSample.release.xcconfig"; sourceTree = "<group>"; };
-		8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.debug.xcconfig"; sourceTree = "<group>"; };
 		A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macOS SignalRClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-macOS SignalRClient/Pods-macOS SignalRClient.debug.xcconfig"; sourceTree = "<group>"; };
 		A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HubSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS SignalRClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOS SignalRClient/Pods-iOS SignalRClient.release.xcconfig"; sourceTree = "<group>"; };
@@ -288,7 +285,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,8 +443,6 @@
 				8BFAA56E5E498F47A7165E93 /* Pods-HubSample.release.xcconfig */,
 				E727A959866B76D6C3A7D6EF /* Pods-HubSamplePhone.debug.xcconfig */,
 				1C9663C04A465C468C69EA5D /* Pods-HubSamplePhone.release.xcconfig */,
-				8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */,
-				519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */,
 				E5A68745A1B87B62015E6E63 /* Pods-iOS SignalRClient.debug.xcconfig */,
 				BD3DFE04AAC7AF2B85E6AE56 /* Pods-iOS SignalRClient.release.xcconfig */,
 				A24BAA0E43CD69F7D3F1943C /* Pods-macOS SignalRClient.debug.xcconfig */,
@@ -543,7 +537,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A9A81651E63CAE100FE62A6 /* Build configuration list for PBXNativeTarget "ConnectionSample" */;
 			buildPhases = (
-				887F336C28EB27B62399DE50 /* [CP] Check Pods Manifest.lock */,
 				5A9A81571E63CAE100FE62A6 /* Sources */,
 				5A9A81581E63CAE100FE62A6 /* Frameworks */,
 				5A9A81591E63CAE100FE62A6 /* Resources */,
@@ -781,24 +774,6 @@
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-iOS SignalRClient-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		887F336C28EB27B62399DE50 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SocketsSample-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1250,7 +1225,6 @@
 		};
 		5A9A81661E63CAE100FE62A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8CBC01DF0779367489AA43A1 /* Pods-SocketsSample.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1267,7 +1241,6 @@
 		};
 		5A9A81671E63CAE100FE62A6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
