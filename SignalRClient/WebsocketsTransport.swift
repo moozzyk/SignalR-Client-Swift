@@ -10,7 +10,7 @@ import Foundation
 
 public class WebsocketsTransport: Transport {
     var webSocket:WebSocket? = nil
-    public weak var delegate: TransportDelegate! = nil
+    public weak var delegate: TransportDelegate? = nil
 
     public func start(url: URL, options: HttpConnectionOptions) {
         var request = URLRequest(url: convertUrl(url: url))
@@ -33,7 +33,7 @@ public class WebsocketsTransport: Transport {
         }
 
         webSocket!.event.error = { error in
-            self.delegate!.transportDidClose(error)
+            self.delegate?.transportDidClose(error)
         }
 
         webSocket!.event.message = { message in

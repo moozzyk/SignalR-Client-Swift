@@ -174,7 +174,7 @@ class ConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidOpenHandler = { connection in
-            testTransport.delegate.transportDidClose(nil)
+            testTransport.delegate?.transportDidClose(nil)
         }
 
         connectionDelegate.connectionDidCloseHandler = { error in
