@@ -9,6 +9,9 @@
 import Foundation
 
 public class WebsocketsTransport: Transport {
+    private let transportQueue: DispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
+    private var isTransportClosed = false
+
     var webSocket:WebSocket? = nil
     public weak var delegate: TransportDelegate? = nil
 
@@ -25,6 +28,13 @@ public class WebsocketsTransport: Transport {
         }
 
         webSocket!.event.close = { code, reason, clean in
+            // the transport could have already been closed as a result of an error. In this case we should not call
+            // transportDidClose again on the delegate.
+            guard !self.markTransportClosed() else {
+                // TODO: add logging
+                return
+            }
+
             if clean {
                 self.delegate?.transportDidClose(nil)
             } else {
@@ -33,6 +43,13 @@ public class WebsocketsTransport: Transport {
         }
 
         webSocket!.event.error = { error in
+            // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
+            // on the delegate multiple times so we can as well add the check and log
+            guard !self.markTransportClosed() else {
+                // TODO: add logging
+                return
+            }
+
             self.delegate?.transportDidClose(error)
         }
 
@@ -78,6 +95,17 @@ public class WebsocketsTransport: Transport {
         if let accessToken = accessTokenProvider() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
+    }
+
+    private func markTransportClosed() -> Bool {
+        var previousCloseStatus = false
+
+        transportQueue.sync {
+            previousCloseStatus = isTransportClosed
+            isTransportClosed = true
+        }
+
+        return previousCloseStatus
     }
 }
 
