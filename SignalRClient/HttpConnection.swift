@@ -166,12 +166,17 @@ public class HttpConnection: Connection {
     }
 
     fileprivate func transportDidClose(_ error: Error?) {
-        _ = self.changeState(from: nil, to: State.stopped)
+        let previousState = self.changeState(from: nil, to: State.stopped)
 
         connectionQueue.async {
-            // wait in case the transport failed immediately after being started to avoid
-            // calling connectionDidClose before connectionDidOpen
-            self.startDispatchGroup.wait()
+            if previousState == State.connecting {
+                // unblock the dispatch group when transport close when starting (likely due to an error)
+                self.startDispatchGroup.leave()
+            } else {
+                // wait in case the transport failed immediately after being started to avoid
+                // calling connectionDidClose before connectionDidOpen
+                self.startDispatchGroup.wait()
+            }
             Util.dispatchToMainThread {
                 self.delegate?.connectionDidClose(error: self.stopError ?? error)
             }
