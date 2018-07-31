@@ -9,8 +9,11 @@
 import Foundation
 
 public class WebsocketsTransport: Transport {
+    private let transportQueue: DispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
+    private var isTransportClosed = false
+
     var webSocket:WebSocket? = nil
-    public weak var delegate: TransportDelegate! = nil
+    public weak var delegate: TransportDelegate? = nil
 
     public func start(url: URL, options: HttpConnectionOptions) {
         var request = URLRequest(url: convertUrl(url: url))
@@ -26,9 +29,16 @@ public class WebsocketsTransport: Transport {
             welf.delegate?.transportDidOpen()
         }
 
-        webSocket!.event.close = { [weak self] (code, reason, clean) in
+        webSocket!.event.close = { [weak self] code, reason, clean in
             guard let welf = self else { return }
-            
+        
+            // the transport could have already been closed as a result of an error. In this case we should not call
+            // transportDidClose again on the delegate.
+            guard !welf.markTransportClosed() else {
+                // TODO: add logging
+                return
+            }
+
             if clean {
                 welf.delegate?.transportDidClose(nil)
             } else {
@@ -38,7 +48,14 @@ public class WebsocketsTransport: Transport {
 
         webSocket!.event.error = { [weak self] error in
             guard let welf = self else { return }
-            
+        
+            // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
+            // on the delegate multiple times so we can as well add the check and log
+            guard !welf.markTransportClosed() else {
+                // TODO: add logging
+                return
+            }
+
             welf.delegate?.transportDidClose(error)
         }
 
@@ -86,6 +103,17 @@ public class WebsocketsTransport: Transport {
         if let accessToken = accessTokenProvider() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
+    }
+
+    private func markTransportClosed() -> Bool {
+        var previousCloseStatus = false
+
+        transportQueue.sync {
+            previousCloseStatus = isTransportClosed
+            isTransportClosed = true
+        }
+
+        return previousCloseStatus
     }
 }
 

@@ -11,7 +11,7 @@ import Foundation
 
 class TestTransport: Transport {
  
-    weak var delegate: TransportDelegate!
+    weak var delegate: TransportDelegate?
 
     func start(url:URL, options: HttpConnectionOptions = HttpConnectionOptions()) -> Void {
         delegate?.transportDidOpen()
@@ -21,6 +21,6 @@ class TestTransport: Transport {
     }
 
     func close() -> Void {
-        delegate.transportDidClose(nil)
+        delegate?.transportDidClose(nil)
     }
 }
