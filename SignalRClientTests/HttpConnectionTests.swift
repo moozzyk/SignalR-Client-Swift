@@ -32,7 +32,7 @@ class TestConnectionDelegate: ConnectionDelegate {
     }
 }
 
-class ConnectionTests: XCTestCase {
+class HttpConnectionTests: XCTestCase {
 
     func testThatConnectionCanSendReceiveMessages() {
         let didOpenExpectation = expectation(description: "connection opened")
