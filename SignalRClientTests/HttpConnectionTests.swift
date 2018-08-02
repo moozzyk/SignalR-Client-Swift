@@ -32,6 +32,41 @@ class TestConnectionDelegate: ConnectionDelegate {
     }
 }
 
+class TestHttpClient: HttpClientProtocol {
+    private var getHandler: ((URL) -> (HttpResponse?, Error?))?
+    private var postHandler: ((URL) -> (HttpResponse?, Error?))?
+
+    init(getHandler: ((URL) -> (HttpResponse?, Error?))?, postHandler: ((URL) -> (HttpResponse?, Error?))?) {
+        self.getHandler = getHandler
+        self.postHandler = postHandler
+    }
+
+    convenience init(getHandler: ((URL) -> (HttpResponse?, Error?))?) {
+        self.init(getHandler: getHandler, postHandler: nil)
+    }
+
+    convenience init(postHandler: ((URL) -> (HttpResponse?, Error?))?) {
+        self.init(getHandler: nil, postHandler: postHandler)
+    }
+
+    convenience init() {
+        self.init(getHandler: nil, postHandler: nil)
+    }
+
+    func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
+        handleHttpRequest(url: url, handler: getHandler, completionHandler: completionHandler)
+    }
+
+    func post(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
+        handleHttpRequest(url: url, handler: postHandler, completionHandler: completionHandler)
+    }
+
+    private func handleHttpRequest(url: URL, handler: ((URL) -> (HttpResponse?, Error?))?, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
+        let (response, error) = (handler?(url)) ?? (nil, nil)
+        completionHandler(response, error)
+    }
+}
+
 class HttpConnectionTests: XCTestCase {
 
     func testThatConnectionCanSendReceiveMessages() {
@@ -340,6 +375,106 @@ class HttpConnectionTests: XCTestCase {
 
         connection.delegate = connectionDelegate
         connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionFailsToOpenIfNegotiationFails() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let startError = SignalRError.invalidOperation(message: "fail")
+        let httpClient = TestHttpClient(postHandler: { _ in (nil, startError) })
+        let httpConnectionOptions = HttpConnectionOptions()
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(startError)", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionFailsToOpenIfNegotiateResponseNil() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpClient = TestHttpClient(postHandler: { _ in (nil, nil) })
+        let httpConnectionOptions = HttpConnectionOptions()
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."))", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionFailsToOpenIfNegotateStatusNotOK() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpClient = TestHttpClient(postHandler: { _ in (HttpResponse(statusCode: 500, contents: nil), nil) })
+        let httpConnectionOptions = HttpConnectionOptions()
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.webError(statusCode: 500))", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionFailsToOpenIfNegotateResponseNotValid() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpClient = TestHttpClient(postHandler: { _ in (HttpResponse(statusCode: 200, contents: "{}".data(using: .utf8)!), nil) })
+        let httpConnectionOptions = HttpConnectionOptions()
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "connectionId property not found or invalid"))", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionFailsToOpenIfStopCalledDuringNegotiate() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let httpClient = TestHttpClient(postHandler: { _ in
+            httpConnection.stop()
+            return (HttpResponse(statusCode: 200, contents: "{}".data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.connectionIsBeingClosed)", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }

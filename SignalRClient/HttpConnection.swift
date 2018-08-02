@@ -91,7 +91,7 @@ public class HttpConnection: Connection {
             }
             else {
                 self.startDispatchGroup.leave()
-                print("HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription: \(String(data: (httpResponse.contents)!, encoding: .utf8)!)")
+                print("HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(String(data: (httpResponse.contents ?? Data()), encoding: .utf8)!)")
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)
             }
         }
