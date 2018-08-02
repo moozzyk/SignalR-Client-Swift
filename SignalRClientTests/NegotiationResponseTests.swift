@@ -10,6 +10,7 @@ import XCTest
 @testable import SignalRClient
 
 class NegotiationResponseTests: XCTestCase {
+
     public func testThatCanCreateNegotiationResponse() {
         let availableTransports = [
             TransportDescription(transportType: .webSockets, transferFormats: [.text, .binary]),

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class HttpResponse {
+public class HttpResponse {
     let statusCode: Int
     let contents: Data?
 

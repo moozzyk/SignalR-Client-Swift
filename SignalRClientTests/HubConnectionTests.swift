@@ -11,14 +11,6 @@ import XCTest
 
 class HubConnectionTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testThatOpeningHubConnectionFailsIfHandshakeFails() {
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
         let didCloseExpectation = expectation(description: "connection closed")

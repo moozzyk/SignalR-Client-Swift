@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DefaultHttpClient {
+class DefaultHttpClient: HttpClientProtocol {
     private let options: HttpConnectionOptions
 
     public init(options: HttpConnectionOptions) {

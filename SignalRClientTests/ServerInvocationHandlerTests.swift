@@ -11,14 +11,6 @@ import XCTest
 
 class InvocationHandlerTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testThatInvocationHandlerCreatesInvocationMessage() {
         let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in })
         let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? InvocationMessage

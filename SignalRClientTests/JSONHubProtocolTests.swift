@@ -10,6 +10,7 @@ import XCTest
 @testable import SignalRClient
 
 class JSONHubProtocolTests: XCTestCase {
+
     func testThatHubProtocolReturnsCorrectName() {
         XCTAssertEqual("json", JSONHubProtocol().name)
     }

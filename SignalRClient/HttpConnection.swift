@@ -48,7 +48,7 @@ public class HttpConnection: Connection {
         startDispatchGroup.enter()
 
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        let httpClient = DefaultHttpClient(options: options)
+        let httpClient = options.httpClientFactory(options)
 
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate");

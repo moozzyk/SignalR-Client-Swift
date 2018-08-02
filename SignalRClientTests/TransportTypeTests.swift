@@ -10,6 +10,7 @@ import XCTest
 @testable import SignalRClient
 
 class TransportTypeTests: XCTestCase {
+
     func testFlagValues() {
         XCTAssertEqual(0b0001, TransportType.longPolling.rawValue)
         XCTAssertEqual(0b0010, TransportType.serverSentEvents.rawValue)
