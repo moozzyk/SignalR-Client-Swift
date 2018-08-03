@@ -57,6 +57,9 @@
 		5A489E3920F292B400A232C4 /* HubConnectionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */; };
 		5A489E3B20F2E78500A232C4 /* NegotiationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3A20F2E78500A232C4 /* NegotiationResponse.swift */; };
 		5A489E3C20F2E78500A232C4 /* NegotiationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A489E3A20F2E78500A232C4 /* NegotiationResponse.swift */; };
+		5A4D7DA52113E57A009C7866 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D7DA42113E57A009C7866 /* Logger.swift */; };
+		5A4D7DA62113E57A009C7866 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D7DA42113E57A009C7866 /* Logger.swift */; };
+		5A4D7DA82113EFF4009C7866 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
@@ -207,6 +210,8 @@
 		5A489E3120F148F400A232C4 /* HttpConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpConnectionOptions.swift; sourceTree = "<group>"; };
 		5A489E3720F292B400A232C4 /* HubConnectionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubConnectionBuilder.swift; sourceTree = "<group>"; };
 		5A489E3A20F2E78500A232C4 /* NegotiationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegotiationResponse.swift; sourceTree = "<group>"; };
+		5A4D7DA42113E57A009C7866 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -371,6 +376,7 @@
 				5A0D4AB9210580E1000C7514 /* TransportType.swift */,
 				5A0D4ABE2105969E000C7514 /* TransferFormat.swift */,
 				5A0D4AC321102678000C7514 /* HttpClientProtocol.swift */,
+				5A4D7DA42113E57A009C7866 /* Logger.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -390,6 +396,7 @@
 				5A32F4EF2084195A0091C185 /* HubProtocolFake.swift */,
 				5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */,
 				5A0D4ABC2105862F000C7514 /* TransportTypeTests.swift */,
+				5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -843,6 +850,7 @@
 				5A406F482030F6320055671E /* TransportDelegate.swift in Sources */,
 				5AE82B96204FC93100F0D15D /* StreamHandle.swift in Sources */,
 				5A406F4A2030F6390055671E /* ConnectionDelegate.swift in Sources */,
+				5A4D7DA62113E57A009C7866 /* Logger.swift in Sources */,
 				5A406F562030F6660055671E /* ServerInvocationHandler.swift in Sources */,
 				5A406F492030F6360055671E /* HttpConnection.swift in Sources */,
 				5A0D4AC521102678000C7514 /* HttpClientProtocol.swift in Sources */,
@@ -875,6 +883,7 @@
 				5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */,
 				5AE82B95204FC93100F0D15D /* StreamHandle.swift in Sources */,
 				5A341EB81E7CDCA400F6D41D /* TypeConverter.swift in Sources */,
+				5A4D7DA52113E57A009C7866 /* Logger.swift in Sources */,
 				5AC1AE3A1E89E737006262B3 /* Transport.swift in Sources */,
 				5A45C82E1F52A774003EEC55 /* HubProtocol.swift in Sources */,
 				5A0D4AC421102678000C7514 /* HttpClientProtocol.swift in Sources */,
@@ -905,6 +914,7 @@
 				5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */,
 				5A32F4F02084195A0091C185 /* HubProtocolFake.swift in Sources */,
 				5A32F4EE2082BE690091C185 /* HandshakeProtocolTests.swift in Sources */,
+				5A4D7DA82113EFF4009C7866 /* LoggerTests.swift in Sources */,
 				5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */,
 				5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */,
 				5AA884F61E80E25400FAF9C4 /* JSONTypeConverterTests.swift in Sources */,
