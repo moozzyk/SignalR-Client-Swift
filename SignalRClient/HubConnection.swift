@@ -15,14 +15,16 @@ public class HubConnection: ConnectionDelegate {
     private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
     private var handshakeHandled = false
+    private let logger: Logger
 
     private var connection: Connection
     private var hubProtocol: HubProtocol
     public weak var delegate: HubConnectionDelegate?
 
-    public init(connection: Connection, hubProtocol: HubProtocol) {
+    public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
         self.connection = connection
         self.hubProtocol = hubProtocol
+        self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
         self.connection.delegate = self
     }

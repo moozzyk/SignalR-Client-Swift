@@ -34,7 +34,7 @@ class WebsocketsTransportTests: XCTestCase {
         let didReceiveDataExpectation = expectation(description: "transport received data")
         let didCloseExpectation = expectation(description: "transport closed")
 
-        let wsTransport = WebsocketsTransport()
+        let wsTransport = WebsocketsTransport(logger: NullLogger())
         let transportDelegate = TestTransportDelegate()
         let message = "Hello, World!"
 

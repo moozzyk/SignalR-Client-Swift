@@ -19,6 +19,7 @@ public class HttpConnection: Connection {
     private var transport: Transport?
     private let options: HttpConnectionOptions
     private var stopError: Error?
+    private let logger: Logger
 
     public weak var delegate: ConnectionDelegate!
 
@@ -29,12 +30,13 @@ public class HttpConnection: Connection {
         case stopped
     }
 
-    public init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions()) {
+    public init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger()) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
         self.url = url
         self.options = options
+        self.logger = logger
         self.state = State.initial
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
@@ -85,7 +87,7 @@ public class HttpConnection: Connection {
 
                 let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
 
-                self.transport = transport ?? WebsocketsTransport()
+                self.transport = transport ?? WebsocketsTransport(logger: self.logger)
                 self.transport!.delegate = self.transportDelegate
                 self.transport!.start(url: startUrl, options: self.options)
             }

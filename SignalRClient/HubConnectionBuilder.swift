@@ -12,6 +12,7 @@ public class HubConnectionBuilder {
     private let url: URL
     private var hubProtocol: HubProtocol = JSONHubProtocol()
     private let httpConnectionOptions = HttpConnectionOptions()
+    private var logger: Logger = NullLogger()
 
     public init(url: URL) {
         self.url = url
@@ -27,9 +28,24 @@ public class HubConnectionBuilder {
         return self
     }
 
+    public func withLogging(minLogLevel: LogLevel) -> HubConnectionBuilder {
+        logger = FilteringLogger(minLogLevel: minLogLevel, logger: PrintLogger())
+        return self
+    }
+
+    public func withLogging(logger: Logger) -> HubConnectionBuilder {
+        self.logger = logger
+        return self
+    }
+
+    public func withLogging(minLogLevel: LogLevel, logger: Logger) -> HubConnectionBuilder {
+        self.logger = FilteringLogger(minLogLevel: minLogLevel, logger: logger)
+        return self
+    }
+
     public func build() -> HubConnection {
-        let httpConnection = HttpConnection(url: url, options: httpConnectionOptions)
-        return HubConnection(connection: httpConnection, hubProtocol: hubProtocol)
+        let httpConnection = HttpConnection(url: url, options: httpConnectionOptions, logger: logger)
+        return HubConnection(connection: httpConnection, hubProtocol: hubProtocol, logger: logger)
     }
 }
 

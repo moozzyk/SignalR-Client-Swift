@@ -31,6 +31,9 @@ public extension LogLevel {
 }
 
 public class PrintLogger: Logger {
+    public init() {
+    }
+
     public func log(logLevel: LogLevel, message: String) {
         // TODO: time?
         print("\(logLevel.toString()): \(message)")
@@ -38,6 +41,9 @@ public class PrintLogger: Logger {
 }
 
 public class NullLogger: Logger {
+    public init() {
+    }
+
     public func log(logLevel: LogLevel, message: String) {
     }
 }

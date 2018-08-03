@@ -11,9 +11,14 @@ import Foundation
 public class WebsocketsTransport: Transport {
     private let transportQueue: DispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
     private var isTransportClosed = false
+    private let logger: Logger
 
     var webSocket:WebSocket? = nil
     public weak var delegate: TransportDelegate? = nil
+
+    init(logger: Logger) {
+        self.logger = logger
+    }
 
     public func start(url: URL, options: HttpConnectionOptions) {
         var request = URLRequest(url: convertUrl(url: url))
