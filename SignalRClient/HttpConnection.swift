@@ -150,6 +150,13 @@ public class HttpConnection: Connection {
     }
 
     fileprivate func transportDidOpen() {
+        // connection is being stopped even though start has not finished yet
+        if (self.state != State.connecting) {
+            self.startDispatchGroup.leave()
+            self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+            return
+        }
+
         let previousState = self.changeState(from: nil, to: State.connected)
 
         assert(previousState == State.connecting)

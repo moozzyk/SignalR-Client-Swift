@@ -20,11 +20,6 @@ target 'macOS SignalRClient' do
 #  pod 'SwiftWebSocket', '~> 2.7'
 end
 
-target 'SocketsSample' do
-  use_frameworks!
-  platform :osx, '10.13'
-end
-
 target 'SignalRClientTests' do
   use_frameworks!
   platform :osx, '10.13'
