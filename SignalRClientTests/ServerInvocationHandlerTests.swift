@@ -12,7 +12,7 @@ import XCTest
 class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in })
+        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in })
         let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? InvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.Invocation, invocationMessage!.messageType)
@@ -24,7 +24,7 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerReturnsErrorForStreamItem() {
-        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in })
+        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in })
         if let error = invocationHandler.processStreamItem(streamItemMessage: StreamItemMessage(invocationId: "42", item: nil)) as? SignalRError {
             XCTAssertEqual(String(describing: error), String(describing: SignalRError.protocolViolation))
         } else {
@@ -33,7 +33,7 @@ class InvocationHandlerTests: XCTestCase {
    }
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
-        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in
+        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in
             XCTAssertNil(result)
             XCTAssertNotNil(error)
             switch (error as! SignalRError) {
@@ -51,7 +51,7 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
-        let invocationHandler = InvocationHandler<Any>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in
+        let invocationHandler = InvocationHandler<Any>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in
             XCTAssertNil(error)
             XCTAssertNil(result)
         })
@@ -61,7 +61,7 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesValueForResultCompletionMessage() {
-        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in
+        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in
             XCTAssertNil(error)
             XCTAssertEqual(42, result)
         })
@@ -71,7 +71,7 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesErrorIfResultConversionFails() {
-        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in
+        let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in
             XCTAssertNil(result)
             XCTAssertEqual(String(describing: error!), String(describing: SignalRError.unsupportedType))
         })
@@ -81,7 +81,7 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatRaiseErrorPassesError() {
-        let invocationHandler = InvocationHandler<Any>(typeConverter: JSONTypeConverter(), invocationDidComplete: { result, error in
+        let invocationHandler = InvocationHandler<Any>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in
             XCTAssertNil(result)
             XCTAssertNotNil(error)
             XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
@@ -102,7 +102,7 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in }, invocationDidComplete: { error in })
+        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in })
         let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? StreamInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.StreamInvocation, invocationMessage!.messageType)
@@ -115,14 +115,14 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatInvocationInvokesCallbackForStreamItem() {
         var receivedItem = -1
-        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in receivedItem = 7}, invocationDidComplete: { error in XCTFail()})
+        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in receivedItem = 7}, invocationDidComplete: { error in XCTFail()})
         let error = invocationHandler.processStreamItem(streamItemMessage: StreamItemMessage(invocationId: "42", item: 7)) as? SignalRError
         XCTAssertNil(error)
         XCTAssertEqual(7, receivedItem)
     }
 
     func testThatInvocationReturnsErrorIfProcessingStreamItemFails() {
-        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in XCTFail()}, invocationDidComplete: { error in XCTFail()})
+        let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in XCTFail()}, invocationDidComplete: { error in XCTFail()})
         if let error = invocationHandler.processStreamItem(streamItemMessage: StreamItemMessage(invocationId: "42", item: "abc")) as? SignalRError {
             XCTAssertEqual(String(describing: error), String(describing: SignalRError.unsupportedType))
         } else {
@@ -131,7 +131,7 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
-        let streamInvocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in }, invocationDidComplete: { error in
+        let streamInvocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in
             XCTAssertNotNil(error)
             switch (error as! SignalRError) {
             case .hubInvocationError(let errorMessage):
@@ -148,7 +148,7 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
-        let streamInvocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in }, invocationDidComplete: { error in
+        let streamInvocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in
             XCTAssertNil(error)
         })
 
@@ -157,7 +157,7 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatRaiseErrorPassesError() {
-        let streamInvocationHandler = StreamInvocationHandler<Any>(typeConverter: JSONTypeConverter(), streamItemReceived: { item in }, invocationDidComplete: { error in
+        let streamInvocationHandler = StreamInvocationHandler<Any>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in
             XCTAssertNotNil(error)
             XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
         })
