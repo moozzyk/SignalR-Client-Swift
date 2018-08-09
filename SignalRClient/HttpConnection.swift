@@ -58,12 +58,12 @@ public class HttpConnection: Connection {
         negotiateUrl.appendPathComponent("negotiate")
 
         httpClient.post(url: negotiateUrl) {httpResponse, error in
-            if error != nil {
-                self.logger.log(logLevel: LogLevel.error, message: "Negotiate failed due to: \(String(describing: error))")
+            if let e = error {
+                self.logger.log(logLevel: LogLevel.error, message: "Negotiate failed due to: \(e))")
 
                 self.startDispatchGroup.leave()
 
-                self.failOpenWithError(error: error!, changeState: true)
+                self.failOpenWithError(error: e, changeState: true)
                 return
             }
 
@@ -87,7 +87,6 @@ public class HttpConnection: Connection {
                 let negotiationResponse: NegotiationResponse
                 do {
                     let payload = httpResponse.contents
-
                     self.logger.log(logLevel: LogLevel.debug, message: "Negotiate response: \(payload != nil ? String(data: payload!, encoding: .utf8) ?? "(nil)" : "(nil)")")
                     negotiationResponse = try NegotiationResponse.parse(payload: payload)
                 } catch {

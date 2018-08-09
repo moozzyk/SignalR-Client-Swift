@@ -16,7 +16,7 @@ public enum LogLevel: Int {
 }
 
 public protocol Logger {
-    func log(logLevel: LogLevel, message: String)
+    func log(logLevel: LogLevel, message: @autoclosure () -> String)
 }
 
 public extension LogLevel {
@@ -34,9 +34,9 @@ public class PrintLogger: Logger {
     public init() {
     }
 
-    public func log(logLevel: LogLevel, message: String) {
+    public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
         // TODO: time?
-        print("\(logLevel.toString()): \(message)")
+        print("\(logLevel.toString()): \(message())")
     }
 }
 
@@ -44,7 +44,7 @@ public class NullLogger: Logger {
     public init() {
     }
 
-    public func log(logLevel: LogLevel, message: String) {
+    public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
     }
 }
 
@@ -57,7 +57,7 @@ class FilteringLogger: Logger {
         self.logger = logger
     }
 
-    func log(logLevel: LogLevel, message: String) {
+    func log(logLevel: LogLevel, message: @autoclosure () -> String) {
         if (logLevel.rawValue <= minLogLevel.rawValue) {
             logger.log(logLevel: logLevel, message: message)
         }

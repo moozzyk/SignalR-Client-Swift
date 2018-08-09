@@ -14,7 +14,7 @@ class LoggerTests: XCTestCase {
     func testThatFilteringLoggerLogsPerMinLogLevel() {
         class TestLogger: Logger {
             var logLevels: [LogLevel] = []
-            func log(logLevel: LogLevel, message: String) {
+            func log(logLevel: LogLevel, message: @autoclosure () -> String) {
                 logLevels.append(logLevel)
             }
         }
