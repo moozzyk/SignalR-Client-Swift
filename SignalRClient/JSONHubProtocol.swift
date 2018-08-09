@@ -41,7 +41,7 @@ open class JSONTypeConverter: TypeConverter {
 }
 
 public class JSONHubProtocol: HubProtocol {
-    private let recordSeparator = UInt8(0x1e)
+    private static let recordSeparator = UInt8(0x1e)
     public let typeConverter: TypeConverter
     public let name = "json"
     public let version = 1
@@ -52,11 +52,11 @@ public class JSONHubProtocol: HubProtocol {
     }
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
-        let payloads = input.split(separator: recordSeparator)
+        let payloads = input.split(separator: JSONHubProtocol.recordSeparator)
         // do not try to parse the last payload if it is not terminated with record sparator
         // TODO: log that if payloads was received ?
         var count = payloads.count
-        if count > 0 && input.last != recordSeparator {
+        if count > 0 && input.last != JSONHubProtocol.recordSeparator {
             count = count - 1
         }
         return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
@@ -129,7 +129,7 @@ public class JSONHubProtocol: HubProtocol {
     public func writeMessage(message: HubMessage) throws -> Data {
         let invocationJSONObject = try createMessageJSONObject(message: message)
         var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)
-        payload.append(recordSeparator)
+        payload.append(JSONHubProtocol.recordSeparator)
         return payload
     }
 
