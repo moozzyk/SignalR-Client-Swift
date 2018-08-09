@@ -42,27 +42,35 @@ open class JSONTypeConverter: TypeConverter {
 
 public class JSONHubProtocol: HubProtocol {
     private static let recordSeparator = UInt8(0x1e)
+    private let logger: Logger
     public let typeConverter: TypeConverter
     public let name = "json"
     public let version = 1
     public let type = ProtocolType.Text
 
-    public init(typeConverter: TypeConverter = JSONTypeConverter()) {
+
+    public init(typeConverter: TypeConverter = JSONTypeConverter(), logger: Logger) {
         self.typeConverter = typeConverter
+        self.logger = logger
     }
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
         let payloads = input.split(separator: JSONHubProtocol.recordSeparator)
         // do not try to parse the last payload if it is not terminated with record sparator
-        // TODO: log that if payloads was received ?
         var count = payloads.count
         if count > 0 && input.last != JSONHubProtocol.recordSeparator {
+            logger.log(logLevel: LogLevel.warning, message: "Partial message received. Here be dragons...")
             count = count - 1
         }
+
+        logger.log(logLevel: LogLevel.debug, message: "Payload contains \(count) message(s)")
+
         return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
     }
 
     private func createHubMessage(payload: Data) throws -> HubMessage {
+        logger.log(logLevel: LogLevel.debug, message: "Message received: \(String(data:payload, encoding: .utf8) ?? "(empty)")")
+
         let json = try JSONSerialization.jsonObject(with: payload)
 
         if let message = json as? NSDictionary, let rawMessageType = message.object(forKey: "type") as? Int, let messageType = MessageType(rawValue: rawMessageType) {
@@ -78,7 +86,7 @@ public class JSONHubProtocol: HubProtocol {
             case .Close:
                 return createCloseMessage(message: message)
             default:
-                print("Unsupported messageType: \(messageType)")
+                logger.log(logLevel: LogLevel.error, message: "Unsupported messageType: \(messageType)")
             }
         }
 
@@ -164,9 +172,7 @@ public class JSONHubProtocol: HubProtocol {
             "type": streamInvocationMessage.messageType.rawValue,
             "invocationId": streamInvocationMessage.invocationId,
             "target": streamInvocationMessage.target,
-            "arguments": try streamInvocationMessage.arguments.map{ arg -> Any? in
-                return try typeConverter.convertToWireType(obj: arg)
-            }]
+            "arguments": try streamInvocationMessage.arguments.map{try typeConverter.convertToWireType(obj: $0)}]
     }
 
     private func createCancelInvocationMessageJSONObject(cancelInvocationMessage: CancelInvocationMessage) -> [String: Any] {

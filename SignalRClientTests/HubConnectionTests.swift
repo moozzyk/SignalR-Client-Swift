@@ -34,7 +34,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
-            .withHubProtocol(hubProtocol: HubProtocolFake())
+            .withHubProtocol(hubProtocolFactory: {_ in HubProtocolFake()})
             .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -142,7 +142,7 @@ class HubConnectionTests: XCTestCase {
         let invocationCancelledExpectation = expectation(description: "invocation cancelled")
 
         let testConnection = TestConnection()
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -168,7 +168,7 @@ class HubConnectionTests: XCTestCase {
         let testError = SignalRError.invalidOperation(message: "testError")
 
         let testConnection = TestConnection()
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -300,7 +300,7 @@ class HubConnectionTests: XCTestCase {
         let invocationCancelledExpectation = expectation(description: "invocation cancelled")
 
         let testConnection = TestConnection()
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -326,7 +326,7 @@ class HubConnectionTests: XCTestCase {
         let testError = SignalRError.invalidOperation(message: "testError")
 
         let testConnection = TestConnection()
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -389,7 +389,7 @@ class HubConnectionTests: XCTestCase {
             sendDidComplete(nil)
         }
 
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -414,7 +414,7 @@ class HubConnectionTests: XCTestCase {
             sendDidComplete(msg.contains("\"type\":5") ? SignalRError.invalidOperation(message: "test") : nil)
         }
 
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
@@ -740,7 +740,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let fakeConnection = FakeHttpConnection(url: URL(string: "http://tempuri.org")!)
-        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         hubConnection.stop()
         XCTAssertTrue(fakeConnection.stopCalled)
     }
@@ -759,7 +759,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let fakeConnection = FakeHttpConnection(url: URL(string: "http://tempuri.org")!)
-        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol())
+        let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         hubConnection.start()
         let payload = "{}\u{1e}{ \"type\": 7, \"error\": \"Server Error\" }\u{1e}"
         fakeConnection.delegate.connectionDidReceiveData(connection: fakeConnection, data: payload.data(using: .utf8)!)

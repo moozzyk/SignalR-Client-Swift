@@ -10,7 +10,7 @@ import Foundation
 
 public class HubConnectionBuilder {
     private let url: URL
-    private var hubProtocol: HubProtocol = JSONHubProtocol()
+    private var hubProtocolFactory: (Logger) -> HubProtocol = {logger in JSONHubProtocol(typeConverter: JSONTypeConverter(), logger: logger)}
     private let httpConnectionOptions = HttpConnectionOptions()
     private var logger: Logger = NullLogger()
 
@@ -18,8 +18,8 @@ public class HubConnectionBuilder {
         self.url = url
     }
 
-    public func withHubProtocol(hubProtocol: HubProtocol) -> HubConnectionBuilder {
-        self.hubProtocol = hubProtocol
+    public func withHubProtocol(hubProtocolFactory: @escaping (Logger) -> HubProtocol) -> HubConnectionBuilder {
+        self.hubProtocolFactory = hubProtocolFactory
         return self
     }
 
@@ -45,12 +45,12 @@ public class HubConnectionBuilder {
 
     public func build() -> HubConnection {
         let httpConnection = HttpConnection(url: url, options: httpConnectionOptions, logger: logger)
-        return HubConnection(connection: httpConnection, hubProtocol: hubProtocol, logger: logger)
+        return HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
     }
 }
 
 public extension HubConnectionBuilder {
     func withJSONHubProtocol(typeConverter: TypeConverter = JSONTypeConverter()) -> HubConnectionBuilder {
-        return self.withHubProtocol(hubProtocol: JSONHubProtocol(typeConverter: typeConverter))
+        return self.withHubProtocol(hubProtocolFactory: {logger in JSONHubProtocol(typeConverter: typeConverter, logger: logger)})
     }
 }
