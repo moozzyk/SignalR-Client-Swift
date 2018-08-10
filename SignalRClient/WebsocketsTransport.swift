@@ -29,14 +29,16 @@ public class WebsocketsTransport: Transport {
         webSocket = WebSocket(request: request)
 
         webSocket!.event.open = {
+            self.logger.log(logLevel: .info, message: "WebSocket open")
             self.delegate?.transportDidOpen()
         }
 
         webSocket!.event.close = { code, reason, clean in
+            self.logger.log(logLevel: .info, message: "WebSocket close. Clean: \(clean), code: \(code), reason: \(reason)")
             // the transport could have already been closed as a result of an error. In this case we should not call
             // transportDidClose again on the delegate.
             guard !self.markTransportClosed() else {
-                // TODO: add logging
+                self.logger.log(logLevel: .debug, message: "Transport already marked as closed due to an error - ignoring close")
                 return
             }
 
@@ -48,10 +50,11 @@ public class WebsocketsTransport: Transport {
         }
 
         webSocket!.event.error = { error in
+            self.logger.log(logLevel: .info, message: "WebSocket error. Error: \(error)")
             // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
             // on the delegate multiple times so we can as well add the check and log
             guard !self.markTransportClosed() else {
-                // TODO: add logging
+                self.logger.log(logLevel: .info, message: "Transport already marked as closed - ignoring error")
                 return
             }
 
@@ -59,6 +62,8 @@ public class WebsocketsTransport: Transport {
         }
 
         webSocket!.event.message = { message in
+            self.logger.log(logLevel: .debug, message: "WebSocket message")
+
             if let text = message as? String {
                 self.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
             } else {
