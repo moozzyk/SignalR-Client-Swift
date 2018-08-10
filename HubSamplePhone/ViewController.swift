@@ -36,7 +36,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.name = alert.textFields?.first?.text ?? "John Doe"
 
             self.chatHubConnectionDelegate = ChatHubConnectionDelegate(controller: self)
-            self.chatHubConnection = HubConnectionBuilder(url: URL(string: self.serverUrl)!).build()
+            self.chatHubConnection = HubConnectionBuilder(url: URL(string: self.serverUrl)!)
+                .withLogging(minLogLevel: .debug)
+                .build()
             self.chatHubConnection!.delegate = self.chatHubConnectionDelegate
             self.chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in
                 let user = try! typeConverter.convertFromWireType(obj: args[0], targetType: String.self)
@@ -44,7 +46,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.appendMessage(message: "\(user!): \(message!)")
             })
             self.chatHubConnection!.start()
-
         }
         alert.addAction(OKAction)
         self.present(alert, animated: true)
