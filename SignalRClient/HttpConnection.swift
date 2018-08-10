@@ -42,9 +42,9 @@ public class HttpConnection: Connection {
     }
 
     public func start(transport: Transport? = nil) {
-        logger.log(logLevel: LogLevel.info, message: "Starting connection")
+        logger.log(logLevel: .info, message: "Starting connection")
         if changeState(from: State.initial, to: State.connecting) == nil {
-            logger.log(logLevel: LogLevel.error, message: "Starting connection failed - invalid state")
+            logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
             failOpenWithError(error: SignalRError.invalidState, changeState: false)
             return;
         }
@@ -59,7 +59,7 @@ public class HttpConnection: Connection {
 
         httpClient.post(url: negotiateUrl) {httpResponse, error in
             if let e = error {
-                self.logger.log(logLevel: LogLevel.error, message: "Negotiate failed due to: \(e))")
+                self.logger.log(logLevel: .error, message: "Negotiate failed due to: \(e))")
 
                 self.startDispatchGroup.leave()
 
@@ -68,17 +68,17 @@ public class HttpConnection: Connection {
             }
 
             guard let httpResponse = httpResponse else {
-                self.logger.log(logLevel: LogLevel.error, message: "Negotiate returned (nil) httpResponse")
+                self.logger.log(logLevel: .error, message: "Negotiate returned (nil) httpResponse")
                 self.failOpenWithError(error: SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."), changeState: true)
                 return
             }
 
             if httpResponse.statusCode == 200 {
-                self.logger.log(logLevel: LogLevel.debug, message: "Negotiate completed with OK status code")
+                self.logger.log(logLevel: .debug, message: "Negotiate completed with OK status code")
 
                 // connection is being stopped even though start has not finished yet
                 if (self.state != State.connecting) {
-                    self.logger.log(logLevel: LogLevel.info, message: "Connection closed during negotiate")
+                    self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
                     self.startDispatchGroup.leave()
                     self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
                     return
@@ -87,10 +87,10 @@ public class HttpConnection: Connection {
                 let negotiationResponse: NegotiationResponse
                 do {
                     let payload = httpResponse.contents
-                    self.logger.log(logLevel: LogLevel.debug, message: "Negotiate response: \(payload != nil ? String(data: payload!, encoding: .utf8) ?? "(nil)" : "(nil)")")
+                    self.logger.log(logLevel: .debug, message: "Negotiate response: \(payload != nil ? String(data: payload!, encoding: .utf8) ?? "(nil)" : "(nil)")")
                     negotiationResponse = try NegotiationResponse.parse(payload: payload)
                 } catch {
-                    self.logger.log(logLevel: LogLevel.error, message: "Parsing negotiate response failed: \(error)")
+                    self.logger.log(logLevel: .error, message: "Parsing negotiate response failed: \(error)")
                     self.failOpenWithError(error: error, changeState: true)
                     return
                 }
@@ -101,7 +101,7 @@ public class HttpConnection: Connection {
                 self.transport!.delegate = self.transportDelegate
                 self.transport!.start(url: startUrl, options: self.options)
             } else {
-                self.logger.log(logLevel: LogLevel.error, message: "HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(httpResponse.contents != nil ? String(data: httpResponse.contents!, encoding: .utf8) ?? "(nil)" : "(nil)")")
+                self.logger.log(logLevel: .error, message: "HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(httpResponse.contents != nil ? String(data: httpResponse.contents!, encoding: .utf8) ?? "(nil)" : "(nil)")")
                 self.startDispatchGroup.leave()
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)
             }
@@ -126,9 +126,9 @@ public class HttpConnection: Connection {
     }
 
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
-        logger.log(logLevel: LogLevel.debug, message: "Sending data")
+        logger.log(logLevel: .debug, message: "Sending data")
         if state != State.connected {
-            logger.log(logLevel: LogLevel.error, message: "Sending data failed - connection not in the 'connected' state")
+            logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
             sendDidComplete(SignalRError.invalidState)
             return
         }
@@ -136,15 +136,15 @@ public class HttpConnection: Connection {
     }
 
     public func stop(stopError: Error? = nil) {
-        logger.log(logLevel: LogLevel.info, message: "Stopping connection")
+        logger.log(logLevel: .info, message: "Stopping connection")
         if state == State.stopped {
-            logger.log(logLevel: LogLevel.warning, message: "Connection already stopped")
+            logger.log(logLevel: .warning, message: "Connection already stopped")
             return
         }
 
         let previousState = self.changeState(from: nil, to: State.stopped)
         if previousState == State.initial {
-            logger.log(logLevel: LogLevel.warning, message: "Connection not yest started")
+            logger.log(logLevel: .warning, message: "Connection not yest started")
             return
         }
 
@@ -156,7 +156,7 @@ public class HttpConnection: Connection {
                 self.stopError = stopError
                 t.close()
             } else {
-                self.logger.log(logLevel: LogLevel.debug, message: "Connection being stopped before transport initialized")
+                self.logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
 
                 Util.dispatchToMainThread {
                     self.delegate?.connectionDidClose(error: stopError)
@@ -166,7 +166,7 @@ public class HttpConnection: Connection {
     }
 
     fileprivate func transportDidOpen() {
-        logger.log(logLevel: LogLevel.info, message: "Transport started")
+        logger.log(logLevel: .info, message: "Transport started")
 
         let previousState = self.changeState(from: nil, to: State.connected)
 
@@ -180,20 +180,20 @@ public class HttpConnection: Connection {
     }
 
     fileprivate func transportDidReceiveData(_ data: Data) {
-        logger.log(logLevel: LogLevel.debug, message: "Received data from transport")
+        logger.log(logLevel: .debug, message: "Received data from transport")
         Util.dispatchToMainThread {
             self.delegate?.connectionDidReceiveData(connection: self, data: data)
         }
     }
 
     fileprivate func transportDidClose(_ error: Error?) {
-        logger.log(logLevel: LogLevel.info, message: "Transport closed")
+        logger.log(logLevel: .info, message: "Transport closed")
 
         let previousState = self.changeState(from: nil, to: State.stopped)
 
         connectionQueue.async {
             if previousState == State.connecting {
-                self.logger.log(logLevel: LogLevel.debug, message: "Unblocking startDispatch group")
+                self.logger.log(logLevel: .debug, message: "Unblocking startDispatch group")
                 // unblock the dispatch group when transport close when starting (likely due to an error)
                 self.startDispatchGroup.leave()
             } else {
@@ -210,14 +210,14 @@ public class HttpConnection: Connection {
     private func changeState(from: State?, to: State) -> State? {
         var previousState: State? = nil
 
-        logger.log(logLevel: LogLevel.debug, message: "Attempting to chage state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
+        logger.log(logLevel: .debug, message: "Attempting to chage state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
         connectionQueue.sync {
             if from == nil || from == state {
                 previousState = state
                 state = to
             }
         }
-        logger.log(logLevel: LogLevel.debug, message: "Changing state to: '\(state)' \(previousState == nil ? "failed" : "succeeded")")
+        logger.log(logLevel: .debug, message: "Changing state to: '\(state)' \(previousState == nil ? "failed" : "succeeded")")
 
         return previousState
     }

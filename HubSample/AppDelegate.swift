@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
 
         chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!)
-            .withLogging(minLogLevel: LogLevel.debug)
+            .withLogging(minLogLevel: .debug)
             .build()
         chatHubConnection!.delegate = chatHubConnectionDelegate
         chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in

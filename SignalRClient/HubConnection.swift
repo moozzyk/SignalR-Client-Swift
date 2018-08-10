@@ -30,31 +30,31 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func start(transport: Transport? = nil) {
-        logger.log(logLevel: LogLevel.info, message: "Starting hub connection")
+        logger.log(logLevel: .info, message: "Starting hub connection")
         connection.start(transport: transport)
     }
 
     fileprivate func connectionStarted() {
-        logger.log(logLevel: LogLevel.info, message: "Hub connection started")
+        logger.log(logLevel: .info, message: "Hub connection started")
         // TODO: support custom protcols
         // TODO: add negative test (e.g. invalid protocol)
         let handshakeRequest = HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol)
-        logger.log(logLevel: LogLevel.debug, message: "Sending handshake request: \(handshakeRequest)")
+        logger.log(logLevel: .debug, message: "Sending handshake request: \(handshakeRequest)")
         connection.send(data: "\(handshakeRequest)".data(using: .utf8)!) { error in
             if let e = error {
-                self.logger.log(logLevel: LogLevel.error, message: "Sending handshake request failed: \(e)")
+                self.logger.log(logLevel: .error, message: "Sending handshake request failed: \(e)")
                 delegate?.connectionDidFailToOpen(error: e)
             }
         }
     }
 
     public func stop() {
-        logger.log(logLevel: LogLevel.info, message: "Stopping hub connection")
+        logger.log(logLevel: .info, message: "Stopping hub connection")
         connection.stop(stopError: nil)
     }
 
     public func on(method: String, callback: @escaping (_ arguments: [Any?], _ typeConverter: TypeConverter) -> Void) {
-        logger.log(logLevel: LogLevel.info, message: "Registering client side hub method: '\(method)'")
+        logger.log(logLevel: .info, message: "Registering client side hub method: '\(method)'")
         hubConnectionQueue.sync {
             // TODO: warn for conflicts?
             callbacks[method] = callback
@@ -62,13 +62,13 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func send(method: String, arguments:[Any?], sendDidComplete: @escaping (_ error: Error?) -> Void) {
-        logger.log(logLevel: LogLevel.info, message: "Sending to server side hub method: '\(method)'")
+        logger.log(logLevel: .info, message: "Sending to server side hub method: '\(method)'")
         let invocationMessage = InvocationMessage(target: method, arguments: arguments)
         do {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
         } catch {
-            logger.log(logLevel: LogLevel.error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
+            logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
             sendDidComplete(error)
         }
     }
@@ -80,7 +80,7 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
-        logger.log(logLevel: LogLevel.info, message: "Invoking server side hub method: '\(method)'")
+        logger.log(logLevel: .info, message: "Invoking server side hub method: '\(method)'")
 
         let invocationHandler = InvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, invocationDidComplete: invocationDidComplete)
 
@@ -88,7 +88,7 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func stream<T>(method: String, arguments: [Any?], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        logger.log(logLevel: LogLevel.info, message: "Invoking server side streaming hub method: '\(method)'")
+        logger.log(logLevel: .info, message: "Invoking server side streaming hub method: '\(method)'")
 
         let streamInvocationHandler = StreamInvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
@@ -98,7 +98,7 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func cancelStreamInvocation(streamHandle: StreamHandle, cancelDidFail: @escaping (_ error: Error) -> Void) {
-        logger.log(logLevel: LogLevel.info, message: "Cancelling server side streaming hub method")
+        logger.log(logLevel: .info, message: "Cancelling server side streaming hub method")
         hubConnectionQueue.sync {
             _ = pendingCalls.removeValue(forKey: streamHandle.invocationId)
         }
@@ -108,18 +108,18 @@ public class HubConnection: ConnectionDelegate {
             let cancelInvocationData = try hubProtocol.writeMessage(message: cancelInvocationMessage)
             connection.send(data: cancelInvocationData, sendDidComplete: {error in
                 if let e = error {
-                    self.logger.log(logLevel: LogLevel.error, message: "Sending cancellation of server side streaming hub returned error: \(e)")
+                    self.logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub returned error: \(e)")
                     cancelDidFail(e)
                 }
             })
         } catch {
-            logger.log(logLevel: LogLevel.error, message: "Sending cancellation of server side streaming hub method failed: \(error)")
+            logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub method failed: \(error)")
             cancelDidFail(error)
         }
     }
 
     fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Any?]) -> String {
-        logger.log(logLevel: LogLevel.info, message: "Invoking server side hub method '\(method)' with \(arguments.count) argument(s)")
+        logger.log(logLevel: .info, message: "Invoking server side hub method '\(method)' with \(arguments.count) argument(s)")
         var id:String = ""
         hubConnectionQueue.sync {
             invocationId = invocationId + 1
@@ -132,12 +132,12 @@ public class HubConnection: ConnectionDelegate {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData) { error in
                 if let e = error {
-                    self.logger.log(logLevel: LogLevel.error, message: "Invoking server hub method \(method) returned error: \(e)")
+                    self.logger.log(logLevel: .error, message: "Invoking server hub method \(method) returned error: \(e)")
                     failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
                 }
             }
         } catch {
-            logger.log(logLevel: LogLevel.error, message: "Invoking server hub method \(method) failed: \(error)")
+            logger.log(logLevel: .error, message: "Invoking server hub method \(method) failed: \(error)")
             failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: error)
         }
 
@@ -155,15 +155,15 @@ public class HubConnection: ConnectionDelegate {
     }
 
     fileprivate func hubConnectionDidReceiveData(data: Data) {
-        logger.log(logLevel: LogLevel.debug, message: "Data received")
+        logger.log(logLevel: .debug, message: "Data received")
         var data = data
         if !handshakeHandled {
-            logger.log(logLevel: LogLevel.debug, message: "Processing handshake response: \(String(data: data, encoding: .utf8) ?? "(invalid)")")
+            logger.log(logLevel: .debug, message: "Processing handshake response: \(String(data: data, encoding: .utf8) ?? "(invalid)")")
             let (error, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
             handshakeHandled = true
             data = remainingData
             if let e = error {
-                logger.log(logLevel: LogLevel.error, message: "Parsing handshake response failed: \(e)")
+                logger.log(logLevel: .error, message: "Parsing handshake response failed: \(e)")
                 delegate?.connectionDidFailToOpen(error: e)
                 return
             }
@@ -185,11 +185,11 @@ public class HubConnection: ConnectionDelegate {
                     // no action required for ping messages
                     break;
                 default:
-                    logger.log(logLevel: LogLevel.error, message: "Usupported message type: \(incomingMessage.messageType.rawValue)")
+                    logger.log(logLevel: .error, message: "Usupported message type: \(incomingMessage.messageType.rawValue)")
                 }
             }
         } catch {
-            logger.log(logLevel: LogLevel.debug, message: "Parsing message failed: \(error)")
+            logger.log(logLevel: .debug, message: "Parsing message failed: \(error)")
         }
     }
 
@@ -204,7 +204,7 @@ public class HubConnection: ConnectionDelegate {
                 serverInvocationHandler!.processCompletion(completionMessage: message)
             }
         } else {
-            logger.log(logLevel: LogLevel.error, message: "Could not find callback with id \(message.invocationId)")
+            logger.log(logLevel: .error, message: "Could not find callback with id \(message.invocationId)")
         }
     }
 
@@ -217,12 +217,12 @@ public class HubConnection: ConnectionDelegate {
         if serverInvocationHandler != nil {
             Util.dispatchToMainThread {
                 if let error = serverInvocationHandler!.processStreamItem(streamItemMessage: message) {
-                    self.logger.log(logLevel: LogLevel.error, message: "Processing stream item failed: \(error)")
+                    self.logger.log(logLevel: .error, message: "Processing stream item failed: \(error)")
                     self.failInvocationWithError(invocationHandler: serverInvocationHandler!, invocationId: message.invocationId, error: error)
                 }
             }
         } else {
-            logger.log(logLevel: LogLevel.error, message: "Could not find callback with id \(message.invocationId)")
+            logger.log(logLevel: .error, message: "Could not find callback with id \(message.invocationId)")
         }
     }
 
@@ -238,12 +238,12 @@ public class HubConnection: ConnectionDelegate {
                 callback!(message.arguments, self.hubProtocol.typeConverter)
             }
         } else {
-            logger.log(logLevel: LogLevel.error, message: "No handler registered for method \'\(message.target)\'")
+            logger.log(logLevel: .error, message: "No handler registered for method \'\(message.target)\'")
         }
     }
 
     fileprivate func hubConnectionDidClose(error: Error?) {
-        logger.log(logLevel: LogLevel.info, message: "HubConnection closing with error: \(String(describing: error))")
+        logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
 
         var invocationHandlers: [ServerInvocationHandler] = []
         hubConnectionQueue.sync {
@@ -251,7 +251,7 @@ public class HubConnection: ConnectionDelegate {
             pendingCalls.removeAll()
         }
 
-        logger.log(logLevel: LogLevel.info, message: "Terminating \(invocationHandlers.count) pending hub methods")
+        logger.log(logLevel: .info, message: "Terminating \(invocationHandlers.count) pending hub methods")
         let invocationError = error ?? SignalRError.hubInvocationCancelled
         for serverInvocationHandler in invocationHandlers {
             Util.dispatchToMainThread {

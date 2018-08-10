@@ -59,17 +59,17 @@ public class JSONHubProtocol: HubProtocol {
         // do not try to parse the last payload if it is not terminated with record sparator
         var count = payloads.count
         if count > 0 && input.last != JSONHubProtocol.recordSeparator {
-            logger.log(logLevel: LogLevel.warning, message: "Partial message received. Here be dragons...")
+            logger.log(logLevel: .warning, message: "Partial message received. Here be dragons...")
             count = count - 1
         }
 
-        logger.log(logLevel: LogLevel.debug, message: "Payload contains \(count) message(s)")
+        logger.log(logLevel: .debug, message: "Payload contains \(count) message(s)")
 
         return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
     }
 
     private func createHubMessage(payload: Data) throws -> HubMessage {
-        logger.log(logLevel: LogLevel.debug, message: "Message received: \(String(data:payload, encoding: .utf8) ?? "(empty)")")
+        logger.log(logLevel: .debug, message: "Message received: \(String(data:payload, encoding: .utf8) ?? "(empty)")")
 
         let json = try JSONSerialization.jsonObject(with: payload)
 
@@ -86,7 +86,7 @@ public class JSONHubProtocol: HubProtocol {
             case .Close:
                 return createCloseMessage(message: message)
             default:
-                logger.log(logLevel: LogLevel.error, message: "Unsupported messageType: \(messageType)")
+                logger.log(logLevel: .error, message: "Unsupported messageType: \(messageType)")
             }
         }
 
