@@ -31,12 +31,18 @@ public extension LogLevel {
 }
 
 public class PrintLogger: Logger {
+    let dateFormatter: DateFormatter
+
     public init() {
+        dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
     }
 
     public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-        // TODO: time?
-        print("\(logLevel.toString()): \(message())")
+        print("\(dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())")
     }
 }
 
