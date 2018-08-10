@@ -473,6 +473,47 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatClientMethodsCanBeOverwritten() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+            })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+
+        hubConnection.on(method: "GetNumber", callback: { args, _ in
+            XCTFail("Should not be invoked")
+        })
+
+        hubConnection.on(method: "GetNumber", callback: { args, _ in
+            XCTAssertNotNil(args)
+            XCTAssertEqual(1, args.count)
+            XCTAssertEqual(42, args[0] as! Int)
+            didInvokeClientMethod.fulfill()
+            hubConnection.stop()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatClientMethodsCanBeInvokedWithTypedStructuralArgument() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")

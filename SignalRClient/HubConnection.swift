@@ -55,9 +55,15 @@ public class HubConnection: ConnectionDelegate {
 
     public func on(method: String, callback: @escaping (_ arguments: [Any?], _ typeConverter: TypeConverter) -> Void) {
         logger.log(logLevel: .info, message: "Registering client side hub method: '\(method)'")
+
+        var callbackRegistered = false
         hubConnectionQueue.sync {
-            // TODO: warn for conflicts?
+            callbackRegistered = callbacks.keys.contains(method)
             callbacks[method] = callback
+        }
+
+        if (callbackRegistered) {
+            logger.log(logLevel: .warning, message: "Client side hub method '\(method)' was already registered and was overwritten")
         }
     }
 
