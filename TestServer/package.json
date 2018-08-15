@@ -10,6 +10,6 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "@aspnet/signalr": "^1.0.0"
+    "@aspnet/signalr": "^1.0.2"
   }
 }
