@@ -458,7 +458,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetNumber", callback: { args, _ in
             XCTAssertNotNil(args)

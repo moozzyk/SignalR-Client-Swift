@@ -523,5 +523,27 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionFailsToOpenIfStartingTheTransportFails() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpConnection = HttpConnection(url: URL(string:"http://localhost:5000/echoNoTransports")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("InvalidResponse(HTTP/1.1 404 Not Found)", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     private let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
 }

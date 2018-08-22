@@ -192,7 +192,6 @@ public class HttpConnection: Connection {
         }
     }
 
-    // TODO: verify if close can be called before/without open (e.g. in if websockets transport cannot be started)
     fileprivate func transportDidClose(_ error: Error?) {
         logger.log(logLevel: .info, message: "Transport closed")
 
@@ -203,11 +202,16 @@ public class HttpConnection: Connection {
             logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
             // unblock the dispatch group if transport closed when starting (likely due to an error)
             startDispatchGroup.leave()
-        }
 
-        logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-        Util.dispatchToMainThread {
-            self.delegate?.connectionDidClose(error: self.stopError ?? error)
+            logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
+            Util.dispatchToMainThread {
+                self.delegate?.connectionDidFailToOpen(error: self.stopError ?? error!)
+            }
+        } else {
+            logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+            Util.dispatchToMainThread {
+                self.delegate?.connectionDidClose(error: self.stopError ?? error)
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,12 @@ namespace TestServer
             }
 
             app.UseConnections(options => options.MapConnectionHandler<EchoConnectionHandler>("/echo"));
+            app.UseConnections(options => options.MapConnectionHandler<EchoConnectionHandler>("/echoNoTransports",
+                dispatcherOptions =>
+                {
+                    dispatcherOptions.Transports = HttpTransportType.None;
+                }));
+
             app.UseSignalR(options =>
             {
                 options.MapHub<TestHub>("/testhub");
