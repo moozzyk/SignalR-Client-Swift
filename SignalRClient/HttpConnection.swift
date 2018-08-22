@@ -37,14 +37,14 @@ public class HttpConnection: Connection {
         self.url = url
         self.options = options
         self.logger = logger
-        self.state = State.initial
+        self.state = .initial
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
 
     public func start(transport: Transport? = nil) {
         logger.log(logLevel: .info, message: "Starting connection")
 
-        if changeState(from: State.initial, to: State.connecting) == nil {
+        if changeState(from: .initial, to: .connecting) == nil {
             logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
             // the connection is already in use so the startDispatchGroup should not be touched to not affect it
             failOpenWithError(error: SignalRError.invalidState, changeState: false, leaveStartDispatchGroup: false)
@@ -87,7 +87,7 @@ public class HttpConnection: Connection {
                 }
 
                 // connection is being stopped even though start has not finished yet
-                if (self.state != State.connecting) {
+                if (self.state != .connecting) {
                     self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
                     self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
                     return
@@ -114,7 +114,7 @@ public class HttpConnection: Connection {
 
     private func failOpenWithError(error: Error, changeState: Bool, leaveStartDispatchGroup: Bool = true) {
         if changeState {
-            _ = self.changeState(from: nil, to: State.stopped)
+            _ = self.changeState(from: nil, to: .stopped)
         }
 
         if leaveStartDispatchGroup {
@@ -130,7 +130,7 @@ public class HttpConnection: Connection {
 
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
         logger.log(logLevel: .debug, message: "Sending data")
-        if state != State.connected {
+        if state != .connected {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
             sendDidComplete(SignalRError.invalidState)
             return
@@ -141,13 +141,13 @@ public class HttpConnection: Connection {
     public func stop(stopError: Error? = nil) {
         logger.log(logLevel: .info, message: "Stopping connection")
 
-        let previousState = self.changeState(from: nil, to: State.stopped)
-        if previousState == State.stopped {
+        let previousState = self.changeState(from: nil, to: .stopped)
+        if previousState == .stopped {
             logger.log(logLevel: .info, message: "Connection already stopped")
             return
         }
 
-        if previousState == State.initial {
+        if previousState == .initial {
             logger.log(logLevel: .warning, message: "Connection not yet started")
             return
         }
@@ -171,7 +171,7 @@ public class HttpConnection: Connection {
     fileprivate func transportDidOpen() {
         logger.log(logLevel: .info, message: "Transport started")
 
-        let previousState = changeState(from: State.connecting, to: State.connected)
+        let previousState = changeState(from: .connecting, to: .connected)
 
         logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
         startDispatchGroup.leave()
@@ -196,10 +196,10 @@ public class HttpConnection: Connection {
     fileprivate func transportDidClose(_ error: Error?) {
         logger.log(logLevel: .info, message: "Transport closed")
 
-        let previousState = changeState(from: nil, to: State.stopped)
+        let previousState = changeState(from: nil, to: .stopped)
         logger.log(logLevel: .debug, message: "Previous state \(previousState!)")
 
-        if previousState == State.connecting {
+        if previousState == .connecting {
             logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
             // unblock the dispatch group if transport closed when starting (likely due to an error)
             startDispatchGroup.leave()
