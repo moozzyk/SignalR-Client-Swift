@@ -43,9 +43,11 @@ public class HttpConnection: Connection {
 
     public func start(transport: Transport? = nil) {
         logger.log(logLevel: .info, message: "Starting connection")
+
         if changeState(from: State.initial, to: State.connecting) == nil {
             logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
-            failOpenWithError(error: SignalRError.invalidState, changeState: false)
+            // the connection is already in use so the startDispatchGroup should not be touched to not affect it
+            failOpenWithError(error: SignalRError.invalidState, changeState: false, leaveStartDispatchGroup: false)
             return;
         }
 
@@ -60,9 +62,6 @@ public class HttpConnection: Connection {
         httpClient.post(url: negotiateUrl) {httpResponse, error in
             if let e = error {
                 self.logger.log(logLevel: .error, message: "Negotiate failed due to: \(e))")
-
-                self.startDispatchGroup.leave()
-
                 self.failOpenWithError(error: e, changeState: true)
                 return
             }
@@ -76,14 +75,6 @@ public class HttpConnection: Connection {
             if httpResponse.statusCode == 200 {
                 self.logger.log(logLevel: .debug, message: "Negotiate completed with OK status code")
 
-                // connection is being stopped even though start has not finished yet
-                if (self.state != State.connecting) {
-                    self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
-                    self.startDispatchGroup.leave()
-                    self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
-                    return
-                }
-
                 let negotiationResponse: NegotiationResponse
                 do {
                     let payload = httpResponse.contents
@@ -95,6 +86,13 @@ public class HttpConnection: Connection {
                     return
                 }
 
+                // connection is being stopped even though start has not finished yet
+                if (self.state != State.connecting) {
+                    self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
+                    self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+                    return
+                }
+
                 let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
 
                 self.transport = transport ?? WebsocketsTransport(logger: self.logger)
@@ -102,7 +100,6 @@ public class HttpConnection: Connection {
                 self.transport!.start(url: startUrl, options: self.options)
             } else {
                 self.logger.log(logLevel: .error, message: "HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(httpResponse.contents != nil ? String(data: httpResponse.contents!, encoding: .utf8) ?? "(nil)" : "(nil)")")
-                self.startDispatchGroup.leave()
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)
             }
         }
@@ -115,11 +112,17 @@ public class HttpConnection: Connection {
         return urlComponents.url!
     }
 
-    private func failOpenWithError(error: Error, changeState: Bool) {
+    private func failOpenWithError(error: Error, changeState: Bool, leaveStartDispatchGroup: Bool = true) {
         if changeState {
             _ = self.changeState(from: nil, to: State.stopped)
         }
 
+        if leaveStartDispatchGroup {
+            logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
+            startDispatchGroup.leave()
+        }
+
+        logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
         Util.dispatchToMainThread {
             self.delegate?.connectionDidFailToOpen(error: error)
         }
@@ -137,30 +140,30 @@ public class HttpConnection: Connection {
 
     public func stop(stopError: Error? = nil) {
         logger.log(logLevel: .info, message: "Stopping connection")
-        if state == State.stopped {
-            logger.log(logLevel: .warning, message: "Connection already stopped")
-            return
-        }
 
         let previousState = self.changeState(from: nil, to: State.stopped)
-        if previousState == State.initial {
-            logger.log(logLevel: .warning, message: "Connection not yest started")
+        if previousState == State.stopped {
+            logger.log(logLevel: .info, message: "Connection already stopped")
             return
         }
 
-        connectionQueue.async {
-            self.startDispatchGroup.wait()
-            // the transport can be nil if connection was stopped immediately after starting
-            // in this case we need to call connectionDidClose ourselves
-            if let t = self.transport {
-                self.stopError = stopError
-                t.close()
-            } else {
-                self.logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
+        if previousState == State.initial {
+            logger.log(logLevel: .warning, message: "Connection not yet started")
+            return
+        }
 
-                Util.dispatchToMainThread {
-                    self.delegate?.connectionDidClose(error: stopError)
-                }
+        self.startDispatchGroup.wait()
+        
+        // The transport can be nil if connection was stopped immediately after starting
+        // or failed to start. In this case we need to call connectionDidClose ourselves.
+        if let t = transport {
+            self.stopError = stopError
+            t.close()
+        } else {
+            logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
+            logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+            Util.dispatchToMainThread {
+                self.delegate?.connectionDidClose(error: stopError)
             }
         }
     }
@@ -168,14 +171,17 @@ public class HttpConnection: Connection {
     fileprivate func transportDidOpen() {
         logger.log(logLevel: .info, message: "Transport started")
 
-        let previousState = self.changeState(from: nil, to: State.connected)
+        let previousState = changeState(from: State.connecting, to: State.connected)
 
-        assert(previousState == State.connecting)
-
-        self.startDispatchGroup.leave()
-
-        Util.dispatchToMainThread {
-            self.delegate?.connectionDidOpen(connection: self)
+        logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
+        startDispatchGroup.leave()
+        if  previousState != nil {
+            logger.log(logLevel: .debug, message: "Invoking connectionDidOpen")
+            Util.dispatchToMainThread {
+                self.delegate?.connectionDidOpen(connection: self)
+            }
+        } else {
+            logger.log(logLevel: .debug, message: "Connection is being stopped while the transport is starting")
         }
     }
 
@@ -186,24 +192,22 @@ public class HttpConnection: Connection {
         }
     }
 
+    // TODO: verify if close can be called before/without open (e.g. in if websockets transport cannot be started)
     fileprivate func transportDidClose(_ error: Error?) {
         logger.log(logLevel: .info, message: "Transport closed")
 
-        let previousState = self.changeState(from: nil, to: State.stopped)
+        let previousState = changeState(from: nil, to: State.stopped)
+        logger.log(logLevel: .debug, message: "Previous state \(previousState!)")
 
-        connectionQueue.async {
-            if previousState == State.connecting {
-                self.logger.log(logLevel: .debug, message: "Unblocking startDispatch group")
-                // unblock the dispatch group when transport close when starting (likely due to an error)
-                self.startDispatchGroup.leave()
-            } else {
-                // wait in case the transport failed immediately after being started to avoid
-                // calling connectionDidClose before connectionDidOpen
-                self.startDispatchGroup.wait()
-            }
-            Util.dispatchToMainThread {
-                self.delegate?.connectionDidClose(error: self.stopError ?? error)
-            }
+        if previousState == State.connecting {
+            logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
+            // unblock the dispatch group if transport closed when starting (likely due to an error)
+            startDispatchGroup.leave()
+        }
+
+        logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+        Util.dispatchToMainThread {
+            self.delegate?.connectionDidClose(error: self.stopError ?? error)
         }
     }
 
@@ -217,7 +221,7 @@ public class HttpConnection: Connection {
                 state = to
             }
         }
-        logger.log(logLevel: .debug, message: "Changing state to: '\(state)' \(previousState == nil ? "failed" : "succeeded")")
+        logger.log(logLevel: .debug, message: "Changing state to: '\(to)' \(previousState == nil ? "failed" : "succeeded")")
 
         return previousState
     }

@@ -21,6 +21,7 @@ public class WebsocketsTransport: Transport {
     }
 
     public func start(url: URL, options: HttpConnectionOptions) {
+        self.logger.log(logLevel: .info, message: "Starting WebSocket transport")
         var request = URLRequest(url: convertUrl(url: url))
         
         populateHeaders(headers: options.headers, request: &request)

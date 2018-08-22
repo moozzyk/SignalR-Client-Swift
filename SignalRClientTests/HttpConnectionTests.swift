@@ -362,7 +362,7 @@ class HttpConnectionTests: XCTestCase {
 
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidCloseHandler = { error in
@@ -460,10 +460,12 @@ class HttpConnectionTests: XCTestCase {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpConnectionOptions = HttpConnectionOptions()
-        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let httpConnection = HttpConnection(url: URL(string:"http://localhost:5000")!, options: httpConnectionOptions, logger: PrintLogger())
         let httpClient = TestHttpClient(postHandler: { _ in
-            httpConnection.stop()
-            return (HttpResponse(statusCode: 200, contents: "{}".data(using: .utf8)!), nil)
+            DispatchQueue.global().async {
+                httpConnection.stop()
+            }
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
         })
         httpConnectionOptions.httpClientFactory = { options in httpClient }
 
@@ -478,4 +480,48 @@ class HttpConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatStoppingConnectionWhenTransportIsStartingDoesNotDeadlock() {
+        class FakeTransport: Transport {
+            var delegate: TransportDelegate?
+            var httpConnection: Connection?
+
+            func start(url: URL, options: HttpConnectionOptions) {
+                DispatchQueue.global().async {
+                    self.httpConnection!.stop(stopError: nil)
+                }
+                delegate?.transportDidOpen()
+            }
+
+            func send(data: Data, sendDidComplete: (Error?) -> Void) {
+            }
+
+            func close() {
+                delegate?.transportDidClose(nil)
+            }
+        }
+
+        let connectionDidCloseExpectation = expectation(description: "connection closed")
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let transport = FakeTransport()
+        transport.httpConnection = httpConnection
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidCloseHandler = { _ in
+            connectionDidCloseExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start(transport: transport)
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    private let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
 }
