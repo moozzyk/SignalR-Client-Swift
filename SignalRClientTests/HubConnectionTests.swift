@@ -792,7 +792,7 @@ class HubConnectionTests: XCTestCase {
         class FakeHttpConnection: HttpConnection {
             var stopError: Error?
 
-            override func start(transport: Transport?) {
+            override func start() {
                 delegate?.connectionDidOpen(connection: self)
             }
 
@@ -831,7 +831,8 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 class TestConnection: Connection {
     var delegate: ConnectionDelegate!
     var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
-    func start(transport: Transport? = nil) -> Void {
+
+    func start() {
         delegate?.connectionDidOpen(connection: self)
     }
 

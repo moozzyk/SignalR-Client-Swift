@@ -29,9 +29,9 @@ public class HubConnection: ConnectionDelegate {
         self.connection.delegate = self
     }
 
-    public func start(transport: Transport? = nil) {
+    public func start() {
         logger.log(logLevel: .info, message: "Starting hub connection")
-        connection.start(transport: transport)
+        connection.start()
     }
 
     fileprivate func connectionStarted() {

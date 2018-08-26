@@ -22,4 +22,5 @@ public enum SignalRError : Error {
     case handshakeError(message: String)
     case invalidNegotiationResponse(message: String)
     case serverClose(message: String?)
+    case noSupportedTransportAvailable
 }

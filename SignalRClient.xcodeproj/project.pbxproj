@@ -85,6 +85,8 @@
 		5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */; };
 		5AD455DF1E5FE95D00732962 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */; };
 		5AD455E11E5FE9C800732962 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */; };
+		5AD92874212DB63A004C16CC /* DefaultTransportFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD92873212DB63A004C16CC /* DefaultTransportFactory.swift */; };
+		5AD92875212DB63A004C16CC /* DefaultTransportFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD92873212DB63A004C16CC /* DefaultTransportFactory.swift */; };
 		5AE82B95204FC93100F0D15D /* StreamHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE82B94204FC93100F0D15D /* StreamHandle.swift */; };
 		5AE82B96204FC93100F0D15D /* StreamHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE82B94204FC93100F0D15D /* StreamHandle.swift */; };
 		5AEC70F020310E3E00616DD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */; };
@@ -243,6 +245,7 @@
 		5AC1AE3B1E8A38CE006262B3 /* TestTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTransport.swift; sourceTree = "<group>"; };
 		5AD455DE1E5FE95D00732962 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		5AD455E01E5FE9C800732962 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
+		5AD92873212DB63A004C16CC /* DefaultTransportFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTransportFactory.swift; sourceTree = "<group>"; };
 		5AE82B94204FC93100F0D15D /* StreamHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamHandle.swift; sourceTree = "<group>"; };
 		5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSamplePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -377,6 +380,7 @@
 				5A0D4ABE2105969E000C7514 /* TransferFormat.swift */,
 				5A0D4AC321102678000C7514 /* HttpClientProtocol.swift */,
 				5A4D7DA42113E57A009C7866 /* Logger.swift */,
+				5AD92873212DB63A004C16CC /* DefaultTransportFactory.swift */,
 			);
 			path = SignalRClient;
 			sourceTree = "<group>";
@@ -845,6 +849,7 @@
 				5A406F4F2030F64C0055671E /* Connection.swift in Sources */,
 				5A406F4C2030F6420055671E /* HttpResponse.swift in Sources */,
 				5A0D4ABB210580E1000C7514 /* TransportType.swift in Sources */,
+				5AD92875212DB63A004C16CC /* DefaultTransportFactory.swift in Sources */,
 				5A406F542030F65F0055671E /* HubProtocol.swift in Sources */,
 				5A406F552030F6620055671E /* JSONHubProtocol.swift in Sources */,
 				5A406F482030F6320055671E /* TransportDelegate.swift in Sources */,
@@ -878,6 +883,7 @@
 				5A73DFEF1E6B8B3D007F3913 /* Connection.swift in Sources */,
 				5A9A81451E63B14000FE62A6 /* HttpResponse.swift in Sources */,
 				5A0D4ABA210580E1000C7514 /* TransportType.swift in Sources */,
+				5AD92874212DB63A004C16CC /* DefaultTransportFactory.swift in Sources */,
 				5A01C02C1EA0562D0091082D /* Util.swift in Sources */,
 				5A9A81391E61E40500FE62A6 /* TransportDelegate.swift in Sources */,
 				5A45C8301F53392E003EEC55 /* JSONHubProtocol.swift in Sources */,

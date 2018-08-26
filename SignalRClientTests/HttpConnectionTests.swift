@@ -194,8 +194,9 @@ class HttpConnectionTests: XCTestCase {
     func testThatSendThrowsIfInvokedAfterConnectionClosed() {
         let sendFailedExpectation = expectation(description: "send failed")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
         let testTransport = TestTransport()
+        let transportFactory = TestTransportFactory(testTransport)
+        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), transportFactory: transportFactory, logger: PrintLogger())
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidOpenHandler = { connection in
@@ -211,7 +212,7 @@ class HttpConnectionTests: XCTestCase {
         }
 
         connection.delegate = connectionDelegate
-        connection.start(transport: testTransport)
+        connection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -290,7 +291,7 @@ class HttpConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
-            connection.start(transport: nil)
+            connection.start()
         }
         connectionDelegate.connectionDidCloseHandler = { error in
             didCloseExpectation.fulfill()
@@ -309,19 +310,15 @@ class HttpConnectionTests: XCTestCase {
     }
 
     func testThatCanStopConnectionThatIsStarting() {
-        let didCloseExpectation = expectation(description: "connection closed")
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidFailToOpenHandler = { error in
+            didFailToOpenExpectation.fulfill()
             XCTAssertNotNil(error)
             XCTAssertEqual(String(describing: error), String(describing: SignalRError.connectionIsBeingClosed))
-        }
-
-        connectionDelegate.connectionDidCloseHandler = { error in
-            didCloseExpectation.fulfill()
-            XCTAssertNil(error)
         }
 
         connection.delegate = connectionDelegate
@@ -502,14 +499,16 @@ class HttpConnectionTests: XCTestCase {
         }
 
         let connectionDidCloseExpectation = expectation(description: "connection closed")
-        let httpConnectionOptions = HttpConnectionOptions()
-        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions, logger: PrintLogger())
+
         let httpClient = TestHttpClient(postHandler: { _ in
             return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
         })
-        httpConnectionOptions.httpClientFactory = { options in httpClient }
-
+        let httpConnectionOptions = HttpConnectionOptions()
+        httpConnectionOptions.httpClientFactory = { _ in httpClient }
         let transport = FakeTransport()
+
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions, transportFactory: TestTransportFactory(transport), logger: PrintLogger())
+
         transport.httpConnection = httpConnection
 
         let connectionDelegate = TestConnectionDelegate()
@@ -518,9 +517,10 @@ class HttpConnectionTests: XCTestCase {
         }
         httpConnection.delegate = connectionDelegate
 
-        httpConnection.start(transport: transport)
+        httpConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
+        transport.httpConnection = nil
     }
 
     func testThatConnectionFailsToOpenIfStartingTheTransportFails() {
@@ -545,5 +545,40 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionFailsToOpenIfTransportNotAvailable() {
+        let didFailToOpenExpectation = expectation(description: "connection did fail to open")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[]}"
+            return (HttpResponse(statusCode: 200, contents: negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.noSupportedTransportAvailable)", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     private let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
+
+    private class TestTransportFactory: TransportFactory {
+        let createTransport: () -> Transport
+
+        init(_ createTransport: @escaping @autoclosure () -> Transport) {
+            self.createTransport = createTransport
+        }
+
+        func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
+            return createTransport()
+        }
+    }
 }

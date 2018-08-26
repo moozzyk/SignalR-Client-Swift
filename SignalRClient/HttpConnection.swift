@@ -12,14 +12,16 @@ public class HttpConnection: Connection {
     private let connectionQueue: DispatchQueue
     private let startDispatchGroup: DispatchGroup
 
+    private let url: URL
+    private let options: HttpConnectionOptions
+    private let transportFactory: TransportFactory
+    private let logger: Logger
+
     private var transportDelegate: TransportDelegate?
 
     private var state: State
-    private var url: URL
     private var transport: Transport?
-    private let options: HttpConnectionOptions
     private var stopError: Error?
-    private let logger: Logger
 
     public weak var delegate: ConnectionDelegate!
 
@@ -30,18 +32,23 @@ public class HttpConnection: Connection {
         case stopped = "stopped"
     }
 
-    public init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger()) {
+    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger()) {
+        self.init(url: url, options: options, transportFactory: DefaultTransportFactory(logger: logger), logger: logger)
+    }
+
+    init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: Logger) {
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
         self.url = url
         self.options = options
+        self.transportFactory = transportFactory
         self.logger = logger
         self.state = .initial
         self.transportDelegate = ConnectionTransportDelegate(connection: self)
     }
 
-    public func start(transport: Transport? = nil) {
+    public func start() {
         logger.log(logLevel: .info, message: "Starting connection")
 
         if changeState(from: .initial, to: .connecting) == nil {
@@ -86,6 +93,14 @@ public class HttpConnection: Connection {
                     return
                 }
 
+                do {
+                    self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
+                } catch {
+                    self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
+                    self.failOpenWithError(error: error, changeState: true)
+                    return
+                }
+
                 // connection is being stopped even though start has not finished yet
                 if (self.state != .connecting) {
                     self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
@@ -94,8 +109,6 @@ public class HttpConnection: Connection {
                 }
 
                 let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
-
-                self.transport = transport ?? WebsocketsTransport(logger: self.logger)
                 self.transport!.delegate = self.transportDelegate
                 self.transport!.start(url: startUrl, options: self.options)
             } else {

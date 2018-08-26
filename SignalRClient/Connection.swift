@@ -10,7 +10,7 @@ import Foundation
 
 public protocol Connection {
     var delegate: ConnectionDelegate! {get set}
-    func start(transport: Transport?) -> Void
+    func start() -> Void
     func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) -> Void
     func stop(stopError: Error?) -> Void
 }

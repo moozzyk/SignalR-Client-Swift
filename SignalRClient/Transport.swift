@@ -14,3 +14,7 @@ public protocol Transport: class {
     func send(data: Data, sendDidComplete: (_ error:Error?) -> Void)
     func close() -> Void
 }
+
+internal protocol TransportFactory {
+    func createTransport(availableTransports: [TransportDescription]) throws -> Transport
+}
