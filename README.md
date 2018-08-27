@@ -23,7 +23,7 @@ Add `#import SwiftSignalRClient` to swift files you would like to use the client
 The repo contains samples for:
 
   - [Hubs](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/HubSample)
-  - [Sockets](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/SocketsSample)
+  - [HttpConnection](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/ConnectionSample)
 
 The samples require a running server. To start the server go to the `TestServer` folder in terminal and run: 
 
