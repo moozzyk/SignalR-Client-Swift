@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary                = "Swift SignalR Client for the ASP.Net Core version of SignalR."
   s.homepage               = "https://github.com/moozzyk/SignalR-Client-Swift"
   s.license                = { :type => "Attribution License", :file => "LICENSE" }
-  s.source                 = { :git => "https://github.com/moozzyk/SignalR-Client-Swift.git", :tag => "0.2.0" }
+  s.source                 = { :git => "https://github.com/moozzyk/SignalR-Client-Swift.git", :tag => "0.3.0" }
   s.authors                = { "Pawel Kadluczka" => "moozzyk@gmail.com" }
   s.social_media_url       = "https://twitter.com/moozzyk"
   s.swift_version          = "3.3"
