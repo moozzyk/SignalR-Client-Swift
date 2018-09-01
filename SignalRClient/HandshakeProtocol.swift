@@ -24,12 +24,12 @@ class HandshakeProtocol {
 
     private static func parseHandshakeResponse(handshakeResponse: Data) -> Error? {
         do {
-            if let handshakeResponseJson = try JSONSerialization.jsonObject(with: handshakeResponse) as? NSDictionary {
+            if let handshakeResponseJson = try JSONSerialization.jsonObject(with: handshakeResponse) as? [String: Any] {
                 if handshakeResponseJson.count == 0 {
                     return nil
                 }
 
-                if handshakeResponseJson.count == 1, let errorMessage = handshakeResponseJson.value(forKey: "error") as? String {
+                if handshakeResponseJson.count == 1, let errorMessage = handshakeResponseJson["error"] as? String {
                     return SignalRError.handshakeError(message: errorMessage)
                 }
             }

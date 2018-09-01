@@ -73,7 +73,7 @@ public class JSONHubProtocol: HubProtocol {
 
         let json = try JSONSerialization.jsonObject(with: payload)
 
-        if let message = json as? NSDictionary, let rawMessageType = message.object(forKey: "type") as? Int, let messageType = MessageType(rawValue: rawMessageType) {
+        if let message = json as? [String: Any], let rawMessageType = message["type"] as? Int, let messageType = MessageType(rawValue: rawMessageType) {
             switch messageType {
             case .Invocation:
                 return try createInvocationMessage(message: message)
@@ -93,44 +93,44 @@ public class JSONHubProtocol: HubProtocol {
         throw SignalRError.unknownMessageType
     }
 
-    private func createInvocationMessage(message: NSDictionary) throws -> InvocationMessage {
+    private func createInvocationMessage(message: [String: Any]) throws -> InvocationMessage {
         // client side invocations are never blocking so the server never sends invocationId
-        guard let target = message.value(forKey: "target") as? String else {
+        guard let target = message["target"] as? String else {
             throw SignalRError.invalidMessage
         }
 
-        let arguments = message.object(forKey: "arguments") as? NSArray
-        return InvocationMessage(target: target, arguments: arguments as? [Any?] ?? [])
+        let arguments = message["arguments"] as? [Any]
+        return InvocationMessage(target: target, arguments: arguments ?? [])
     }
 
-    private func createStreamItemMessage(message: NSDictionary) throws -> StreamItemMessage {
+    private func createStreamItemMessage(message: [String: Any]) throws -> StreamItemMessage {
         let invocationId = try getInvocationId(message: message)
-        return StreamItemMessage(invocationId: invocationId, item: message.value(forKey: "item"))
+        return StreamItemMessage(invocationId: invocationId, item: message["item"] as Any)
     }
 
-    private func createCompletionMessage(message: NSDictionary) throws -> CompletionMessage {
+    private func createCompletionMessage(message: [String: Any]) throws -> CompletionMessage {
         let invocationId = try getInvocationId(message: message)
-        if let error = message.value(forKey: "error") as? String {
+        if let error = message["error"] as? String {
             return CompletionMessage(invocationId: invocationId, error: error)
         }
 
-        if let result = message.value(forKey: "result") {
+        if let result = message["result"] {
             return CompletionMessage(invocationId: invocationId, result: result is NSNull ? nil : result)
         }
 
         return CompletionMessage(invocationId: invocationId)
     }
 
-    private func getInvocationId(message: NSDictionary) throws -> String {
-        guard let invocationId = message.value(forKey: "invocationId") as? String else {
+    private func getInvocationId(message: [String: Any]) throws -> String {
+        guard let invocationId = message["invocationId"] as? String else {
             throw SignalRError.invalidMessage
         }
 
         return invocationId
     }
 
-    private func createCloseMessage(message: NSDictionary) -> CloseMessage {
-        let error = message.value(forKey: "error") as? String
+    private func createCloseMessage(message: [String: Any]) -> CloseMessage {
+        let error = message["error"] as? String
         return CloseMessage(error: error)
     }
 

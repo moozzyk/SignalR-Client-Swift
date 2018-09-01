@@ -80,12 +80,12 @@ class JSONTypeConverterTests: XCTestCase {
     func testThatConvertToWireTypeConvertsValidJsonTypes() {
         XCTAssertNil(try jsonTypeConverter.convertToWireType(obj: nil))
 
-        let array: NSArray = [42]
-        let resultArray = try! jsonTypeConverter.convertToWireType(obj: array) as! NSArray
+        let array = [42]
+        let resultArray = try! jsonTypeConverter.convertToWireType(obj: array) as! [Int]
         XCTAssertEqual(array, resultArray)
 
-        let dictionary: NSDictionary = ["Property" : 42]
-        let resultDictionary = try! jsonTypeConverter.convertToWireType(obj: dictionary) as! NSDictionary
+        let dictionary: [String: Int] = ["Property" : 42]
+        let resultDictionary = try! jsonTypeConverter.convertToWireType(obj: dictionary) as! [String: Int]
         XCTAssertEqual(dictionary, resultDictionary)
     }
 

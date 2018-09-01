@@ -41,15 +41,15 @@ internal class NegotiationResponse {
         return NegotiationResponse(connectionId: connectionId, availableTransports: availableTransports)
     }
 
-    private static func getNegotiationResponseJSON(payload: Data) throws -> [String: Any?]? {
+    private static func getNegotiationResponseJSON(payload: Data) throws -> [String: Any]? {
         do {
-            return try JSONSerialization.jsonObject(with: payload) as? [String: Any?]
+            return try JSONSerialization.jsonObject(with: payload) as? [String: Any]
         } catch {
             throw SignalRError.invalidNegotiationResponse(message: "\(error)")
         }
     }
 
-    private static func parseConnectionId(negotiationResponseJSON: [String: Any?]) throws -> String {
+    private static func parseConnectionId(negotiationResponseJSON: [String: Any]) throws -> String {
         guard let connectionId = negotiationResponseJSON["connectionId"] as? String else {
             throw SignalRError.invalidNegotiationResponse(message: "connectionId property not found or invalid")
         }
@@ -57,15 +57,15 @@ internal class NegotiationResponse {
         return connectionId
     }
 
-    private static func parseAvailableTransports(negotiationResponseJSON: [String: Any?]) throws -> [TransportDescription] {
-        guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any?]] else {
+    private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws -> [TransportDescription] {
+        guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any]] else {
             throw SignalRError.invalidNegotiationResponse(message: "availableTransports property not found or invalid")
         }
 
         return try transports.map { try parseTransport(transportJSON: $0) }
     }
 
-    private static func parseTransport(transportJSON: [String: Any?]) throws -> TransportDescription {
+    private static func parseTransport(transportJSON: [String: Any]) throws -> TransportDescription {
         guard let transportName = transportJSON["transport"] as? String,
             let transportType = try? TransportType.fromString(transportName: transportName) else {
             throw SignalRError.invalidNegotiationResponse(message: "transport property not found or invalid")

@@ -186,7 +186,7 @@ class JSONHubProtocolTests: XCTestCase {
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
-        let json = (try! JSONSerialization.jsonObject(with: data!) as? NSDictionary)!
+        let json = (try! JSONSerialization.jsonObject(with: data!) as? [String: Any])!
 
         XCTAssertEqual(1, json["type"] as! Int)
         XCTAssertEqual("12", json["invocationId"] as! String)
@@ -209,7 +209,7 @@ class JSONHubProtocolTests: XCTestCase {
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: streamInvocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
-        let json = (try! JSONSerialization.jsonObject(with: data!) as? NSDictionary)!
+        let json = (try! JSONSerialization.jsonObject(with: data!) as? [String: Any])!
 
         XCTAssertEqual(4, json["type"] as! Int)
         XCTAssertEqual("12", json["invocationId"] as! String)
@@ -221,7 +221,7 @@ class JSONHubProtocolTests: XCTestCase {
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: cancelInvocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
-        let json = (try! JSONSerialization.jsonObject(with: data!) as? NSDictionary)!
+        let json = (try! JSONSerialization.jsonObject(with: data!) as? [String: Any])!
 
         XCTAssertEqual(5, json["type"] as! Int)
         XCTAssertEqual("42", json["invocationId"] as! String)
