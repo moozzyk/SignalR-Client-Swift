@@ -33,6 +33,11 @@ public class HubConnection: ConnectionDelegate {
         logger.log(logLevel: .info, message: "Starting hub connection")
         connection.start()
     }
+    
+    public func reStart() {
+        logger.log(logLevel: .info, message: "Starting hub connection")
+        connection.reStart()
+    }
 
     fileprivate func connectionStarted() {
         logger.log(logLevel: .info, message: "Hub connection started")
@@ -264,6 +269,8 @@ public class HubConnection: ConnectionDelegate {
                 serverInvocationHandler.raiseError(error: invocationError)
             }
         }
+        
+        handshakeHandled = false
 
         delegate?.connectionDidClose(error: error)
     }
