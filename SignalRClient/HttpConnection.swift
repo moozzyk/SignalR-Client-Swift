@@ -117,6 +117,17 @@ public class HttpConnection: Connection {
             }
         }
     }
+    
+    public func reStart() {
+        if state == .connected || state == .connecting {
+            return
+        }
+        
+        logger.log(logLevel: .info, message: "Restarting connection")
+        
+        let _ = changeState(from: state, to: .initial)
+        start()
+    }
 
     private func createStartUrl(connectionId: String) -> URL {
         let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
@@ -162,6 +173,7 @@ public class HttpConnection: Connection {
 
         if previousState == .initial {
             logger.log(logLevel: .warning, message: "Connection not yet started")
+            self.state = .initial
             return
         }
 

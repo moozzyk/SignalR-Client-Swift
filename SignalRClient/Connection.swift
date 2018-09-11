@@ -11,6 +11,7 @@ import Foundation
 public protocol Connection {
     var delegate: ConnectionDelegate! {get set}
     func start() -> Void
+    func reStart() -> Void
     func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) -> Void
     func stop(stopError: Error?) -> Void
 }
