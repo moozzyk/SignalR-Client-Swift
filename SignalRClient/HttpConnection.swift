@@ -61,11 +61,16 @@ public class HttpConnection: Connection {
         startDispatchGroup.enter()
 
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        let httpClient = options.httpClientFactory(options)
-
         var negotiateUrl = self.url
         negotiateUrl.appendPathComponent("negotiate")
+        negotiate(negotiateUrl: negotiateUrl) { negotiationResponse in
+            self.startTransport(negotiationResponse: negotiationResponse)
+        }
+    }
 
+    private func negotiate(negotiateUrl: URL, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
+        // TODO: negotiate not needed if the user explicitly asks for WebSockets
+        let httpClient = options.httpClientFactory(options)
         httpClient.post(url: negotiateUrl) {httpResponse, error in
             if let e = error {
                 self.logger.log(logLevel: .error, message: "Negotiate failed due to: \(e))")
@@ -93,29 +98,33 @@ public class HttpConnection: Connection {
                     return
                 }
 
-                do {
-                    self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
-                } catch {
-                    self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
-                    self.failOpenWithError(error: error, changeState: true)
-                    return
-                }
-
-                // connection is being stopped even though start has not finished yet
-                if (self.state != .connecting) {
-                    self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
-                    self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
-                    return
-                }
-
-                let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
-                self.transport!.delegate = self.transportDelegate
-                self.transport!.start(url: startUrl, options: self.options)
+                negotiateDidComplete(negotiationResponse)
             } else {
                 self.logger.log(logLevel: .error, message: "HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(httpResponse.contents != nil ? String(data: httpResponse.contents!, encoding: .utf8) ?? "(nil)" : "(nil)")")
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)
             }
         }
+    }
+
+    private func startTransport(negotiationResponse: NegotiationResponse) {
+        do {
+            self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
+        } catch {
+            self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
+            self.failOpenWithError(error: error, changeState: true)
+            return
+        }
+
+        // connection is being stopped even though start has not finished yet
+        if (self.state != .connecting) {
+            self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
+            self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+            return
+        }
+
+        let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
+        self.transport!.delegate = self.transportDelegate
+        self.transport!.start(url: startUrl, options: self.options)
     }
 
     private func createStartUrl(connectionId: String) -> URL {
