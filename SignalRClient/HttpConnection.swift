@@ -55,7 +55,7 @@ public class HttpConnection: Connection {
             logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
             // the connection is already in use so the startDispatchGroup should not be touched to not affect it
             failOpenWithError(error: SignalRError.invalidState, changeState: false, leaveStartDispatchGroup: false)
-            return;
+            return
         }
 
         startDispatchGroup.enter()
@@ -91,7 +91,8 @@ public class HttpConnection: Connection {
                 do {
                     let payload = httpResponse.contents
                     self.logger.log(logLevel: .debug, message: "Negotiate response: \(payload != nil ? String(data: payload!, encoding: .utf8) ?? "(nil)" : "(nil)")")
-                    negotiationResponse = try NegotiationResponse.parse(payload: payload)
+                    // TODO: handle redirection
+                    negotiationResponse = try NegotiationPayloadParser.parse(payload: payload) as! NegotiationResponse
                 } catch {
                     self.logger.log(logLevel: .error, message: "Parsing negotiate response failed: \(error)")
                     self.failOpenWithError(error: error, changeState: true)

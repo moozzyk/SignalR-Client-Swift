@@ -17,7 +17,10 @@ internal class TransportDescription {
     }
 }
 
-internal class NegotiationResponse {
+internal protocol NegotiationPayload {
+}
+
+internal class NegotiationResponse: NegotiationPayload {
     let connectionId: String
     let availableTransports: [TransportDescription]
 
@@ -25,8 +28,20 @@ internal class NegotiationResponse {
         self.connectionId = connectionId
         self.availableTransports = availableTransports
     }
+}
 
-    static func parse(payload: Data?) throws -> NegotiationResponse {
+internal class Redirection: NegotiationPayload {
+    let url: URL
+    let accessToken: String
+
+    init(url: URL, accessToken: String) {
+        self.url = url
+        self.accessToken = accessToken
+    }
+}
+
+internal class NegotiationPayloadParser {
+    static func parse(payload: Data?) throws -> NegotiationPayload {
         guard let payload = payload else {
             throw SignalRError.invalidNegotiationResponse(message: "negotiation payload is nil")
         }
@@ -35,10 +50,11 @@ internal class NegotiationResponse {
             throw SignalRError.invalidNegotiationResponse(message: "negotiation response is not a JSON object")
         }
 
-        let connectionId = try parseConnectionId(negotiationResponseJSON: negotiationResponseJSON)
-        let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
-
-        return NegotiationResponse(connectionId: connectionId, availableTransports: availableTransports)
+        if negotiationResponseJSON["url"] == nil {
+            return try parseNegotiation(negotiationResponseJSON)
+        } else {
+            return try parseRedirection(negotiationResponseJSON)
+        }
     }
 
     private static func getNegotiationResponseJSON(payload: Data) throws -> [String: Any]? {
@@ -47,6 +63,13 @@ internal class NegotiationResponse {
         } catch {
             throw SignalRError.invalidNegotiationResponse(message: "\(error)")
         }
+    }
+
+    private static func parseNegotiation(_ negotiationResponseJSON: [String: Any]) throws -> NegotiationResponse {
+        let connectionId = try parseConnectionId(negotiationResponseJSON: negotiationResponseJSON)
+        let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
+
+        return NegotiationResponse(connectionId: connectionId, availableTransports: availableTransports)
     }
 
     private static func parseConnectionId(negotiationResponseJSON: [String: Any]) throws -> String {
@@ -87,5 +110,22 @@ internal class NegotiationResponse {
         }
 
         return TransportDescription(transportType: transportType, transferFormats: transferFormats)
+    }
+
+    private static func parseRedirection(_ negotiationResponseJSON: [String: Any]) throws -> Redirection {
+        let urlString = try parseString(negotiationResponseJSON: negotiationResponseJSON, key: "url")
+        guard let url = URL(string: urlString) else {
+            throw SignalRError.invalidNegotiationResponse(message: "invalid url '\(urlString)'")
+        }
+        let accessToken = try parseString(negotiationResponseJSON: negotiationResponseJSON, key: "accessToken")
+
+        return Redirection(url: url, accessToken: accessToken)
+    }
+
+    private static func parseString(negotiationResponseJSON: [String: Any], key: String) throws -> String {
+        guard let connectionId = negotiationResponseJSON[key] as? String else {
+            throw SignalRError.invalidNegotiationResponse(message: "\(key) property not found or invalid")
+        }
+        return connectionId
     }
 }

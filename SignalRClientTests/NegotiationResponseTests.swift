@@ -24,7 +24,7 @@ class NegotiationResponseTests: XCTestCase {
     public func testThatParseCanParseCreatesNegotiationResponseFromValidPayload() {
         let payload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
 
-        let negotiationResponse = try! NegotiationResponse.parse(payload: payload.data(using: .utf8))
+        let negotiationResponse = try! NegotiationPayloadParser.parse(payload: payload.data(using: .utf8)) as! NegotiationResponse
 
         XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", negotiationResponse.connectionId)
         XCTAssertEqual(3, negotiationResponse.availableTransports.count)
@@ -36,6 +36,22 @@ class NegotiationResponseTests: XCTestCase {
 
         XCTAssertEqual(.longPolling, negotiationResponse.availableTransports[2].transportType)
         XCTAssertEqual([.text, .binary], negotiationResponse.availableTransports[2].transferFormats)
+    }
+
+    public func testThatCanCreateRedirection() {
+        let redirection = Redirection(url: URL(string: "http://fakeuri.org")!, accessToken: "abc")
+
+        XCTAssertEqual(URL(string: "http://fakeuri.org")!, redirection.url)
+        XCTAssertEqual("abc", redirection.accessToken)
+    }
+
+    public func testThatParseParseCreatesRedirectionResponseFromValidPayload() {
+        let payload = "{\"url\":\"http://fakeuri.org\", \"accessToken\": \"abc\"}"
+
+        let redirection = try! NegotiationPayloadParser.parse(payload: payload.data(using: .utf8)) as! Redirection
+
+        XCTAssertEqual(URL(string: "http://fakeuri.org")!, redirection.url)
+        XCTAssertEqual("abc", redirection.accessToken)
     }
 
     public func testThatParseThrowsForInvalidPayloads() {
@@ -52,13 +68,17 @@ class NegotiationResponseTests: XCTestCase {
             "{\"connectionId\": \"123\", \"availableTransports\": [{\"transport\": \"WebSockets\", \"transferFormats\":{}}]}" : "transferFormats property not found or invalid",
             "{\"connectionId\": \"123\", \"availableTransports\": [{\"transport\": \"WebSockets\", \"transferFormats\":[]}]}" : "empty list of transfer formats",
             "{\"connectionId\": \"123\", \"availableTransports\": [{\"transport\": \"WebSockets\", \"transferFormats\":[\"Text\", \"abc\"]}]}" : "invalid transfer format 'abc'",
+            "{\"url\": 123}" : "url property not found or invalid",
+            "{\"url\": \"123\"}" : "accessToken property not found or invalid",
+            "{\"accessToken\": \"123\", \"url\": null}" : "url property not found or invalid",
+            "{\"accessToken\": 123, \"url\": \"123\"}" : "accessToken property not found or invalid",
         ]
 
         testCases.forEach {
             let (payload, errorMessage) = $0
 
             do {
-                _ = try NegotiationResponse.parse(payload: payload.data(using: .utf8))
+                _ = try NegotiationPayloadParser.parse(payload: payload.data(using: .utf8))
                 XCTAssert(false, "exception expected but none thrown")
             } catch {
                 XCTAssertEqual("\(error)", "\(SignalRError.invalidNegotiationResponse(message: errorMessage))")

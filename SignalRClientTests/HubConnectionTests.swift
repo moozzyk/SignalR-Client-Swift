@@ -782,7 +782,7 @@ class HubConnectionTests: XCTestCase {
             }
         }
 
-        let fakeConnection = FakeHttpConnection(url: URL(string: "http://tempuri.org")!)
+        let fakeConnection = FakeHttpConnection(url: URL(string: "http://fakeuri.org")!)
         let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         hubConnection.stop()
         XCTAssertTrue(fakeConnection.stopCalled)
@@ -801,7 +801,7 @@ class HubConnectionTests: XCTestCase {
             }
         }
 
-        let fakeConnection = FakeHttpConnection(url: URL(string: "http://tempuri.org")!)
+        let fakeConnection = FakeHttpConnection(url: URL(string: "http://fakeuri.org")!)
         let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         hubConnection.start()
         let payload = "{}\u{1e}{ \"type\": 7, \"error\": \"Server Error\" }\u{1e}"
