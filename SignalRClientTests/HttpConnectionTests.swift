@@ -581,4 +581,38 @@ class HttpConnectionTests: XCTestCase {
             return createTransport()
         }
     }
+
+    func testThatConnectionFollowsRedirects() {
+        let redirectionExpectation = expectation(description: "redirected")
+
+        let initialUrl = "http://fakeuri.org"
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpClient = TestHttpClient(postHandler: { url in
+            if (url.absoluteString == initialUrl + "/negotiate") {
+                let negotiatePayload = "{\"accessToken\":\"xyz\",\"url\":\"https://service/?abcdef\"}"
+                return (HttpResponse(statusCode: 200, contents: negotiatePayload.data(using: .utf8)!), nil)
+            }
+
+            XCTAssertEqual("https://service/negotiate?abcdef", url.absoluteString)
+            XCTAssertEqual("xyz", httpConnectionOptions.accessTokenProvider())
+
+            redirectionExpectation.fulfill()
+            return (HttpResponse(statusCode: 500, contents: nil), nil)
+        })
+
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."))", "\(error)")
+            // didFailToOpenExpectation.fulfill()
+        }
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }

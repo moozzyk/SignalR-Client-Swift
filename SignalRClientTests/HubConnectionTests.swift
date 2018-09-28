@@ -12,6 +12,9 @@ import XCTest
 class HubConnectionTests: XCTestCase {
 
     func testThatOpeningHubConnectionFailsIfHandshakeFails() {
+        // This test fails most of the times when running against SignalR Service - the webSocket is closed
+        // before receiving any data. Occasionally when data is being received before close the data is correct.
+        // This is a negative test so leaving as is for now.
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
@@ -34,12 +37,13 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+            .withLogging(minLogLevel: .debug)
             .withHubProtocol(hubProtocolFactory: {_ in HubProtocolFake()})
             .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
-        waitForExpectations(timeout: 500 /*seconds*/)
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     func testThatHubMethodCanBeInvoked() {
@@ -402,7 +406,10 @@ class HubConnectionTests: XCTestCase {
 
         // 3 messages: protocol negotation/handshake, stream method invocation, stream method cancellation
         XCTAssertEqual(3, messages.count)
-        XCTAssertEqual("{\"type\":5,\"invocationId\":\"1\"}\u{1e}", String(data: messages.last!, encoding: .utf8))
+        let methodCancellationJson = try! JSONSerialization.jsonObject(with: messages.last!.split(separator: 0x1e).first!) as! [String: Any]
+        XCTAssertEqual(2, methodCancellationJson.count)
+        XCTAssertEqual(5, methodCancellationJson["type"] as! Int)
+        XCTAssertEqual("1", methodCancellationJson["invocationId"] as! String)
     }
 
     func testThatCallbackInvokedIfSendingCancellationMessageFailed() {

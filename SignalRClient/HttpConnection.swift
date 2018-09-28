@@ -12,7 +12,7 @@ public class HttpConnection: Connection {
     private let connectionQueue: DispatchQueue
     private let startDispatchGroup: DispatchGroup
 
-    private let url: URL
+    private var url: URL
     private let options: HttpConnectionOptions
     private let transportFactory: TransportFactory
     private let logger: Logger
@@ -61,15 +61,21 @@ public class HttpConnection: Connection {
         startDispatchGroup.enter()
 
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        var negotiateUrl = self.url
-        negotiateUrl.appendPathComponent("negotiate")
-        negotiate(negotiateUrl: negotiateUrl) { negotiationResponse in
+        negotiate(accessToken: nil) { negotiationResponse in
             self.startTransport(negotiationResponse: negotiationResponse)
         }
     }
 
-    private func negotiate(negotiateUrl: URL, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
+    private func negotiate(accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
         // TODO: negotiate not needed if the user explicitly asks for WebSockets
+        if let accessToken = accessToken {
+            logger.log(logLevel: .debug, message: "Overriding accessToken")
+            options.accessTokenProvider = { accessToken }
+        }
+
+        var negotiateUrl = self.url
+        negotiateUrl.appendPathComponent("negotiate")
+
         let httpClient = options.httpClientFactory(options)
         httpClient.post(url: negotiateUrl) {httpResponse, error in
             if let e = error {
@@ -87,19 +93,25 @@ public class HttpConnection: Connection {
             if httpResponse.statusCode == 200 {
                 self.logger.log(logLevel: .debug, message: "Negotiate completed with OK status code")
 
-                let negotiationResponse: NegotiationResponse
                 do {
                     let payload = httpResponse.contents
                     self.logger.log(logLevel: .debug, message: "Negotiate response: \(payload != nil ? String(data: payload!, encoding: .utf8) ?? "(nil)" : "(nil)")")
-                    // TODO: handle redirection
-                    negotiationResponse = try NegotiationPayloadParser.parse(payload: payload) as! NegotiationResponse
+
+                    switch try NegotiationPayloadParser.parse(payload: payload) {
+                    case let redirection as Redirection:
+                        self.logger.log(logLevel: .debug, message: "Negotiate redirects to \(redirection.url)")
+                        self.url = redirection.url
+                        self.negotiate(accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
+                    case let negotiationResponse as NegotiationResponse:
+                        self.logger.log(logLevel: .debug, message: "Negotation response received")
+                        negotiateDidComplete(negotiationResponse)
+                    default:
+                        throw SignalRError.invalidNegotiationResponse(message: "internal error - unexpected negotiation payload")
+                    }
                 } catch {
                     self.logger.log(logLevel: .error, message: "Parsing negotiate response failed: \(error)")
                     self.failOpenWithError(error: error, changeState: true)
-                    return
                 }
-
-                negotiateDidComplete(negotiationResponse)
             } else {
                 self.logger.log(logLevel: .error, message: "HTTP request error. statusCode: \(httpResponse.statusCode)\ndescription:\(httpResponse.contents != nil ? String(data: httpResponse.contents!, encoding: .utf8) ?? "(nil)" : "(nil)")")
                 self.failOpenWithError(error: SignalRError.webError(statusCode: httpResponse.statusCode), changeState: true)

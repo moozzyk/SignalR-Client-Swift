@@ -70,9 +70,10 @@ public class WebsocketsTransport: Transport {
 
         webSocket!.event.message = { [weak self] message in
             guard let welf = self else { return }
-
             if let text = message as? String {
                 welf.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
+            } else if let bytes = message as? [UInt8] {
+                welf.delegate?.transportDidReceiveData(Data(bytes: bytes))
             } else {
                 welf.delegate?.transportDidReceiveData(message as! Data)
             }
