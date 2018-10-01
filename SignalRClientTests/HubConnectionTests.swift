@@ -56,12 +56,12 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "Echo", arguments: [message], returnType: String.self, invocationDidComplete: { result, error in
+            hubConnection.invoke(method: "Echo", arguments: [message], returnType: String.self) {result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual(message, result)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
-            })
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -72,6 +72,21 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.start()
+        hubConnection.invoke(method: "x", arguments: [], returnType: String.self) {result, error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
+            hubConnection.stop()
+            didComplete.fulfill()
+        }
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -100,6 +115,21 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.start()
+        hubConnection.invoke(method: "x", arguments: []) {error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
+            hubConnection.stop()
+            didComplete.fulfill()
+        }
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -146,23 +176,28 @@ class HubConnectionTests: XCTestCase {
         let invocationCancelledExpectation = expectation(description: "invocation cancelled")
 
         let testConnection = TestConnection()
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
+        let logger = PrintLogger()
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: logger), logger: logger)
         let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
+                XCTAssertNotNil(error)
+
+                switch (error as! SignalRError) {
+                case .hubInvocationCancelled:
+                    invocationCancelledExpectation.fulfill()
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+            })
+
+            hubConnection.stop()
+        }
+
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
-        hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
-            XCTAssertNotNil(error)
-
-            switch (error as! SignalRError) {
-            case .hubInvocationCancelled:
-                invocationCancelledExpectation.fulfill()
-                break
-            default:
-                XCTFail()
-                break
-            }
-        })
-        hubConnection.stop()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -175,19 +210,22 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
+                switch (error as! SignalRError) {
+                case .invalidOperation(let errorMessage):
+                    XCTAssertEqual("testError", errorMessage)
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+                invocationCancelledExpectation.fulfill()
+            })
+            testConnection.delegate?.connectionDidClose(error: testError)
+        }
+
         hubConnection.start()
-        hubConnection.invoke(method: "TestMethod", arguments: [], invocationDidComplete: { error in
-            switch (error as! SignalRError) {
-            case .invalidOperation(let errorMessage):
-                XCTAssertEqual("testError", errorMessage)
-                break
-            default:
-                XCTFail()
-                break
-            }
-            invocationCancelledExpectation.fulfill()
-        })
-        testConnection.delegate?.connectionDidClose(error: testError)
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -218,6 +256,21 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatInvokingStreamingMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.start()
+        _ = hubConnection.stream(method: "StreamNumbers", arguments: [], itemType: Int.self, streamItemReceived: {_ in }, invocationDidComplete: {error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
+            hubConnection.stop()
+            didComplete.fulfill()
+        })
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -306,21 +359,23 @@ class HubConnectionTests: XCTestCase {
         let testConnection = TestConnection()
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
+                XCTAssertNotNil(error)
+
+                switch (error as! SignalRError) {
+                case .hubInvocationCancelled:
+                    invocationCancelledExpectation.fulfill()
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+            })
+            hubConnection.stop()
+        }
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
-        _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
-            XCTAssertNotNil(error)
-
-            switch (error as! SignalRError) {
-            case .hubInvocationCancelled:
-                invocationCancelledExpectation.fulfill()
-                break
-            default:
-                XCTFail()
-                break
-            }
-        })
-        hubConnection.stop()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -332,20 +387,22 @@ class HubConnectionTests: XCTestCase {
         let testConnection = TestConnection()
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
+                switch (error as! SignalRError) {
+                case .invalidOperation(let errorMessage):
+                    XCTAssertEqual("testError", errorMessage)
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+                invocationCancelledExpectation.fulfill()
+            })
+            testConnection.delegate?.connectionDidClose(error: testError)
+        }
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
-        _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
-            switch (error as! SignalRError) {
-            case .invalidOperation(let errorMessage):
-                XCTAssertEqual("testError", errorMessage)
-                break
-            default:
-                XCTFail()
-                break
-            }
-            invocationCancelledExpectation.fulfill()
-        })
-        testConnection.delegate?.connectionDidClose(error: testError)
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -396,20 +453,22 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
+        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
+            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
+                                                    streamItemReceived: { _ in XCTFail() },
+                                                    invocationDidComplete: { _ in XCTFail() })
+            hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { _ in XCTFail() })
+
+            hubConnection.stop()
+
+            // 3 messages: protocol negotation/handshake, stream method invocation, stream method cancellation
+            XCTAssertEqual(3, messages.count)
+            let methodCancellationJson = try! JSONSerialization.jsonObject(with: messages.last!.split(separator: 0x1e).first!) as! [String: Any]
+            XCTAssertEqual(2, methodCancellationJson.count)
+            XCTAssertEqual(5, methodCancellationJson["type"] as! Int)
+            XCTAssertEqual("1", methodCancellationJson["invocationId"] as! String)
+        }
         hubConnection.start()
-        let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
-                                                streamItemReceived: { _ in XCTFail() },
-                                                invocationDidComplete: { _ in XCTFail() })
-        hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { _ in XCTFail() })
-
-        hubConnection.stop()
-
-        // 3 messages: protocol negotation/handshake, stream method invocation, stream method cancellation
-        XCTAssertEqual(3, messages.count)
-        let methodCancellationJson = try! JSONSerialization.jsonObject(with: messages.last!.split(separator: 0x1e).first!) as! [String: Any]
-        XCTAssertEqual(2, methodCancellationJson.count)
-        XCTAssertEqual(5, methodCancellationJson["type"] as! Int)
-        XCTAssertEqual("1", methodCancellationJson["invocationId"] as! String)
     }
 
     func testThatCallbackInvokedIfSendingCancellationMessageFailed() {
@@ -423,23 +482,57 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
+            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
+                                                    streamItemReceived: { _ in XCTFail() },
+                                                    invocationDidComplete: { _ in XCTFail() })
+            hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { error in
+                switch (error as! SignalRError) {
+                case .invalidOperation(let errorMessage):
+                    XCTAssertEqual("test", errorMessage)
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+                hubConnection.stop()
+                cancelDidFailExpectation.fulfill()
+            })
+        }
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
-        let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
-                                                streamItemReceived: { _ in XCTFail() },
-                                                invocationDidComplete: { _ in XCTFail() })
-        hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { error in
-            switch (error as! SignalRError) {
-            case .invalidOperation(let errorMessage):
-                XCTAssertEqual("test", errorMessage)
-                break
-            default:
-                XCTFail()
-                break
-            }
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatCancellingStreamingInvocationRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.start()
+        hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "123")) {error in
+            XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error)")
             hubConnection.stop()
-            cancelDidFailExpectation.fulfill()
-        })
+            didComplete.fulfill()
+        }
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+    
+    func testTestThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
+            hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "")) {error in
+                XCTAssertEqual("\(SignalRError.invalidOperation(message: "Invalid stream handle."))", "\(error)")
+                hubConnection.stop()
+                didComplete.fulfill()
+            }
+        }
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -599,6 +692,21 @@ class HubConnectionTests: XCTestCase {
         })
 
         hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didComplete = expectation(description: "test completed")
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        hubConnection.start()
+        hubConnection.send(method: "x", arguments: []) {error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
+            hubConnection.stop()
+            didComplete.fulfill()
+        }
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
@@ -841,6 +949,7 @@ class TestConnection: Connection {
 
     func start() {
         delegate?.connectionDidOpen(connection: self)
+        delegate?.connectionDidReceiveData(connection: self, data: "{}\u{1e}".data(using: .utf8)!)
     }
 
     func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {

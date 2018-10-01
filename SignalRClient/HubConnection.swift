@@ -69,8 +69,13 @@ public class HubConnection: ConnectionDelegate {
 
     public func send(method: String, arguments:[Any?], sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Sending to server side hub method: '\(method)'")
-        let invocationMessage = InvocationMessage(target: method, arguments: arguments)
+
+        if !ensureConnectionStarted() {sendDidComplete($0)} {
+            return
+        }
+
         do {
+            let invocationMessage = InvocationMessage(target: method, arguments: arguments)
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
         } catch {
@@ -88,6 +93,10 @@ public class HubConnection: ConnectionDelegate {
     public func invoke<T>(method: String, arguments: [Any?], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Invoking server side hub method: '\(method)'")
 
+        if !ensureConnectionStarted() {invocationDidComplete(nil, $0)} {
+            return
+        }
+
         let invocationHandler = InvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, invocationDidComplete: invocationDidComplete)
 
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
@@ -95,6 +104,10 @@ public class HubConnection: ConnectionDelegate {
 
     public func stream<T>(method: String, arguments: [Any?], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
         logger.log(logLevel: .info, message: "Invoking server side streaming hub method: '\(method)'")
+
+        if !ensureConnectionStarted() {invocationDidComplete($0)} {
+            return StreamHandle(invocationId: "")
+        }
 
         let streamInvocationHandler = StreamInvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
@@ -105,6 +118,17 @@ public class HubConnection: ConnectionDelegate {
 
     public func cancelStreamInvocation(streamHandle: StreamHandle, cancelDidFail: @escaping (_ error: Error) -> Void) {
         logger.log(logLevel: .info, message: "Cancelling server side streaming hub method")
+
+        if !ensureConnectionStarted() {cancelDidFail($0)} {
+            return
+        }
+
+        if streamHandle.invocationId == "" {
+            logger.log(logLevel: .error, message: "Invalid stream handle")
+            cancelDidFail(SignalRError.invalidOperation(message: "Invalid stream handle."))
+            return
+        }
+
         hubConnectionQueue.sync {
             _ = pendingCalls.removeValue(forKey: streamHandle.invocationId)
         }
@@ -133,8 +157,8 @@ public class HubConnection: ConnectionDelegate {
             pendingCalls[id] = invocationHandler
         }
 
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id, method: method, arguments: arguments)
         do {
+            let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id, method: method, arguments: arguments)
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData) { error in
                 if let e = error {
@@ -150,7 +174,7 @@ public class HubConnection: ConnectionDelegate {
         return id
     }
 
-    fileprivate func failInvocationWithError(invocationHandler: ServerInvocationHandler, invocationId: String, error: Error) {
+    private func failInvocationWithError(invocationHandler: ServerInvocationHandler, invocationId: String, error: Error) {
         hubConnectionQueue.sync {
             _ = pendingCalls.removeValue(forKey: invocationId)
         }
@@ -160,7 +184,16 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    fileprivate func hubConnectionDidReceiveData(data: Data) {
+    private func ensureConnectionStarted(errorHandler: (Error)->Void) -> Bool {
+        if !handshakeHandled {
+            logger.log(logLevel: .error, message: "Attempting to send data before connection has been started.")
+            errorHandler(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))
+            return false
+        }
+        return true
+    }
+
+    private func hubConnectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
         var data = data
         if !handshakeHandled {
@@ -214,7 +247,7 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    fileprivate func handleStreamItem(message: StreamItemMessage) throws {
+    private func handleStreamItem(message: StreamItemMessage) throws {
         var serverInvocationHandler: ServerInvocationHandler?
         self.hubConnectionQueue.sync {
             serverInvocationHandler = self.pendingCalls[message.invocationId]
@@ -232,7 +265,7 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    fileprivate func handleInvocation(message: InvocationMessage) throws {
+    private func handleInvocation(message: InvocationMessage) throws {
         var callback: (([Any?], TypeConverter) -> Void)?
 
         self.hubConnectionQueue.sync {
@@ -248,7 +281,7 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    fileprivate func hubConnectionDidClose(error: Error?) {
+    private func hubConnectionDidClose(error: Error?) {
         logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
 
         var invocationHandlers: [ServerInvocationHandler] = []
