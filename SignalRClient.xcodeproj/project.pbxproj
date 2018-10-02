@@ -61,6 +61,7 @@
 		5A4D7DA62113E57A009C7866 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D7DA42113E57A009C7866 /* Logger.swift */; };
 		5A4D7DA82113EFF4009C7866 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */; };
 		5A4F86C51E71A54900D9A13F /* SignalRError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F86C41E71A54900D9A13F /* SignalRError.swift */; };
+		5A5071C72163328C00FE70D9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5071C62163328C00FE70D9 /* Constants.swift */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A73DFEB1E6B8867007F3913 /* HubConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEA1E6B8867007F3913 /* HubConnection.swift */; };
 		5A73DFED1E6B8960007F3913 /* HubConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */; };
@@ -215,6 +216,7 @@
 		5A4D7DA42113E57A009C7866 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		5A4F86C41E71A54900D9A13F /* SignalRError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalRError.swift; sourceTree = "<group>"; };
+		5A5071C62163328C00FE70D9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5A73DFEA1E6B8867007F3913 /* HubConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnection.swift; sourceTree = "<group>"; };
 		5A73DFEC1E6B8960007F3913 /* HubConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionDelegate.swift; sourceTree = "<group>"; };
 		5A73DFEE1E6B8B3D007F3913 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
@@ -401,6 +403,7 @@
 				5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */,
 				5A0D4ABC2105862F000C7514 /* TransportTypeTests.swift */,
 				5A4D7DA72113EFF3009C7866 /* LoggerTests.swift */,
+				5A5071C62163328C00FE70D9 /* Constants.swift */,
 			);
 			path = SignalRClientTests;
 			sourceTree = "<group>";
@@ -920,6 +923,7 @@
 				5A45C8321F5AFDB6003EEC55 /* JSONHubProtocolTests.swift in Sources */,
 				5A32F4F02084195A0091C185 /* HubProtocolFake.swift in Sources */,
 				5A32F4EE2082BE690091C185 /* HandshakeProtocolTests.swift in Sources */,
+				5A5071C72163328C00FE70D9 /* Constants.swift in Sources */,
 				5A4D7DA82113EFF4009C7866 /* LoggerTests.swift in Sources */,
 				5AC1AE3C1E8A38CE006262B3 /* TestTransport.swift in Sources */,
 				5A73DFF31E6B95E4007F3913 /* HubConnectionTests.swift in Sources */,

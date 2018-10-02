@@ -36,7 +36,7 @@ class HubConnectionTests: XCTestCase {
             XCTAssertNil(error)
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withLogging(minLogLevel: .debug)
             .withHubProtocol(hubProtocolFactory: {_ in HubProtocolFake()})
             .build()
@@ -69,7 +69,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -79,7 +79,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
         hubConnection.invoke(method: "x", arguments: [], returnType: String.self) {result, error in
             XCTAssertNotNil(error)
@@ -112,7 +112,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -122,7 +122,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
         hubConnection.invoke(method: "x", arguments: []) {error in
             XCTAssertNotNil(error)
@@ -165,7 +165,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -253,7 +253,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -263,7 +263,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatInvokingStreamingMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
         _ = hubConnection.stream(method: "StreamNumbers", arguments: [], itemType: Int.self, streamItemReceived: {_ in }, invocationDidComplete: {error in
             XCTAssertNotNil(error)
@@ -310,7 +310,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -346,7 +346,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -411,7 +411,7 @@ class HubConnectionTests: XCTestCase {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         var lastItem = -1
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
@@ -508,7 +508,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatCancellingStreamingInvocationRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
         hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "123")) {error in
             XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error)")
@@ -522,7 +522,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
             hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "")) {error in
@@ -558,7 +558,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -596,7 +596,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
 
         hubConnection.on(method: "GetNumber", callback: { args, _ in
@@ -638,7 +638,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withJSONHubProtocol(typeConverter: PersonTypeConverter())
             .build()
 
@@ -681,7 +681,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetNumber", callback: { args, _ in
             XCTAssertNotNil(args)
@@ -699,7 +699,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
         hubConnection.send(method: "x", arguments: []) {error in
             XCTAssertNotNil(error)
@@ -822,7 +822,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withJSONHubProtocol(typeConverter: PersonTypeConverter())
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -847,7 +847,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.headers["TestHeader"] = "header"
             }
@@ -875,7 +875,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.accessTokenProvider = { return "abc" }
             }

@@ -160,4 +160,3 @@ class ChatHubConnectionDelegate: HubConnectionDelegate {
         app?.connectionDidClose(error: error)
     }
 }
-

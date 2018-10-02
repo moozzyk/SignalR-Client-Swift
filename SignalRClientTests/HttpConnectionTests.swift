@@ -96,7 +96,7 @@ class HttpConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         connection.delegate = connectionDelegate
         connection.start()
 
@@ -120,7 +120,7 @@ class HttpConnectionTests: XCTestCase {
             didFailToOpenExpectation.fulfill()
         }
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         connection.delegate = connectionDelegate
         connection.start()
         connection.start()
@@ -153,7 +153,7 @@ class HttpConnectionTests: XCTestCase {
             didFailToOpenExpectation.fulfill()
         }
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/throw")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/throw")!)
         connection.delegate = connectionDelegate
         connection.start()
 
@@ -175,7 +175,7 @@ class HttpConnectionTests: XCTestCase {
 
     func testThatSendThrowsIfInvokedAfterConnectionFailedToStart() {
         let sendFailedExpectation = expectation(description: "send failed")
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/throw")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/throw")!)
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
                 connection.send(data: "".data(using: .utf8)!) { sendError in
@@ -196,7 +196,7 @@ class HttpConnectionTests: XCTestCase {
 
         let testTransport = TestTransport()
         let transportFactory = TestTransportFactory(testTransport)
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), transportFactory: transportFactory, logger: PrintLogger())
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!, options: HttpConnectionOptions(), transportFactory: transportFactory, logger: PrintLogger())
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidOpenHandler = { connection in
@@ -220,7 +220,7 @@ class HttpConnectionTests: XCTestCase {
     func testThatSendThrowsIfInvokedAfterConnectionStopped() {
         let sendFailedExpectation = expectation(description: "send failed")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         connection.start()
         connection.stop()
 
@@ -238,7 +238,7 @@ class HttpConnectionTests: XCTestCase {
         let didCloseExpectation = expectation(description: "connection closed")
         let didFailToOpen = expectation(description: "connection failed to open")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
@@ -264,7 +264,7 @@ class HttpConnectionTests: XCTestCase {
         let didOpenExpectation = expectation(description: "connection opened")
         let didFailToOpen = expectation(description: "connection failed to open")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
@@ -287,7 +287,7 @@ class HttpConnectionTests: XCTestCase {
         let didCloseExpectation = expectation(description: "connection closed")
         let didFailToOpen = expectation(description: "connection failed to open")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!)
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
@@ -312,7 +312,7 @@ class HttpConnectionTests: XCTestCase {
     func testThatCanStopConnectionThatIsStarting() {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidFailToOpenHandler = { error in
@@ -332,7 +332,7 @@ class HttpConnectionTests: XCTestCase {
         let didFailToOpen = expectation(description: "connection did fail to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/")!)
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)")!)
         let connectionDelegate = TestConnectionDelegate()
 
         connectionDelegate.connectionDidFailToOpenHandler = { error in
@@ -359,7 +359,7 @@ class HttpConnectionTests: XCTestCase {
 
         let didCloseExpectation = expectation(description: "connection closed")
 
-        let connection = HttpConnection(url: URL(string: "http://localhost:5000/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!, options: HttpConnectionOptions(), logger: PrintLogger())
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidCloseHandler = { error in
@@ -457,7 +457,7 @@ class HttpConnectionTests: XCTestCase {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpConnectionOptions = HttpConnectionOptions()
-        let httpConnection = HttpConnection(url: URL(string:"http://localhost:5000")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpConnection = HttpConnection(url: URL(string:"\(BASE_URL)")!, options: httpConnectionOptions, logger: PrintLogger())
         let httpClient = TestHttpClient(postHandler: { _ in
             DispatchQueue.global().async {
                 httpConnection.stop()
@@ -527,7 +527,7 @@ class HttpConnectionTests: XCTestCase {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpConnectionOptions = HttpConnectionOptions()
-        let httpConnection = HttpConnection(url: URL(string:"http://localhost:5000/echoNoTransports")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpConnection = HttpConnection(url: URL(string:"\(BASE_URL)/echoNoTransports")!, options: httpConnectionOptions, logger: PrintLogger())
         let httpClient = TestHttpClient(postHandler: { _ in
             return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
         })
