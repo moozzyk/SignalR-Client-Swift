@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.source                 = { :git => "https://github.com/moozzyk/SignalR-Client-Swift.git", :tag => "0.4.1" }
   s.authors                = { "Pawel Kadluczka" => "moozzyk@gmail.com" }
   s.social_media_url       = "https://twitter.com/moozzyk"
-  s.swift_version          = "3.3"
+  s.swift_version          = "4.2"
   s.ios.deployment_target  = "9.0"
   s.osx.deployment_target  = "10.13"
   s.tvos.deployment_target = "9.0"
