@@ -17,3 +17,7 @@ signalr-client/
 node_modules/
 TestServer/wwwroot/js/
 Pods/
+Package.resolved
+.build/
+# This can be generated using: swift package generate-xcodeproj
+SwiftSignalRClient.xcodeproj
