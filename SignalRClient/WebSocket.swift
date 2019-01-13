@@ -967,8 +967,13 @@ private class InnerWebSocket: Hashable {
     }
 
     func closeConn() {
+        #if swift(>=4.2)
+        rd.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+        wr.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+        #else
         rd.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         wr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        #endif
         rd.delegate = nil
         wr.delegate = nil
         rd.close()
@@ -1087,8 +1092,13 @@ private class InnerWebSocket: Hashable {
         }
         rd.delegate = delegate
         wr.delegate = delegate
+        #if swift(>=4.2)
+        rd.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
+        wr.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
+        #else
         rd.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         wr.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        #endif
         rd.open()
         wr.open()
         try write(header, length: header.count)
