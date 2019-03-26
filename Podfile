@@ -1,3 +1,5 @@
+project 'SignalRClient.xcodeproj'
+
 target 'HubSample' do
   use_frameworks!
   platform :osx, '10.13'
