@@ -14,7 +14,7 @@ class HandshakeProtocol {
     }
 
     static func parseHandshakeResponse(data: Data) -> (Error?, Data) {
-        if let idx = data.index(where: {$0 == 0x1e}) {
+        if let idx = data.firstIndex(where: {$0 == 0x1e}) {
             let error = parseHandshakeResponse(handshakeResponse: data[0..<idx])
             return (error, data.dropFirst(idx + 1))
         }

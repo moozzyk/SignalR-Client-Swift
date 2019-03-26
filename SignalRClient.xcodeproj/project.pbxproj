@@ -10,7 +10,6 @@
 		0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */; };
 		2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */; };
 		3EE477C9B88482D1A4CDC1BB /* Pods_macOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */; };
-		49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */; };
 		5A004A042028293400A26C0B /* ServerInvocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A004A032028293400A26C0B /* ServerInvocationHandler.swift */; };
 		5A01C02C1EA0562D0091082D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A01C02B1EA0562D0091082D /* Util.swift */; };
 		5A0D4AB820FF0379000C7514 /* NegotiationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0D4AB720FF0379000C7514 /* NegotiationResponseTests.swift */; };
@@ -305,7 +304,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49161ABF38DA4E2AA71C1CF7 /* Pods_SocketsSample.framework in Frameworks */,
 				95EB841095A45F68911C1C90 /* Pods_ConnectionSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -632,11 +630,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Pawel Kadluczka";
 				TargetAttributes = {
 					5A406F3D2030F4960055671E = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					5A9803511E5FE60E00BFFB0A = {
@@ -656,18 +655,19 @@
 					};
 					5AA9EFFD1E835AC200C5E248 = {
 						CreatedOnToolsVersion = 8.1;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					5AEC70EC20310E3E00616DD2 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 5A98034C1E5FE60E00BFFB0A /* Build configuration list for PBXProject "SignalRClient" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -1049,7 +1049,7 @@
 				PRODUCT_NAME = SignalRClient;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1077,7 +1077,7 @@
 				PRODUCT_NAME = SignalRClient;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1220,7 +1220,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1246,7 +1246,7 @@
 				PRODUCT_NAME = SignalRClient;
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1328,8 +1328,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1345,8 +1344,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1369,7 +1367,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1393,7 +1391,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
