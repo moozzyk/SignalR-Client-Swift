@@ -25,7 +25,13 @@ The repo contains samples for:
   - [Hubs](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/HubSample)
   - [HttpConnection](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/ConnectionSample)
 
-The samples require a running server. To start the server go to the `TestServer` folder in terminal and run: 
+The samples require a running server. To start the server go to the `TestServer` and 
+
+- install the JS client running (needed only once):
+```
+npm install
+```
+- start the server with: 
 
 ```C#
 dotnet run
