@@ -20,12 +20,12 @@ public protocol Logger {
 }
 
 public extension LogLevel {
-    public func toString() -> String {
+    func toString() -> String {
         switch (self) {
-        case LogLevel.error: return "error"
-        case LogLevel.warning: return "warning"
-        case LogLevel.info: return "info"
-        case LogLevel.debug: return "debug"
+        case .error: return "error"
+        case .warning: return "warning"
+        case .info: return "info"
+        case .debug: return "debug"
         }
     }
 }
@@ -65,7 +65,7 @@ class FilteringLogger: Logger {
 
     func log(logLevel: LogLevel, message: @autoclosure () -> String) {
         if (logLevel.rawValue <= minLogLevel.rawValue) {
-            logger.log(logLevel: logLevel, message: message)
+            logger.log(logLevel: logLevel, message: message())
         }
     }
 }

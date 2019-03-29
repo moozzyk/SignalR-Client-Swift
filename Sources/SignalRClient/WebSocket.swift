@@ -599,8 +599,14 @@ private class InnerWebSocket: Hashable {
         ws.binaryType = binaryType
         return ws
     }
-
+    
+    #if swift(>=5.0)
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    #else
     var hashValue: Int { return id }
+    #endif
 
     init(request: URLRequest, subProtocols : [String] = [], stub : Bool = false){
         pthread_mutex_init(&mutex, nil)
