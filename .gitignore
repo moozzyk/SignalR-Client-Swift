@@ -17,3 +17,5 @@ signalr-client/
 node_modules/
 TestServer/wwwroot/js/
 Pods/
+Package.resolved
+.build/
