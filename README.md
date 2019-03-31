@@ -6,26 +6,36 @@ A Swift SignalR Client for the Asp.Net Core version of SignalR
 
 ### Cocoapods
 
-- add the following lines to your `Podfile`:
-  ```ruby
-  use_frameworks!
-  pod 'SwiftSignalRClient'
-  ```
-- run:
-  ```
-  pod install
-  ```
+Add the following lines to your `Podfile`:
 
-Add `#import SwiftSignalRClient` to swift files you would like to use the client in.
+```ruby
+use_frameworks!
+pod 'SwiftSignalRClient', '~> 0.5'
+```
 
-## Samples
+Then run:
+```sh
+pod install
+```
+
+### Swift Packacge Manager
+
+```swift
+.package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.5.0")),
+```
+
+## Usage
+
+Add `import SwiftSignalRClient` to swift files you would like to use the client in.
+
+## Examples
 
 The repo contains samples for:
 
-  - [Hubs](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/HubSample)
-  - [HttpConnection](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/ConnectionSample)
+  - [Hubs](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/HubSample)
+  - [HttpConnection](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/ConnectionSample)
 
-The samples require a running server. To start the server go to the `TestServer` folder in terminal and run: 
+The samples require a running server. To start the server go to the [`TestServer`](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/TestServer) folder in terminal and run: 
 
 ```C#
 dotnet run
