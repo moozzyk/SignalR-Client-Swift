@@ -600,7 +600,9 @@ private class InnerWebSocket: Hashable {
         return ws
     }
 
-    var hashValue: Int { return id }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 
     init(request: URLRequest, subProtocols : [String] = [], stub : Bool = false){
         pthread_mutex_init(&mutex, nil)

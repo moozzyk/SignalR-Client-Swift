@@ -20,7 +20,7 @@ public protocol Logger {
 }
 
 public extension LogLevel {
-    public func toString() -> String {
+    func toString() -> String {
         switch (self) {
         case LogLevel.error: return "error"
         case LogLevel.warning: return "warning"
