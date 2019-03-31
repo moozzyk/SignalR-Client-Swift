@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SignalRClient
+import SwiftSignalRClient
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Update the Url accordingly

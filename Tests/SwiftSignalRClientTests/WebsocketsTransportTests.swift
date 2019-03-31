@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SignalRClient
+@testable import SwiftSignalRClient
 
 class TestTransportDelegate: TransportDelegate {
     var transportDidOpenHandler: (() -> Void)?

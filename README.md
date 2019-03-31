@@ -82,6 +82,10 @@ There are several sample projects in the `Examples` folder. They include:
     
     To run, navigate to the `TestServer` folder and execute the following in the terminal:
     
+    ```sh
+    npm install
+    ```
+    
     ```C#
     dotnet run
     ```

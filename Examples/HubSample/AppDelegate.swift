@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import SignalRClient
+import SwiftSignalRClient
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate {
