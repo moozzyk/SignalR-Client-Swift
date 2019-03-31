@@ -20,25 +20,68 @@ pod install
 
 ### Swift Packacge Manager
 
+Add the following to your `Package` dependencies:
+
 ```swift
 .package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.5.0")),
+```
+
+Then include `"SwiftSignalRClient"` in your target dependencies. For example:
+
+```swift
+.target(name: "MySwiftPackage", dependencies: ["SwiftSignalRClient"]),
 ```
 
 ## Usage
 
 Add `import SwiftSignalRClient` to swift files you would like to use the client in.
 
-## Examples
+A typical implementation looks like the following:
 
-The repo contains samples for:
+```swift
+import Foundation
+import SwiftSignalRClient
 
-  - [Hubs](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/HubSample)
-  - [HttpConnection](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/ConnectionSample)
-
-The samples require a running server. To start the server go to the [`TestServer`](https://github.com/moozzyk/SignalR-Client-Swift/tree/master/Example/TestServer) folder in terminal and run: 
-
-```C#
-dotnet run
+public class SignalRService {
+    private var connection: HubConnection
+    
+    public init(url: URL) {
+        connection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .error).build()
+        connection.on(method: "MessageReceived", callback: { (args, typeConverter) in
+            do {
+                let user = try typeConverter.convertFromWireType(obj: args[0], targetType: String.self)
+                let message = try typeConverter.convertFromWireType(obj: args[1], targetType: String.self)
+                self.handleMessage(message, from: user)
+            } catch {
+                print(error)
+            }
+        })
+        
+        connection.start()
+    }
+    
+    private func handleMessage(_ message: String, from user: String) {
+        // Do something with the message.
+    }
+}
 ```
 
-(Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later)
+## Examples
+
+There are several sample projects in the `Examples` folder. They include:
+
+  - [SignalRClient.xcworkspace](Examples/)
+    
+    An Xcode workspace that has compiled libraries for macOS (OSX) and iOS, along with the Application targets 'ConnectionSample', 'HubSample', and 'HubSamplePhone'.
+    
+  - [TestServer](Examples/TestServer)
+    
+    A .Net solution that creates a SignalR hub that the application targets can be run against.
+    
+    The `TestServer` Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later.
+    
+    To run, navigate to the `TestServer` folder and execute the following in the terminal:
+    
+    ```C#
+    dotnet run
+    ```
