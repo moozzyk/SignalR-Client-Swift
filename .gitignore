@@ -15,7 +15,7 @@ launchSettings.json
 .vscode/
 signalr-client/
 node_modules/
-TestServer/wwwroot/js/
+*/TestServer/wwwroot/js/
 Pods/
 Package.resolved
 .build/
