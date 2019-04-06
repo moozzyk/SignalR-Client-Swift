@@ -10,7 +10,7 @@ Add the following lines to your `Podfile`:
 
 ```ruby
 use_frameworks!
-pod 'SwiftSignalRClient', '~> 0.5'
+pod 'SwiftSignalRClient'
 ```
 
 Then run:
@@ -26,21 +26,21 @@ Add the following to your `Package` dependencies:
 .package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.5.0")),
 ```
 
-Then include `"SwiftSignalRClient"` in your target dependencies. For example:
+Then include `"SignalRClient"` in your target dependencies. For example:
 
 ```swift
-.target(name: "MySwiftPackage", dependencies: ["SwiftSignalRClient"]),
+.target(name: "MySwiftPackage", dependencies: ["SignalRClient"]),
 ```
 
 ## Usage
 
-Add `import SwiftSignalRClient` to swift files you would like to use the client in.
+Add `import SignalRClient` to swift files you would like to use the client in.
 
 A typical implementation looks like the following:
 
 ```swift
 import Foundation
-import SwiftSignalRClient
+import SignalRClient
 
 public class SignalRService {
     private var connection: HubConnection
@@ -76,7 +76,7 @@ There are several sample projects in the `Examples` folder. They include:
     
   - [TestServer](Examples/TestServer)
     
-    A .Net solution that creates a SignalR hub that the application targets can be run against.
+    A .Net solution that the unit tests can be run against.
     
     The `TestServer` Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later.
     
