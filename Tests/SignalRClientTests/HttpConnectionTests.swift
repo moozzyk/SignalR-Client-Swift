@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SwiftSignalRClient
+@testable import SignalRClient
 
 class TestConnectionDelegate: ConnectionDelegate {
     var connectionDidOpenHandler: ((_ connection: Connection) -> Void)?

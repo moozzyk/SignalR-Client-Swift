@@ -7,7 +7,8 @@
 //
 
 import Foundation
-@testable import SwiftSignalRClient
+
+@testable import SignalRClient
 
 public class HubProtocolFake: HubProtocol {
     public let name = "fakeProtocol"

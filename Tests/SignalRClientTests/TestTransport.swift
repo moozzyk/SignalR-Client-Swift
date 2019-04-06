@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable import SwiftSignalRClient
+@testable import SignalRClient
 
 class TestTransport: Transport {
  

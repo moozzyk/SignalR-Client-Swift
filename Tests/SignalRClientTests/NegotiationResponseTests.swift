@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SwiftSignalRClient
+@testable import SignalRClient
 
 class NegotiationResponseTests: XCTestCase {
 

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5A9803511E5FE60E00BFFB0A"
-               BuildableName = "SignalRClient.framework"
+               BuildableName = "SwiftSignalRClient.framework"
                BlueprintName = "macOS SignalRClient"
                ReferencedContainer = "container:SignalRClient.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5A98035A1E5FE60E00BFFB0A"
-               BuildableName = "SignalRClientTests.xctest"
+               BuildableName = "SwiftSignalRClientTests.xctest"
                BlueprintName = "SignalRClientTests"
                ReferencedContainer = "container:SignalRClient.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5A9803511E5FE60E00BFFB0A"
-            BuildableName = "SignalRClient.framework"
+            BuildableName = "SwiftSignalRClient.framework"
             BlueprintName = "macOS SignalRClient"
             ReferencedContainer = "container:SignalRClient.xcodeproj">
          </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5A9803511E5FE60E00BFFB0A"
-            BuildableName = "SignalRClient.framework"
+            BuildableName = "SwiftSignalRClient.framework"
             BlueprintName = "macOS SignalRClient"
             ReferencedContainer = "container:SignalRClient.xcodeproj">
          </BuildableReference>
@@ -83,7 +83,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5A9803511E5FE60E00BFFB0A"
-            BuildableName = "SignalRClient.framework"
+            BuildableName = "SwiftSignalRClient.framework"
             BlueprintName = "macOS SignalRClient"
             ReferencedContainer = "container:SignalRClient.xcodeproj">
          </BuildableReference>
