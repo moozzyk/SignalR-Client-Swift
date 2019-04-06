@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import SwiftSignalRClient
+import SignalRClient
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         echoConnection = HttpConnection(url: url)
         echoConnectionDelegate = EchoConnectionDelegate(app: self)
         echoConnection!.delegate = echoConnectionDelegate
-        echoConnection!.start(transport: nil)
+        echoConnection!.start()
     }
 
     @IBAction func btnSend(sender: AnyObject) {

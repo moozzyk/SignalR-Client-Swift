@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SwiftSignalRClient
+import SignalRClient
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Update the Url accordingly
@@ -30,7 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        let alert = UIAlertController(title: "Enter your Name", message:"", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Enter your Name", message:"", preferredStyle: UIAlertController.Style.alert)
         alert.addTextField() { textField in textField.placeholder = "Name"}
         let OKAction = UIAlertAction(title: "OK", style: .default) { action in
             self.name = alert.textFields?.first?.text ?? "John Doe"
