@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 @testable import SignalRClient
 
 public class HubProtocolFake: HubProtocol {
