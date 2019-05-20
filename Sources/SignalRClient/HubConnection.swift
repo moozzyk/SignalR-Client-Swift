@@ -20,6 +20,13 @@ public class HubConnection: ConnectionDelegate {
     private var connection: Connection
     private var hubProtocol: HubProtocol
     public weak var delegate: HubConnectionDelegate?
+    
+    /**
+     Gets the connections connectionId. This value will be cleared when the connection is stopped and will have a new value every time the connection is successfully started.
+     */
+    public var connectionId: String? {
+        return connection.connectionId
+    }
 
     public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
         self.connection = connection

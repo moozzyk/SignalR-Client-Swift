@@ -24,6 +24,7 @@ public class HttpConnection: Connection {
     private var stopError: Error?
 
     public weak var delegate: ConnectionDelegate!
+    public private(set) var connectionId: String?
 
     private enum State: String {
         case initial = "initial"
@@ -135,6 +136,7 @@ public class HttpConnection: Connection {
             return
         }
 
+        self.connectionId = negotiationResponse.connectionId
         let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
         self.transport!.delegate = self.transportDelegate
         self.transport!.start(url: startUrl, options: self.options)
@@ -152,7 +154,9 @@ public class HttpConnection: Connection {
         if changeState {
             _ = self.changeState(from: nil, to: .stopped)
         }
-
+        
+        self.connectionId = nil
+        
         if leaveStartDispatchGroup {
             logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
             startDispatchGroup.leave()
@@ -188,6 +192,8 @@ public class HttpConnection: Connection {
             return
         }
 
+        self.connectionId = nil
+        
         self.startDispatchGroup.wait()
         
         // The transport can be nil if connection was stopped immediately after starting
@@ -234,6 +240,8 @@ public class HttpConnection: Connection {
         let previousState = changeState(from: nil, to: .stopped)
         logger.log(logLevel: .debug, message: "Previous state \(previousState!)")
 
+        self.connectionId = nil
+        
         if previousState == .connecting {
             logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
             // unblock the dispatch group if transport closed when starting (likely due to an error)

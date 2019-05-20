@@ -644,4 +644,32 @@ class HttpConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatConnectionIdIsAvailableAfterStart() {
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", connection.connectionId)
+            httpConnection.stop();
+        }
+        connectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(httpConnection.connectionId)
+        }
+        
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertNil(httpConnection.connectionId)
+        }
+        
+        httpConnection.delegate = connectionDelegate
+        
+        httpConnection.start()
+        
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
