@@ -14,17 +14,10 @@ class HandshakeProtocol {
     }
 
     static func parseHandshakeResponse(data: Data) -> (Error?, Data) {
-        #if swift(>=5.0)
         if let idx = data.firstIndex(where: {$0 == 0x1e}) {
-            let error = parseHandshakeResponse(handshakeResponse: data[0..<idx])
-            return (error, data.dropFirst(idx + 1))
-        }
-        #else
-        if let idx = data.first(where: {$0 == 0x1e}) {
             let error = parseHandshakeResponse(handshakeResponse: data[0..<idx])
             return (error, data.dropFirst(Int(idx + 1)))
         }
-        #endif
 
         return (SignalRError.handshakeError(message: "Received partial handshake response."), data)
     }

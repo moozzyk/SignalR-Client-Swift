@@ -73,11 +73,7 @@ public class WebsocketsTransport: Transport {
             if let text = message as? String {
                 welf.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
             } else if let bytes = message as? [UInt8] {
-                #if swift(>=5.0)
                 welf.delegate?.transportDidReceiveData(Data(bytes))
-                #else
-                welf.delegate?.transportDidReceiveData(Data(bytes: bytes))
-                #endif
             } else {
                 welf.delegate?.transportDidReceiveData(message as! Data)
             }
