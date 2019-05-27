@@ -150,6 +150,23 @@ class HubConnectionTests: XCTestCase {
     }
 
     func testTestThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+        let didOpenExpectation = expectation(description: "connection opened")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            XCTAssertNotNil(hubConnection.connectionId)
+            didOpenExpectation.fulfill()
+            hubConnection.stop()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testTestThatCanGetConnectionId() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
@@ -961,10 +978,13 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 }
 
 class TestConnection: Connection {
+    var connectionId: String?
+
     var delegate: ConnectionDelegate!
     var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
 
     func start() {
+        connectionId = "00000000-0000-0000-C000-000000000046"
         delegate?.connectionDidOpen(connection: self)
         delegate?.connectionDidReceiveData(connection: self, data: "{}\u{1e}".data(using: .utf8)!)
     }
@@ -974,6 +994,7 @@ class TestConnection: Connection {
     }
 
     func stop(stopError: Error? = nil) -> Void {
+        connectionId = nil
         delegate?.connectionDidClose(error: stopError)
     }
 }

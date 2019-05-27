@@ -607,7 +607,6 @@ class HttpConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
             XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."))", "\(error)")
-            // didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
 
@@ -645,9 +644,13 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionIdIsAvailableAfterStart() {
+    func testThatConnectionIdIsAvailableAfterStartAndClearedAfterStop() {
+        let connectionIdSetExpectation = expectation(description: "connectionId set")
+        let connectionIdClearedExpectation = expectation(description: "connectionId cleared")
+
         let httpConnectionOptions = HttpConnectionOptions()
-        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, logger: PrintLogger())
+        let transport = TestTransport()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, transportFactory: TestTransportFactory(transport), logger: PrintLogger())
         let httpClient = TestHttpClient(postHandler: { _ in
             return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
         })
@@ -656,20 +659,52 @@ class HttpConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
             XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", connection.connectionId)
+            connectionIdSetExpectation.fulfill()
             httpConnection.stop();
         }
         connectionDelegate.connectionDidCloseHandler = { error in
             XCTAssertNil(httpConnection.connectionId)
-        }
-        
-        connectionDelegate.connectionDidFailToOpenHandler = { error in
-            XCTAssertNil(httpConnection.connectionId)
+            connectionIdClearedExpectation.fulfill()
         }
         
         httpConnection.delegate = connectionDelegate
-        
         httpConnection.start()
-        
+
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatConnectionIdNotSetIfTransportFailsToOpen() {
+        class UnopenableTransport: TestTransport {
+            override func start(url: URL, options: HttpConnectionOptions) {
+                delegate?.transportDidClose(SignalRError.invalidOperation(message: "testError"))
+            }
+        }
+
+        let connectionIdNotSetExpectation = expectation(description: "connectionId set")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let transport = UnopenableTransport()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, transportFactory: TestTransportFactory(transport), logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            XCTAssert(false)
+        }
+
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            XCTAssertNil(httpConnection.connectionId)
+            connectionIdNotSetExpectation.fulfill()
+        }
+
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
 }
