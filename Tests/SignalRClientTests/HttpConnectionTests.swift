@@ -615,4 +615,33 @@ class HttpConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testConnectionPassesConnectionIdWhenStartingTransport() {
+        class ConnectionIdTransport: TestTransport {
+            override func start(url: URL, options: HttpConnectionOptions) {
+                XCTAssertTrue(url.absoluteString.contains("?id=6baUtSEmluCoKvmUIqLUJw"))
+                super.start(url: url, options: options)
+            }
+        }
+
+        let connectionOpenedExpectation = expectation(description: "connection opened")
+        let httpConnectionOptions = HttpConnectionOptions()
+        let transport = ConnectionIdTransport()
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, transportFactory: TestTransportFactory(transport), logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            connectionOpenedExpectation.fulfill()
+            connection.stop(stopError: nil)
+        }
+
+        httpConnection.delegate = connectionDelegate
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }

@@ -141,9 +141,10 @@ public class HttpConnection: Connection {
     }
 
     private func createStartUrl(connectionId: String) -> URL {
-        let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
         var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "id", value: connectionId))
+        urlComponents.queryItems = queryItems
         return urlComponents.url!
     }
 
