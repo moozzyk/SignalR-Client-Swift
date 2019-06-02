@@ -42,6 +42,7 @@ open class JSONTypeConverter: TypeConverter {
 
 public class JSONHubProtocol: HubProtocol {
     private static let recordSeparator = UInt8(0x1e)
+    private let encoder = JSONEncoder()
     private let logger: Logger
     public let typeConverter: TypeConverter
     public let name = "json"
@@ -135,50 +136,21 @@ public class JSONHubProtocol: HubProtocol {
     }
 
     public func writeMessage(message: HubMessage) throws -> Data {
-        let invocationJSONObject = try createMessageJSONObject(message: message)
-        var payload = try JSONSerialization.data(withJSONObject: invocationJSONObject)
+        var payload = try createMessageData(message: message)
         payload.append(JSONHubProtocol.recordSeparator)
         return payload
     }
 
-    private func createMessageJSONObject(message: HubMessage) throws -> [String: Any] {
+    private func createMessageData(message: HubMessage) throws -> Data {
         switch message.messageType {
         case .Invocation:
-            return try createInvocationMessageJSONObject(invocationMessage: message as! InvocationMessage)
+            return try encoder.encode(message as! ServerInvocationMessage)
         case .StreamInvocation:
-            return try createStreamInvocationMessageJSONObject(streamInvocationMessage: message as!StreamInvocationMessage)
+            return try encoder.encode(message as! StreamInvocationMessage)
         case .CancelInvocation:
-            return createCancelInvocationMessageJSONObject(cancelInvocationMessage: message as! CancelInvocationMessage)
+            return try encoder.encode(message as! CancelInvocationMessage)
         default:
             throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
         }
-    }
-
-    private func createInvocationMessageJSONObject(invocationMessage: InvocationMessage) throws -> [String:Any] {
-        var invocationJSONObject: [String: Any] = [
-            "type": invocationMessage.messageType.rawValue,
-            "target": invocationMessage.target,
-            "arguments": try invocationMessage.arguments.map{ arg -> Any? in
-                return try typeConverter.convertToWireType(obj: arg)
-            }]
-        if (invocationMessage.invocationId != nil) {
-            invocationJSONObject["invocationId"] = invocationMessage.invocationId
-        }
-        return invocationJSONObject
-    }
-
-    private func createStreamInvocationMessageJSONObject(streamInvocationMessage: StreamInvocationMessage) throws -> [String:Any] {
-        return [
-            "type": streamInvocationMessage.messageType.rawValue,
-            "invocationId": streamInvocationMessage.invocationId,
-            "target": streamInvocationMessage.target,
-            "arguments": try streamInvocationMessage.arguments.map{try typeConverter.convertToWireType(obj: $0)}]
-    }
-
-    private func createCancelInvocationMessageJSONObject(cancelInvocationMessage: CancelInvocationMessage) -> [String: Any] {
-        return [
-            "type": cancelInvocationMessage.messageType.rawValue,
-            "invocationId": cancelInvocationMessage.invocationId
-        ]
     }
 }
