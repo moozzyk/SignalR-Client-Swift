@@ -182,7 +182,7 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteInvocationMessage() {
-        let invocationMessage = InvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
+        let invocationMessage = ServerInvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
@@ -194,7 +194,7 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteInvocationMessageWithoutInvocationId() {
-        let invocationMessage = InvocationMessage(target: "myMethod", arguments: [])
+        let invocationMessage = ServerInvocationMessage(target: "myMethod", arguments: [])
         let message = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
 
         let deserializedMessage = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: message)[0] as! InvocationMessage

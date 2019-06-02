@@ -22,7 +22,7 @@ public protocol HubProtocol {
     func writeMessage(message: HubMessage) throws -> Data
 }
 
-public enum MessageType: Int {
+public enum MessageType: Int, Codable {
     case Invocation = 1
     case StreamItem = 2
     case Completion = 3
@@ -50,6 +50,42 @@ public class InvocationMessage: HubMessage {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
+    }
+}
+
+public class ServerInvocationMessage: HubMessage, Encodable {
+    public let messageType = MessageType.Invocation
+    public let invocationId: String?
+    public let target: String
+    public let arguments: [Encodable]
+
+    convenience init(target: String, arguments: [Encodable]) {
+        self.init(invocationId: nil, target: target, arguments: arguments)
+    }
+
+    init(invocationId: String?, target: String, arguments: [Encodable]) {
+        self.invocationId = invocationId
+        self.target = target
+        self.arguments = arguments
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(messageType, forKey: .messageType)
+        try container.encode(target, forKey: .target)
+        try container.encodeIfPresent(invocationId, forKey: .invocationId)
+
+        var argumentsContainer = container.nestedUnkeyedContainer(forKey: .arguments)
+        try arguments.forEach {
+            try argumentsContainer.encode(AnyEncodable(value:$0))
+        }
+    }
+
+    enum CodingKeys : String, CodingKey {
+        case messageType = "type"
+        case target
+        case invocationId
+        case arguments
     }
 }
 
@@ -93,25 +129,48 @@ public class CompletionMessage: HubMessage {
     }
 }
 
-public class StreamInvocationMessage: HubMessage {
+public class StreamInvocationMessage: HubMessage, Encodable {
     public let messageType = MessageType.StreamInvocation
     public let invocationId: String
     public let target: String
-    public let arguments: [Any?]
+    public let arguments: [Encodable]
 
-    init(invocationId: String, target: String, arguments: [Any?]) {
+    init(invocationId: String, target: String, arguments: [Encodable]) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
     }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(messageType, forKey: .messageType)
+        try container.encode(target, forKey: .target)
+        try container.encode(invocationId, forKey: .invocationId)
+        var argumentsContainer = container.nestedUnkeyedContainer(forKey: .arguments)
+        try arguments.forEach {
+            try argumentsContainer.encode(AnyEncodable(value:$0))
+        }
+    }
+
+    enum CodingKeys : String, CodingKey {
+        case messageType = "type"
+        case target
+        case invocationId
+        case arguments
+    }
 }
 
-public class CancelInvocationMessage: HubMessage {
+public class CancelInvocationMessage: HubMessage, Encodable {
     public let messageType = MessageType.CancelInvocation
     public let invocationId: String
 
     init(invocationId: String) {
         self.invocationId = invocationId
+    }
+
+    enum CodingKeys : String, CodingKey {
+        case messageType = "type"
+        case invocationId
     }
 }
 

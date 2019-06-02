@@ -9,7 +9,7 @@
 import Foundation
 
 internal protocol ServerInvocationHandler {
-    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Encodable]) -> HubMessage
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error?
     func processCompletion(completionMessage: CompletionMessage)
     func raiseError(error: Error)
@@ -26,9 +26,9 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
         self.invocationDidComplete = invocationDidComplete
     }
 
-    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage {
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Encodable]) -> HubMessage {
         logger.log(logLevel: .debug, message: "Creating invocation message for method: '\(method)', invocationId: \(invocationId)")
-        return InvocationMessage(invocationId: invocationId, target: method, arguments: arguments)
+        return ServerInvocationMessage(invocationId: invocationId, target: method, arguments: arguments)
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
@@ -80,7 +80,7 @@ internal class StreamInvocationHandler<T>: ServerInvocationHandler {
         self.invocationDidComplete = invocationDidComplete
     }
 
-    func createInvocationMessage(invocationId: String, method: String, arguments: [Any?]) -> HubMessage {
+    func createInvocationMessage(invocationId: String, method: String, arguments: [Encodable]) -> HubMessage {
         logger.log(logLevel: .debug, message: "Creating invocation message for streaming method: '\(method)', invocationId: \(invocationId)")
         return StreamInvocationMessage(invocationId: invocationId, target: method, arguments: arguments)
     }

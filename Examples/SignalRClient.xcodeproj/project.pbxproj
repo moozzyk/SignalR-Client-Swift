@@ -13,6 +13,8 @@
 		5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A4292F7208D2A4A008B30EF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4292F6208D2A4A008B30EF /* libz.tbd */; };
 		5A4292F9208D2A59008B30EF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4292F8208D2A59008B30EF /* libz.tbd */; };
+		5A4D833422A47E47001F195D /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D833322A47E47001F195D /* AnyEncodable.swift */; };
+		5A4D833522A47E47001F195D /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4D833322A47E47001F195D /* AnyEncodable.swift */; };
 		5A73DFE71E63E2D4007F3913 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A9803631E5FE60E00BFFB0A /* SignalRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A9803551E5FE60E00BFFB0A /* SignalRClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A9A815E1E63CAE100FE62A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9A815D1E63CAE100FE62A6 /* AppDelegate.swift */; };
@@ -194,6 +196,7 @@
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A4292F6208D2A4A008B30EF /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5A4292F8208D2A59008B30EF /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		5A4D833322A47E47001F195D /* AnyEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
 		5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A9803551E5FE60E00BFFB0A /* SignalRClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalRClient.h; sourceTree = "<group>"; };
 		5A9803561E5FE60E00BFFB0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -436,6 +439,7 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5A4D833322A47E47001F195D /* AnyEncodable.swift */,
 				7391A90722510170007BEF23 /* Transport.swift */,
 				7391A90822510170007BEF23 /* WebsocketsTransport.swift */,
 				7391A90922510170007BEF23 /* HttpConnectionOptions.swift */,
@@ -901,6 +905,7 @@
 				7391A95322510170007BEF23 /* ConnectionDelegate.swift in Sources */,
 				7391A92F22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94322510170007BEF23 /* HttpClientProtocol.swift in Sources */,
+				5A4D833522A47E47001F195D /* AnyEncodable.swift in Sources */,
 				7391A93122510170007BEF23 /* DefaultHttpClient.swift in Sources */,
 				7391A94B22510170007BEF23 /* Util.swift in Sources */,
 				7391A94D22510170007BEF23 /* WebSocket.swift in Sources */,
@@ -935,6 +940,7 @@
 				7391A95222510170007BEF23 /* ConnectionDelegate.swift in Sources */,
 				7391A92E22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94222510170007BEF23 /* HttpClientProtocol.swift in Sources */,
+				5A4D833422A47E47001F195D /* AnyEncodable.swift in Sources */,
 				7391A93022510170007BEF23 /* DefaultHttpClient.swift in Sources */,
 				7391A94A22510170007BEF23 /* Util.swift in Sources */,
 				7391A94C22510170007BEF23 /* WebSocket.swift in Sources */,

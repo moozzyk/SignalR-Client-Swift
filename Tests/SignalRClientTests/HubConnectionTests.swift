@@ -711,25 +711,17 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    enum Sex {
+    enum Sex: Int, Encodable {
         case Male
         case Female
     }
 
-    class User {
+    struct User: Encodable {
         public let firstName: String
         let lastName: String
         let age: Int?
         let height: Double?
         let sex: Sex?
-
-        init(firstName: String, lastName: String, age: Int?, height: Double?, sex: Sex?) {
-            self.firstName = firstName
-            self.lastName = lastName
-            self.age = age
-            self.height = height
-            self.sex = sex
-        }
     }
 
     class PersonTypeConverter: JSONTypeConverter {

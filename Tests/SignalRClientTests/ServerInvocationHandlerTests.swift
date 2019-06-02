@@ -13,7 +13,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
         let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in })
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? InvocationMessage
+        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? ServerInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.Invocation, invocationMessage!.messageType)
         XCTAssertEqual("42", invocationMessage!.invocationId)
