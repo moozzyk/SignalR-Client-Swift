@@ -711,12 +711,12 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    enum Sex: Int, Encodable {
+    enum Sex: Int, Codable {
         case Male
         case Female
     }
 
-    struct User: Encodable {
+    struct User: Codable {
         public let firstName: String
         let lastName: String
         let age: Int?

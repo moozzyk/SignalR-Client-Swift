@@ -21,7 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		5AA49E6422A47C750016D7E2 /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA49E6322A47C750016D7E2 /* AnyEncodable.swift */; };
+		5AA49E6422A47C750016D7E2 /* CodableHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA49E6322A47C750016D7E2 /* CodableHelpers.swift */; };
 		OBJ_107 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_38 /* Constants.swift */; };
 		OBJ_108 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* HandshakeProtocolTests.swift */; };
 		OBJ_109 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HttpConnectionTests.swift */; };
@@ -84,7 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5AA49E6322A47C750016D7E2 /* AnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
+		5AA49E6322A47C750016D7E2 /* CodableHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
 		OBJ_10 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		OBJ_11 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
 		OBJ_12 /* DefaultTransportFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTransportFactory.swift; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 			path = Tests/SignalRClientTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -194,7 +194,6 @@
 				OBJ_56 /* SwiftSignalRClient.podspec */,
 				OBJ_57 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_51 /* Products */ = {
@@ -244,7 +243,7 @@
 				OBJ_33 /* Util.swift */,
 				OBJ_34 /* WebSocket.swift */,
 				OBJ_35 /* WebsocketsTransport.swift */,
-				5AA49E6322A47C750016D7E2 /* AnyEncodable.swift */,
+				5AA49E6322A47C750016D7E2 /* CodableHelpers.swift */,
 			);
 			name = SignalRClient;
 			path = Sources/SignalRClient;
@@ -317,7 +316,7 @@
 				English,
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_51 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -356,7 +355,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_63 /* Connection.swift in Sources */,
-				5AA49E6422A47C750016D7E2 /* AnyEncodable.swift in Sources */,
+				5AA49E6422A47C750016D7E2 /* CodableHelpers.swift in Sources */,
 				OBJ_64 /* ConnectionDelegate.swift in Sources */,
 				OBJ_65 /* DefaultHttpClient.swift in Sources */,
 				OBJ_66 /* DefaultTransportFactory.swift in Sources */,
