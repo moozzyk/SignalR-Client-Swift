@@ -51,7 +51,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! InvocationMessage
-        XCTAssertEqual(MessageType.Invocation, msg.messageType)
+        XCTAssertEqual(MessageType.Invocation, msg.type)
         XCTAssertNil(msg.invocationId)
         XCTAssertEqual("method", msg.target)
     }
@@ -70,7 +70,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! StreamItemMessage
-        XCTAssertEqual(MessageType.StreamItem, msg.messageType)
+        XCTAssertEqual(MessageType.StreamItem, msg.type)
         XCTAssertEqual("12", msg.invocationId)
     }
 
@@ -88,7 +88,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! CompletionMessage
-        XCTAssertEqual(MessageType.Completion, msg.messageType)
+        XCTAssertEqual(MessageType.Completion, msg.type)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertEqual("Error occurred", msg.error)
         XCTAssertFalse(msg.hasResult)
@@ -101,7 +101,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! CompletionMessage
-        XCTAssertEqual(MessageType.Completion, msg.messageType)
+        XCTAssertEqual(MessageType.Completion, msg.type)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertFalse(msg.hasResult)
         XCTAssertNil(msg.error)
@@ -114,7 +114,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! CompletionMessage
-        XCTAssertEqual(MessageType.Completion, msg.messageType)
+        XCTAssertEqual(MessageType.Completion, msg.type)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertTrue(msg.hasResult)
         XCTAssertEqual(42, msg.result as! Int)
@@ -127,7 +127,7 @@ class JSONHubProtocolTests: XCTestCase {
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
         let msg = hubMessages[0] as! CompletionMessage
-        XCTAssertEqual(MessageType.Completion, msg.messageType)
+        XCTAssertEqual(MessageType.Completion, msg.type)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertTrue(msg.hasResult)
         XCTAssertNil(nil)
@@ -162,14 +162,14 @@ class JSONHubProtocolTests: XCTestCase {
 
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
-        XCTAssertEqual(MessageType.Ping, hubMessages[0].messageType)
+        XCTAssertEqual(MessageType.Ping, hubMessages[0].type)
     }
 
     func testThatCanParseCloseMessageWithoutError() {
         let payload = "{ \"type\": 7 }\u{001e}"
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
-        XCTAssertEqual(MessageType.Close, hubMessages[0].messageType)
+        XCTAssertEqual(MessageType.Close, hubMessages[0].type)
         XCTAssertNil((hubMessages[0] as! CloseMessage).error)
     }
 
@@ -177,7 +177,7 @@ class JSONHubProtocolTests: XCTestCase {
         let payload = "{ \"type\": 7, \"error\": \"Error occurred\" }\u{001e}"
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
-        XCTAssertEqual(MessageType.Close, hubMessages[0].messageType)
+        XCTAssertEqual(MessageType.Close, hubMessages[0].type)
         XCTAssertEqual("Error occurred", (hubMessages[0] as! CloseMessage).error)
     }
 
@@ -199,7 +199,7 @@ class JSONHubProtocolTests: XCTestCase {
 
         let deserializedMessage = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: message)[0] as! InvocationMessage
 
-        XCTAssertEqual(invocationMessage.messageType, deserializedMessage.messageType)
+        XCTAssertEqual(invocationMessage.type, deserializedMessage.type)
         XCTAssertNil(deserializedMessage.invocationId)
         XCTAssertEqual(invocationMessage.target, deserializedMessage.target)
     }

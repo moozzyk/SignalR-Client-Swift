@@ -212,7 +212,7 @@ public class HubConnection: ConnectionDelegate {
         do {
             let messages = try hubProtocol.parseMessages(input: data)
             for incomingMessage in messages {
-                switch(incomingMessage.messageType) {
+                switch(incomingMessage.type) {
                 case MessageType.Completion:
                     try handleCompletion(message: incomingMessage as! CompletionMessage)
                 case MessageType.StreamItem:
@@ -225,7 +225,7 @@ public class HubConnection: ConnectionDelegate {
                     // no action required for ping messages
                     break;
                 default:
-                    logger.log(logLevel: .error, message: "Usupported message type: \(incomingMessage.messageType.rawValue)")
+                    logger.log(logLevel: .error, message: "Usupported message type: \(incomingMessage.type.rawValue)")
                 }
             }
         } catch {
