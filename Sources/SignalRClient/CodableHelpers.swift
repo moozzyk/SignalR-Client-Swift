@@ -23,3 +23,6 @@ extension Encodable {
         try container.encode(self)
     }
 }
+
+struct DecodableVoid: Decodable {
+}

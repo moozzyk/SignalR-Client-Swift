@@ -85,12 +85,12 @@ public class HubConnection: ConnectionDelegate {
     }
 
     public func invoke(method: String, arguments: [Encodable], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
-        invoke(method: method, arguments: arguments, returnType: Any.self, invocationDidComplete: {_, error in
+        invoke(method: method, arguments: arguments, returnType: DecodableVoid.self, invocationDidComplete: {_, error in
             invocationDidComplete(error)
         })
     }
 
-    public func invoke<T>(method: String, arguments: [Encodable], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
+    public func invoke<T: Decodable>(method: String, arguments: [Encodable], returnType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Invoking server side hub method: '\(method)'")
 
         if !ensureConnectionStarted() {invocationDidComplete(nil, $0)} {
@@ -102,7 +102,7 @@ public class HubConnection: ConnectionDelegate {
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
 
-    public func stream<T>(method: String, arguments: [Encodable], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+    public func stream<T: Decodable>(method: String, arguments: [Encodable], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
         logger.log(logLevel: .info, message: "Invoking server side streaming hub method: '\(method)'")
 
         if !ensureConnectionStarted() {invocationDidComplete($0)} {
