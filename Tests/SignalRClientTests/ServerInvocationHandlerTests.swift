@@ -15,7 +15,7 @@ class InvocationHandlerTests: XCTestCase {
         let invocationHandler = InvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), invocationDidComplete: { result, error in })
         let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? ServerInvocationMessage
         XCTAssertNotNil(invocationMessage)
-        XCTAssertEqual(MessageType.Invocation, invocationMessage!.messageType)
+        XCTAssertEqual(MessageType.Invocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
         XCTAssertEqual("testMethod", invocationMessage!.target)
         XCTAssertEqual(2, invocationMessage!.arguments.count)
@@ -105,7 +105,7 @@ class StreamInvocationHandlerTests: XCTestCase {
         let invocationHandler = StreamInvocationHandler<Int>(typeConverter: JSONTypeConverter(), logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in })
         let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? StreamInvocationMessage
         XCTAssertNotNil(invocationMessage)
-        XCTAssertEqual(MessageType.StreamInvocation, invocationMessage!.messageType)
+        XCTAssertEqual(MessageType.StreamInvocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
         XCTAssertEqual("testMethod", invocationMessage!.target)
         XCTAssertEqual(2, invocationMessage!.arguments.count)

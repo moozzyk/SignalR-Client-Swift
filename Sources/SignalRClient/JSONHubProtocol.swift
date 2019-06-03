@@ -142,7 +142,7 @@ public class JSONHubProtocol: HubProtocol {
     }
 
     private func createMessageData(message: HubMessage) throws -> Data {
-        switch message.messageType {
+        switch message.type {
         case .Invocation:
             return try encoder.encode(message as! ServerInvocationMessage)
         case .StreamInvocation:

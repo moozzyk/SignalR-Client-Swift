@@ -33,11 +33,11 @@ public enum MessageType: Int, Codable {
 }
 
 public protocol HubMessage {
-    var messageType: MessageType { get }
+    var type: MessageType { get }
 }
 
 public class InvocationMessage: HubMessage {
-    public let messageType = MessageType.Invocation
+    public let type = MessageType.Invocation
     public let invocationId: String?
     public let target: String
     public let arguments: [Any?]
@@ -54,7 +54,7 @@ public class InvocationMessage: HubMessage {
 }
 
 public class ServerInvocationMessage: HubMessage, Encodable {
-    public let messageType = MessageType.Invocation
+    public let type = MessageType.Invocation
     public let invocationId: String?
     public let target: String
     public let arguments: [Encodable]
@@ -71,7 +71,7 @@ public class ServerInvocationMessage: HubMessage, Encodable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(messageType, forKey: .messageType)
+        try container.encode(type, forKey: .type)
         try container.encode(target, forKey: .target)
         try container.encodeIfPresent(invocationId, forKey: .invocationId)
 
@@ -82,7 +82,7 @@ public class ServerInvocationMessage: HubMessage, Encodable {
     }
 
     enum CodingKeys : String, CodingKey {
-        case messageType = "type"
+        case type
         case target
         case invocationId
         case arguments
@@ -90,7 +90,7 @@ public class ServerInvocationMessage: HubMessage, Encodable {
 }
 
 public class StreamItemMessage: HubMessage {
-    public let messageType = MessageType.StreamItem
+    public let type = MessageType.StreamItem
     public let invocationId: String
     public let item: Any?
 
@@ -101,7 +101,7 @@ public class StreamItemMessage: HubMessage {
 }
 
 public class CompletionMessage: HubMessage {
-    public let messageType = MessageType.Completion
+    public let type = MessageType.Completion
     public let invocationId: String
     public let error: String?
     public let hasResult: Bool
@@ -130,7 +130,7 @@ public class CompletionMessage: HubMessage {
 }
 
 public class StreamInvocationMessage: HubMessage, Encodable {
-    public let messageType = MessageType.StreamInvocation
+    public let type = MessageType.StreamInvocation
     public let invocationId: String
     public let target: String
     public let arguments: [Encodable]
@@ -143,7 +143,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(messageType, forKey: .messageType)
+        try container.encode(type, forKey: .type)
         try container.encode(target, forKey: .target)
         try container.encode(invocationId, forKey: .invocationId)
         var argumentsContainer = container.nestedUnkeyedContainer(forKey: .arguments)
@@ -153,7 +153,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
     }
 
     enum CodingKeys : String, CodingKey {
-        case messageType = "type"
+        case type
         case target
         case invocationId
         case arguments
@@ -161,28 +161,23 @@ public class StreamInvocationMessage: HubMessage, Encodable {
 }
 
 public class CancelInvocationMessage: HubMessage, Encodable {
-    public let messageType = MessageType.CancelInvocation
+    public let type = MessageType.CancelInvocation
     public let invocationId: String
 
     init(invocationId: String) {
         self.invocationId = invocationId
     }
-
-    enum CodingKeys : String, CodingKey {
-        case messageType = "type"
-        case invocationId
-    }
 }
 
 public class PingMessage : HubMessage {
-    public let messageType = MessageType.Ping
+    public let type = MessageType.Ping
     private init() { }
 
     static let instance = PingMessage()
 }
 
 public class CloseMessage: HubMessage {
-    public let messageType = MessageType.Close
+    public let type = MessageType.Close
     public let error: String?
 
     init(error: String?) {
