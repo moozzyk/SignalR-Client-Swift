@@ -29,19 +29,19 @@ class JSONHubProtocolTests: XCTestCase {
 
     func testThatParsingFailsIfMessageTypeIsMissing() {
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: "{}\u{1e}".data(using: .utf8)!)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.unknownMessageType))
+            error in XCTAssertTrue(JSONHubProtocolTests.isProtocolViolation(error))
         }
     }
 
     func testThatParsingFailsIfMessageTypeIsNotNumber() {
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: "{ \"type\": false }\u{1e}".data(using: .utf8)!)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.unknownMessageType))
+            error in XCTAssertTrue(JSONHubProtocolTests.isProtocolViolation(error))
         }
     }
 
     func testThatParsingFailsIfMessageTypeIsOutOfRange() {
-        XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: "{ \"messageType\": 42 }\u{1e}".data(using: .utf8)!)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.unknownMessageType))
+        XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: "{ \"type\": 42 }\u{1e}".data(using: .utf8)!)) {
+            error in XCTAssertTrue(JSONHubProtocolTests.isProtocolViolation(error))
         }
     }
 
@@ -50,9 +50,8 @@ class JSONHubProtocolTests: XCTestCase {
 
         let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
         XCTAssertEqual(1, hubMessages.count)
-        let msg = hubMessages[0] as! InvocationMessage
+        let msg = hubMessages[0] as! ClientInvocationMessage
         XCTAssertEqual(MessageType.Invocation, msg.type)
-        XCTAssertNil(msg.invocationId)
         XCTAssertEqual("method", msg.target)
     }
 
@@ -92,7 +91,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertEqual("Error occurred", msg.error)
         XCTAssertFalse(msg.hasResult)
-        XCTAssertNil(msg.result)
+        XCTAssertNil(try msg.getResult(String.self))
     }
 
     func testThatCanParseVoidCompletionMessage() {
@@ -105,7 +104,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertFalse(msg.hasResult)
         XCTAssertNil(msg.error)
-        XCTAssertNil(msg.result)
+        XCTAssertNil(try msg.getResult(String.self))
     }
 
     func testThatCanParseNonVoidCompletionMessage() {
@@ -117,7 +116,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(MessageType.Completion, msg.type)
         XCTAssertEqual("12", msg.invocationId)
         XCTAssertTrue(msg.hasResult)
-        XCTAssertEqual(42, msg.result as! Int)
+        XCTAssertEqual(42, try msg.getResult(Int.self))
         XCTAssertNil(msg.error)
     }
 
@@ -145,7 +144,7 @@ class JSONHubProtocolTests: XCTestCase {
     private func testThatParsingMessageFailsIfInvocationIdMissing(messageType: MessageType) {
         let payload =  "{ \"type\": \(messageType.rawValue) }\u{001e}"
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidMessage))
+            error in XCTAssertTrue(JSONHubProtocolTests.isProtocolViolation(error))
         }
     }
 
@@ -153,7 +152,7 @@ class JSONHubProtocolTests: XCTestCase {
         let payload = "{ \"type\": \(messageType.rawValue), \"invocationId\": false }\u{001e}"
 
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidMessage))
+            error in XCTAssertTrue(JSONHubProtocolTests.isProtocolViolation(error))
         }
     }
 
@@ -197,10 +196,9 @@ class JSONHubProtocolTests: XCTestCase {
         let invocationMessage = ServerInvocationMessage(target: "myMethod", arguments: [])
         let message = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
 
-        let deserializedMessage = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: message)[0] as! InvocationMessage
+        let deserializedMessage = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: message)[0] as! ClientInvocationMessage
 
         XCTAssertEqual(invocationMessage.type, deserializedMessage.type)
-        XCTAssertNil(deserializedMessage.invocationId)
         XCTAssertEqual(invocationMessage.target, deserializedMessage.target)
     }
 
@@ -228,7 +226,8 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatWritingStreamItemMessageIsNotSupported() {
-        let streamItemMessage = StreamItemMessage(invocationId: "12", item: nil)
+        let messagePayload = "{ \"type\": 2, \"invocationId\": \"12\" }".data(using: .utf8)!
+        let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
 
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).writeMessage(message: streamItemMessage)) {
             error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidOperation(message: "Unexpected MessageType.")))
@@ -236,10 +235,20 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatWritingCompletionMessageIsNotSupported() {
-        let completionMessage = CompletionMessage(invocationId: "12")
+        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\" }".data(using: .utf8)!
+        let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
 
         XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).writeMessage(message: completionMessage)) {
             error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidOperation(message: "Unexpected MessageType.")))
+        }
+    }
+
+    private static func isProtocolViolation(_ error: Error) -> Bool {
+        switch (error as! SignalRError) {
+        case .protocolViolation:
+            return true
+        default:
+            return false
         }
     }
 }

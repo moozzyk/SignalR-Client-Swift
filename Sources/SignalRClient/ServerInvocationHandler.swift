@@ -15,7 +15,7 @@ internal protocol ServerInvocationHandler {
     func raiseError(error: Error)
 }
 
-internal class InvocationHandler<T>: ServerInvocationHandler {
+internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let typeConverter: TypeConverter
     private let logger: Logger
     private let invocationDidComplete: (T?, Error?) -> Void
@@ -33,7 +33,7 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
         logger.log(logLevel: .error, message: "Stream item message received for non-streaming server side method")
-        return SignalRError.protocolViolation;
+        return SignalRError.protocolViolation(underlyingError: SignalRError.invalidOperation(message: "Stream item message received for non-streaming server side method"))
     }
 
     func processCompletion(completionMessage: CompletionMessage) {
@@ -54,7 +54,7 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
 
         do {
             logger.log(logLevel: .debug, message: "Server method with invocationId \(invocationId) completed successfully")
-            let result = try typeConverter.convertFromWireType(obj: completionMessage.result, targetType: T.self)
+            let result = try completionMessage.getResult(T.self)
             invocationDidComplete(result, nil)
         } catch {
             logger.log(logLevel: .error, message: "Error while getting result for server method with invocationId \(invocationId)")
@@ -67,7 +67,7 @@ internal class InvocationHandler<T>: ServerInvocationHandler {
     }
 }
 
-internal class StreamInvocationHandler<T>: ServerInvocationHandler {
+internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let typeConverter: TypeConverter
     private let logger: Logger
     private let streamItemReceived: (T?) -> Void
@@ -89,7 +89,7 @@ internal class StreamInvocationHandler<T>: ServerInvocationHandler {
         let invocationId = streamItemMessage.invocationId
         logger.log(logLevel: .debug, message: "Received stream item message for streaming method with invocationId: '\(invocationId)'")
         do {
-            let value = try typeConverter.convertFromWireType(obj: streamItemMessage.item, targetType: T.self)
+            let value = try streamItemMessage.getItem(T.self)
             streamItemReceived(value)
             return nil
         } catch {

@@ -310,7 +310,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -329,7 +331,7 @@ class HubConnectionTests: XCTestCase {
             _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 5], itemType: UUID.self, streamItemReceived: { item in XCTFail() } , invocationDidComplete: { error in
                 XCTAssertNotNil(error)
                 switch (error as! SignalRError) {
-                case .unsupportedType:
+                case .serializationError:
                     break
                 default:
                     XCTFail()
@@ -346,7 +348,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -562,17 +566,16 @@ class HubConnectionTests: XCTestCase {
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetNumber", callback: { args, _ in
-            XCTAssertNotNil(args)
-            XCTAssertEqual(1, args.count)
-            XCTAssertEqual(42, args[0] as! Int)
+        hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
+            XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
+            XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
             hubConnection.stop()
         })
 
         hubConnection.start()
 
-        waitForExpectations(timeout: 5 /*seconds*/)
+        waitForExpectations(timeout: 5000 /*seconds*/)
     }
 
     func testThatClientMethodsCanBeOverwritten() {
@@ -599,14 +602,14 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
 
-        hubConnection.on(method: "GetNumber", callback: { args, _ in
+        hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
             XCTFail("Should not be invoked")
         })
 
-        hubConnection.on(method: "GetNumber", callback: { args, _ in
-            XCTAssertNotNil(args)
-            XCTAssertEqual(1, args.count)
-            XCTAssertEqual(42, args[0] as! Int)
+        hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
+            XCTAssertNotNil(argumentExtractor)
+            XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
+            XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
             hubConnection.stop()
         })
@@ -643,14 +646,15 @@ class HubConnectionTests: XCTestCase {
             .build()
 
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetPerson", callback: { arguments, typeConverter in
-            XCTAssertNotNil(arguments)
-            let person = try! typeConverter.convertFromWireType(obj: arguments[0], targetType: User.self)
-            XCTAssertEqual("Jerzy", person!.firstName)
-            XCTAssertEqual("Meteor", person!.lastName)
-            XCTAssertEqual(34, person!.age)
-            XCTAssertEqual(179.0, person!.height)
-            XCTAssertEqual(Sex.Male, person!.sex)
+        hubConnection.on(method: "GetPerson", callback: { argumentExtractor in
+            XCTAssertNotNil(argumentExtractor)
+            let person = try argumentExtractor.getArgument(type: User.self)
+            XCTAssertFalse(argumentExtractor.hasMoreArgs())
+            XCTAssertEqual("Jerzy", person.firstName)
+            XCTAssertEqual("Meteor", person.lastName)
+            XCTAssertEqual(34, person.age)
+            XCTAssertEqual(179.0, person.height)
+            XCTAssertEqual(Sex.Male, person.sex)
             didInvokeClientMethod.fulfill()
             hubConnection.stop()
         })
@@ -683,10 +687,10 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "GetNumber", callback: { args, _ in
-            XCTAssertNotNil(args)
-            XCTAssertEqual(1, args.count)
-            XCTAssertEqual(42, args[0] as! Int)
+        hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
+            XCTAssertNotNil(argumentExtractor)
+            XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
+            XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
             hubConnection.stop()
         })

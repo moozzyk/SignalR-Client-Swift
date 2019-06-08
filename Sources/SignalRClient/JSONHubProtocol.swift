@@ -24,7 +24,7 @@ open class JSONTypeConverter: TypeConverter {
             obj is Int || obj is Int? || obj is [Int] || obj is [Int?] ||
             obj is Double || obj is Double? || obj is [Double] || obj is [Double?] ||
             obj is String || obj is String? || obj is [String] || obj is [String?] ||
-            obj is Bool || obj is Bool? || obj is [Bool] || obj is [Bool?];
+            obj is Bool || obj is Bool? || obj is [Bool] || obj is [Bool?]
     }
 
     public func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
@@ -43,12 +43,12 @@ open class JSONTypeConverter: TypeConverter {
 public class JSONHubProtocol: HubProtocol {
     private static let recordSeparator = UInt8(0x1e)
     private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
     private let logger: Logger
     public let typeConverter: TypeConverter
     public let name = "json"
     public let version = 1
     public let type = ProtocolType.Text
-
 
     public init(typeConverter: TypeConverter = JSONTypeConverter(), logger: Logger) {
         self.typeConverter = typeConverter
@@ -69,70 +69,44 @@ public class JSONHubProtocol: HubProtocol {
         return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
     }
 
-    private func createHubMessage(payload: Data) throws -> HubMessage {
-        logger.log(logLevel: .debug, message: "Message received: \(String(data:payload, encoding: .utf8) ?? "(empty)")")
+    public func createHubMessage(payload: Data) throws -> HubMessage {
+        logger.log(logLevel: .debug, message: "Message received: \(String(data: payload, encoding: .utf8) ?? "(empty)")")
 
-        let json = try JSONSerialization.jsonObject(with: payload)
-
-        if let message = json as? [String: Any], let rawMessageType = message["type"] as? Int, let messageType = MessageType(rawValue: rawMessageType) {
+        do {
+        let messageType = try getMessageType(payload: payload)
             switch messageType {
             case .Invocation:
-                return try createInvocationMessage(message: message)
+                return try decoder.decode(ClientInvocationMessage.self, from: payload)
             case .StreamItem:
-                return try createStreamItemMessage(message: message)
+                return try decoder.decode(StreamItemMessage.self, from: payload)
             case .Completion:
-                return try createCompletionMessage(message: message)
+                return try decoder.decode(CompletionMessage.self, from: payload)
             case .Ping:
                 return PingMessage.instance
             case .Close:
-                return createCloseMessage(message: message)
+                return try decoder.decode(CloseMessage.self, from: payload)
             default:
                 logger.log(logLevel: .error, message: "Unsupported messageType: \(messageType)")
+                throw SignalRError.unknownMessageType
             }
+        } catch {
+            throw SignalRError.protocolViolation(underlyingError: error)
         }
-
-        throw SignalRError.unknownMessageType
     }
 
-    private func createInvocationMessage(message: [String: Any]) throws -> InvocationMessage {
-        // client side invocations are never blocking so the server never sends invocationId
-        guard let target = message["target"] as? String else {
-            throw SignalRError.invalidMessage
+    private func getMessageType(payload: Data) throws -> MessageType {
+        struct MessageTypeHelper: Decodable {
+            let type: MessageType
+
+            private enum CodingKeys: String, CodingKey { case type }
         }
 
-        let arguments = message["arguments"] as? [Any]
-        return InvocationMessage(target: target, arguments: arguments ?? [])
-    }
-
-    private func createStreamItemMessage(message: [String: Any]) throws -> StreamItemMessage {
-        let invocationId = try getInvocationId(message: message)
-        return StreamItemMessage(invocationId: invocationId, item: message["item"] as Any)
-    }
-
-    private func createCompletionMessage(message: [String: Any]) throws -> CompletionMessage {
-        let invocationId = try getInvocationId(message: message)
-        if let error = message["error"] as? String {
-            return CompletionMessage(invocationId: invocationId, error: error)
+        do {
+            return try decoder.decode(MessageTypeHelper.self, from: payload).type
+        } catch {
+            logger.log(logLevel: .error, message: "Getting messageType failed: \(error)")
+            throw SignalRError.protocolViolation(underlyingError: error)
         }
-
-        if let result = message["result"] {
-            return CompletionMessage(invocationId: invocationId, result: result is NSNull ? nil : result)
-        }
-
-        return CompletionMessage(invocationId: invocationId)
-    }
-
-    private func getInvocationId(message: [String: Any]) throws -> String {
-        guard let invocationId = message["invocationId"] as? String else {
-            throw SignalRError.invalidMessage
-        }
-
-        return invocationId
-    }
-
-    private func createCloseMessage(message: [String: Any]) -> CloseMessage {
-        let error = message["error"] as? String
-        return CloseMessage(error: error)
     }
 
     public func writeMessage(message: HubMessage) throws -> Data {

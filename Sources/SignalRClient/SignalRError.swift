@@ -16,9 +16,10 @@ public enum SignalRError : Error {
     case unknownMessageType
     case invalidMessage
     case unsupportedType
+    case serializationError(underlyingError: Error)
     case connectionIsBeingClosed
     case invalidOperation(message: String)
-    case protocolViolation
+    case protocolViolation(underlyingError: Error)
     case handshakeError(message: String)
     case invalidNegotiationResponse(message: String)
     case serverClose(message: String?)

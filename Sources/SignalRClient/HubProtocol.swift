@@ -36,23 +36,6 @@ public protocol HubMessage {
     var type: MessageType { get }
 }
 
-public class InvocationMessage: HubMessage {
-    public let type = MessageType.Invocation
-    public let invocationId: String?
-    public let target: String
-    public let arguments: [Any?]
-
-    convenience init(target: String, arguments: [Any?]) {
-        self.init(invocationId: nil, target: target, arguments: arguments)
-    }
-
-    init(invocationId: String?, target: String, arguments: [Any?]) {
-        self.invocationId = invocationId
-        self.target = target
-        self.arguments = arguments
-    }
-}
-
 public class ServerInvocationMessage: HubMessage, Encodable {
     public let type = MessageType.Invocation
     public let invocationId: String?
@@ -89,43 +72,99 @@ public class ServerInvocationMessage: HubMessage, Encodable {
     }
 }
 
-public class StreamItemMessage: HubMessage {
-    public let type = MessageType.StreamItem
-    public let invocationId: String
-    public let item: Any?
+public class ClientInvocationMessage: HubMessage, Decodable {
+    public let type = MessageType.Invocation
+    public let target: String
+    private var arguments: UnkeyedDecodingContainer?
 
-    init(invocationId: String, item: Any?) {
-        self.invocationId = invocationId
-        self.item = item
+    public required init (from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        target = try container.decode(String.self, forKey: .target)
+        if container.contains(.arguments) {
+            arguments = try container.nestedUnkeyedContainer(forKey: .arguments)
+        }
+    }
+
+    public func getArgument<T: Decodable>(type: T.Type) throws -> T {
+        if var args = arguments {
+            return try args.decode(T.self)
+        }
+
+        throw SignalRError.invalidOperation(message: "no arguments exist")
+    }
+
+    var hasMoreArgs : Bool {
+        get {
+            if let args = arguments {
+                return args.isAtEnd
+            }
+
+            return false
+        }
+    }
+
+    enum CodingKeys : String, CodingKey {
+        case type
+        case target
+        case invocationId
+        case arguments
     }
 }
 
-public class CompletionMessage: HubMessage {
+public class StreamItemMessage: HubMessage, Decodable {
+    public let type = MessageType.StreamItem
+    public let invocationId: String
+    let container: KeyedDecodingContainer<StreamItemMessage.CodingKeys>
+
+    public required init (from decoder: Decoder) throws {
+        container = try decoder.container(keyedBy: CodingKeys.self)
+        invocationId = try container.decode(String.self, forKey: .invocationId)
+    }
+
+    public func getItem<T: Decodable>(_ type: T.Type) throws -> T? {
+        do {
+            return try container.decode(T?.self, forKey: .item)
+        } catch {
+            throw SignalRError.serializationError(underlyingError: error)
+        }
+    }
+
+    enum CodingKeys : String, CodingKey {
+        case invocationId
+        case item
+    }
+}
+
+public class CompletionMessage: HubMessage, Decodable {
     public let type = MessageType.Completion
     public let invocationId: String
     public let error: String?
     public let hasResult: Bool
-    public let result: Any?
+    let container: KeyedDecodingContainer<CompletionMessage.CodingKeys>
 
-    init(invocationId: String) {
-        self.invocationId = invocationId
-        self.result = nil
-        self.error = nil
-        self.hasResult = false
+    public required init (from decoder: Decoder) throws {
+        container = try decoder.container(keyedBy: CodingKeys.self)
+        invocationId = try container.decode(String.self, forKey: .invocationId)
+        error = try container.decodeIfPresent(String.self, forKey: .error)
+        hasResult = container.contains(.result)
     }
 
-    init(invocationId: String, result: Any?) {
-        self.invocationId = invocationId
-        self.result = result
-        self.error = nil
-        self.hasResult = true
+    public func getResult<T: Decodable>(_ type: T.Type) throws -> T? {
+        if hasResult {
+            do {
+                return try container.decode(T.self, forKey: .result)
+            } catch {
+                throw SignalRError.serializationError(underlyingError: error)
+            }
+        }
+
+        return nil
     }
 
-    init(invocationId: String, error: String) {
-        self.invocationId = invocationId
-        self.error = error
-        self.result = nil
-        self.hasResult = false
+    enum CodingKeys : String, CodingKey {
+        case invocationId
+        case error
+        case result
     }
 }
 
@@ -176,7 +215,7 @@ public class PingMessage : HubMessage {
     static let instance = PingMessage()
 }
 
-public class CloseMessage: HubMessage {
+public class CloseMessage: HubMessage, Decodable {
     public let type = MessageType.Close
     public let error: String?
 
