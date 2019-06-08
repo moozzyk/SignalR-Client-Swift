@@ -13,7 +13,7 @@ public class HubConnection: ConnectionDelegate {
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
     private var pendingCalls = [String: ServerInvocationHandler]()
-    private var callbacks = [String: ([Any?], TypeConverter) -> Void]()
+    private var callbacks = [String: (ArgumentExtractor) throws -> Void]()
     private var handshakeHandled = false
     private let logger: Logger
 
@@ -53,7 +53,7 @@ public class HubConnection: ConnectionDelegate {
         connection.stop(stopError: nil)
     }
 
-    public func on(method: String, callback: @escaping (_ arguments: [Any?], _ typeConverter: TypeConverter) -> Void) {
+    public func on(method: String, callback: @escaping (_ ArgumentExtractor: ArgumentExtractor) throws -> Void) {
         logger.log(logLevel: .info, message: "Registering client side hub method: '\(method)'")
 
         var callbackRegistered = false
@@ -218,12 +218,12 @@ public class HubConnection: ConnectionDelegate {
                 case MessageType.StreamItem:
                     try handleStreamItem(message: incomingMessage as! StreamItemMessage)
                 case MessageType.Invocation:
-                    try handleInvocation(message: incomingMessage as! InvocationMessage)
+                    handleInvocation(message: incomingMessage as! ClientInvocationMessage)
                 case MessageType.Close:
                     connection.stop(stopError: SignalRError.serverClose(message: (incomingMessage as! CloseMessage).error))
                 case MessageType.Ping:
                     // no action required for ping messages
-                    break;
+                    break
                 default:
                     logger.log(logLevel: .error, message: "Usupported message type: \(incomingMessage.type.rawValue)")
                 }
@@ -266,8 +266,8 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    private func handleInvocation(message: InvocationMessage) throws {
-        var callback: (([Any?], TypeConverter) -> Void)?
+    private func handleInvocation(message: ClientInvocationMessage) {
+        var callback: ((ArgumentExtractor) throws -> Void)?
 
         self.hubConnectionQueue.sync {
             callback = self.callbacks[message.target]
@@ -275,7 +275,11 @@ public class HubConnection: ConnectionDelegate {
 
         if callback != nil {
             Util.dispatchToMainThread {
-                callback!(message.arguments, self.hubProtocol.typeConverter)
+                do {
+                    try callback!(ArgumentExtractor(clientInvocationMessage: message))
+                } catch {
+                    self.logger.log(logLevel: .error, message: "Invoking client hub method \(message.target) failed due to: \(error)")
+                }
             }
         } else {
             logger.log(logLevel: .error, message: "No handler registered for method \'\(message.target)\'")
@@ -316,5 +320,21 @@ public class HubConnection: ConnectionDelegate {
 
     public func connectionDidClose(error: Error?) {
         hubConnectionDidClose(error: error)
+    }
+}
+
+public class ArgumentExtractor {
+    let clientInvocationMessage: ClientInvocationMessage
+
+    init(clientInvocationMessage: ClientInvocationMessage) {
+        self.clientInvocationMessage = clientInvocationMessage
+    }
+
+    public func getArgument<T: Decodable>(type: T.Type) throws -> T {
+        return try clientInvocationMessage.getArgument(type: type)
+    }
+
+    public func hasMoreArgs() -> Bool {
+        return clientInvocationMessage.hasMoreArgs
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 
 // Credit: http://yourfriendlyioscoder.com/blog/2019/04/27/any-encodable/
-
 struct AnyEncodable: Encodable {
     let value: Encodable
 
