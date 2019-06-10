@@ -16,12 +16,10 @@ internal protocol ServerInvocationHandler {
 }
 
 internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
-    private let typeConverter: TypeConverter
     private let logger: Logger
     private let invocationDidComplete: (T?, Error?) -> Void
 
-    init(typeConverter: TypeConverter, logger: Logger, invocationDidComplete: @escaping (T?, Error?) -> Void) {
-        self.typeConverter = typeConverter
+    init(logger: Logger, invocationDidComplete: @escaping (T?, Error?) -> Void) {
         self.logger = logger
         self.invocationDidComplete = invocationDidComplete
     }
@@ -68,13 +66,11 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
 }
 
 internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
-    private let typeConverter: TypeConverter
     private let logger: Logger
     private let streamItemReceived: (T?) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
-    init(typeConverter: TypeConverter, logger: Logger, streamItemReceived: @escaping (T?) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
-        self.typeConverter = typeConverter
+    init(logger: Logger, streamItemReceived: @escaping (T?) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
         self.logger = logger
         self.streamItemReceived = streamItemReceived
         self.invocationDidComplete = invocationDidComplete

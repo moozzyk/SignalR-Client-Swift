@@ -97,7 +97,7 @@ public class HubConnection: ConnectionDelegate {
             return
         }
 
-        let invocationHandler = InvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, invocationDidComplete: invocationDidComplete)
+        let invocationHandler = InvocationHandler<T>(logger: logger, invocationDidComplete: invocationDidComplete)
 
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
@@ -109,7 +109,7 @@ public class HubConnection: ConnectionDelegate {
             return StreamHandle(invocationId: "")
         }
 
-        let streamInvocationHandler = StreamInvocationHandler<T>(typeConverter: hubProtocol.typeConverter, logger: logger, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+        let streamInvocationHandler = StreamInvocationHandler<T>(logger: logger, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
         let id = invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
 
