@@ -642,7 +642,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
-            .withJSONHubProtocol(typeConverter: PersonTypeConverter())
+            .withJSONHubProtocol()
             .build()
 
         hubConnection.delegate = hubConnectionDelegate
@@ -728,57 +728,6 @@ class HubConnectionTests: XCTestCase {
         let sex: Sex?
     }
 
-    class PersonTypeConverter: JSONTypeConverter {
-        override func convertToWireType(obj: Any?) throws -> Any? {
-            if let user = obj as? User? {
-                return convertUser(user: user)
-            }
-
-            if let users = obj as? [User?] {
-                return users.map({u in convertUser(user:u)})
-            }
-
-            return try super.convertToWireType(obj: obj)
-        }
-
-        private func convertUser(user: User?) -> [String: Any?]? {
-            if let u = user {
-                return [
-                    "firstName": u.firstName,
-                    "lastName": u.lastName,
-                    "age": u.age,
-                    "height": u.height,
-                    "sex": u.sex == Sex.Male ? 0 : 1]
-            }
-
-            return nil
-        }
-
-        override func convertFromWireType<T>(obj: Any?, targetType: T.Type) throws -> T? {
-            if let userDictionary = obj as? [String: Any?]? {
-                return materializeUser(userDictionary: userDictionary) as? T
-            }
-
-            if let userArray = obj as? [[String: Any?]?] {
-
-                let result: [User?] = userArray.map({userDictionary in
-                    return materializeUser(userDictionary: userDictionary)
-                })
-
-                return result as? T
-            }
-
-            return try super.convertFromWireType(obj: obj, targetType: targetType)
-        }
-
-        private func materializeUser(userDictionary: [String: Any?]?) -> User? {
-            if let user = userDictionary {
-                return User(firstName: user["firstName"] as! String, lastName: user["lastName"] as! String, age: user["age"] as! Int?, height: user["height"] as! Double?, sex: user["sex"] as! Int == 0 ? Sex.Male : Sex.Female)
-            }
-            return nil
-        }
-    }
-
     func testThatHubMethodUsingComplexTypesCanBeInvoked() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
@@ -819,7 +768,7 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
-            .withJSONHubProtocol(typeConverter: PersonTypeConverter())
+            .withJSONHubProtocol()
             .build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()

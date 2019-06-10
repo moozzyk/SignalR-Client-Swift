@@ -8,50 +8,16 @@
 
 import Foundation
 
-open class JSONTypeConverter: TypeConverter {
-    public init() {}
-
-    public func convertToWireType(obj: Any?) throws -> Any? {
-        if isKnownType(obj: obj) || JSONSerialization.isValidJSONObject(obj!) {
-            return obj
-        }
-
-        throw SignalRError.unsupportedType
-    }
-
-    private func isKnownType(obj: Any?) -> Bool {
-        return obj == nil ||
-            obj is Int || obj is Int? || obj is [Int] || obj is [Int?] ||
-            obj is Double || obj is Double? || obj is [Double] || obj is [Double?] ||
-            obj is String || obj is String? || obj is [String] || obj is [String?] ||
-            obj is Bool || obj is Bool? || obj is [Bool] || obj is [Bool?]
-    }
-
-    public func convertFromWireType<T>(obj:Any?, targetType: T.Type) throws -> T? {
-        if obj == nil || obj is NSNull {
-            return nil
-        }
-
-        if let converted = obj as? T? {
-            return converted
-        }
-
-        throw SignalRError.unsupportedType
-    }
-}
-
 public class JSONHubProtocol: HubProtocol {
     private static let recordSeparator = UInt8(0x1e)
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     private let logger: Logger
-    public let typeConverter: TypeConverter
     public let name = "json"
     public let version = 1
     public let type = ProtocolType.Text
 
-    public init(typeConverter: TypeConverter = JSONTypeConverter(), logger: Logger) {
-        self.typeConverter = typeConverter
+    public init(logger: Logger) {
         self.logger = logger
     }
 

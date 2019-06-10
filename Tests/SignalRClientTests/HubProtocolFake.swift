@@ -14,7 +14,6 @@ public class HubProtocolFake: HubProtocol {
     public let name = "fakeProtocol"
     public let version = 42
     public let type = ProtocolType.Binary
-    public let typeConverter: TypeConverter = JSONTypeConverter()
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
         throw NSError(domain: "Not supported", code: -1)

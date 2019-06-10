@@ -28,7 +28,6 @@
 		OBJ_110 /* HubConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HubConnectionTests.swift */; };
 		OBJ_111 /* HubProtocolFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_42 /* HubProtocolFake.swift */; };
 		OBJ_112 /* JSONHubProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* JSONHubProtocolTests.swift */; };
-		OBJ_113 /* JSONTypeConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* JSONTypeConverterTests.swift */; };
 		OBJ_114 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_45 /* LoggerTests.swift */; };
 		OBJ_115 /* NegotiationResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_46 /* NegotiationResponseTests.swift */; };
 		OBJ_116 /* ServerInvocationHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* ServerInvocationHandlerTests.swift */; };
@@ -59,7 +58,6 @@
 		OBJ_83 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* Transport.swift */; };
 		OBJ_84 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* TransportDelegate.swift */; };
 		OBJ_85 /* TransportType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* TransportType.swift */; };
-		OBJ_86 /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* TypeConverter.swift */; };
 		OBJ_87 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* Util.swift */; };
 		OBJ_88 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* WebSocket.swift */; };
 		OBJ_89 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* WebsocketsTransport.swift */; };
@@ -107,7 +105,6 @@
 		OBJ_29 /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		OBJ_30 /* TransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
 		OBJ_31 /* TransportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportType.swift; sourceTree = "<group>"; };
-		OBJ_32 /* TypeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		OBJ_33 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		OBJ_34 /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		OBJ_35 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
@@ -117,7 +114,6 @@
 		OBJ_41 /* HubConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubConnectionTests.swift; sourceTree = "<group>"; };
 		OBJ_42 /* HubProtocolFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubProtocolFake.swift; sourceTree = "<group>"; };
 		OBJ_43 /* JSONHubProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONHubProtocolTests.swift; sourceTree = "<group>"; };
-		OBJ_44 /* JSONTypeConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONTypeConverterTests.swift; sourceTree = "<group>"; };
 		OBJ_45 /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		OBJ_46 /* NegotiationResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegotiationResponseTests.swift; sourceTree = "<group>"; };
 		OBJ_47 /* ServerInvocationHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInvocationHandlerTests.swift; sourceTree = "<group>"; };
@@ -170,7 +166,6 @@
 				OBJ_41 /* HubConnectionTests.swift */,
 				OBJ_42 /* HubProtocolFake.swift */,
 				OBJ_43 /* JSONHubProtocolTests.swift */,
-				OBJ_44 /* JSONTypeConverterTests.swift */,
 				OBJ_45 /* LoggerTests.swift */,
 				OBJ_46 /* NegotiationResponseTests.swift */,
 				OBJ_47 /* ServerInvocationHandlerTests.swift */,
@@ -239,7 +234,6 @@
 				OBJ_29 /* Transport.swift */,
 				OBJ_30 /* TransportDelegate.swift */,
 				OBJ_31 /* TransportType.swift */,
-				OBJ_32 /* TypeConverter.swift */,
 				OBJ_33 /* Util.swift */,
 				OBJ_34 /* WebSocket.swift */,
 				OBJ_35 /* WebsocketsTransport.swift */,
@@ -340,7 +334,6 @@
 				OBJ_110 /* HubConnectionTests.swift in Sources */,
 				OBJ_111 /* HubProtocolFake.swift in Sources */,
 				OBJ_112 /* JSONHubProtocolTests.swift in Sources */,
-				OBJ_113 /* JSONTypeConverterTests.swift in Sources */,
 				OBJ_114 /* LoggerTests.swift in Sources */,
 				OBJ_115 /* NegotiationResponseTests.swift in Sources */,
 				OBJ_116 /* ServerInvocationHandlerTests.swift in Sources */,
@@ -378,7 +371,6 @@
 				OBJ_83 /* Transport.swift in Sources */,
 				OBJ_84 /* TransportDelegate.swift in Sources */,
 				OBJ_85 /* TransportType.swift in Sources */,
-				OBJ_86 /* TypeConverter.swift in Sources */,
 				OBJ_87 /* Util.swift in Sources */,
 				OBJ_88 /* WebSocket.swift in Sources */,
 				OBJ_89 /* WebsocketsTransport.swift in Sources */,
