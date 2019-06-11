@@ -40,10 +40,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
             .withLogging(minLogLevel: .debug)
             .build()
         chatHubConnection!.delegate = chatHubConnectionDelegate
-        chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in
-            let user = try! typeConverter.convertFromWireType(obj: args[0], targetType: String.self)
-            let message = try! typeConverter.convertFromWireType(obj: args[1], targetType: String.self)
-            self.appendMessage(message: "\(user!): \(message!)")
+        chatHubConnection!.on(method: "NewMessage", callback: { (user: String, message: String) in
+            self.appendMessage(message: "\(user): \(message)")
         })
         chatHubConnection!.start()
     }
