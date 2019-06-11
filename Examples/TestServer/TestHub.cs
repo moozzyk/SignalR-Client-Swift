@@ -90,5 +90,9 @@ namespace TestServer
         {
             return Clients.Client(Context.ConnectionId).SendCoreAsync("ManyArgs", args);
         }
+
+        public string Concatenate(string s, int n) {
+            return $"{s} {n}";
+        }
     }
 }
