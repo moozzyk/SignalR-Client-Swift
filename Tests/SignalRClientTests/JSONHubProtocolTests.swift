@@ -53,6 +53,31 @@ class JSONHubProtocolTests: XCTestCase {
         let msg = hubMessages[0] as! ClientInvocationMessage
         XCTAssertEqual(MessageType.Invocation, msg.type)
         XCTAssertEqual("method", msg.target)
+        XCTAssertFalse(msg.hasMoreArgs)
+    }
+
+    func testThatClientInvocationMessageGetArgumentThrowsIfNoArgs() {
+        let payload = "{ \"type\": 1, \"target\": \"method\" }\u{001e}"
+
+        let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
+        XCTAssertEqual(1, hubMessages.count)
+        let msg = hubMessages[0] as! ClientInvocationMessage
+        XCTAssertThrowsError(try msg.getArgument(type: String.self)) { error in
+            XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidOperation(message: "No arguments exist.")))
+        }
+    }
+
+    func testThatClientInvocationMessageHasMoreArgsReturnsCorrectValue() {
+        let payload = "{ \"type\": 1, \"target\": \"method\", \"arguments\": [42, \"abc\"] }\u{001e}"
+
+        let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
+        XCTAssertEqual(1, hubMessages.count)
+        let msg = hubMessages[0] as! ClientInvocationMessage
+        XCTAssertTrue(msg.hasMoreArgs)
+        XCTAssertEqual(42, try! msg.getArgument(type: Int.self))
+        XCTAssertTrue(msg.hasMoreArgs)
+        XCTAssertEqual("abc", try! msg.getArgument(type: String.self))
+        XCTAssertFalse(msg.hasMoreArgs)
     }
 
     func testThatParsingInvocationMessageFailsIfInvocationIdMissing() {
@@ -180,7 +205,7 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("Error occurred", (hubMessages[0] as! CloseMessage).error)
     }
 
-    func testThatCanWriteInvocationMessage() {
+    func testThatCanWriteServerInvocationMessage() {
         let invocationMessage = ServerInvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
         let message = String(data: payload, encoding: .utf8)!

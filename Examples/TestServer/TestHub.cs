@@ -85,5 +85,10 @@ namespace TestServer
             Context.GetHttpContext().Request.Headers.TryGetValue(name, out var header);
             return header;
         }
+
+        public Task InvokeManyArgs(object[] args)
+        {
+            return Clients.Client(Context.ConnectionId).SendCoreAsync("ManyArgs", args);
+        }
     }
 }
