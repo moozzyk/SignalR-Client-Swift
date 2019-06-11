@@ -49,8 +49,6 @@
 		7391A93322510170007BEF23 /* DefaultTransportFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A90F22510170007BEF23 /* DefaultTransportFactory.swift */; };
 		7391A93422510170007BEF23 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91022510170007BEF23 /* Logger.swift */; };
 		7391A93522510170007BEF23 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91022510170007BEF23 /* Logger.swift */; };
-		7391A93622510170007BEF23 /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91122510170007BEF23 /* TypeConverter.swift */; };
-		7391A93722510170007BEF23 /* TypeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91122510170007BEF23 /* TypeConverter.swift */; };
 		7391A93822510170007BEF23 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91222510170007BEF23 /* HttpResponse.swift */; };
 		7391A93922510170007BEF23 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91222510170007BEF23 /* HttpResponse.swift */; };
 		7391A93A22510170007BEF23 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91322510170007BEF23 /* TransportDelegate.swift */; };
@@ -86,7 +84,6 @@
 		7391A96722510187007BEF23 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95A22510187007BEF23 /* Constants.swift */; };
 		7391A96822510187007BEF23 /* HubProtocolFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95B22510187007BEF23 /* HubProtocolFake.swift */; };
 		7391A96922510187007BEF23 /* TransportTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95C22510187007BEF23 /* TransportTypeTests.swift */; };
-		7391A96A22510187007BEF23 /* JSONTypeConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95D22510187007BEF23 /* JSONTypeConverterTests.swift */; };
 		7391A96B22510187007BEF23 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95E22510187007BEF23 /* HandshakeProtocolTests.swift */; };
 		7391A96C22510187007BEF23 /* WebsocketsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A95F22510187007BEF23 /* WebsocketsTransportTests.swift */; };
 		7391A96D22510187007BEF23 /* TestTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A96022510187007BEF23 /* TestTransport.swift */; };
@@ -229,7 +226,6 @@
 		7391A90E22510170007BEF23 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
 		7391A90F22510170007BEF23 /* DefaultTransportFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTransportFactory.swift; sourceTree = "<group>"; };
 		7391A91022510170007BEF23 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		7391A91122510170007BEF23 /* TypeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConverter.swift; sourceTree = "<group>"; };
 		7391A91222510170007BEF23 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
 		7391A91322510170007BEF23 /* TransportDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
 		7391A91422510170007BEF23 /* StreamHandle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamHandle.swift; sourceTree = "<group>"; };
@@ -249,7 +245,6 @@
 		7391A95A22510187007BEF23 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7391A95B22510187007BEF23 /* HubProtocolFake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocolFake.swift; sourceTree = "<group>"; };
 		7391A95C22510187007BEF23 /* TransportTypeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportTypeTests.swift; sourceTree = "<group>"; };
-		7391A95D22510187007BEF23 /* JSONTypeConverterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTypeConverterTests.swift; sourceTree = "<group>"; };
 		7391A95E22510187007BEF23 /* HandshakeProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandshakeProtocolTests.swift; sourceTree = "<group>"; };
 		7391A95F22510187007BEF23 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		7391A96022510187007BEF23 /* TestTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTransport.swift; sourceTree = "<group>"; };
@@ -450,7 +445,6 @@
 				7391A90E22510170007BEF23 /* DefaultHttpClient.swift */,
 				7391A90F22510170007BEF23 /* DefaultTransportFactory.swift */,
 				7391A91022510170007BEF23 /* Logger.swift */,
-				7391A91122510170007BEF23 /* TypeConverter.swift */,
 				7391A91222510170007BEF23 /* HttpResponse.swift */,
 				7391A91322510170007BEF23 /* TransportDelegate.swift */,
 				7391A91422510170007BEF23 /* StreamHandle.swift */,
@@ -486,7 +480,6 @@
 				7391A95A22510187007BEF23 /* Constants.swift */,
 				7391A95B22510187007BEF23 /* HubProtocolFake.swift */,
 				7391A95C22510187007BEF23 /* TransportTypeTests.swift */,
-				7391A95D22510187007BEF23 /* JSONTypeConverterTests.swift */,
 				7391A95E22510187007BEF23 /* HandshakeProtocolTests.swift */,
 				7391A95F22510187007BEF23 /* WebsocketsTransportTests.swift */,
 				7391A96022510187007BEF23 /* TestTransport.swift */,
@@ -916,7 +909,6 @@
 				7391A92322510170007BEF23 /* Transport.swift in Sources */,
 				7391A93322510170007BEF23 /* DefaultTransportFactory.swift in Sources */,
 				7391A95722510170007BEF23 /* SignalRError.swift in Sources */,
-				7391A93722510170007BEF23 /* TypeConverter.swift in Sources */,
 				7391A93522510170007BEF23 /* Logger.swift in Sources */,
 				7391A94922510170007BEF23 /* HubProtocol.swift in Sources */,
 				7391A92522510170007BEF23 /* WebsocketsTransport.swift in Sources */,
@@ -951,7 +943,6 @@
 				7391A92222510170007BEF23 /* Transport.swift in Sources */,
 				7391A93222510170007BEF23 /* DefaultTransportFactory.swift in Sources */,
 				7391A95622510170007BEF23 /* SignalRError.swift in Sources */,
-				7391A93622510170007BEF23 /* TypeConverter.swift in Sources */,
 				7391A93422510170007BEF23 /* Logger.swift in Sources */,
 				7391A94822510170007BEF23 /* HubProtocol.swift in Sources */,
 				7391A92422510170007BEF23 /* WebsocketsTransport.swift in Sources */,
@@ -965,7 +956,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7391A96A22510187007BEF23 /* JSONTypeConverterTests.swift in Sources */,
 				7391A97022510187007BEF23 /* HubConnectionTests.swift in Sources */,
 				7391A96B22510187007BEF23 /* HandshakeProtocolTests.swift in Sources */,
 				7391A96922510187007BEF23 /* TransportTypeTests.swift in Sources */,

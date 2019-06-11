@@ -85,17 +85,17 @@ public class ClientInvocationMessage: HubMessage, Decodable {
     }
 
     public func getArgument<T: Decodable>(type: T.Type) throws -> T {
-        if var args = arguments {
-            return try args.decode(T.self)
+        guard arguments != nil else {
+            throw SignalRError.invalidOperation(message: "No arguments exist.")
         }
 
-        throw SignalRError.invalidOperation(message: "no arguments exist")
+        return try arguments!.decode(T.self)
     }
 
     var hasMoreArgs : Bool {
         get {
-            if let args = arguments {
-                return args.isAtEnd
+            if arguments != nil {
+                return !arguments!.isAtEnd
             }
 
             return false

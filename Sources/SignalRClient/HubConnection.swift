@@ -338,3 +338,116 @@ public class ArgumentExtractor {
         return clientInvocationMessage.hasMoreArgs
     }
 }
+
+public extension HubConnection {
+    func on(method: String, callback: @escaping () -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            callback()
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable>(method: String, callback: @escaping (_ arg1: T1) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            callback(arg1)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            callback(arg1, arg2)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            callback(arg1, arg2, arg3)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            callback(arg1, arg2, arg3, arg4)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+
+            callback(arg1, arg2, arg3, arg4, arg5)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+
+            callback(arg1, arg2, arg3, arg4, arg5, arg6)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+            let arg8 = try argumentExtractor.getArgument(type: T8.self)
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+}
