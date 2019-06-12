@@ -56,7 +56,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "Echo", arguments: [message], returnType: String.self) {result, error in
+            hubConnection.invoke(method: "Echo", arguments: [message], resultType: String.self) {result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual(message, result)
                 didReceiveInvocationResult.fulfill()
@@ -85,7 +85,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "Concatenate", arguments: ["This is number:", 42], returnType: String.self) {result, error in
+            hubConnection.invoke(method: "Concatenate", arguments: ["This is number:", 42], resultType: String.self) {result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual("This is number: 42", result)
                 didReceiveInvocationResult.fulfill()
@@ -111,7 +111,7 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
-        hubConnection.invoke(method: "x", arguments: [], returnType: String.self) {result, error in
+        hubConnection.invoke(method: "x", arguments: [], resultType: String.self) {result, error in
             XCTAssertNotNil(error)
             XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
             hubConnection.stop()
@@ -173,7 +173,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "ErrorMethod", arguments: [], returnType: String.self, invocationDidComplete: { result, error in
+            hubConnection.invoke(method: "ErrorMethod", arguments: [], resultType: String.self, invocationDidComplete: { result, error in
                 XCTAssertNotNil(error)
 
                 switch (error as! SignalRError) {
@@ -812,7 +812,7 @@ class HubConnectionTests: XCTestCase {
             let input = [User(firstName: "Klara", lastName: "Smetana", age: nil, height: 166.5, sex: Sex.Female),
                          User(firstName: "Jerzy", lastName: "Meteor", age: 34, height: 179.0, sex: Sex.Male)]
 
-            hubConnection.invoke(method: "SortByName", arguments: [input], returnType: [User].self, invocationDidComplete: { people, error in
+            hubConnection.invoke(method: "SortByName", arguments: [input], resultType: [User].self, invocationDidComplete: { people, error in
                 XCTAssertNil(error)
                 XCTAssertNotNil(people)
                 XCTAssertEqual(2, people!.count)
@@ -851,7 +851,7 @@ class HubConnectionTests: XCTestCase {
     func testThatHubConnectionSendsHeaders() {
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
-            hubConnection.invoke(method: "GetHeader", arguments: ["TestHeader"], returnType: String.self, invocationDidComplete: { result, error in
+            hubConnection.invoke(method: "GetHeader", arguments: ["TestHeader"], resultType: String.self, invocationDidComplete: { result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual("header", result)
                 hubConnection.stop()
@@ -879,7 +879,7 @@ class HubConnectionTests: XCTestCase {
     func testThatHubConnectionSendsAuthToken() {
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
-            hubConnection.invoke(method: "GetHeader", arguments: ["Authorization"], returnType: String.self, invocationDidComplete: { result, error in
+            hubConnection.invoke(method: "GetHeader", arguments: ["Authorization"], resultType: String.self, invocationDidComplete: { result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual("Bearer abc", result)
                 hubConnection.stop()
@@ -977,6 +977,7 @@ class TestConnection: Connection {
         delegate?.connectionDidClose(error: stopError)
     }
 }
+
 class ArgumentExtractorTests: XCTestCase {
     func testThatArgumentExtractorCallsIntoClientInvocationMessage() {
         let payload = "{ \"type\": 1, \"target\": \"method\", \"arguments\": [42, \"abc\"] }\u{001e}"
@@ -994,7 +995,7 @@ class ArgumentExtractorTests: XCTestCase {
 }
 
 class HubConnectionExtensionTests: XCTestCase {
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_0arg() {
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_0arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1004,10 +1005,12 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[] as [Int]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeNoArgs", resultType: Bool.self) { result, error in
+                XCTAssertTrue(result!)
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1021,7 +1024,6 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "ManyArgs", callback: {
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1029,7 +1031,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_1arg() {
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_1arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1039,10 +1041,12 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs1", 42, resultType: Bool.self) { result, error in
                 XCTAssertNil(error)
+                XCTAssertTrue(result!)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1057,7 +1061,6 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnection.on(method: "ManyArgs", callback: { (number: Int) in
             XCTAssertEqual(42, number)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1065,7 +1068,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_2arg() {
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_2arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1075,10 +1078,374 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42, 84]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs2", "a", 2, resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_3arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeManyArgs3", "a", 2, "c", resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_4arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeManyArgs4", "a", 2, "c", 4, resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            XCTAssertEqual(4, arg4)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_5arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let arg5: String? = nil
+            hubConnection.invoke(method: "InvokeManyArgs5", "a", 2, "c", 4, arg5, resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int, arg5: String?) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            XCTAssertEqual(4, arg4)
+            XCTAssertNil(arg5)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_6arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let arg5: String? = nil
+            hubConnection.invoke(method: "InvokeManyArgs6", "a", 2, "c", 4, arg5, 6, resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int, arg5: String?, arg6: Int) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            XCTAssertEqual(4, arg4)
+            XCTAssertNil(arg5)
+            XCTAssertEqual(6, arg6)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_7arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let arg5: String? = nil
+            hubConnection.invoke(method: "InvokeManyArgs7", "a", 2, "c", 4, arg5, 6, "g", resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int, arg5: String?, arg6: Int, arg7: String) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            XCTAssertEqual(4, arg4)
+            XCTAssertNil(arg5)
+            XCTAssertEqual(6, arg6)
+            XCTAssertEqual("g", arg7)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatServerHubMethodRegisteredWithGenericInvokeMethodCanBeInvoked_8arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let arg5: String? = nil
+            hubConnection.invoke(method: "InvokeManyArgs8", "a", 2, "c", 4, arg5, 6, "g", true, resultType: Bool.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertTrue(result!)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int, arg5: String?, arg6: Int, arg7: String, arg8: Bool) in
+            XCTAssertEqual("a", arg1)
+            XCTAssertEqual(2, arg2)
+            XCTAssertEqual("c", arg3)
+            XCTAssertEqual(4, arg4)
+            XCTAssertNil(arg5)
+            XCTAssertEqual(6, arg6)
+            XCTAssertEqual("g", arg7)
+            XCTAssertTrue(arg8)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_0arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeNoArgs") { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: {
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_1arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeManyArgs1", 42) { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ManyArgs", callback: { (number: Int) in
+            XCTAssertEqual(42, number)
+            didInvokeClientMethod.fulfill()
+        })
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_2arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didInvokeClientMethod = expectation(description: "client method invoked")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "InvokeManyArgs2", 42, 84) { error in
+                XCTAssertNil(error)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1094,7 +1461,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertEqual(42, arg1)
             XCTAssertEqual(84, arg2)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1102,7 +1468,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_3arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_3arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1112,10 +1478,11 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42, 84, 126]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs3", 42, 84, 126) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1132,7 +1499,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertEqual(84, arg2)
             XCTAssertEqual(126, arg3)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1140,7 +1506,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_4arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_4arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1150,10 +1516,11 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42, 84, 126, 168]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs4", 42, 84, 126, 168) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1171,7 +1538,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertEqual(126, arg3)
             XCTAssertEqual(168, arg4)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1179,7 +1545,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_5arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_5arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1189,10 +1555,11 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [["a", "b", "c", "d", "e"]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs5", "a", "b", "c", "d", "e") { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1211,7 +1578,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertEqual("d", arg4)
             XCTAssertEqual("e", arg5)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1219,7 +1585,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_6arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_6arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1229,10 +1595,11 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[true, false, true, false, true, false]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs6", true, false, true, false, true, false) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1252,7 +1619,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertTrue(arg5)
             XCTAssertFalse(arg6)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1260,7 +1626,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_7arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_7arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1270,10 +1636,11 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42, 84, 126, 168, 210, 252, 294]], invocationDidComplete: { error in
+            hubConnection.invoke(method: "InvokeManyArgs7", 42, 84, 126, 168, 210, 252, 294) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1294,7 +1661,6 @@ class HubConnectionExtensionTests: XCTestCase {
             XCTAssertEqual(252, arg6)
             XCTAssertEqual(294, arg7)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -1302,7 +1668,7 @@ class HubConnectionExtensionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientRegisteredWithGenericOnMethodsCanBeInvoked_8arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_8arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1312,10 +1678,12 @@ class HubConnectionExtensionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs", arguments: [["a", "b", "c", "d", "e", "f", "g", "h"]], invocationDidComplete: { error in
+            let arg5: String? = nil
+            hubConnection.invoke(method: "InvokeManyArgs8", "a", 2, "c", 4, arg5, 6, "g", true) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
-            })
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -1327,17 +1695,16 @@ class HubConnectionExtensionTests: XCTestCase {
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
-        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: String, arg3: String, arg4: String, arg5: String, arg6: String, arg7: String, arg8: String) in
+        hubConnection.on(method: "ManyArgs", callback: { (arg1: String, arg2: Int, arg3: String, arg4: Int, arg5: String?, arg6: Int, arg7: String, arg8: Bool) in
             XCTAssertEqual("a", arg1)
-            XCTAssertEqual("b", arg2)
+            XCTAssertEqual(2, arg2)
             XCTAssertEqual("c", arg3)
-            XCTAssertEqual("d", arg4)
-            XCTAssertEqual("e", arg5)
-            XCTAssertEqual("f", arg6)
+            XCTAssertEqual(4, arg4)
+            XCTAssertNil(arg5)
+            XCTAssertEqual(6, arg6)
             XCTAssertEqual("g", arg7)
-            XCTAssertEqual("h", arg8)
+            XCTAssertTrue(arg8)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()

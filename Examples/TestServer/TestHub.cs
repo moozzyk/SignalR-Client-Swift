@@ -91,6 +91,59 @@ namespace TestServer
             return Clients.Client(Context.ConnectionId).SendCoreAsync("ManyArgs", args);
         }
 
+        public async Task<bool> InvokeNoArgs() {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs");
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs1(object arg1)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs2(object arg1, object arg2)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs3(object arg1, object arg2, object arg3)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs4(object arg1, object arg2, object arg3, object arg4)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3, arg4);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs5(object arg1, object arg2, object arg3, object arg4, object arg5)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3, arg4, arg5);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs6(object arg1, object arg2, object arg3, object arg4, object arg5, object arg6)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3, arg4, arg5, arg6);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs7(object arg1, object arg2, object arg3, object arg4, object arg5, object arg6, object arg7)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+            return true;
+        }
+
+        public async Task<bool> InvokeManyArgs8(object arg1, object arg2, object arg3, object arg4, object arg5, object arg6, object arg7, object arg8)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+            return true;
+        }
+
         public string Concatenate(string s, int n) {
             return $"{s} {n}";
         }
