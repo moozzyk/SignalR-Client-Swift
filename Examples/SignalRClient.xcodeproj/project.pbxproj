@@ -10,6 +10,9 @@
 		0593119AF89E597BFDB12112 /* Pods_HubSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3A31D118C1F95EC1324A8D9 /* Pods_HubSample.framework */; };
 		2CC9DD15DD66A3F50168DADB /* Pods_HubSamplePhone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB121666480B08D75CA1E67A /* Pods_HubSamplePhone.framework */; };
 		3EE477C9B88482D1A4CDC1BB /* Pods_macOS_SignalRClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08395BAC7C98D9FFF351C3F3 /* Pods_macOS_SignalRClient.framework */; };
+		5A13255622B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */; };
+		5A13255722B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */; };
+		5A13255A22B0CCDF0082C783 /* HubConnectionExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A13255822B0CCD20082C783 /* HubConnectionExtensionsTests.swift */; };
 		5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A3D4EFC22A4D0C2009B0C78 /* CodableHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */; };
 		5A3D4EFD22A4D0C2009B0C78 /* CodableHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */; };
@@ -190,6 +193,8 @@
 		2B834CCBD18A464AD4A954B8 /* Pods-SignalRClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SignalRClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SignalRClientTests/Pods-SignalRClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 		43B143695FF3720D7A42DB7D /* Pods_SocketsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		519681CF34C8C12D89D8E7C2 /* Pods-SocketsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketsSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SocketsSample/Pods-SocketsSample.release.xcconfig"; sourceTree = "<group>"; };
+		5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionExtensions.swift; sourceTree = "<group>"; };
+		5A13255822B0CCD20082C783 /* HubConnectionExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionExtensionsTests.swift; sourceTree = "<group>"; };
 		5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A4292F6208D2A4A008B30EF /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -434,6 +439,7 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */,
 				5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */,
 				7391A90722510170007BEF23 /* Transport.swift */,
 				7391A90822510170007BEF23 /* WebsocketsTransport.swift */,
@@ -477,6 +483,7 @@
 		7391A95922510187007BEF23 /* SignalRClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				5A13255822B0CCD20082C783 /* HubConnectionExtensionsTests.swift */,
 				7391A95A22510187007BEF23 /* Constants.swift */,
 				7391A95B22510187007BEF23 /* HubProtocolFake.swift */,
 				7391A95C22510187007BEF23 /* TransportTypeTests.swift */,
@@ -895,6 +902,7 @@
 				7391A92922510170007BEF23 /* Connection.swift in Sources */,
 				7391A93D22510170007BEF23 /* StreamHandle.swift in Sources */,
 				7391A95122510170007BEF23 /* HttpConnection.swift in Sources */,
+				5A13255722B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */,
 				7391A94122510170007BEF23 /* HubConnectionDelegate.swift in Sources */,
 				7391A95322510170007BEF23 /* ConnectionDelegate.swift in Sources */,
 				7391A92F22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
@@ -929,6 +937,7 @@
 				7391A92822510170007BEF23 /* Connection.swift in Sources */,
 				7391A93C22510170007BEF23 /* StreamHandle.swift in Sources */,
 				7391A95022510170007BEF23 /* HttpConnection.swift in Sources */,
+				5A13255622B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */,
 				7391A94022510170007BEF23 /* HubConnectionDelegate.swift in Sources */,
 				7391A95222510170007BEF23 /* ConnectionDelegate.swift in Sources */,
 				7391A92E22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
@@ -956,6 +965,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A13255A22B0CCDF0082C783 /* HubConnectionExtensionsTests.swift in Sources */,
 				7391A97022510187007BEF23 /* HubConnectionTests.swift in Sources */,
 				7391A96B22510187007BEF23 /* HandshakeProtocolTests.swift in Sources */,
 				7391A96922510187007BEF23 /* TransportTypeTests.swift in Sources */,
