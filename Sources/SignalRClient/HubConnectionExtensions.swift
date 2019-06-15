@@ -80,6 +80,42 @@ public extension HubConnection {
         self.invoke(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], resultType: resultType, invocationDidComplete: invocationDidComplete)
     }
 
+    func send(method: String, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable>(method: String, _ arg1: T1, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable>(method: String, _ arg1: T1, _ arg2: T2, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3, arg4], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3, arg4, arg5], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7], sendDidComplete: sendDidComplete)
+    }
+
+    func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, T8: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], sendDidComplete: sendDidComplete)
+    }
+
     func on(method: String, callback: @escaping () -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             callback()
