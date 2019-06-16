@@ -226,4 +226,40 @@ public extension HubConnection {
 
         self.on(method: method, callback: cb)
     }
+
+    func stream<TItemType: Decodable>(method: String, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2,  itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
+
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, T8: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    }
 }

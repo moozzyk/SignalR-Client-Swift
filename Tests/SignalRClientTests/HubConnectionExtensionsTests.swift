@@ -1079,4 +1079,274 @@ class HubConnectionExtensionsTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_0arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs0", itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_1arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs1", 1, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_2arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs2", 1, 2, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_3arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [String] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs3", "a", "b", "c", itemType: String.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual(["a", "b", "c"], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_4arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [String] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs4", "a", "b", "c", "d", itemType: String.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual(["a", "b", "c", "d"], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_5arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs5", 1, 2, 3, 4, 5, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2, 3, 4, 5], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_6arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs6", 1, 2, 3, 4, 5, 6, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2, 3, 4, 5, 6], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_7arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs7", 1, 2, 3, 4, 5, 6, 7, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2, 3, 4, 5, 6, 7], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_8arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveStreamItems = expectation(description: "received stream items")
+        let didCloseExpectation = expectation(description: "connection closed")
+        var items: [Int] = []
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            _ = hubConnection.stream(method: "StreamManyArgs8", 1, 2, 3, 4, 5, 6, 7, 8, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+                XCTAssertNil(error)
+                XCTAssertEqual([1, 2, 3, 4, 5, 6, 7, 8], items)
+                didReceiveStreamItems.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
