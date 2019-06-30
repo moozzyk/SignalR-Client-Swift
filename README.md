@@ -34,23 +34,21 @@ Then include `"SignalRClient"` in your target dependencies. For example:
 
 ## Usage
 
-Add `import SignalRClient` to swift files you would like to use the client in.
+Add `import SwiftSignalRClient` to swift files you would like to use the client in.
 
 A typical implementation looks like the following:
 
 ```swift
 import Foundation
-import SignalRClient
+import SwiftSignalRClient
 
 public class SignalRService {
     private var connection: HubConnection
     
     public init(url: URL) {
         connection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .error).build()
-        connection.on(method: "MessageReceived", callback: { (args, typeConverter) in
+        connection.on(method: "MessageReceived", callback: { (user: String, message: String) in
             do {
-                let user = try typeConverter.convertFromWireType(obj: args[0], targetType: String.self)
-                let message = try typeConverter.convertFromWireType(obj: args[1], targetType: String.self)
                 self.handleMessage(message, from: user)
             } catch {
                 print(error)
@@ -76,7 +74,7 @@ There are several sample projects in the `Examples` folder. They include:
     
   - [TestServer](Examples/TestServer)
     
-    A .Net solution that the unit tests can be run against.
+    A .Net solution that the unit tests and samples can be run against.
     
     The `TestServer` Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later.
     
