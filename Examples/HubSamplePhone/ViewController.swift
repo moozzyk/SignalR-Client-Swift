@@ -60,12 +60,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func btnSend(_ sender: Any) {
         let message = msgTextField.text
         if message != "" {
-            chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message], invocationDidComplete:
-                {error in
-                    if let e = error {
-                        self.appendMessage(message: "Error: \(e)")
-                    }
-            })
+            chatHubConnection?.invoke(method: "Broadcast", name, message) { error in
+                if let e = error {
+                    self.appendMessage(message: "Error: \(e)")
+                }
+            }
             msgTextField.text = ""
         }
     }

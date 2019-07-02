@@ -105,12 +105,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     @IBAction func btnSend(sender: AnyObject) {
         let message = msgTextField.stringValue
         if message != "" {
-            chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message], invocationDidComplete:
-                {error in
-                    if let e = error {
-                        self.appendMessage(message: "Error: \(e)")
-                    }
-                })
+            chatHubConnection?.invoke(method: "Broadcast", name, message) { error in
+                if let e = error {
+                    self.appendMessage(message: "Error: \(e)")
+                }
+            }
             msgTextField.stringValue = ""
         }
     }
