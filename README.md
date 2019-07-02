@@ -87,3 +87,55 @@ There are several sample projects in the `Examples` folder. They include:
     ```C#
     dotnet run
     ```
+
+## Migration from versions before 0.6.0
+
+The way of handling serialization/deserialization of values sent/received from the server changed in version 0.6.0. The `TypeConverter` protocol has been removed in favor of the `Encodable`/`Decodable` protocols. The client now can serialize and send to the server any value that conforms to the `Encodable` protocol and is able to deserialize any value received from the server as long as the target type for the value conforms to the `Decodable` protocol (in most cases you don't need to distinguish between these protocols and you can just make your types conform to the `Codable` protocol. Also primitive types already conform to the `Codable` protocol so they work out of the box). One of the consequences of this change is that the signature of the client side method handlers changed and the code needs to be adjusted when moving to the version 0.6.0. Here is how:
+
+Before version 0.6.0 registering a handler for the client side method could look like this:
+
+```Swift
+self.chatHubConnection!.on(method: "NewMessage", callback: {args, typeConverter in
+    let user = try! typeConverter.convertFromWireType(obj: args[0], targetType: String.self)
+    let message = try! typeConverter.convertFromWireType(obj: args[1], targetType: String.self)
+    self.appendMessage(message: "\(user!): \(message!)")
+})
+```
+
+After installing version 0.6.0 or newer it needs to be changed to:
+
+```Swift
+self.chatHubConnection!.on(method: "NewMessage", callback: {(user: String, message: String) in
+    self.appendMessage(message: "\(user): \(message)")
+})
+```
+
+Here is the summary of the changes:
+- remove the `typeConverter` parameter
+- replace `args` parameter with a list of actual parameters (make sure to provide parameter types)
+- remove calls to `typeConverter` methods
+- remove code to handle optional types (if applicabale)
+
+Note: if your client side method takes more than 8 parameters you will need to use a lower level primitve to add a handler for this method. 
+
+Version 0.6.0 also adds some syntactic sugar for the APIs to invoke server side hub methods (i.e. `invoke`, `send`, `stream`). This is not a breaking change - the old methods will continue to work but in version 0.6.0 you can now pass the values as separate arguments instead of creating an array which is much nicer. For instance nvoking a hub method:
+
+```Swift
+chatHubConnection?.invoke(method: "Broadcast", arguments: [name, message]) { error in
+    if let e = error {
+        self.appendMessage(message: "Error: \(e)")
+    }
+}
+```
+
+can now be changed to:
+
+```Swift
+chatHubConnection?.invoke(method: "Broadcast", name, message) { error in
+    if let e = error {
+        self.appendMessage(message: "Error: \(e)")
+    }
+}
+```
+
+The new APIs support up to 8 parameters. If you have a hub method taking more than 8 parameters you will need to use a lower level primitives that take an array containing parameter values.
