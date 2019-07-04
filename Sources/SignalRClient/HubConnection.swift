@@ -313,7 +313,7 @@ public class HubConnection: ConnectionDelegate {
         delegate?.connectionDidClose(error: error)
     }
 
-    public func connectionDidOpen(connection: Connection!) {
+    public func connectionDidOpen(connection: Connection) {
         connectionStarted()
     }
 
@@ -321,7 +321,7 @@ public class HubConnection: ConnectionDelegate {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
-    public func connectionDidReceiveData(connection: Connection!, data: Data) {
+    public func connectionDidReceiveData(connection: Connection, data: Data) {
         hubConnectionDidReceiveData(data: data)
     }
 

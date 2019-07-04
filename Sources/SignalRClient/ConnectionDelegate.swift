@@ -9,8 +9,8 @@
 import Foundation
 
 public protocol ConnectionDelegate: class {
-    func connectionDidOpen(connection: Connection!)
+    func connectionDidOpen(connection: Connection)
     func connectionDidFailToOpen(error: Error)
-    func connectionDidReceiveData(connection: Connection!, data: Data)
+    func connectionDidReceiveData(connection: Connection, data: Data)
     func connectionDidClose(error: Error?)
 }

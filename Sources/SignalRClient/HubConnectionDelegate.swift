@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol HubConnectionDelegate: class {
-    func connectionDidOpen(hubConnection: HubConnection!)
+    func connectionDidOpen(hubConnection: HubConnection)
     func connectionDidFailToOpen(error: Error)
     func connectionDidClose(error: Error?)
 }
