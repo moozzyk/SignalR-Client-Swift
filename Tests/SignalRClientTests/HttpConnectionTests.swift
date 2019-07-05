@@ -15,7 +15,7 @@ class TestConnectionDelegate: ConnectionDelegate {
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
     var connectionDidReceiveDataHandler: ((_ connection: Connection, _ data: Data) -> Void)?
 
-    func connectionDidOpen(connection: Connection!) {
+    func connectionDidOpen(connection: Connection) {
         connectionDidOpenHandler?(connection)
     }
 
@@ -23,7 +23,7 @@ class TestConnectionDelegate: ConnectionDelegate {
         connectionDidFailToOpenHandler?(error)
     }
 
-    func connectionDidReceiveData(connection: Connection!, data: Data) {
+    func connectionDidReceiveData(connection: Connection, data: Data) {
         connectionDidReceiveDataHandler?(connection, data)
     }
 

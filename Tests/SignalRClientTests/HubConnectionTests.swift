@@ -964,7 +964,7 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
     var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
 
-    func connectionDidOpen(hubConnection: HubConnection!) {
+    func connectionDidOpen(hubConnection: HubConnection) {
         connectionDidOpenHandler?(hubConnection)
     }
 
