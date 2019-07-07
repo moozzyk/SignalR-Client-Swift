@@ -23,7 +23,7 @@ pod install
 Add the following to your `Package` dependencies:
 
 ```swift
-.package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.5.0")),
+.package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.6.0")),
 ```
 
 Then include `"SignalRClient"` in your target dependencies. For example:
