@@ -18,7 +18,7 @@ Then run:
 pod install
 ```
 
-### Swift Packacge Manager
+### Swift Package Manager
 
 Add the following to your `Package` dependencies:
 
