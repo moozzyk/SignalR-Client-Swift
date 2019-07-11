@@ -60,14 +60,25 @@ public class HttpConnection: Connection {
 
         startDispatchGroup.enter()
 
-        // TODO: negotiate not needed if the user explicitly asks for WebSockets
-        negotiate(accessToken: nil) { negotiationResponse in
-            self.startTransport(negotiationResponse: negotiationResponse)
+        if options.skipNegotiation {
+            transport = try! self.transportFactory.createTransport(availableTransports: [TransportDescription(transportType: TransportType.webSockets, transferFormats: [TransferFormat.text, TransferFormat.binary])])
+            startTransport(connectionId: nil)
+        } else {
+            negotiate(accessToken: nil) { negotiationResponse in
+                do {
+                    self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
+                } catch {
+                    self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
+                    self.failOpenWithError(error: error, changeState: true)
+                    return
+                }
+
+                self.startTransport(connectionId: negotiationResponse.connectionId)
+            }
         }
     }
 
     private func negotiate(accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
-        // TODO: negotiate not needed if the user explicitly asks for WebSockets
         if let accessToken = accessToken {
             logger.log(logLevel: .debug, message: "Overriding accessToken")
             options.accessTokenProvider = { accessToken }
@@ -119,15 +130,7 @@ public class HttpConnection: Connection {
         }
     }
 
-    private func startTransport(negotiationResponse: NegotiationResponse) {
-        do {
-            self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
-        } catch {
-            self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
-            self.failOpenWithError(error: error, changeState: true)
-            return
-        }
-
+    private func startTransport(connectionId: String?) {
         // connection is being stopped even though start has not finished yet
         if (self.state != .connecting) {
             self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
@@ -135,13 +138,16 @@ public class HttpConnection: Connection {
             return
         }
 
-        let startUrl = self.createStartUrl(connectionId: negotiationResponse.connectionId)
-        self.transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: negotiationResponse.connectionId)
+        let startUrl = self.createStartUrl(connectionId: connectionId)
+        self.transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
         self.transport!.delegate = self.transportDelegate
         self.transport!.start(url: startUrl, options: self.options)
     }
 
-    private func createStartUrl(connectionId: String) -> URL {
+    private func createStartUrl(connectionId: String?) -> URL {
+        if connectionId == nil {
+            return self.url
+        }
         var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
         var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "id", value: connectionId))

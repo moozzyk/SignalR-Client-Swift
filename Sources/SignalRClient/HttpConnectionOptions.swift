@@ -12,6 +12,7 @@ public class HttpConnectionOptions {
     public var headers: [String:String] = [:]
     public var accessTokenProvider: () -> String? = { return nil }
     public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = { DefaultHttpClient(options: $0) }
+    public var skipNegotiation: Bool = false
 
     public init() {
     }

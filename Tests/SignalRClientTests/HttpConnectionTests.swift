@@ -103,6 +103,47 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionCanSendReceiveMessagesWithSkipNegotiation() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveMessageExpectation = expectation(description: "message received")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let message = "Hello, World!"
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidOpenHandler = { connection in
+            connection.send(data: message.data(using: .utf8)!) { error in
+                if let e = error {
+                    print(e)
+                }
+            }
+            didOpenExpectation.fulfill()
+        }
+
+        connectionDelegate.connectionDidReceiveDataHandler = { connection, data in
+            XCTAssertEqual(message, String(data: data, encoding: .utf8))
+            didReceiveMessageExpectation.fulfill()
+            connection.stop(stopError: nil)
+        }
+
+        connectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let httpClient = TestHttpClient(postHandler: { _ in
+            XCTFail()
+            return (HttpResponse(statusCode: 500, contents: nil), nil)
+        })
+        let options = HttpConnectionOptions()
+        options.skipNegotiation = true
+        options.httpClientFactory = { options in httpClient }
+        let connection = HttpConnection(url: URL(string: "\(BASE_URL)/echo")!, options: options)
+        connection.delegate = connectionDelegate
+        connection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatOpeningConnectionFailsIfConnectionNotInInitialState() {
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -415,7 +456,7 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionFailsToOpenIfNegotateStatusNotOK() {
+    func testThatConnectionFailsToOpenIfNegotiateStatusNotOK() {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpClient = TestHttpClient(postHandler: { _ in (HttpResponse(statusCode: 500, contents: nil), nil) })
@@ -434,7 +475,7 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionFailsToOpenIfNegotateResponseNotValid() {
+    func testThatConnectionFailsToOpenIfNegotiateResponseNotValid() {
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpClient = TestHttpClient(postHandler: { _ in (HttpResponse(statusCode: 200, contents: "{}".data(using: .utf8)!), nil) })
