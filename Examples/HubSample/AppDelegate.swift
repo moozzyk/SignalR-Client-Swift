@@ -20,10 +20,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     private let dispatchQueue = DispatchQueue(label: "hubsample.queue.dispatcheueuq")
 
-    var chatHubConnection: HubConnection?
-    var chatHubConnectionDelegate: ChatHubConnectionDelegate?
-    var name = ""
-    var messages: [String] = []
+    private var chatHubConnection: HubConnection?
+    private var chatHubConnectionDelegate: HubConnectionDelegate?
+    private var name = ""
+    private var messages: [String] = []
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         chatTableView.delegate = self
@@ -35,11 +35,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         name = getName()
 
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
-
         chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!)
+            .withHubConnectionDelegate(delegate: chatHubConnectionDelegate!)
             .withLogging(minLogLevel: .debug)
             .build()
-        chatHubConnection!.delegate = chatHubConnectionDelegate
+
         chatHubConnection!.on(method: "NewMessage", callback: { (user: String, message: String) in
             self.appendMessage(message: "\(user): \(message)")
         })
@@ -145,7 +145,7 @@ class ChatHubConnectionDelegate: HubConnectionDelegate {
         self.app = app
     }
 
-    func connectionDidOpen(hubConnection: HubConnection!) {
+    func connectionDidOpen(hubConnection: HubConnection) {
         app?.connectionDidStart()
     }
 

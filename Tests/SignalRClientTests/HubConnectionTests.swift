@@ -39,8 +39,8 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withLogging(minLogLevel: .debug)
             .withHubProtocol(hubProtocolFactory: {_ in HubProtocolFake()})
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -69,8 +69,10 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -98,8 +100,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -142,8 +145,10 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -159,8 +164,10 @@ class HubConnectionTests: XCTestCase {
             hubConnection.stop()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -212,8 +219,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -300,8 +308,10 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -358,9 +368,9 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -396,9 +406,9 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -610,9 +620,10 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
+
         hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
             XCTAssertTrue(argumentExtractor.hasMoreArgs())
             XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
@@ -648,9 +659,10 @@ class HubConnectionTests: XCTestCase {
         }
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
+
         hubConnection.on(method: "ManyArgs", callback: { argumentExtractor in
             XCTAssertTrue(argumentExtractor.hasMoreArgs())
             XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
@@ -688,8 +700,9 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
 
         hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
             XCTFail("Should not be invoked")
@@ -732,9 +745,9 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withJSONHubProtocol()
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.on(method: "GetPerson", callback: { argumentExtractor in
             XCTAssertNotNil(argumentExtractor)
             let person = try argumentExtractor.getArgument(type: User.self)
@@ -774,8 +787,10 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
-        hubConnection.delegate = hubConnectionDelegate
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
         hubConnection.on(method: "GetNumber", callback: { argumentExtractor in
             XCTAssertNotNil(argumentExtractor)
             XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
@@ -858,8 +873,8 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withJSONHubProtocol()
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -885,9 +900,9 @@ class HubConnectionTests: XCTestCase {
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.headers["TestHeader"] = "header"
             }
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -913,9 +928,9 @@ class HubConnectionTests: XCTestCase {
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.accessTokenProvider = { return "abc" }
             }
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
-        hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)

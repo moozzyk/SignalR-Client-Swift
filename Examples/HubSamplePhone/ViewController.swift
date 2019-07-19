@@ -14,10 +14,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private let serverUrl = "http://192.168.0.105:5000/chat"
     private let dispatchQueue = DispatchQueue(label: "hubsamplephone.queue.dispatcheueuq")
 
-    var chatHubConnection: HubConnection?
-    var chatHubConnectionDelegate: ChatHubConnectionDelegate?
-    var name = ""
-    var messages: [String] = []
+    private var chatHubConnection: HubConnection?
+    private var chatHubConnectionDelegate: HubConnectionDelegate?
+    private var name = ""
+    private var messages: [String] = []
 
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var chatTableView: UITableView!
@@ -38,8 +38,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.chatHubConnectionDelegate = ChatHubConnectionDelegate(controller: self)
             self.chatHubConnection = HubConnectionBuilder(url: URL(string: self.serverUrl)!)
                 .withLogging(minLogLevel: .debug)
+                .withHubConnectionDelegate(delegate: self.chatHubConnectionDelegate!)
                 .build()
-            self.chatHubConnection!.delegate = self.chatHubConnectionDelegate
+
             self.chatHubConnection!.on(method: "NewMessage", callback: {(user: String, message: String) in
                 self.appendMessage(message: "\(user): \(message)")
             })
@@ -120,13 +121,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 
 class ChatHubConnectionDelegate: HubConnectionDelegate {
+
     weak var controller: ViewController?
 
     init(controller: ViewController) {
         self.controller = controller
     }
 
-    func connectionDidOpen(hubConnection: HubConnection!) {
+    func connectionDidOpen(hubConnection: HubConnection) {
         controller?.connectionDidOpen()
     }
 

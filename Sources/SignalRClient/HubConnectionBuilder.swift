@@ -13,6 +13,7 @@ public class HubConnectionBuilder {
     private var hubProtocolFactory: (Logger) -> HubProtocol = {logger in JSONHubProtocol(logger: logger)}
     private let httpConnectionOptions = HttpConnectionOptions()
     private var logger: Logger = NullLogger()
+    private var delegate: HubConnectionDelegate?
 
     public init(url: URL) {
         self.url = url
@@ -43,9 +44,16 @@ public class HubConnectionBuilder {
         return self
     }
 
+    public func withHubConnectionDelegate(delegate: HubConnectionDelegate) -> HubConnectionBuilder {
+        self.delegate = delegate
+        return self
+    }
+
     public func build() -> HubConnection {
         let httpConnection = HttpConnection(url: url, options: httpConnectionOptions, logger: logger)
-        return HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        hubConnection.delegate = delegate
+        return hubConnection
     }
 }
 
