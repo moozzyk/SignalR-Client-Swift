@@ -40,6 +40,7 @@ namespace TestServer
             {
                 options.MapHub<TestHub>("/testhub");
                 options.MapHub<ChatHub>("/chat");
+                options.MapHub<PlaygroundHub>("/playground");
             });
 
             app.UseFileServer();

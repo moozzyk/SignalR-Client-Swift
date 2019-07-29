@@ -221,6 +221,7 @@
 		5AEC70F620310E3E00616DD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5AEC70F920310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5AEC70FB20310E3F00616DD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AF307B822EACFD5001D3BFE /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		7391A90722510170007BEF23 /* Transport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		7391A90822510170007BEF23 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		7391A90922510170007BEF23 /* HttpConnectionOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpConnectionOptions.swift; sourceTree = "<group>"; };
@@ -330,9 +331,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A17165922ED7FBE00ABB7FA /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				5AF307B822EACFD5001D3BFE /* Playground.playground */,
+			);
+			path = Playground;
+			sourceTree = "<group>";
+		};
 		5A9803481E5FE60E00BFFB0A = {
 			isa = PBXGroup;
 			children = (
+				5A17165922ED7FBE00ABB7FA /* Playground */,
 				7391A90522510170007BEF23 /* Sources */,
 				7391A95822510187007BEF23 /* Tests */,
 				5A9803541E5FE60E00BFFB0A /* SignalRClient */,
