@@ -64,6 +64,9 @@ public class SignalRService {
 }
 ```
 
+More detailed user guide:
+ - [Swift Client for the ASP.Net Core Version of SignalR – Part 1: Getting Started](https://blog.3d-logic.com/2019/07/28/swift-client-for-the-asp-net-core-version-of-signalr-part-1-getting-started/)
+
 ## Examples
 
 There are several sample projects in the `Examples` folder. They include:
