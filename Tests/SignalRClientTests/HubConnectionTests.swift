@@ -295,7 +295,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], itemType: Int.self, streamItemReceived: { item in items.append(item!) }, invocationDidComplete: { error in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], streamItemReceived: { item in items.append(item!) }, invocationDidComplete: { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], items)
                 didReceiveStreamItems.fulfill()
@@ -322,7 +322,7 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         hubConnection.start()
-        _ = hubConnection.stream(method: "StreamNumbers", arguments: [], itemType: Int.self, streamItemReceived: {_ in }, invocationDidComplete: {error in
+        _ = hubConnection.stream(method: "StreamNumbers", arguments: [], streamItemReceived: { (_: Int) in }, invocationDidComplete: {error in
             XCTAssertNotNil(error)
             XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error!)")
             hubConnection.stop()
@@ -342,7 +342,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "ErrorStreamMethod", arguments: [], itemType: String.self, streamItemReceived: { item in receivedItems.append(item)} , invocationDidComplete: { error in
+            _ = hubConnection.stream(method: "ErrorStreamMethod", arguments: [], streamItemReceived: { item in receivedItems.append(item)} , invocationDidComplete: { error in
                 XCTAssertNotNil(error)
 
                 switch (error as! SignalRError) {
@@ -385,7 +385,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 5], itemType: UUID.self, streamItemReceived: { item in XCTFail() } , invocationDidComplete: { error in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 5], streamItemReceived: { (_: String) in XCTFail() } , invocationDidComplete: { error in
                 XCTAssertNotNil(error)
                 switch (error as! SignalRError) {
                 case .serializationError:
@@ -421,7 +421,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], streamItemReceived: { (_: Int) in }, invocationDidComplete: { error in
                 XCTAssertNotNil(error)
 
                 switch (error as! SignalRError) {
@@ -449,7 +449,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], itemType: Int.self, streamItemReceived: { item in }, invocationDidComplete: { error in
+            _ = hubConnection.stream(method: "StreamNumbers", arguments: [5, 100], streamItemReceived: { (_: Int) in }, invocationDidComplete: { error in
                 switch (error as! SignalRError) {
                 case .invalidOperation(let errorMessage):
                     XCTAssertEqual("testError", errorMessage)
@@ -479,8 +479,8 @@ class HubConnectionTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             var streamHandle: StreamHandle? = nil
-            streamHandle = hubConnection.stream(method: "StreamNumbers", arguments: [1000, 1], itemType: Int.self, streamItemReceived: { item in
-                lastItem = item!
+            streamHandle = hubConnection.stream(method: "StreamNumbers", arguments: [1000, 1], streamItemReceived: { (item: Int) in
+                lastItem = item
                 if item == 42 {
                     hubConnection.cancelStreamInvocation(streamHandle: streamHandle!, cancelDidFail: { _ in XCTFail() })
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -515,9 +515,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnection.delegate = hubConnectionDelegate
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
-                                                    streamItemReceived: { _ in XCTFail() },
-                                                    invocationDidComplete: { _ in XCTFail() })
+            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], streamItemReceived: { (_: Int) in XCTFail() }, invocationDidComplete: { _ in XCTFail() })
             hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { _ in XCTFail() })
 
             hubConnection.stop()
@@ -544,9 +542,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], itemType: Int.self,
-                                                    streamItemReceived: { _ in XCTFail() },
-                                                    invocationDidComplete: { _ in XCTFail() })
+            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], streamItemReceived: { (_: Int) in XCTFail() }, invocationDidComplete: { _ in XCTFail() })
             hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { error in
                 switch (error as! SignalRError) {
                 case .invalidOperation(let errorMessage):

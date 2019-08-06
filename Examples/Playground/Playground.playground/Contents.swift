@@ -38,8 +38,7 @@ hubConnection.send(method: "Broadcast", "Playground user", "Testing send") { err
     }
 }
 
-let streamHandle = hubConnection.stream(method: "StreamNumbers", 1, 10000, itemType: Int.self,
-                                        streamItemReceived: { item in print(">>> \(item!)") }) { error in
+let streamHandle = hubConnection.stream(method: "StreamNumbers", 1, 10000, streamItemReceived: { (item: Int) in print(">>> \(item)") }) { error in
         print("Stream closed.")
         if let error = error {
             print("Error: \(error)")

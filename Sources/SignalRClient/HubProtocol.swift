@@ -120,9 +120,9 @@ public class StreamItemMessage: HubMessage, Decodable {
         invocationId = try container.decode(String.self, forKey: .invocationId)
     }
 
-    public func getItem<T: Decodable>(_ type: T.Type) throws -> T? {
+    public func getItem<T: Decodable>(_ type: T.Type) throws -> T {
         do {
-            return try container.decode(T?.self, forKey: .item)
+            return try container.decode(T.self, forKey: .item)
         } catch {
             throw SignalRError.serializationError(underlyingError: error)
         }

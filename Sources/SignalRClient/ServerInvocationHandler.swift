@@ -67,10 +67,10 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
 
 internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
-    private let streamItemReceived: (T?) -> Void
+    private let streamItemReceived: (T) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
-    init(logger: Logger, streamItemReceived: @escaping (T?) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
+    init(logger: Logger, streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
         self.logger = logger
         self.streamItemReceived = streamItemReceived
         self.invocationDidComplete = invocationDidComplete

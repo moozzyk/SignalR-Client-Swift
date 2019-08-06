@@ -1090,7 +1090,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs0", itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs0", streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], items)
                 didReceiveStreamItems.fulfill()
@@ -1120,7 +1120,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs1", 1, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs1", 1, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1], items)
                 didReceiveStreamItems.fulfill()
@@ -1150,7 +1150,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs2", 1, 2, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs2", 1, 2, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2], items)
                 didReceiveStreamItems.fulfill()
@@ -1180,7 +1180,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs3", "a", "b", "c", itemType: String.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs3", "a", "b", "c", streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual(["a", "b", "c"], items)
                 didReceiveStreamItems.fulfill()
@@ -1210,7 +1210,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs4", "a", "b", "c", "d", itemType: String.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs4", "a", "b", "c", "d", streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual(["a", "b", "c", "d"], items)
                 didReceiveStreamItems.fulfill()
@@ -1240,7 +1240,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs5", 1, 2, 3, 4, 5, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs5", 1, 2, 3, 4, 5, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5], items)
                 didReceiveStreamItems.fulfill()
@@ -1270,7 +1270,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs6", 1, 2, 3, 4, 5, 6, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs6", 1, 2, 3, 4, 5, 6, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6], items)
                 didReceiveStreamItems.fulfill()
@@ -1300,7 +1300,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs7", 1, 2, 3, 4, 5, 6, 7, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs7", 1, 2, 3, 4, 5, 6, 7, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6, 7], items)
                 didReceiveStreamItems.fulfill()
@@ -1330,7 +1330,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs8", 1, 2, 3, 4, 5, 6, 7, 8, itemType: Int.self, streamItemReceived: { item in items.append(item!) }) { error in
+            _ = hubConnection.stream(method: "StreamManyArgs8", 1, 2, 3, 4, 5, 6, 7, 8, streamItemReceived: { item in items.append(item!) }) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6, 7, 8], items)
                 didReceiveStreamItems.fulfill()

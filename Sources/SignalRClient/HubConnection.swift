@@ -188,14 +188,17 @@ public class HubConnection: ConnectionDelegate {
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
      - note: Consider using typed `.stream()` extension methods defined on the `HubConnectionExtensions` class.
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    public func stream<T: Decodable>(method: String, arguments: [Encodable], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+    public func stream<T: Decodable>(method: String, arguments: [Encodable], streamItemReceived: @escaping (_ item: T) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
         logger.log(logLevel: .info, message: "Invoking server side streaming hub method: '\(method)'")
 
         if !ensureConnectionStarted() {invocationDidComplete($0)} {

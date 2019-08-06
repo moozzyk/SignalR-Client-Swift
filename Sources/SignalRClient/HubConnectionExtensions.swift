@@ -505,10 +505,10 @@ public extension HubConnection {
      - parameter method: the name of the client side method to register the callback for
      - parameter callback: a callback that will be called when the client side method is invoked from the server
      - parameter arg1: first argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -528,10 +528,10 @@ public extension HubConnection {
      - parameter callback: a callback that will be called when the client side method is invoked from the server
      - parameter arg1: first argument of the client side hub method
      - parameter arg2: second argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -553,10 +553,10 @@ public extension HubConnection {
      - parameter arg1: first argument of the client side hub method
      - parameter arg2: second argument of the client side hub method
      - parameter arg3: third argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -580,10 +580,10 @@ public extension HubConnection {
      - parameter arg2: second argument of the client side hub method
      - parameter arg3: third argument of the client side hub method
      - parameter arg4: fourth argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -609,10 +609,10 @@ public extension HubConnection {
      - parameter arg3: third argument of the client side hub method
      - parameter arg4: fourth argument of the client side hub method
      - parameter arg5: fifth argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -641,10 +641,10 @@ public extension HubConnection {
      - parameter arg4: fourth argument of the client side hub method
      - parameter arg5: fifth argument of the client side hub method
      - parameter arg6: sixth argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -675,10 +675,10 @@ public extension HubConnection {
      - parameter arg5: fifth argument of the client side hub method
      - parameter arg6: sixth argument of the client side hub method
      - parameter arg7: seventh argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
-     print(">>> \(user): \(message)")
+        print(">>> \(user): \(message)")
      }
      ```
      */
@@ -711,7 +711,7 @@ public extension HubConnection {
      - parameter arg6: sixth argument of the client side hub method
      - parameter arg7: seventh argument of the client side hub method
      - parameter arg8: eighth argument of the client side hub method
-     - note: the callback parameters must be typed e.g.:
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
      ```
      hubConnection.on(method: "AddMessage") {(user: String, message: String) in
         print(">>> \(user): \(message)")
@@ -742,14 +742,17 @@ public extension HubConnection {
      - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<TItemType: Decodable>(method: String, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<TItemType: Decodable>(method: String, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -761,14 +764,17 @@ public extension HubConnection {
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -781,14 +787,17 @@ public extension HubConnection {
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
      - parameter arg2: second argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2,  itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -802,14 +811,17 @@ public extension HubConnection {
      - parameter arg1: first argument of the hub method
      - parameter arg2: second argument of the hub method
      - parameter arg3: third argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -824,14 +836,17 @@ public extension HubConnection {
      - parameter arg2: second argument of the hub method
      - parameter arg3: third argument of the hub method
      - parameter arg4: fourth argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -847,14 +862,17 @@ public extension HubConnection {
      - parameter arg3: third argument of the hub method
      - parameter arg4: fourth argument of the hub method
      - parameter arg5: fifth argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -871,14 +889,17 @@ public extension HubConnection {
      - parameter arg4: fourth argument of the hub method
      - parameter arg5: fifth argument of the hub method
      - parameter arg6: sixth argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -896,14 +917,17 @@ public extension HubConnection {
      - parameter arg5: fifth argument of the hub method
      - parameter arg6: sixth argument of the hub method
      - parameter arg7: seventh argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 
     /**
@@ -922,13 +946,16 @@ public extension HubConnection {
      - parameter arg6: sixth argument of the hub method
      - parameter arg7: seventh argument of the hub method
      - parameter arg8: eighth argument of the hub method
-     - parameter itemType: the type of the items streamed by the hub method
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
      - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
      */
-    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, T8: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, itemType: TItemType.Type, streamItemReceived: @escaping (_ item: TItemType?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
-        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], itemType: itemType, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+    func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, T8: Encodable, TItemType: Decodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, streamItemReceived: @escaping (_ item: TItemType) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
+        return self.stream(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
 }
