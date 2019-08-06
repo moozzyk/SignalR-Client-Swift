@@ -8,8 +8,32 @@
 
 import Foundation
 
+/**
+ A protocol that allows receiving hub connection lifecycle event notifications.
+
+ To receive hub connection lifecycle event notifications create a class that conforms to this protocol and register it using the `HubConnectionBuilder.withHubConnectionDelegate()` method.
+
+ - note: The user is responsible for maintaining the reference to the delegate.
+ */
 public protocol HubConnectionDelegate: class {
+    /**
+     Invoked when the connection to the server opened successfully.
+
+     - parameter hubConnection: the newly opened `HubConnection`
+    */
     func connectionDidOpen(hubConnection: HubConnection)
+
+    /**
+     Invoked when the connection to the server failed to open.
+
+     - parameter error: contains failure details
+    */
     func connectionDidFailToOpen(error: Error)
+
+    /**
+     Invoked when the connection to the server was closed.
+
+     - parameter error: If the connection was closed cleanly `nil`. Otherwise contains failure detais
+    */
     func connectionDidClose(error: Error?)
 }

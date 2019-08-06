@@ -8,7 +8,23 @@
 
 import Foundation
 
+/**
+ Http Client protocol.
+ */
 public protocol HttpClientProtocol {
+    /**
+     Sends a `GET` HTTP request.
+
+     - parameter url: URL
+     - parameter completionHandler: callback invoked after the HTTP request has been completed
+     */
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
+
+    /**
+     Sends a `POST` HTTP request.
+
+     - parameter url: URL
+     - parameter completionHandler: callback invoked after the HTTP request has been completed
+     */
     func post(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
 }

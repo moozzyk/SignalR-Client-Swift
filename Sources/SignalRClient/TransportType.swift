@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TransportType: OptionSet{
+public struct TransportType: OptionSet {
     public let rawValue: Int
 
     public init(rawValue: Int) {

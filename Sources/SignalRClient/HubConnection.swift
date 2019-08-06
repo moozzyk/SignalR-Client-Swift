@@ -8,6 +8,11 @@
 
 import Foundation
 
+/**
+`HubConnection` is the client for interacting with SignalR server. It allows invoking server side hub methods and register handlers for client side methods that can be invoked from the server.
+
+ - note: You need to maintain the reference to the `HubConnection` instance until the connection is stopped
+ */
 public class HubConnection: ConnectionDelegate {
 
     private var invocationId: Int = 0
@@ -19,6 +24,12 @@ public class HubConnection: ConnectionDelegate {
 
     private var connection: Connection
     private var hubProtocol: HubProtocol
+
+    /**
+    Allows setting a delegate that will be notified about connection lifecycle events
+
+     - note: You need to maintain the reference of the `HubConnectionDelegate` instance for the entire lifetime of the connection
+     */
     public weak var delegate: HubConnectionDelegate?
     
     /**
@@ -28,6 +39,14 @@ public class HubConnection: ConnectionDelegate {
         return connection.connectionId
     }
 
+    /**
+     Initializes a `HubConnection` with an underlying connection, a hub protocol and an optional logger.
+
+     - parameter connection: underlying `Connection`
+     - parameter hubProtocol: `HubProtocol` to use to communicate with the server
+     - parameter logger: optional logger to write logs. If not provided no log will be written
+
+     */
     public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
         self.connection = connection
         self.hubProtocol = hubProtocol
@@ -36,6 +55,11 @@ public class HubConnection: ConnectionDelegate {
         self.connection.delegate = self
     }
 
+    /**
+     Starts the connection.
+
+     - note: Use `HubConnectionDelegate` to receive connection lifecycle notifications.
+    */
     public func start() {
         logger.log(logLevel: .info, message: "Starting hub connection")
         connection.start()
@@ -55,12 +79,23 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
+    /**
+     Stops the connection.
+    */
     public func stop() {
         logger.log(logLevel: .info, message: "Stopping hub connection")
         connection.stop(stopError: nil)
     }
 
-    public func on(method: String, callback: @escaping (_ ArgumentExtractor: ArgumentExtractor) throws -> Void) {
+    /**
+     Allows registering callbacks for client side hub methods.
+
+     - parameter method: the name of the client side method to register the callback for
+     - parameter callback: a callback that will be called when the client side method is invoked from the server
+     - parameter argumentExtractor: an object allowing extracting arguments for the callback
+     - note: Consider using typed `.on` extension methods defined on the `HubConnectionExtensions` class.
+     */
+    public func on(method: String, callback: @escaping (_ argumentExtractor: ArgumentExtractor) throws -> Void) {
         logger.log(logLevel: .info, message: "Registering client side hub method: '\(method)'")
 
         var callbackRegistered = false
@@ -74,6 +109,17 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
+    /**
+     Invokes a server side hub method in a fire-and-forget manner.
+
+     When a hub method is invoked in a fire-and-forget manner the client never receives any result of the invocation nor is notified about the invocation status.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
+     - note: Consider using typed `.send()` extension methods defined on the `HubConnectionExtensions` class.
+     */
     public func send(method: String, arguments:[Encodable], sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Sending to server side hub method: '\(method)'")
 
@@ -91,12 +137,36 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
+    /**
+     Invokes a server side hub method that does not return a result.
+
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - note: Consider using typed `.invoke()` extension methods defined on the `HubConnectionExtensions` class.
+     */
     public func invoke(method: String, arguments: [Encodable], invocationDidComplete: @escaping (_ error: Error?) -> Void) {
         invoke(method: method, arguments: arguments, resultType: DecodableVoid.self, invocationDidComplete: {_, error in
             invocationDidComplete(error)
         })
     }
 
+    /**
+     Invokes a server side hub method that returns a result.
+
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter resultType: the type of the result returned by the hub method
+     - parameter invocationDidComplete:  a completion handler that will be invoked when the invocation has completed
+     - parameter result: the result returned by the hub method
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - note: Consider using typed `.invoke()` extension methods defined on the `HubConnectionExtensions` class
+     */
     public func invoke<T: Decodable>(method: String, arguments: [Encodable], resultType: T.Type, invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Invoking server side hub method: '\(method)'")
 
@@ -109,6 +179,22 @@ public class HubConnection: ConnectionDelegate {
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
 
+    /**
+     Invokes a streaming server side hub method.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter itemType: the type of the items streamed by the hub method
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: Consider using typed `.stream()` extension methods defined on the `HubConnectionExtensions` class.
+     */
     public func stream<T: Decodable>(method: String, arguments: [Encodable], itemType: T.Type, streamItemReceived: @escaping (_ item: T?) -> Void, invocationDidComplete: @escaping (_ error: Error?) -> Void) -> StreamHandle {
         logger.log(logLevel: .info, message: "Invoking server side streaming hub method: '\(method)'")
 
@@ -123,6 +209,13 @@ public class HubConnection: ConnectionDelegate {
         return StreamHandle(invocationId: id)
     }
 
+    /**
+     Cancels a streaming hub method.
+
+     - parameter streamHandle: a `StreamHandle` identifying a hub method returned from the `stream` method
+     - parameter cancelDidFail: an error handler that will be invoked if cancelling a stream method failed
+     - parameter error: contains failure details if cancelling a stream method failed
+     */
     public func cancelStreamInvocation(streamHandle: StreamHandle, cancelDidFail: @escaping (_ error: Error) -> Void) {
         logger.log(logLevel: .info, message: "Cancelling server side streaming hub method")
 
@@ -313,34 +406,68 @@ public class HubConnection: ConnectionDelegate {
         delegate?.connectionDidClose(error: error)
     }
 
+    /**
+     Internal. Should not be called directly.
+    */
     public func connectionDidOpen(connection: Connection) {
         connectionStarted()
     }
 
+    /**
+     Internal. Should not be called directly.
+     */
     public func connectionDidFailToOpen(error: Error) {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
+    /**
+     Internal. Should not be called directly.
+     */
     public func connectionDidReceiveData(connection: Connection, data: Data) {
         hubConnectionDidReceiveData(data: data)
     }
 
+    /**
+     Internal. Should not be called directly.
+     */
     public func connectionDidClose(error: Error?) {
         hubConnectionDidClose(error: error)
     }
 }
 
+/**
+ A helper class used for retrieving arguments of invocations of client side method.
+ */
 public class ArgumentExtractor {
     let clientInvocationMessage: ClientInvocationMessage
 
+    /**
+     Initializes an `ArgumentExtractor` with the received `ClientInvocationMessage`.
+
+     - parameter clientInvocationMessage: a `ClientInvocationMessage` containing client side method invocation details
+     */
     init(clientInvocationMessage: ClientInvocationMessage) {
         self.clientInvocationMessage = clientInvocationMessage
     }
 
+    /**
+     Retrieves next argument of the client side method to invoke and advances to the next argument.
+
+     - parameter type: the type of the argument that is being retrieved
+     - returns: a value of the argument
+     - throws: an error if:
+        - the requested `type` is not compatible with the actual value
+        - there are no more arguments to be retrieved
+     */
     public func getArgument<T: Decodable>(type: T.Type) throws -> T {
         return try clientInvocationMessage.getArgument(type: type)
     }
 
+    /**
+     Allows to check if there are more arguments to retrieve.
+
+     - returns: `true` if there are more arguments to retrieve. `false` otherwise
+     */
     public func hasMoreArgs() -> Bool {
         return clientInvocationMessage.hasMoreArgs
     }

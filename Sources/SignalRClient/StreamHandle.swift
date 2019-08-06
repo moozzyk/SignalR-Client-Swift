@@ -7,6 +7,11 @@
 //
 import Foundation
 
+/**
+ A handle indentifying a stream.
+
+ The handle is returned by the `HubConnection.stream` method and is required to cancel an active stream invocation.
+ */
 public class StreamHandle {
     internal let invocationId: String
     internal init(invocationId: String) {
