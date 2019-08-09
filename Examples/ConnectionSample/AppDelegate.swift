@@ -79,7 +79,7 @@ class EchoConnectionDelegate: ConnectionDelegate {
         self.app = app
     }
 
-    func connectionDidOpen(connection: Connection!) {
+    func connectionDidOpen(connection: Connection) {
         app?.appendLog(string: "Connection started")
         app?.toggleSend(isEnabled: true)
     }
@@ -88,7 +88,7 @@ class EchoConnectionDelegate: ConnectionDelegate {
         app?.appendLog(string: "Error")
     }
 
-    func connectionDidReceiveData(connection: Connection!, data: Data) {
+    func connectionDidReceiveData(connection: Connection, data: Data) {
         app?.appendLog(string: "Received: " + String(data: data, encoding: .utf8)!)
     }
 
