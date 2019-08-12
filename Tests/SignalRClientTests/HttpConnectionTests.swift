@@ -625,6 +625,7 @@ class HttpConnectionTests: XCTestCase {
 
     func testThatConnectionFollowsRedirects() {
         let redirectionExpectation = expectation(description: "redirected")
+        let connectionDidFailToOpenExpectation = expectation(description: "failedToOpen")
 
         let initialUrl = "http://fakeuri.org"
 
@@ -646,8 +647,8 @@ class HttpConnectionTests: XCTestCase {
         let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
 
         let connectionDelegate = TestConnectionDelegate()
-        connectionDelegate.connectionDidFailToOpenHandler = { error in
-            XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."))", "\(error)")
+        connectionDelegate.connectionDidFailToOpenHandler = { _ in
+            connectionDidFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
 

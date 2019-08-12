@@ -23,7 +23,7 @@ public class HttpConnection: Connection {
     private var transport: Transport?
     private var stopError: Error?
 
-    public weak var delegate: ConnectionDelegate!
+    public weak var delegate: ConnectionDelegate?
     public private(set) var connectionId: String?
 
     private enum State: String {
@@ -38,6 +38,7 @@ public class HttpConnection: Connection {
     }
 
     init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: Logger) {
+        logger.log(logLevel: .debug, message: "HttpConnection init")
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
 
@@ -46,6 +47,10 @@ public class HttpConnection: Connection {
         self.transportFactory = transportFactory
         self.logger = logger
         self.state = .initial
+    }
+
+    deinit {
+        logger.log(logLevel: .debug, message: "HttpConnection deinit")
     }
 
     public func start() {

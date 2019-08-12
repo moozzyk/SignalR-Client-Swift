@@ -48,11 +48,16 @@ public class HubConnection: ConnectionDelegate {
 
      */
     public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
+        logger.log(logLevel: .debug, message: "HubConnection init")
         self.connection = connection
         self.hubProtocol = hubProtocol
         self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
         self.connection.delegate = self
+    }
+
+    deinit {
+        logger.log(logLevel: .debug, message: "HubConnection deinit")
     }
 
     /**

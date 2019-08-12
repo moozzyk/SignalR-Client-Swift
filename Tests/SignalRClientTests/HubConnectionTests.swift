@@ -102,12 +102,12 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
-
 
     func testTestThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
@@ -965,7 +965,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: fakeConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         hubConnection.start()
         let payload = "{}\u{1e}{ \"type\": 7, \"error\": \"Server Error\" }\u{1e}"
-        fakeConnection.delegate.connectionDidReceiveData(connection: fakeConnection, data: payload.data(using: .utf8)!)
+        fakeConnection.delegate!.connectionDidReceiveData(connection: fakeConnection, data: payload.data(using: .utf8)!)
         XCTAssertEqual(String(describing: SignalRError.serverClose(message: "Server Error")), String(describing: fakeConnection.stopError!))
     }
 }
@@ -991,7 +991,7 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 class TestConnection: Connection {
     var connectionId: String?
 
-    var delegate: ConnectionDelegate!
+    var delegate: ConnectionDelegate?
     var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
 
     func start() {
