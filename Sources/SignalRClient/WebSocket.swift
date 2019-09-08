@@ -1,16 +1,15 @@
 /*
-* SwiftWebSocket (websocket.swift)
-*
-* Copyright (C) Josh Baker. All Rights Reserved.
-* Contact: @tidwall, joshbaker77@gmail.com
-*
-* This software may be modified and distributed under the terms
-* of the MIT license.  See the LICENSE file for details.
-*
-*/
+ * SwiftWebSocket (websocket.swift)
+ *
+ * Copyright (C) Josh Baker. All Rights Reserved.
+ * Contact: @tidwall, joshbaker77@gmail.com
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ *
+ */
 
 import Foundation
-import zlib
 
 private let windowBufferSize = 0x2000
 
@@ -488,8 +487,8 @@ private class Deflater {
         free(buffer)
     }
     /*func deflate(_ bufin : UnsafePointer<UInt8>, length : Int, final : Bool) -> (p : UnsafeMutablePointer<UInt8>, n : Int, err : NSError?){
-        return (nil, 0, nil)
-    }*/
+     return (nil, 0, nil)
+     }*/
 }
 
 /// WebSocketDelegate is an Objective-C alternative to WebSocketEvents and is used to delegate the events for the WebSocket connection.
@@ -600,7 +599,9 @@ private class InnerWebSocket: Hashable {
         ws.binaryType = binaryType
         return ws
     }
-    
+
+    var hashValue: Int { return id }
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -970,13 +971,8 @@ private class InnerWebSocket: Hashable {
     }
 
     func closeConn() {
-        #if swift(>=4.2)
         rd.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         wr.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
-        #else
-        rd.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-        wr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-        #endif
         rd.delegate = nil
         wr.delegate = nil
         rd.close()
@@ -988,7 +984,7 @@ private class InnerWebSocket: Hashable {
         req.setValue("websocket", forHTTPHeaderField: "Upgrade")
         req.setValue("Upgrade", forHTTPHeaderField: "Connection")
         if req.value(forHTTPHeaderField: "User-Agent") == nil {
-                req.setValue("SwiftWebSocket", forHTTPHeaderField: "User-Agent")
+            req.setValue("SwiftWebSocket", forHTTPHeaderField: "User-Agent")
         }
         req.setValue("13", forHTTPHeaderField: "Sec-WebSocket-Version")
 
@@ -1021,18 +1017,18 @@ private class InnerWebSocket: Hashable {
             }
             req.setValue(val, forHTTPHeaderField: "Sec-WebSocket-Extensions")
         }
-		
-		let security: TCPConnSecurity
-		let port : Int
-		if req.url!.scheme == "wss" {
-			port = req.url!.port ?? 443
-			security = .negoticatedSSL
-		} else {
-			port = req.url!.port ?? 80
-			security = .none
-		}
 
-		var path = CFURLCopyPath(req.url! as CFURL) as String
+        let security: TCPConnSecurity
+        let port : Int
+        if req.url!.scheme == "wss" {
+            port = req.url!.port ?? 443
+            security = .negoticatedSSL
+        } else {
+            port = req.url!.port ?? 80
+            security = .none
+        }
+
+        var path = CFURLCopyPath(req.url! as CFURL) as String
         if path == "" {
             path = "/"
         }
@@ -1071,7 +1067,7 @@ private class InnerWebSocket: Hashable {
         wro = writeStream!.takeRetainedValue()
         (rd, wr) = (rdo!, wro!)
         rd.setProperty(security.level, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-		wr.setProperty(security.level, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+        wr.setProperty(security.level, forKey: Stream.PropertyKey.socketSecurityLevelKey)
         if services.contains(.VoIP) {
             rd.setProperty(StreamNetworkServiceTypeValue.voIP.rawValue, forKey: Stream.PropertyKey.networkServiceType)
             wr.setProperty(StreamNetworkServiceTypeValue.voIP.rawValue, forKey: Stream.PropertyKey.networkServiceType)
@@ -1095,13 +1091,8 @@ private class InnerWebSocket: Hashable {
         }
         rd.delegate = delegate
         wr.delegate = delegate
-        #if swift(>=4.2)
         rd.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
         wr.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
-        #else
-        rd.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-        wr.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-        #endif
         rd.open()
         wr.open()
         try write(header, length: header.count)
@@ -1161,7 +1152,7 @@ private class InnerWebSocket: Hashable {
                         value = trim(String(line[r.upperBound...]))
                     }
                 }
-                
+
                 switch key.lowercased() {
                 case "sec-websocket-subprotocol":
                     privateSubProtocol = value
@@ -1564,13 +1555,13 @@ private func ==(lhs: InnerWebSocket, rhs: InnerWebSocket) -> Bool {
 private enum TCPConnSecurity {
     case none
     case negoticatedSSL
-	
-	var level: String {
-		switch self {
-		case .none: return StreamSocketSecurityLevel.none.rawValue
-		case .negoticatedSSL: return StreamSocketSecurityLevel.negotiatedSSL.rawValue
-		}
-	}
+
+    var level: String {
+        switch self {
+        case .none: return StreamSocketSecurityLevel.none.rawValue
+        case .negoticatedSSL: return StreamSocketSecurityLevel.negotiatedSSL.rawValue
+        }
+    }
 }
 
 // Manager class is used to minimize the number of dispatches and cycle through network events
@@ -1659,11 +1650,18 @@ private class Manager {
 private let manager = Manager()
 
 /// WebSocket objects are bidirectional network streams that communicate over HTTP. RFC 6455.
+@objcMembers
 open class WebSocket: NSObject {
     fileprivate var ws: InnerWebSocket
     fileprivate var id = manager.nextId()
     fileprivate var opened: Bool
+
     open override var hash: Int { return id }
+    open override func isEqual(_ other: Any?) -> Bool {
+        guard let other = other as? WebSocket else { return false }
+        return self.id == other.id
+    }
+
     /// Create a WebSocket connection to a URL; this should be the URL to which the WebSocket server will respond.
     public convenience init(_ url: String){
         self.init(request: URLRequest(url: URL(string: url)!), subProtocols: [])
@@ -1819,6 +1817,7 @@ public func ==(lhs: WebSocket, rhs: WebSocket) -> Bool {
 
 extension WebSocket {
     /// The events of the WebSocket using a delegate.
+    @objc
     public var delegate : WebSocketDelegate? {
         get { return ws.eventDelegate }
         set { ws.eventDelegate = newValue }
