@@ -13,7 +13,7 @@ import Foundation
 
  - note: You need to maintain the reference to the `HubConnection` instance until the connection is stopped
  */
-public class HubConnection: ConnectionDelegate {
+public class HubConnection {
 
     private var invocationId: Int = 0
     private let hubConnectionQueue: DispatchQueue
@@ -23,6 +23,7 @@ public class HubConnection: ConnectionDelegate {
     private let logger: Logger
 
     private var connection: Connection
+    private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
     /**
@@ -53,7 +54,6 @@ public class HubConnection: ConnectionDelegate {
         self.hubProtocol = hubProtocol
         self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
-        self.connection.delegate = self
     }
 
     deinit {
@@ -66,6 +66,8 @@ public class HubConnection: ConnectionDelegate {
      - note: Use `HubConnectionDelegate` to receive connection lifecycle notifications.
     */
     public func start() {
+        self.connectionDelegate = HubConnectionConnectionDelegate(hubConnection: self)
+        self.connection.delegate = connectionDelegate
         logger.log(logLevel: .info, message: "Starting hub connection")
         connection.start()
     }
@@ -302,7 +304,7 @@ public class HubConnection: ConnectionDelegate {
         return true
     }
 
-    private func hubConnectionDidReceiveData(data: Data) {
+    fileprivate func connectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
         var data = data
         if !handshakeHandled {
@@ -394,7 +396,7 @@ public class HubConnection: ConnectionDelegate {
         }
     }
 
-    private func hubConnectionDidClose(error: Error?) {
+    fileprivate func connectionDidClose(error: Error?) {
         logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
 
         var invocationHandlers: [ServerInvocationHandler] = []
@@ -414,32 +416,32 @@ public class HubConnection: ConnectionDelegate {
         delegate?.connectionDidClose(error: error)
     }
 
-    /**
-     Internal. Should not be called directly.
-    */
-    public func connectionDidOpen(connection: Connection) {
-        connectionStarted()
-    }
-
-    /**
-     Internal. Should not be called directly.
-     */
-    public func connectionDidFailToOpen(error: Error) {
+    fileprivate func connectionDidFailToOpen(error: Error) {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
-    /**
-     Internal. Should not be called directly.
-     */
-    public func connectionDidReceiveData(connection: Connection, data: Data) {
-        hubConnectionDidReceiveData(data: data)
+}
+
+fileprivate class HubConnectionConnectionDelegate: ConnectionDelegate {
+    private weak var hubConnection: HubConnection?
+    init(hubConnection: HubConnection) {
+        self.hubConnection = hubConnection
     }
 
-    /**
-     Internal. Should not be called directly.
-     */
-    public func connectionDidClose(error: Error?) {
-        hubConnectionDidClose(error: error)
+    func connectionDidOpen(connection: Connection) {
+        hubConnection?.connectionStarted()
+    }
+
+    func connectionDidFailToOpen(error: Error) {
+        hubConnection?.connectionDidFailToOpen(error: error)
+    }
+
+    func connectionDidReceiveData(connection: Connection, data: Data) {
+        hubConnection?.connectionDidReceiveData(data: data)
+    }
+
+    func connectionDidClose(error: Error?) {
+        hubConnection?.connectionDidClose(error: error)
     }
 }
 

@@ -166,11 +166,12 @@ class HubConnectionTests: XCTestCase {
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withLogging(minLogLevel: .debug)
             .build()
 
         hubConnection.start()
 
-        waitForExpectations(timeout: 5 /*seconds*/)
+        waitForExpectations(timeout: 5000 /*seconds*/)
     }
 
     func testTestThatCanGetConnectionId() {
