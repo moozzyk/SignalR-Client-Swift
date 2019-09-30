@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace TestServer
 {
@@ -20,27 +20,25 @@ namespace TestServer
             services.AddSingleton<EchoConnectionHandler>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            loggerFactory.AddConsole(LogLevel.Debug);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseConnections(options => options.MapConnectionHandler<EchoConnectionHandler>("/echo"));
-            app.UseConnections(options => options.MapConnectionHandler<EchoConnectionHandler>("/echoNoTransports",
-                dispatcherOptions =>
-                {
-                    dispatcherOptions.Transports = HttpTransportType.None;
-                }));
-
-            app.UseSignalR(options =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                options.MapHub<TestHub>("/testhub");
-                options.MapHub<ChatHub>("/chat");
-                options.MapHub<PlaygroundHub>("/playground");
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo");
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoNoTransports",
+                    dispatcherOptions =>
+                    {
+                        dispatcherOptions.Transports = HttpTransportType.None;
+                    });
+                endpoints.MapHub<TestHub>("/testhub");
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<PlaygroundHub>("/playground");
             });
 
             app.UseFileServer();
