@@ -156,3 +156,7 @@ chatHubConnection?.invoke(method: "Broadcast", name, message) { error in
 ```
 
 The new APIs support up to 8 parameters. If you have a hub method taking more than 8 parameters you will need to use a lower level primitives that take an array containing parameter values.
+
+## Disclaimer
+
+I am providing code in the repository to you under an open source license. Because this is my personal repository, the license you receive to my code is from me and not my employer (Facebook)
