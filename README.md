@@ -93,7 +93,7 @@ There are several sample projects in the `Examples` folder. They include:
     
     A .Net solution that the unit tests and samples can be run against.
     
-    The `TestServer` Requires [.NET Core SDK 2.1.300](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300) or later.
+    The `TestServer` Requires [.NET Core SDK 3.0.100](https://www.microsoft.com/net/download/dotnet-core/sdk-3.0.100) or later.
     
     To run, navigate to the `TestServer` folder and execute the following in the terminal:
     
