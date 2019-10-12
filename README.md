@@ -32,6 +32,8 @@ Then include `"SignalRClient"` in your target dependencies. For example:
 .target(name: "MySwiftPackage", dependencies: ["SignalRClient"]),
 ```
 
+You may need to add libz.tbd to the libraries your project is linked with (under Build Phases, Linked Frameworks and Libraries) if you see undefined symbol errors similar to ones reported in https://github.com/moozzyk/SignalR-Client-Swift/issues/42.
+
 ### Carthage
 
 Add the following lines to your `Cartfile`:
