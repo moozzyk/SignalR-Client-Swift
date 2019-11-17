@@ -239,10 +239,6 @@ public class HubConnection {
             return
         }
 
-        hubConnectionQueue.sync {
-            _ = pendingCalls.removeValue(forKey: streamHandle.invocationId)
-        }
-
         let cancelInvocationMessage = CancelInvocationMessage(invocationId: streamHandle.invocationId)
         do {
             let cancelInvocationData = try hubProtocol.writeMessage(message: cancelInvocationMessage)

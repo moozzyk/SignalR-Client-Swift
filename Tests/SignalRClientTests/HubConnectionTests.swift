@@ -472,6 +472,7 @@ class HubConnectionTests: XCTestCase {
     func testThatCanCancelStreamingInvocations() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
+        let invocationDidComplete = expectation(description: "stream cancellation completed")
 
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
         var lastItem = -1
@@ -488,7 +489,10 @@ class HubConnectionTests: XCTestCase {
                         hubConnection.stop()
                     }
                 }
-            }, invocationDidComplete: { _ in XCTFail() })
+            }, invocationDidComplete: { error in
+                XCTAssertNil(error)
+                invocationDidComplete.fulfill()
+            })
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -503,36 +507,9 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCancellingStreamingInvocationSendsCancelStreamMessage() {
-        var messages: [Data] = []
-
-        let testConnection = TestConnection()
-        testConnection.sendDelegate = { data, sendDidComplete in
-            messages.append(data)
-            sendDidComplete(nil)
-        }
-
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
-        let hubConnectionDelegate = TestHubConnectionDelegate()
-        hubConnection.delegate = hubConnectionDelegate
-        hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], streamItemReceived: { (_: Int) in XCTFail() }, invocationDidComplete: { _ in XCTFail() })
-            hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { _ in XCTFail() })
-
-            hubConnection.stop()
-
-            // 3 messages: protocol negotation/handshake, stream method invocation, stream method cancellation
-            XCTAssertEqual(3, messages.count)
-            let methodCancellationJson = try! JSONSerialization.jsonObject(with: messages.last!.split(separator: 0x1e).first!) as! [String: Any]
-            XCTAssertEqual(2, methodCancellationJson.count)
-            XCTAssertEqual(5, methodCancellationJson["type"] as! Int)
-            XCTAssertEqual("1", methodCancellationJson["invocationId"] as! String)
-        }
-        hubConnection.start()
-    }
-
     func testThatCallbackInvokedIfSendingCancellationMessageFailed() {
         let cancelDidFailExpectation = expectation(description: "cancelDidFail invoked")
+        let invocationDidCompleteExpectation = expectation(description: "invocationDidComplete")
 
         let testConnection = TestConnection()
         testConnection.sendDelegate = { data, sendDidComplete in
@@ -543,7 +520,17 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
-            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], streamItemReceived: { (_: Int) in XCTFail() }, invocationDidComplete: { _ in XCTFail() })
+            let streamHandle = hubConnection.stream(method: "TestStream", arguments: [], streamItemReceived: { (_: Int) in XCTFail() }, invocationDidComplete: { error in
+                switch(error as! SignalRError) {
+                case .hubInvocationCancelled:
+                    break
+                default:
+                    XCTFail()
+                    break
+                }
+                invocationDidCompleteExpectation.fulfill()
+            })
+
             hubConnection.cancelStreamInvocation(streamHandle: streamHandle, cancelDidFail: { error in
                 switch (error as! SignalRError) {
                 case .invalidOperation(let errorMessage):
