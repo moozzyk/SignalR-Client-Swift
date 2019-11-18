@@ -9,6 +9,7 @@ import Foundation
 
 internal class RetryableConnection: Connection {
     private let connectionFactory: () -> Connection
+    private let retryPolicy: RetryPolicy
     private var underlyingConnection: Connection
 
     var delegate: ConnectionDelegate?
@@ -16,8 +17,9 @@ internal class RetryableConnection: Connection {
         return underlyingConnection.connectionId
     }
 
-    init(connectionFactory: @escaping () -> Connection) {
+    init(connectionFactory: @escaping () -> Connection, retryPolicy: RetryPolicy) {
         self.connectionFactory = connectionFactory
+        self.retryPolicy = retryPolicy
         self.underlyingConnection = connectionFactory()
     }
 

@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		5ACE4BD82382688200F665B6 /* RetryableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD72382688200F665B6 /* RetryableConnection.swift */; };
+		5ACE4BDA2382701000F665B6 /* RetryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD92382701000F665B6 /* RetryPolicy.swift */; };
+		5ACE4BE1238274B500F665B6 /* RetryPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BDF238273DA00F665B6 /* RetryPolicyTests.swift */; };
 		OBJ_109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Constants.swift */; };
 		OBJ_110 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HandshakeProtocolTests.swift */; };
 		OBJ_111 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HttpConnectionTests.swift */; };
@@ -87,6 +89,8 @@
 /* Begin PBXFileReference section */
 		5AC776102341BB6C00486117 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5ACE4BD72382688200F665B6 /* RetryableConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryableConnection.swift; sourceTree = "<group>"; };
+		5ACE4BD92382701000F665B6 /* RetryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryPolicy.swift; sourceTree = "<group>"; };
+		5ACE4BDF238273DA00F665B6 /* RetryPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryPolicyTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		OBJ_11 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		OBJ_12 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
@@ -188,6 +192,7 @@
 				OBJ_49 /* TestTransport.swift */,
 				OBJ_50 /* TransportTypeTests.swift */,
 				OBJ_51 /* WebsocketsTransportTests.swift */,
+				5ACE4BDF238273DA00F665B6 /* RetryPolicyTests.swift */,
 			);
 			name = SignalRClientTests;
 			path = Tests/SignalRClientTests;
@@ -257,6 +262,7 @@
 				OBJ_35 /* WebSocket.swift */,
 				OBJ_36 /* WebsocketsTransport.swift */,
 				5ACE4BD72382688200F665B6 /* RetryableConnection.swift */,
+				5ACE4BD92382701000F665B6 /* RetryPolicy.swift */,
 			);
 			name = SignalRClient;
 			path = Sources/SignalRClient;
@@ -351,6 +357,7 @@
 				OBJ_110 /* HandshakeProtocolTests.swift in Sources */,
 				OBJ_111 /* HttpConnectionTests.swift in Sources */,
 				OBJ_112 /* HubConnectionExtensionsTests.swift in Sources */,
+				5ACE4BE1238274B500F665B6 /* RetryPolicyTests.swift in Sources */,
 				OBJ_113 /* HubConnectionTests.swift in Sources */,
 				OBJ_114 /* HubProtocolFake.swift in Sources */,
 				OBJ_115 /* JSONHubProtocolTests.swift in Sources */,
@@ -395,6 +402,7 @@
 				OBJ_88 /* TransportType.swift in Sources */,
 				OBJ_89 /* Util.swift in Sources */,
 				OBJ_90 /* WebSocket.swift in Sources */,
+				5ACE4BDA2382701000F665B6 /* RetryPolicy.swift in Sources */,
 				OBJ_91 /* WebsocketsTransport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
