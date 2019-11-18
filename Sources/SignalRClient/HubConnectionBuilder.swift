@@ -107,8 +107,8 @@ public class HubConnectionBuilder {
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let httpConnection = HttpConnection(url: url, options: httpConnectionOptions, logger: logger)
-        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let httpConnectionFactory = { return HttpConnection(url: self.url, options: self.httpConnectionOptions, logger: self.logger) }
+        let hubConnection = HubConnection(connectionFactory: httpConnectionFactory, hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
     }
