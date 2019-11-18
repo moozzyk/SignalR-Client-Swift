@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		5ACE4BD82382688200F665B6 /* RetryableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD72382688200F665B6 /* RetryableConnection.swift */; };
 		OBJ_109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Constants.swift */; };
 		OBJ_110 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HandshakeProtocolTests.swift */; };
 		OBJ_111 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HttpConnectionTests.swift */; };
@@ -85,6 +86,7 @@
 
 /* Begin PBXFileReference section */
 		5AC776102341BB6C00486117 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		5ACE4BD72382688200F665B6 /* RetryableConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryableConnection.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		OBJ_11 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		OBJ_12 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				OBJ_34 /* Util.swift */,
 				OBJ_35 /* WebSocket.swift */,
 				OBJ_36 /* WebsocketsTransport.swift */,
+				5ACE4BD72382688200F665B6 /* RetryableConnection.swift */,
 			);
 			name = SignalRClient;
 			path = Sources/SignalRClient;
@@ -374,6 +377,7 @@
 				OBJ_71 /* HttpConnection.swift in Sources */,
 				OBJ_72 /* HttpConnectionOptions.swift in Sources */,
 				OBJ_73 /* HttpResponse.swift in Sources */,
+				5ACE4BD82382688200F665B6 /* RetryableConnection.swift in Sources */,
 				OBJ_74 /* HubConnection.swift in Sources */,
 				OBJ_75 /* HubConnectionBuilder.swift in Sources */,
 				OBJ_76 /* HubConnectionDelegate.swift in Sources */,

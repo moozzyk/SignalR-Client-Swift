@@ -22,7 +22,6 @@ public class HubConnection {
     private var handshakeHandled = false
     private let logger: Logger
 
-    private let connectionFactory: () -> Connection
     private var connection: Connection
     private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
@@ -47,26 +46,10 @@ public class HubConnection {
      - parameter connection: underlying `Connection`
      - parameter hubProtocol: `HubProtocol` to use to communicate with the server
      - parameter logger: optional logger to write logs. If not provided no log will be written
-
-     - note: this initializer does not allow automatic reconnects
-
      */
-    public convenience init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
-        self.init(connectionFactory: {return connection}, hubProtocol: hubProtocol, logger: logger)
-    }
-
-    /**
-     Initializes a `HubConnection` with an underlying connection, a hub protocol and an optional logger.
-
-     - parameter connectionFactory: factory that creates the underlying `Connection`
-     - parameter hubProtocol: `HubProtocol` to use to communicate with the server
-     - parameter logger: optional logger to write logs. If not provided no log will be written
-
-     */
-    public init(connectionFactory: @escaping () -> Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
+    public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
         logger.log(logLevel: .debug, message: "HubConnection init")
-        self.connectionFactory = connectionFactory
-        self.connection = connectionFactory()
+        self.connection = connection
         self.hubProtocol = hubProtocol
         self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
