@@ -1,5 +1,5 @@
 //
-//  RetryableConnection.swift
+//  ReconnectableConnection.swift
 //  SignalRClient
 //
 //  Created by Pawel Kadluczka on 11/17/19.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-internal class RetryableConnection: Connection {
+internal class ReconnectableConnection: Connection {
     private let connectionFactory: () -> Connection
-    private let retryPolicy: RetryPolicy
+    private let reconnectPolicy: ReconnectPolicy
     private var underlyingConnection: Connection
 
     var delegate: ConnectionDelegate?
@@ -17,9 +17,9 @@ internal class RetryableConnection: Connection {
         return underlyingConnection.connectionId
     }
 
-    init(connectionFactory: @escaping () -> Connection, retryPolicy: RetryPolicy) {
+    init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy) {
         self.connectionFactory = connectionFactory
-        self.retryPolicy = retryPolicy
+        self.reconnectPolicy = reconnectPolicy
         self.underlyingConnection = connectionFactory()
     }
 

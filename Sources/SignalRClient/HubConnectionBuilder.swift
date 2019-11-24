@@ -24,7 +24,7 @@ public class HubConnectionBuilder {
     private let httpConnectionOptions = HttpConnectionOptions()
     private var logger: Logger = NullLogger()
     private var delegate: HubConnectionDelegate?
-    private var retryPolicy: RetryPolicy = NoRetryPolicy()
+    private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
 
     /**
      Initializes a `HubConnectionBuilder` with a URL.
@@ -102,8 +102,8 @@ public class HubConnectionBuilder {
         return self
     }
 
-    public func withAutoReconnect(retryPolicy: RetryPolicy = DefaultRetryPolicy()) -> HubConnectionBuilder {
-        self.retryPolicy = retryPolicy
+    public func withAutoReconnect(reconnectPolicy: ReconnectPolicy = DefaultReconnectPolicy()) -> HubConnectionBuilder {
+        self.reconnectPolicy = reconnectPolicy
         return self
     }
 
@@ -114,8 +114,8 @@ public class HubConnectionBuilder {
      */
     public func build() -> HubConnection {
         let connectionFactory = {return HttpConnection(url: self.url, options: self.httpConnectionOptions, logger: self.logger)}
-        let retryableConnection = RetryableConnection(connectionFactory: connectionFactory, retryPolicy: retryPolicy)
-        let hubConnection = HubConnection(connection: retryableConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let reconnectableConnection = ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy)
+        let hubConnection = HubConnection(connection: reconnectableConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
     }
