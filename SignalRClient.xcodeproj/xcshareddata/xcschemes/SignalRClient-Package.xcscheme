@@ -37,11 +37,6 @@
                BlueprintName = "SignalRClientTests"
                ReferencedContainer = "container:SignalRClient.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "ReconnectableConnectionTests/testThatConnectionReconnectsIfReconnectPolicyAllowsIt()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

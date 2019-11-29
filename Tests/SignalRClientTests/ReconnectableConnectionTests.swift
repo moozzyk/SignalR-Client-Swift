@@ -29,18 +29,23 @@ class ReconnectableConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    // TODO: enable the test after adding reconnect callbacks
-    public func XtestThatConnectionReconnectsIfReconnectPolicyAllowsIt() {
+    public func testThatConnectionReconnectsIfReconnectPolicyAllowsIt() {
+        let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
+        let didReconnectExpectation = expectation(description: "connection reconnected")
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
         let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: TestReconnectPolicy(), logger: PrintLogger())
 
-        var error: Error? = SignalRError.invalidOperation(message: "error")
         delegate.connectionDidOpenHandler = { connection in
-            testConnection.delegate?.connectionDidClose(error: error)
-            error = nil
+            didOpenExpectation.fulfill()
+            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+        }
+
+        delegate.connectionDidReconnectHandler = {
+            didReconnectExpectation.fulfill()
+            reconnectableConnection.stop(stopError: nil)
         }
 
         delegate.connectionDidCloseHandler = { error in
@@ -51,7 +56,7 @@ class ReconnectableConnectionTests: XCTestCase {
         reconnectableConnection.delegate = delegate
         reconnectableConnection.start()
 
-        waitForExpectations(timeout: 5000 /*seconds*/)
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     class TestReconnectPolicy: ReconnectPolicy {

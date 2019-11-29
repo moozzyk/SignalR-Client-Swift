@@ -93,6 +93,7 @@ internal class ReconnectableConnection: Connection {
                 DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
                     self.startInternal()
                 }
+                // TODO: fire willReconnect but only for the first attempt
                 return
             }
         }
@@ -124,7 +125,8 @@ internal class ReconnectableConnection: Connection {
             if previousState == .starting {
                 unwrappedConnection.delegate?.connectionDidOpen(connection: connection)
             } else if previousState == .reconnecting {
-                // TODO: invoke delegate?.connectionDidReconnect. (does it need to take connection)?
+                // TODO: reset the attempt counter here
+                unwrappedConnection.delegate?.connectionDidReconnect()
             } else {
                 // TODO: log internal error
                 // stop with error?
@@ -148,7 +150,7 @@ internal class ReconnectableConnection: Connection {
             if previousState != nil {
                 connection?.restartConnection(error: error)
             } else {
-                // TODO: log state
+                // TODO: this is assuming that the state is .stopping which might not be correct
                 unwrappedConnection.delegate?.connectionDidClose(error: error)
             }
         }

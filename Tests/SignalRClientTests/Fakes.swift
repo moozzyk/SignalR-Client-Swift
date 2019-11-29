@@ -12,6 +12,8 @@ class TestConnectionDelegate: ConnectionDelegate {
     var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
     var connectionDidReceiveDataHandler: ((_ connection: Connection, _ data: Data) -> Void)?
+    var connectionWillReconnectHandler: ((_ error: Error?)->Void)?
+    var connectionDidReconnectHandler: (()->Void)?
 
     func connectionDidOpen(connection: Connection) {
         connectionDidOpenHandler?(connection)
@@ -27,6 +29,14 @@ class TestConnectionDelegate: ConnectionDelegate {
 
     func connectionDidClose(error: Error?) {
         connectionDidCloseHandler?(error)
+    }
+
+    func connectionWillReconnect(error: Error) {
+        connectionWillReconnectHandler?(error)
+    }
+
+    func connectionDidReconnect() {
+        connectionDidReconnectHandler?()
     }
 }
 

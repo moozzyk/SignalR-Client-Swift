@@ -13,4 +13,11 @@ public protocol ConnectionDelegate: class {
     func connectionDidFailToOpen(error: Error)
     func connectionDidReceiveData(connection: Connection, data: Data)
     func connectionDidClose(error: Error?)
+    func connectionWillReconnect(error: Error)
+    func connectionDidReconnect()
+}
+
+public extension ConnectionDelegate {
+    func connectionWillReconnect(error: Error) {}
+    func connectionDidReconnect() {}
 }
