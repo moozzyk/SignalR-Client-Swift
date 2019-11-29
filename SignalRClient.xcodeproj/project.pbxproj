@@ -24,6 +24,8 @@
 		5ACE4BD82382688200F665B6 /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */; };
 		5ACE4BDA2382701000F665B6 /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */; };
 		5ACE4BE1238274B500F665B6 /* ReconnectPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BDF238273DA00F665B6 /* ReconnectPolicyTests.swift */; };
+		5AFBA01C238A4C2800A9B5C7 /* ReconnectableConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFBA01B238A4C2800A9B5C7 /* ReconnectableConnectionTests.swift */; };
+		5AFBA01E238A554B00A9B5C7 /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFBA01D238A554B00A9B5C7 /* Fakes.swift */; };
 		OBJ_109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Constants.swift */; };
 		OBJ_110 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HandshakeProtocolTests.swift */; };
 		OBJ_111 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HttpConnectionTests.swift */; };
@@ -91,6 +93,8 @@
 		5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectableConnection.swift; sourceTree = "<group>"; };
 		5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
 		5ACE4BDF238273DA00F665B6 /* ReconnectPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicyTests.swift; sourceTree = "<group>"; };
+		5AFBA01B238A4C2800A9B5C7 /* ReconnectableConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectableConnectionTests.swift; sourceTree = "<group>"; };
+		5AFBA01D238A554B00A9B5C7 /* Fakes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		OBJ_11 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		OBJ_12 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
@@ -193,6 +197,8 @@
 				OBJ_50 /* TransportTypeTests.swift */,
 				OBJ_51 /* WebsocketsTransportTests.swift */,
 				5ACE4BDF238273DA00F665B6 /* ReconnectPolicyTests.swift */,
+				5AFBA01B238A4C2800A9B5C7 /* ReconnectableConnectionTests.swift */,
+				5AFBA01D238A554B00A9B5C7 /* Fakes.swift */,
 			);
 			name = SignalRClientTests;
 			path = Tests/SignalRClientTests;
@@ -353,8 +359,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				5AFBA01E238A554B00A9B5C7 /* Fakes.swift in Sources */,
 				OBJ_109 /* Constants.swift in Sources */,
 				OBJ_110 /* HandshakeProtocolTests.swift in Sources */,
+				5AFBA01C238A4C2800A9B5C7 /* ReconnectableConnectionTests.swift in Sources */,
 				OBJ_111 /* HttpConnectionTests.swift in Sources */,
 				OBJ_112 /* HubConnectionExtensionsTests.swift in Sources */,
 				5ACE4BE1238274B500F665B6 /* ReconnectPolicyTests.swift in Sources */,

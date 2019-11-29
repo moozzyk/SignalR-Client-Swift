@@ -114,7 +114,7 @@ public class HubConnectionBuilder {
      */
     public func build() -> HubConnection {
         let connectionFactory = {return HttpConnection(url: self.url, options: self.httpConnectionOptions, logger: self.logger)}
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy)
+        let reconnectableConnection = ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: self.logger)
         let hubConnection = HubConnection(connection: reconnectableConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection

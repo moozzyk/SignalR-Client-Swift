@@ -8,7 +8,7 @@
 import XCTest
 @testable import SignalRClient
 
-class ReconnectPolicyTest: XCTestCase {
+class ReconnectPolicyTests: XCTestCase {
     public func testThatNoReconnectPolicyReturnsDispatchTimeInternalNever() {
         XCTAssertEqual(DispatchTimeInterval.never, NoReconnectPolicy().nextAttemptInterval())
     }
