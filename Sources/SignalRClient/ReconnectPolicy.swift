@@ -7,19 +7,25 @@
 
 import Foundation
 
+public struct RetryContext {
+    let failedAttemptsCount: Int
+    let reconnectStartTime: Date
+    let error: Error
+}
+
 public protocol ReconnectPolicy {
-    func nextAttemptInterval() -> DispatchTimeInterval
+    func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval
 }
 
 public class DefaultReconnectPolicy: ReconnectPolicy {
     public init() {}
-    public func nextAttemptInterval() -> DispatchTimeInterval {
+    public func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
         return DispatchTimeInterval.never
     }
 }
 
 internal class NoReconnectPolicy: ReconnectPolicy {
-    func nextAttemptInterval() -> DispatchTimeInterval {
+    func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
         return DispatchTimeInterval.never
     }
 }

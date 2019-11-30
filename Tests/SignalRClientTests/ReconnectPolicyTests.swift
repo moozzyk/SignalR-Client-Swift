@@ -10,6 +10,9 @@ import XCTest
 
 class ReconnectPolicyTests: XCTestCase {
     public func testThatNoReconnectPolicyReturnsDispatchTimeInternalNever() {
-        XCTAssertEqual(DispatchTimeInterval.never, NoReconnectPolicy().nextAttemptInterval())
+        for attempts in 0...5 {
+            let retryContext = RetryContext(failedAttemptsCount: attempts, reconnectStartTime: Date(), error: SignalRError.invalidOperation(message: "blah"))
+            XCTAssertEqual(DispatchTimeInterval.never, NoReconnectPolicy().nextAttemptInterval(retryContext: retryContext))
+        }
     }
 }

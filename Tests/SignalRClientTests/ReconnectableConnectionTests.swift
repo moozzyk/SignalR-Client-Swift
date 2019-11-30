@@ -32,6 +32,7 @@ class ReconnectableConnectionTests: XCTestCase {
     public func testThatConnectionReconnectsIfReconnectPolicyAllowsIt() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
+        let willReconnectExpectation = expectation(description: "connection will reconnect")
         let didReconnectExpectation = expectation(description: "connection reconnected")
 
         let testConnection = TestConnection()
@@ -41,6 +42,18 @@ class ReconnectableConnectionTests: XCTestCase {
         delegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
             testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+        }
+
+        delegate.connectionWillReconnectHandler = { error in
+            switch (error as! SignalRError) {
+            case .invalidOperation(let errorMessage):
+                XCTAssertEqual("forcing reconnect", errorMessage)
+                break
+            default:
+                XCTFail()
+                break
+            }
+            willReconnectExpectation.fulfill()
         }
 
         delegate.connectionDidReconnectHandler = {
@@ -60,7 +73,7 @@ class ReconnectableConnectionTests: XCTestCase {
     }
 
     class TestReconnectPolicy: ReconnectPolicy {
-        func nextAttemptInterval() -> DispatchTimeInterval {
+        func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
             return DispatchTimeInterval.milliseconds(50)
         }
     }

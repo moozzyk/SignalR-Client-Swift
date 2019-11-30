@@ -18,6 +18,8 @@ internal class ReconnectableConnection: Connection {
     private var underlyingConnection: Connection
     private var wrappedDelegate: ConnectionDelegate?
     private var state = State.disconnected
+    private var failedAttemptsCount: Int = 0
+    private var reconnectStartTime: Date = Date()
 
     private enum State: String {
         case disconnected = "disconnected"
@@ -44,7 +46,7 @@ internal class ReconnectableConnection: Connection {
         if changeState(from:[.disconnected], to: .starting) != nil {
             startInternal()
         } else {
-            // TODO: fail
+            // TODO: fail vs. ignore?
         }
     }
 
@@ -88,12 +90,15 @@ internal class ReconnectableConnection: Connection {
 
     private func restartConnection(error: Error?) {
         if state == .starting || state == .reconnecting {
-            let nextAttemptInterval = reconnectPolicy.nextAttemptInterval()
+            let retryContext = updateAndCreateRetryContext(error: error)
+            let nextAttemptInterval = reconnectPolicy.nextAttemptInterval(retryContext: retryContext)
             if nextAttemptInterval != .never {
                 DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
                     self.startInternal()
                 }
-                // TODO: fire willReconnect but only for the first attempt
+                if (retryContext.failedAttemptsCount == 0) {
+                    delegate?.connectionWillReconnect(error: retryContext.error)
+                }
                 return
             }
         }
@@ -109,6 +114,33 @@ internal class ReconnectableConnection: Connection {
         // _ = changeState(from: nil, to: .disconnected)
     }
 
+    private func updateAndCreateRetryContext(error: Error?) -> RetryContext {
+        var attemptsCount = -1
+        var startTime = Date()
+        connectionQueue.sync {
+            attemptsCount = self.failedAttemptsCount
+            if attemptsCount == 0 {
+                self.reconnectStartTime = Date()
+            }
+            startTime = self.reconnectStartTime
+            self.reconnectStartTime += 1
+        }
+
+        if error == nil {
+            // TODO: log - this should not happen
+        }
+
+        let error = error ?? SignalRError.invalidOperation(message: "Unexpected error.")
+        return RetryContext(failedAttemptsCount: attemptsCount, reconnectStartTime: startTime, error: error)
+    }
+
+    private func resetRetryAttempts() {
+        connectionQueue.sync {
+            self.failedAttemptsCount = 0
+            // no need to reset start time - it will be set next time reconnect happens
+        }
+    }
+
     private class ReconnectableConnectionDelegate: ConnectionDelegate {
         private weak var connection: ReconnectableConnection?
 
@@ -120,7 +152,7 @@ internal class ReconnectableConnection: Connection {
             guard let unwrappedConnection = self.connection else {
                 return
             }
-
+            unwrappedConnection.resetRetryAttempts()
             let previousState = unwrappedConnection.changeState(from: [.starting, .reconnecting], to: .running)
             if previousState == .starting {
                 unwrappedConnection.delegate?.connectionDidOpen(connection: connection)
