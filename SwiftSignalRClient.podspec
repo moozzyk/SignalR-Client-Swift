@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name                   = "SwiftSignalRClient"
-  s.version                = "0.2.2"
+  s.name                   = "SwiftSignalRClient8.0"
+  s.version                = "0.2.3"
   s.summary                = "Swift SignalR Client for the ASP.Net Core version of SignalR."
   s.homepage               = "https://github.com/moozzyk/SignalR-Client-Swift"
   s.license                = { :type => "Attribution License", :file => "LICENSE" }
