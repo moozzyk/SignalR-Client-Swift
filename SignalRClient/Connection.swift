@@ -66,16 +66,30 @@ public class Connection: SocketConnection {
                     self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
                     return
                 }
+        
+                guard let data = httpResponse!.contents else {
+                    self.failOpenWithError(error: DataError.NoResponseData, changeState: true)
+                    return
+                }
+                let negotiationResponse: NegotiationResponse
+                do {
+                    negotiationResponse = try JSONDecoder().decode(NegotiationResponse.self, from: data)
+                } catch let error {
+                    self.failOpenWithError(error: error, changeState: true)
+                    return
+                }
+                    
+                let connectionId = negotiationResponse.connectionId
 
-                // TODO: parse negotiate response to get connection id and transports
-                // let contents = String(data: (httpResponse!.contents)!, encoding: String.Encoding.utf8) ?? ""
-                let connectionId = ""
-
-                let urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+                var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
                 var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
                 queryItems.append(URLQueryItem(name: "connectionId", value: connectionId))
-                self.url = urlComponents.url!
+                urlComponents.percentEncodedQuery = queryItems.map {
+                    return ($0.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") + "=" + ($0.value?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
+                }.joined(separator: "&")
 
+                self.url = urlComponents.url!
+                
                 self.transport = transport ?? WebsocketsTransport()
                 self.transport!.delegate = self.transportDelegate
 
@@ -195,4 +209,24 @@ public class ConnectionTransportDelegate: TransportDelegate {
     public func transportDidClose(_ error: Error?) {
         connection?.transportDidClose(error)
     }
+}
+
+struct NegotiationResponse: Decodable {
+    let connectionId: String
+    let availableTransports: [NegotiationResponseTransport]
+}
+
+struct NegotiationResponseTransport: Decodable {
+    let transport: String
+    let transferFormats: [TransferFormat]
+}
+
+enum TransferFormat: String, Decodable {
+    case Text
+    case Binary
+}
+
+enum DataError: Error {
+    case NoResponseData
+    case UnexpectedNegotiationResponse
 }
