@@ -9,7 +9,6 @@
 import Foundation
 
 public class WebsocketsTransport: Transport {
-    private let transportQueue: DispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
     private var isTransportClosed = false
     private let logger: Logger
 
@@ -28,6 +27,7 @@ public class WebsocketsTransport: Transport {
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
 
         webSocket = WebSocket(request: request)
+        webSocket!.eventQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
 
         webSocket!.event.open = { [weak self] in
             guard let welf = self else { return }
@@ -116,13 +116,11 @@ public class WebsocketsTransport: Transport {
     }
 
     private func markTransportClosed() -> Bool {
-        var previousCloseStatus = false
-
-        transportQueue.sync {
-            previousCloseStatus = isTransportClosed
-            isTransportClosed = true
-        }
-
+        // The assumption is that this method will not be invoked concurrently
+        // Currently it is guaranteed because it is only invoked from webSocket
+        // event handlers which share the same queue
+        let previousCloseStatus = isTransportClosed
+        isTransportClosed = true
         return previousCloseStatus
     }
 }

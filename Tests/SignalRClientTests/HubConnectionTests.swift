@@ -956,6 +956,27 @@ class HubConnectionTests: XCTestCase {
         fakeConnection.delegate!.connectionDidReceiveData(connection: fakeConnection, data: payload.data(using: .utf8)!)
         XCTAssertEqual(String(describing: SignalRError.serverClose(message: "Server Error")), String(describing: fakeConnection.stopError!))
     }
+
+    func testThatDeadlockDoesNotHappen() {
+        let didStop = expectation(description: "connection stopped")
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didStop.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withHttpConnectionOptions(configureHttpOptions: {options in
+                options.skipNegotiation = true
+            })
+            .build()
+        hubConnection.start()
+        hubConnection.stop()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {
