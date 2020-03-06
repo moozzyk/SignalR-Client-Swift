@@ -208,8 +208,17 @@ internal class ReconnectableConnection: Connection {
                 connection?.restartConnection(error: error)
             } else {
                 unwrappedConnection.logger.log(logLevel: .debug, message: "Assuming clean stop - stopping connection")
-                // TODO: this is assuming that the state is .stopping which might not be correct
-                unwrappedConnection.delegate?.connectionDidClose(error: error)
+                if  unwrappedConnection.state == .stopping {
+                    _ = unwrappedConnection.changeState(from: [.stopping], to: .disconnected)
+                    unwrappedConnection.delegate?.connectionDidClose(error: error)
+                } else {
+                    // TODO: Review what happens if this close happens when the connection is
+                    // in one of these states:
+                    //  - starting (possible?)
+                    //  - reconnecting
+                    //  - disconnected (possible?)
+                    unwrappedConnection.logger.log(logLevel: .error, message: "Internal error - unexpected state")
+                }
             }
         }
     }

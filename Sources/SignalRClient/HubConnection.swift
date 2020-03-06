@@ -407,7 +407,7 @@ public class HubConnection {
                 serverInvocationHandler.raiseError(error: invocationError)
             }
         }
-
+        handshakeHandled = false
         delegate?.connectionDidClose(error: error)
     }
 

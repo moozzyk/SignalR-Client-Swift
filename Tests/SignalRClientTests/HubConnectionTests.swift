@@ -977,6 +977,35 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatConnectionCanBeRestarted() {
+        let connectionDidCloseExpectation = expectation(description: "connection closed")
+        connectionDidCloseExpectation.expectedFulfillmentCount = 5
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .build()
+
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.stop()
+        }
+
+        var numRestarts = 4 // initial start + 4 restarts = 5 (expectedFulfillmentCount)
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            if (numRestarts > 0) {
+                numRestarts -= 1
+                hubConnection.start()
+            }
+            connectionDidCloseExpectation.fulfill()
+        }
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {
