@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -9,8 +9,11 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.IO.Pipelines" Version="4.7.0" />
+  </ItemGroup>
+
   <Target Name="CopyClient" BeforeTargets="AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@microsoft\signalr\dist\browser\signalr.js"
-          DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@microsoft\signalr\dist\browser\signalr.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
   </Target>
 </Project>
