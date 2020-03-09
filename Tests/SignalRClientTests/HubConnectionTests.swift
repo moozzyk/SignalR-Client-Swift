@@ -978,6 +978,41 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionCanReconnect() {
+        let connectionWillReconnectExpectation = expectation(description: "connection will reconnect")
+        let connectionDidReconnectExpectation = expectation(description: "connection did reconnect")
+        let connectionDidCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withAutoReconnect(reconnectPolicy: TestReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(20)]))
+            .build()
+
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.send(method: "KillConnection")
+        }
+
+        hubConnectionDelegate.connectionWillReconnectHandler = { error in
+            connectionWillReconnectExpectation.fulfill()
+        }
+
+        hubConnectionDelegate.connectionDidReconnectHandler = {
+            connectionDidReconnectExpectation.fulfill()
+            hubConnection.stop()
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            connectionDidCloseExpectation.fulfill()
+        }
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatConnectionCanBeRestarted() {
         let connectionDidCloseExpectation = expectation(description: "connection closed")
         connectionDidCloseExpectation.expectedFulfillmentCount = 5
@@ -1012,6 +1047,8 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
     var connectionDidOpenHandler: ((_ hubConnection: HubConnection) -> Void)?
     var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
+    var connectionWillReconnectHandler: ((_ error: Error) -> Void)?
+    var connectionDidReconnectHandler: (() -> Void)?
 
     func connectionDidOpen(hubConnection: HubConnection) {
         connectionDidOpenHandler?(hubConnection)
@@ -1023,6 +1060,28 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 
     func connectionDidClose(error: Error?) {
         connectionDidCloseHandler?(error)
+    }
+
+    func connectionWillReconnect(error: Error) {
+        connectionWillReconnectHandler?(error)
+    }
+
+    func connectionDidReconnect() {
+        connectionDidReconnectHandler?()
+    }
+}
+
+class TestReconnectPolicy: ReconnectPolicy {
+    let retryIntervals: [DispatchTimeInterval]
+    init(retryIntervals: [DispatchTimeInterval]) {
+        self.retryIntervals = retryIntervals
+    }
+
+    func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
+        if retryContext.failedAttemptsCount > retryIntervals.count {
+            return .never
+        }
+        return retryIntervals[retryContext.failedAttemptsCount]
     }
 }
 

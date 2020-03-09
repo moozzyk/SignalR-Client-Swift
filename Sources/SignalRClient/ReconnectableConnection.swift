@@ -110,9 +110,11 @@ internal class ReconnectableConnection: Connection {
             logger.log(logLevel: .debug, message: "nextAttemptInterval: \(nextAttemptInterval), RetryContext: \(retryContext)")
             if nextAttemptInterval != .never {
                 logger.log(logLevel: .debug, message: "Scheduling reconnect attempt")
+                // TODO: can this cause problems because event handlers are dispatched to main queue as well (via `Util.dispatchToMainThread`)
                 DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
                     self.startInternal()
                 }
+                // TODO: again, running on a random (possibly main) queue
                 if (retryContext.failedAttemptsCount == 0) {
                     delegate?.connectionWillReconnect(error: retryContext.error)
                 }
@@ -149,7 +151,7 @@ internal class ReconnectableConnection: Connection {
         }
 
         if error == nil {
-            logger.log(logLevel: .error, message: "Internal error - unexpected error value (nil)")
+            logger.log(logLevel: .info, message: "Received nil error. (Can be because Context.Abort())")
         }
 
         let error = error ?? SignalRError.invalidOperation(message: "Unexpected error.")

@@ -86,6 +86,11 @@ namespace TestServer
             return header;
         }
 
+        public void KillConnection()
+        {
+            Context.Abort();
+        }
+
         public Task InvokeManyArgs(object[] args)
         {
             return Clients.Client(Context.ConnectionId).SendCoreAsync("ManyArgs", args);

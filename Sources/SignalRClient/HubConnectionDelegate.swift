@@ -36,4 +36,21 @@ public protocol HubConnectionDelegate: class {
      - parameter error: If the connection was closed cleanly `nil`. Otherwise contains failure detais
     */
     func connectionDidClose(error: Error?)
+
+    /**
+     Invoked when the connection will try to reconnect.
+
+     - parameter error: Contains the reason for reconnect
+    */
+    func connectionWillReconnect(error: Error)
+
+    /**
+     Invoked when the connection reconnected successfully.
+    */
+    func connectionDidReconnect()
+}
+
+public extension HubConnectionDelegate {
+    func connectionWillReconnect(error: Error) {}
+    func connectionDidReconnect() {}
 }

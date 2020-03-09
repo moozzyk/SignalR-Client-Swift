@@ -415,6 +415,13 @@ public class HubConnection {
         delegate?.connectionDidFailToOpen(error: error)
     }
 
+    fileprivate func connectionWillReconnect(error: Error) {
+        delegate?.connectionWillReconnect(error: error)
+    }
+
+    fileprivate func connectionDidReconnect() {
+        delegate?.connectionDidReconnect()
+    }
 }
 
 fileprivate class HubConnectionConnectionDelegate: ConnectionDelegate {
@@ -437,6 +444,14 @@ fileprivate class HubConnectionConnectionDelegate: ConnectionDelegate {
 
     func connectionDidClose(error: Error?) {
         hubConnection?.connectionDidClose(error: error)
+    }
+
+    func connectionWillReconnect(error: Error) {
+        hubConnection?.connectionWillReconnect(error: error)
+    }
+
+    func connectionDidReconnect() {
+        hubConnection?.connectionDidReconnect()
     }
 }
 
