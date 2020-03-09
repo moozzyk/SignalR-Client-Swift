@@ -10,6 +10,9 @@
  */
 
 import Foundation
+#if canImport(zlib)
+import zlib
+#endif
 
 private let windowBufferSize = 0x2000
 
