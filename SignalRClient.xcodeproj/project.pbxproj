@@ -132,7 +132,7 @@
 		OBJ_51 /* WebsocketsTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketsTransportTests.swift; sourceTree = "<group>"; };
 		OBJ_55 /* Examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Examples; sourceTree = SOURCE_ROOT; };
 		OBJ_56 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		OBJ_57 /* SwiftSignalRClient.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftSignalRClient.podspec; sourceTree = "<group>"; };
+		OBJ_57 /* SwiftSignalRClientMD.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftSignalRClientMD.podspec; sourceTree = "<group>"; };
 		OBJ_58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* CodableHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
@@ -206,7 +206,7 @@
 				OBJ_52 /* Products */,
 				OBJ_55 /* Examples */,
 				OBJ_56 /* LICENSE */,
-				OBJ_57 /* SwiftSignalRClient.podspec */,
+				OBJ_57 /* SwiftSignalRClientMD.podspec */,
 				OBJ_58 /* README.md */,
 				5AC7760F2341BB6C00486117 /* Frameworks */,
 			);
