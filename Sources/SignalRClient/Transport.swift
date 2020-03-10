@@ -15,6 +15,6 @@ public protocol Transport: class {
     func close() -> Void
 }
 
-internal protocol TransportFactory {
+protocol TransportFactory {
     func createTransport(availableTransports: [TransportDescription]) throws -> Transport
 }

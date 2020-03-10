@@ -1,25 +1,45 @@
 //
-//  WebsocketsTransport.swift
-//  SignalRClient
+//  PingingWebSocketsTransport.swift
+//  iFNApp
 //
-//  Created by Pawel Kadluczka on 2/23/17.
-//  Copyright © 2017 Pawel Kadluczka. All rights reserved.
+//  Created by Michael Danzig on 06.03.20.
+//  Copyright © 2020 ABC New Media AG. All rights reserved.
 //
 
 import Foundation
 
-public class WebsocketsTransport: Transport {
-    private var isTransportClosed = false
-    private let logger: Logger
-
-    var webSocket:WebSocket? = nil
-    public weak var delegate: TransportDelegate? = nil
-
-    init(logger: Logger) {
-        self.logger = logger
+/// A copy of the WebsocketTransport with the addition of sending pings in certain intervals.
+public class PingingWebsocketsTransport: WebsocketsTransport {
+    private var pingTimer: Timer?
+    /// The time in secconds after a message has been received or after the connection has been established that needs to pass before a ping is sent.
+    public var pingInterval = 90
+    /// The time in secconds to wait for a response to a ping.
+    public var pingTimeout = 10
+    
+    func resetPingTimer() {
+        pingTimer?.invalidate()
+        pingTimer = Timer.scheduledTimer(timeInterval: TimeInterval(pingInterval), target: self, selector: #selector(sendPing), userInfo: nil, repeats: false)
+    }
+    
+    @objc
+    func sendPing() {
+        pingTimer = Timer.scheduledTimer(timeInterval: TimeInterval(pingTimeout), target: self, selector: #selector(pingTimedOut), userInfo: nil, repeats: false)
+        webSocket?.ping()
+    }
+    
+    @objc
+    private func pingTimedOut() {
+        webSocket?.close()
+        let error = WebSocketsTransportError.PingTimedOut
+        logger.log(logLevel: .info, message: "WebSocket error. Error: \(error)")
+        guard !self.markTransportClosed() else {
+            self.logger.log(logLevel: .info, message: "Transport already marked as closed - ignoring error")
+            return
+        }
+        self.delegate?.transportDidClose(error)
     }
 
-    public func start(url: URL, options: HttpConnectionOptions) {
+    override public func start(url: URL, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
         var request = URLRequest(url: convertUrl(url: url))
 
@@ -27,17 +47,19 @@ public class WebsocketsTransport: Transport {
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
 
         webSocket = WebSocket(request: request)
-        webSocket!.eventQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
 
         webSocket!.event.open = { [weak self] in
             guard let welf = self else { return }
             welf.logger.log(logLevel: .info, message: "WebSocket open")
 
             welf.delegate?.transportDidOpen()
+            self?.resetPingTimer()
         }
-
+        
         webSocket!.event.close = { [weak self] (code, reason, clean) in
             guard let welf = self else { return }
+            welf.pingTimer?.invalidate()
+            
             welf.logger.log(logLevel: .info, message: "WebSocket close. Clean: \(clean), code: \(code), reason: \(reason)")
 
             // the transport could have already been closed as a result of an error. In this case we should not call
@@ -56,6 +78,8 @@ public class WebsocketsTransport: Transport {
 
         webSocket!.event.error = { [weak self] error in
             guard let welf = self else { return }
+            
+            welf.pingTimer?.invalidate()
 
             welf.logger.log(logLevel: .info, message: "WebSocket error. Error: \(error)")
             // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
@@ -77,54 +101,22 @@ public class WebsocketsTransport: Transport {
             } else {
                 welf.delegate?.transportDidReceiveData(message as! Data)
             }
+            welf.resetPingTimer()
         }
         webSocket!.open()
     }
-
-    public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
-        webSocket?.send(data: data)
-        sendDidComplete(nil)
-    }
-
-    public func close() {
-        webSocket?.close()
-    }
-
-    private func convertUrl(url: URL) -> URL {
-        if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            if (components.scheme == "http") {
-                components.scheme = "ws"
-            } else if (components.scheme == "https") {
-                components.scheme = "wss"
-            }
-            return components.url!
-        }
-
-        return url
-    }
-
-    @inline(__always) private func populateHeaders(headers: [String : String], request: inout URLRequest) {
-        headers.forEach { (key, value) in
-            request.addValue(value, forHTTPHeaderField: key)
-        }
-    }
-
-    @inline(__always) private func setAccessToken(accessTokenProvider: () -> String?, request: inout URLRequest) {
-        if let accessToken = accessTokenProvider() {
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        }
-    }
-
-    private func markTransportClosed() -> Bool {
-        // The assumption is that this method will not be invoked concurrently
-        // Currently it is guaranteed because it is only invoked from webSocket
-        // event handlers which share the same queue
-        let previousCloseStatus = isTransportClosed
-        isTransportClosed = true
-        return previousCloseStatus
-    }
 }
 
-fileprivate enum WebSocketsTransportError: Error {
-    case webSocketClosed(statusCode: Int, reason: String)
+extension PingingWebsocketsTransport: WebSocketDelegate {
+    public func webSocketOpen() {
+        resetPingTimer()
+    }
+
+    public func webSocketClose(_ code: Int, reason: String, wasClean: Bool) {
+        pingTimer?.invalidate()
+    }
+
+    public func webSocketError(_ error: NSError) {
+        resetPingTimer()
+    }
 }

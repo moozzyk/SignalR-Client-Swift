@@ -18,7 +18,7 @@ internal class DefaultTransportFactory: TransportFactory {
     func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
         for transport in availableTransports {
             if transport.transportType == .webSockets {
-                return WebsocketsTransport(logger: logger)
+                return PingingWebsocketsTransport(logger: logger)
             }
         }
 
