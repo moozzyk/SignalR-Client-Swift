@@ -22,6 +22,9 @@
 
 /* Begin PBXBuildFile section */
 		5AC776122341BC3300486117 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC776102341BB6C00486117 /* libz.tbd */; };
+		F594F53324178558007D2710 /* PingingWebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F594F53224178558007D2710 /* PingingWebsocketsTransport.swift */; };
+		F594F53424178558007D2710 /* PingingWebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F594F53224178558007D2710 /* PingingWebsocketsTransport.swift */; };
+		F594F53524178558007D2710 /* PingingWebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F594F53224178558007D2710 /* PingingWebsocketsTransport.swift */; };
 		OBJ_109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Constants.swift */; };
 		OBJ_110 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HandshakeProtocolTests.swift */; };
 		OBJ_111 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HttpConnectionTests.swift */; };
@@ -86,6 +89,7 @@
 
 /* Begin PBXFileReference section */
 		5AC776102341BB6C00486117 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		F594F53224178558007D2710 /* PingingWebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PingingWebsocketsTransport.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		OBJ_11 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
 		OBJ_12 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
@@ -193,7 +197,7 @@
 			path = Tests/SignalRClientTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -206,7 +210,6 @@
 				OBJ_58 /* README.md */,
 				5AC7760F2341BB6C00486117 /* Frameworks */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_52 /* Products */ = {
@@ -247,6 +250,7 @@
 				OBJ_24 /* JSONHubProtocol.swift */,
 				OBJ_25 /* Logger.swift */,
 				OBJ_26 /* NegotiationResponse.swift */,
+				F594F53224178558007D2710 /* PingingWebsocketsTransport.swift */,
 				OBJ_27 /* ServerInvocationHandler.swift */,
 				OBJ_28 /* SignalRError.swift */,
 				OBJ_29 /* StreamHandle.swift */,
@@ -320,6 +324,11 @@
 			attributes = {
 				LastSwiftMigration = 9999;
 				LastUpgradeCheck = 9999;
+				TargetAttributes = {
+					"SignalRClient::SignalRClientPackageTests::ProductTarget" = {
+						LastSwiftMigration = 1130;
+					};
+				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "SignalRClient" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -329,7 +338,7 @@
 				English,
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_52 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -347,6 +356,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				F594F53524178558007D2710 /* PingingWebsocketsTransport.swift in Sources */,
 				OBJ_109 /* Constants.swift in Sources */,
 				OBJ_110 /* HandshakeProtocolTests.swift in Sources */,
 				OBJ_111 /* HttpConnectionTests.swift in Sources */,
@@ -376,6 +386,7 @@
 				OBJ_70 /* HttpClientProtocol.swift in Sources */,
 				OBJ_71 /* HttpConnection.swift in Sources */,
 				OBJ_72 /* HttpConnectionOptions.swift in Sources */,
+				F594F53324178558007D2710 /* PingingWebsocketsTransport.swift in Sources */,
 				OBJ_73 /* HttpResponse.swift in Sources */,
 				OBJ_74 /* HubConnection.swift in Sources */,
 				OBJ_75 /* HubConnectionBuilder.swift in Sources */,
@@ -402,6 +413,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				F594F53424178558007D2710 /* PingingWebsocketsTransport.swift in Sources */,
 				OBJ_98 /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,12 +437,21 @@
 		OBJ_101 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/SignalRClient/SignalRClientPackageTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		OBJ_102 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/SignalRClient/SignalRClientPackageTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
