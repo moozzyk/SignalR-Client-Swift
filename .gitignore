@@ -13,7 +13,6 @@ project.lock.json
 launchSettings.json
 *.tmp
 .vscode/
-signalr-client/
 node_modules/
 */TestServer/wwwroot/js/
 Pods/
