@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		5AC776122341BC3300486117 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC776102341BB6C00486117 /* libz.tbd */; };
 		OBJ_109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Constants.swift */; };
 		OBJ_110 /* HandshakeProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* HandshakeProtocolTests.swift */; };
 		OBJ_111 /* HttpConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* HttpConnectionTests.swift */; };
@@ -132,7 +131,7 @@
 		OBJ_58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* CodableHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
-		"SignalRClient::SignalRClient::Product" /* SignalRClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"SignalRClient::SignalRClient::Product" /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"SignalRClient::SignalRClientTests::Product" /* SignalRClientTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -149,7 +148,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				5AC776122341BC3300486117 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,7 +191,7 @@
 			path = Tests/SignalRClientTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -206,7 +204,6 @@
 				OBJ_58 /* README.md */,
 				5AC7760F2341BB6C00486117 /* Frameworks */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_52 /* Products */ = {
@@ -329,7 +326,7 @@
 				English,
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_52 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
