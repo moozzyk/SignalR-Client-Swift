@@ -37,7 +37,7 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: TestReconnectPolicy(), logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), logger: PrintLogger())
 
         delegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
@@ -70,12 +70,6 @@ class ReconnectableConnectionTests: XCTestCase {
         reconnectableConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
-    }
-
-    class TestReconnectPolicy: ReconnectPolicy {
-        func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
-            return DispatchTimeInterval.milliseconds(50)
-        }
     }
 
     class TestConnection: Connection {

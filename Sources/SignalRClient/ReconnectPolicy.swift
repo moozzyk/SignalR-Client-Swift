@@ -18,9 +18,16 @@ public protocol ReconnectPolicy {
 }
 
 public class DefaultReconnectPolicy: ReconnectPolicy {
-    public init() {}
+    let retryIntervals: [DispatchTimeInterval]
+    public init(retryIntervals: [DispatchTimeInterval] = [.milliseconds(0), .seconds(2), .seconds(10), .seconds(30)]) {
+        self.retryIntervals = retryIntervals
+    }
+
     public func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
-        return DispatchTimeInterval.never
+        if retryContext.failedAttemptsCount >= retryIntervals.count {
+            return .never
+        }
+        return retryIntervals[retryContext.failedAttemptsCount]
     }
 }
 

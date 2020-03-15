@@ -987,7 +987,7 @@ class HubConnectionTests: XCTestCase {
         let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
-            .withAutoReconnect(reconnectPolicy: TestReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(20)]))
+            .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
             .build()
 
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
@@ -1068,20 +1068,6 @@ class TestHubConnectionDelegate: HubConnectionDelegate {
 
     func connectionDidReconnect() {
         connectionDidReconnectHandler?()
-    }
-}
-
-class TestReconnectPolicy: ReconnectPolicy {
-    let retryIntervals: [DispatchTimeInterval]
-    init(retryIntervals: [DispatchTimeInterval]) {
-        self.retryIntervals = retryIntervals
-    }
-
-    func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
-        if retryContext.failedAttemptsCount > retryIntervals.count {
-            return .never
-        }
-        return retryIntervals[retryContext.failedAttemptsCount]
     }
 }
 
