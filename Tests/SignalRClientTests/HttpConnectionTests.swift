@@ -481,7 +481,7 @@ class HttpConnectionTests: XCTestCase {
         let httpClient = TestHttpClient(postHandler: { _ in (HttpResponse(statusCode: 200, contents: "{}".data(using: .utf8)!), nil) })
         let httpConnectionOptions = HttpConnectionOptions()
         httpConnectionOptions.httpClientFactory = { options in httpClient }
-        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions, logger: PrintLogger())
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
             XCTAssertEqual("\(SignalRError.invalidNegotiationResponse(message: "connectionId property not found or invalid"))", "\(error)")
@@ -510,6 +510,11 @@ class HttpConnectionTests: XCTestCase {
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
             XCTAssertEqual("\(SignalRError.connectionIsBeingClosed)", "\(error)")
+            didFailToOpenExpectation.fulfill()
+        }
+        connectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNotNil(error)
+            XCTAssertEqual("InvalidResponse(HTTP/1.1 200 OK)", "\(error!)")
             didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate

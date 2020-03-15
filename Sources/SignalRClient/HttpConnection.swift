@@ -119,7 +119,7 @@ public class HttpConnection: Connection {
                         self.url = redirection.url
                         self.negotiate(accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
                     case let negotiationResponse as NegotiationResponse:
-                        self.logger.log(logLevel: .debug, message: "Negotation response received")
+                        self.logger.log(logLevel: .debug, message: "Negotiation response received")
                         negotiateDidComplete(negotiationResponse)
                     default:
                         throw SignalRError.invalidNegotiationResponse(message: "internal error - unexpected negotiation payload")
