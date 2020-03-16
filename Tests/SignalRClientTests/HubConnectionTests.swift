@@ -1041,6 +1041,39 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatHubMethodCanBeInvokedWithLegacyHttpConnection() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let message = "Hello, World!"
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "Echo", arguments: [message], resultType: String.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual(message, result)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withLegacyHttpConnection()
+            .build()
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {

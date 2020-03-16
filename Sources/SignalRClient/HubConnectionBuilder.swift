@@ -25,6 +25,7 @@ public class HubConnectionBuilder {
     private var logger: Logger = NullLogger()
     private var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
+    private var useLegacyHttpConnection = false
 
     /**
      Initializes a `HubConnectionBuilder` with a URL.
@@ -107,17 +108,32 @@ public class HubConnectionBuilder {
         return self
     }
 
+    public func withLegacyHttpConnection() -> HubConnectionBuilder {
+        useLegacyHttpConnection = true
+        return self
+    }
+
     /**
      Creates a new `HubConnection` using requested configuration.
 
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let connectionFactory = {return HttpConnection(url: self.url, options: self.httpConnectionOptions, logger: self.logger)}
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: self.logger)
-        let hubConnection = HubConnection(connection: reconnectableConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let hubConnection = HubConnection(connection: createHttpConnection(), hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
+    }
+
+    private func createHttpConnection() -> Connection {
+        if useLegacyHttpConnection {
+            if !(reconnectPolicy is NoReconnectPolicy) {
+                logger.log(logLevel: .error, message: "Using reconnect with legacy HttpConnection is not supported. Ignoring reconnect settings.")
+            }
+            return HttpConnection(url: url, options: httpConnectionOptions, logger: logger)
+        }
+
+        let connectionFactory = {return HttpConnection(url: self.url, options: self.httpConnectionOptions, logger: self.logger)}
+        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: self.logger)
     }
 }
 
