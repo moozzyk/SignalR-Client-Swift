@@ -38,7 +38,6 @@ internal class ReconnectableConnection: Connection {
         self.connectionFactory = connectionFactory
         self.reconnectPolicy = reconnectPolicy
         self.logger = logger
-        // TODO: use sentinel?
         self.underlyingConnection = connectionFactory()
     }
 
@@ -48,14 +47,17 @@ internal class ReconnectableConnection: Connection {
             wrappedDelegate = ReconnectableConnectionDelegate(connection: self)
             startInternal()
         } else {
-            logger.log(logLevel: .warning, message: "Reconnectable connection not in the disconnected state")
-            // TODO: fail vs. ignore?
+            logger.log(logLevel: .warning, message: "Reconnectable connection not in the disconnected state. Ignoring start request")
         }
     }
 
     func send(data: Data, sendDidComplete: (Error?) -> Void) {
         logger.log(logLevel: .info, message: "Received send request")
-        // TODO: do not send during reconnect. buffer?
+        guard state != .reconnecting else {
+            // TODO: consider buffering
+            sendDidComplete(SignalRError.connectionIsReconnecting)
+            return
+        }
         underlyingConnection.send(data: data, sendDidComplete: sendDidComplete)
     }
 
@@ -182,7 +184,6 @@ internal class ReconnectableConnection: Connection {
             if previousState == .starting {
                 unwrappedConnection.delegate?.connectionDidOpen(connection: connection)
             } else if previousState == .reconnecting {
-                // TODO: reset the attempt counter here
                 unwrappedConnection.delegate?.connectionDidReconnect()
             } else {
                 unwrappedConnection.logger.log(logLevel: .debug, message: "Internal error - unexpected connection state")

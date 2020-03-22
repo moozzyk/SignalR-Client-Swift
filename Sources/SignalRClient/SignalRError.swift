@@ -24,4 +24,5 @@ public enum SignalRError : Error {
     case invalidNegotiationResponse(message: String)
     case serverClose(message: String?)
     case noSupportedTransportAvailable
+    case connectionIsReconnecting
 }

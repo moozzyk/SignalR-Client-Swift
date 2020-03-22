@@ -171,7 +171,7 @@ class HubConnectionTests: XCTestCase {
 
         hubConnection.start()
 
-        waitForExpectations(timeout: 5000 /*seconds*/)
+        waitForExpectations(timeout: 5 /*seconds*/)
     }
 
     func testTestThatCanGetConnectionId() {
@@ -1001,6 +1001,49 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidReconnectHandler = {
             connectionDidReconnectExpectation.fulfill()
             hubConnection.stop()
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            connectionDidCloseExpectation.fulfill()
+        }
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatConnectionCanReconnectMultipleTimes() {
+        let connectionWillReconnectExpectation = expectation(description: "connection will reconnect")
+        connectionWillReconnectExpectation.expectedFulfillmentCount = 10
+        let connectionDidReconnectExpectation = expectation(description: "connection did reconnect")
+        connectionDidReconnectExpectation.expectedFulfillmentCount = 10
+        let connectionDidCloseExpectation = expectation(description: "connection closed")
+
+        var reconnectAttemptCount = 9
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
+            .build()
+
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.send(method: "KillConnection")
+        }
+
+        hubConnectionDelegate.connectionWillReconnectHandler = { error in
+            connectionWillReconnectExpectation.fulfill()
+        }
+
+        hubConnectionDelegate.connectionDidReconnectHandler = {
+            connectionDidReconnectExpectation.fulfill()
+            if (reconnectAttemptCount > 0) {
+                reconnectAttemptCount -= 1
+                hubConnection.send(method: "KillConnection")
+            } else {
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
