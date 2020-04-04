@@ -923,6 +923,10 @@ class HubConnectionTests: XCTestCase {
     func testThatStopDoesNotPassStopErrorToUnderlyingConnection() {
         class FakeHttpConnection: HttpConnection {
             var stopCalled: Bool = false
+            init(url: URL) {
+                let logger = NullLogger()
+                super.init(url: url, options: HttpConnectionOptions(), transportFactory: DefaultTransportFactory(logger: logger), logger: logger)
+            }
 
             override func stop(stopError: Error?) {
                 XCTAssertNil(stopError)
@@ -939,6 +943,10 @@ class HubConnectionTests: XCTestCase {
     func testThatHubConnectionClosesConnectionUponReceivingCloseMessage() {
         class FakeHttpConnection: HttpConnection {
             var stopError: Error?
+            init(url: URL) {
+                let logger = NullLogger()
+                super.init(url: url, options: HttpConnectionOptions(), transportFactory: DefaultTransportFactory(logger: logger), logger: logger)
+            }
 
             override func start() {
                 delegate?.connectionDidOpen(connection: self)
