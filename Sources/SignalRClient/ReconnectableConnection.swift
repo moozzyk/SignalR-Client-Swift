@@ -124,7 +124,7 @@ internal class ReconnectableConnection: Connection {
             }
         }
 
-        let previousState = changeState(from: nil, to: .stopping)
+        let previousState = changeState(from: nil, to: .disconnected)
         logger.log(logLevel: .info, message: "Connection not to be restarted. State: \(previousState!.rawValue)")
         if previousState == .starting {
             logger.log(logLevel: .debug, message: "Opening the connection failed")
@@ -135,9 +135,6 @@ internal class ReconnectableConnection: Connection {
         } else {
             logger.log(logLevel: .debug, message: "Stopping connection")
         }
-
-        // TODO: how to reset the state to not break things?
-        // _ = changeState(from: nil, to: .disconnected)
     }
 
     private func updateAndCreateRetryContext(error: Error?) -> RetryContext {
@@ -187,7 +184,7 @@ internal class ReconnectableConnection: Connection {
                 unwrappedConnection.delegate?.connectionDidReconnect()
             } else {
                 unwrappedConnection.logger.log(logLevel: .debug, message: "Internal error - unexpected connection state")
-                // stop with error?
+                // TODO: stop with error?
                 // use dispatchGroup to block stop while reconnecting/starting
             }
         }

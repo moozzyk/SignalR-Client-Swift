@@ -1093,6 +1093,35 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionCanBeRestartedAfterFailedReconnect() {
+        let connectionDidCloseExpectation = expectation(description: "connection closed")
+        connectionDidCloseExpectation.expectedFulfillmentCount = 2
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+            .withLogging(minLogLevel: .debug)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: []))
+            .build()
+
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            hubConnection.send(method: "KillConnection")
+        }
+
+        var shouldRestart = true
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            connectionDidCloseExpectation.fulfill()
+            if shouldRestart {
+                shouldRestart = false
+                hubConnection.start()
+            }
+        }
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatHubMethodCanBeInvokedWithLegacyHttpConnection() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
