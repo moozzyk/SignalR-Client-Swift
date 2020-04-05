@@ -103,11 +103,20 @@ public class HubConnectionBuilder {
         return self
     }
 
+    /**
+    Allows enablbing and configuring automatic reconnection in case the connection was closed
+
+     - parameter reconnectPolicy: allows setting a reconnect policy that configures reconnection
+     - note: by default the connection is not reconnectable. Calling this method makes it reconnectable. If no `reconnectPolicy` is provided the `DefaultReconnectPolicy` will be used.
+     */
     public func withAutoReconnect(reconnectPolicy: ReconnectPolicy = DefaultReconnectPolicy()) -> HubConnectionBuilder {
         self.reconnectPolicy = reconnectPolicy
         return self
     }
 
+    /**
+    In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency measure only and will be removed in future versions.
+     */
     public func withLegacyHttpConnection() -> HubConnectionBuilder {
         useLegacyHttpConnection = true
         return self
