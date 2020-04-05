@@ -9,7 +9,6 @@ import Foundation
 
 internal class ReconnectableConnection: Connection {
     private let connectionQueue = DispatchQueue(label: "SignalR.reconnection.queue")
-    private let connectionDispatchGroup = DispatchGroup()
 
     private let connectionFactory: () -> Connection
     private let reconnectPolicy: ReconnectPolicy
@@ -184,8 +183,7 @@ internal class ReconnectableConnection: Connection {
                 unwrappedConnection.delegate?.connectionDidReconnect()
             } else {
                 unwrappedConnection.logger.log(logLevel: .debug, message: "Internal error - unexpected connection state")
-                // TODO: stop with error?
-                // use dispatchGroup to block stop while reconnecting/starting
+                // TODO: consider using dispatchGroup to block stop while reconnecting/starting.
             }
         }
 
@@ -208,17 +206,14 @@ internal class ReconnectableConnection: Connection {
                 connection?.restartConnection(error: error)
             } else {
                 unwrappedConnection.logger.log(logLevel: .debug, message: "Assuming clean stop - stopping connection")
-                if  unwrappedConnection.state == .stopping {
-                    _ = unwrappedConnection.changeState(from: [.stopping], to: .disconnected)
-                    unwrappedConnection.delegate?.connectionDidClose(error: error)
-                } else {
-                    // TODO: Review what happens if this close happens when the connection is
-                    // in one of these states:
-                    //  - starting (possible?)
-                    //  - reconnecting
-                    //  - disconnected (possible?)
+                if  unwrappedConnection.state != .stopping {
+                    // This is wired to the transport so it should not be fired in the starting, reconnecting
+                    // or disconnected state (maybe there is a tiny window when it can happen right after a
+                    // the transport connected successfully. For now just log an error.
                     unwrappedConnection.logger.log(logLevel: .error, message: "Internal error - unexpected state")
                 }
+                _ = unwrappedConnection.changeState(from: nil, to: .disconnected)
+                unwrappedConnection.delegate?.connectionDidClose(error: error)
             }
         }
     }
