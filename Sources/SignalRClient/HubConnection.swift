@@ -510,12 +510,10 @@ fileprivate enum HandshakeStatus {
 
 extension HandshakeStatus {
     var isHandled: Bool {
-        switch self {
-        case .handled:
+        if case .handled = self {
             return true
-        default:
-            return false
         }
+        return false
     }
 
     var isReconnect: Bool {
