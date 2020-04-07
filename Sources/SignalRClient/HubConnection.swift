@@ -19,7 +19,7 @@ public class HubConnection {
     private let hubConnectionQueue: DispatchQueue
     private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: (ArgumentExtractor) throws -> Void]()
-    private var handshakeHandled = false
+    private var handshakeStatus: HandshakeStatus = .needsHandling(false)
     private let logger: Logger
 
     private var connection: Connection
@@ -71,7 +71,7 @@ public class HubConnection {
         connection.start()
     }
 
-    fileprivate func connectionStarted() {
+    fileprivate func initiateHandshake() {
         logger.log(logLevel: .info, message: "Hub connection started")
         // TODO: support custom protcols
         // TODO: add negative test (e.g. invalid protocol)
@@ -80,6 +80,8 @@ public class HubConnection {
         connection.send(data: "\(handshakeRequest)".data(using: .utf8)!) { error in
             if let e = error {
                 self.logger.log(logLevel: .error, message: "Sending handshake request failed: \(e)")
+                // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
+                // will be no further reconnect attempts
                 delegate?.connectionDidFailToOpen(error: e)
             }
         }
@@ -291,7 +293,7 @@ public class HubConnection {
     }
 
     private func ensureConnectionStarted(errorHandler: (Error)->Void) -> Bool {
-        if !handshakeHandled {
+        if !handshakeStatus.isHandled {
             logger.log(logLevel: .error, message: "Attempting to send data before connection has been started.")
             errorHandler(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))
             return false
@@ -302,17 +304,24 @@ public class HubConnection {
     fileprivate func connectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
         var data = data
-        if !handshakeHandled {
+        if !handshakeStatus.isHandled {
             logger.log(logLevel: .debug, message: "Processing handshake response: \(String(data: data, encoding: .utf8) ?? "(invalid)")")
             let (error, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
-            handshakeHandled = true
             data = remainingData
+            let originalHandshakeStatus = handshakeStatus
+            handshakeStatus = .handled
             if let e = error {
+                // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
+                // will be no further reconnect attempts
                 logger.log(logLevel: .error, message: "Parsing handshake response failed: \(e)")
                 delegate?.connectionDidFailToOpen(error: e)
                 return
             }
-            delegate?.connectionDidOpen(hubConnection: self)
+            if originalHandshakeStatus.isReconnect {
+                delegate?.connectionDidReconnect()
+            } else {
+                delegate?.connectionDidOpen(hubConnection: self)
+            }
         }
         do {
             let messages = try hubProtocol.parseMessages(input: data)
@@ -407,7 +416,7 @@ public class HubConnection {
                 serverInvocationHandler.raiseError(error: invocationError)
             }
         }
-        handshakeHandled = false
+        handshakeStatus = .needsHandling(false)
         delegate?.connectionDidClose(error: error)
     }
 
@@ -416,11 +425,12 @@ public class HubConnection {
     }
 
     fileprivate func connectionWillReconnect(error: Error) {
+        handshakeStatus = .needsHandling(true)
         delegate?.connectionWillReconnect(error: error)
     }
 
     fileprivate func connectionDidReconnect() {
-        delegate?.connectionDidReconnect()
+        initiateHandshake()
     }
 }
 
@@ -431,7 +441,7 @@ fileprivate class HubConnectionConnectionDelegate: ConnectionDelegate {
     }
 
     func connectionDidOpen(connection: Connection) {
-        hubConnection?.connectionStarted()
+        hubConnection?.initiateHandshake()
     }
 
     func connectionDidFailToOpen(error: Error) {
@@ -490,5 +500,30 @@ public class ArgumentExtractor {
      */
     public func hasMoreArgs() -> Bool {
         return clientInvocationMessage.hasMoreArgs
+    }
+}
+
+fileprivate enum HandshakeStatus {
+    case needsHandling(/*isReconnect*/ Bool)
+    case handled
+}
+
+extension HandshakeStatus {
+    var isHandled: Bool {
+        switch self {
+        case .handled:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var isReconnect: Bool {
+        switch self {
+        case .needsHandling(let isReconnect):
+            return isReconnect
+        default:
+            return false
+        }
     }
 }

@@ -1008,7 +1008,11 @@ class HubConnectionTests: XCTestCase {
 
         hubConnectionDelegate.connectionDidReconnectHandler = {
             connectionDidReconnectExpectation.fulfill()
-            hubConnection.stop()
+            hubConnection.invoke(method: "VoidMethod") {
+                error in
+                XCTAssertNil(error)
+                hubConnection.stop()
+            }
         }
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
