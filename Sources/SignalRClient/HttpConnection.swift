@@ -177,7 +177,7 @@ public class HttpConnection: Connection {
     }
 
     public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
-        logger.log(logLevel: .debug, message: "Sending data")
+        logger.log(logLevel: .debug, message: "Sending data \(String(data: data, encoding: .utf8) ?? "(empty)")")
         if state != .connected {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
             sendDidComplete(SignalRError.invalidState)
