@@ -145,7 +145,7 @@ internal class ReconnectableConnection: Connection {
                 self.reconnectStartTime = Date()
             }
             startTime = self.reconnectStartTime
-            self.reconnectStartTime += 1
+            self.failedAttemptsCount += 1
         }
 
         if error == nil {

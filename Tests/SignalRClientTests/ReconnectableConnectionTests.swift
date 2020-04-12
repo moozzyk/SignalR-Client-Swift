@@ -72,6 +72,52 @@ class ReconnectableConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    public func testThatConnectionDoesNotReconnectIfAllowedAttemptsExhausted() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didCloseExpectation = expectation(description: "connection closed")
+        let willReconnectExpectation = expectation(description: "connection will reconnect")
+
+        let testConnection = TestConnection()
+        let delegate = TestConnectionDelegate()
+        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10), .milliseconds(10), .milliseconds(10)]), logger: PrintLogger())
+
+        delegate.connectionDidOpenHandler = { connection in
+            didOpenExpectation.fulfill()
+            testConnection.openError = SignalRError.invalidNegotiationResponse(message: "Negotiation failed")
+            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+        }
+
+        delegate.connectionWillReconnectHandler = { error in
+            switch (error as! SignalRError) {
+            case .invalidOperation(let errorMessage):
+                XCTAssertEqual("forcing reconnect", errorMessage)
+                break
+            default:
+                XCTFail()
+                break
+            }
+            willReconnectExpectation.fulfill()
+        }
+
+        delegate.connectionDidCloseHandler = { error in
+            XCTAssertNotNil(error)
+            switch (error as! SignalRError) {
+            case .invalidNegotiationResponse(let errorMessage):
+                XCTAssertEqual("Negotiation failed", errorMessage)
+                break
+            default:
+                XCTFail()
+                break
+            }
+            didCloseExpectation.fulfill()
+        }
+
+        reconnectableConnection.delegate = delegate
+        reconnectableConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     public func testThatSendingDuringReconnectReturnsError() {
         let didCloseExpectation = expectation(description: "connection closed")
         let sendDidFail = expectation(description: "send failed")
@@ -103,11 +149,16 @@ class ReconnectableConnectionTests: XCTestCase {
 
     class TestConnection: Connection {
         var delegate: ConnectionDelegate?
+        var openError: Error?
 
         var connectionId: String?
 
         func start() {
-            delegate?.connectionDidOpen(connection: self)
+            if let e = openError {
+                delegate?.connectionDidFailToOpen(error: e)
+            } else {
+                delegate?.connectionDidOpen(connection: self)
+            }
         }
 
         func send(data: Data, sendDidComplete: (Error?) -> Void) {
