@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
     private var chatHubConnectionDelegate: HubConnectionDelegate?
     private var name = ""
     private var messages: [String] = []
+    private var reconnectAlert: NSAlert?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         chatTableView.delegate = self
@@ -37,6 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
         chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!)
             .withHubConnectionDelegate(delegate: chatHubConnectionDelegate!)
+            .withAutoReconnect()
             .withLogging(minLogLevel: .debug)
             .build()
 
@@ -72,12 +74,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
 
     func connectionDidFailToOpen(error: Error)
     {
-        appendMessage(message: "Connection failed to start. Error \(error)")
-        toggleUI(isEnabled: false)
+        blockUI(message: "Connection failed to start.", error: error)
     }
 
     func connectionDidClose(error: Error?) {
-        var message = "Connection closed."
+        if let alert = reconnectAlert {
+            alert.window.orderOut(nil)
+        }
+        blockUI(message: "Connection is closed.", error: error)
+    }
+
+    fileprivate func connectionWillReconnect(error: Error?) {
+        guard reconnectAlert == nil else {
+            print("Alert already present. This is unexpected.")
+            return
+        }
+
+        reconnectAlert = NSAlert()
+        reconnectAlert!.messageText = "Reconnecting..."
+        reconnectAlert!.informativeText = "Please wait."
+        reconnectAlert!.addButton(withTitle: "Hidden button")
+        reconnectAlert!.buttons[0].isHidden = true
+        reconnectAlert?.beginSheetModal(for: self.window, completionHandler: nil)
+    }
+
+    fileprivate func connectionDidReconnect() {
+        reconnectAlert?.window.orderOut(nil)
+        reconnectAlert = nil
+    }
+
+    func blockUI(message: String, error: Error?) {
+        var message = message
         if let e = error {
             message.append(" Error: \(e)")
         }
@@ -155,5 +182,13 @@ class ChatHubConnectionDelegate: HubConnectionDelegate {
 
     func connectionDidClose(error: Error?) {
         app?.connectionDidClose(error: error)
+    }
+
+    func connectionWillReconnect(error: Error) {
+        app?.connectionWillReconnect(error: error)
+    }
+
+    func connectionDidReconnect() {
+        app?.connectionDidReconnect()
     }
 }

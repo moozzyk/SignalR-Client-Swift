@@ -7,6 +7,12 @@ namespace TestServer
     {
         public Task Broadcast(string sender, string message)
         {
+            if (message == "abort")
+            {
+                Context.Abort();
+                return Task.CompletedTask;
+            }
+
             return Clients.All.SendAsync("NewMessage", sender, message);
         }
     }

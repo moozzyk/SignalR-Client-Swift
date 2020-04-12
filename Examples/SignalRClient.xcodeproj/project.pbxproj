@@ -23,6 +23,10 @@
 		5AA9F0031E835AC200C5E248 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0021E835AC200C5E248 /* Assets.xcassets */; };
 		5AA9F0061E835AC200C5E248 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AA9F0041E835AC200C5E248 /* MainMenu.xib */; };
 		5AA9F00E1E8381DD00C5E248 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A9803521E5FE60E00BFFB0A /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5ABD6A602439AE6B00BFA93D /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */; };
+		5ABD6A612439AE6B00BFA93D /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */; };
+		5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */; };
+		5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */; };
 		5AEC70F020310E3E00616DD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */; };
 		5AEC70F220310E3E00616DD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70F120310E3E00616DD2 /* ViewController.swift */; };
 		5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F320310E3E00616DD2 /* Main.storyboard */; };
@@ -170,6 +174,8 @@
 		5AA9F0021E835AC200C5E248 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5AA9F0051E835AC200C5E248 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		5AA9F0071E835AC200C5E248 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
+		5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectableConnection.swift; sourceTree = "<group>"; };
 		5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSamplePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5AEC70F120310E3E00616DD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -346,6 +352,8 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */,
+				5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */,
 				5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */,
 				5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */,
 				7391A90722510170007BEF23 /* Transport.swift */,
@@ -612,12 +620,14 @@
 				5A13255722B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */,
 				7391A94122510170007BEF23 /* HubConnectionDelegate.swift in Sources */,
 				7391A95322510170007BEF23 /* ConnectionDelegate.swift in Sources */,
+				5ABD6A612439AE6B00BFA93D /* ReconnectPolicy.swift in Sources */,
 				7391A92F22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94322510170007BEF23 /* HttpClientProtocol.swift in Sources */,
 				7391A93122510170007BEF23 /* DefaultHttpClient.swift in Sources */,
 				7391A94B22510170007BEF23 /* Util.swift in Sources */,
 				7391A94D22510170007BEF23 /* WebSocket.swift in Sources */,
 				7391A93F22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
+				5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94722510170007BEF23 /* TransferFormat.swift in Sources */,
 				7391A93B22510170007BEF23 /* TransportDelegate.swift in Sources */,
 				7391A92D22510170007BEF23 /* TransportType.swift in Sources */,
@@ -647,12 +657,14 @@
 				5A13255622B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */,
 				7391A94022510170007BEF23 /* HubConnectionDelegate.swift in Sources */,
 				7391A95222510170007BEF23 /* ConnectionDelegate.swift in Sources */,
+				5ABD6A602439AE6B00BFA93D /* ReconnectPolicy.swift in Sources */,
 				7391A92E22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94222510170007BEF23 /* HttpClientProtocol.swift in Sources */,
 				7391A93022510170007BEF23 /* DefaultHttpClient.swift in Sources */,
 				7391A94A22510170007BEF23 /* Util.swift in Sources */,
 				7391A94C22510170007BEF23 /* WebSocket.swift in Sources */,
 				7391A93E22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
+				5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94622510170007BEF23 /* TransferFormat.swift in Sources */,
 				7391A93A22510170007BEF23 /* TransportDelegate.swift in Sources */,
 				7391A92C22510170007BEF23 /* TransportType.swift in Sources */,

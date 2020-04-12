@@ -110,7 +110,7 @@ internal class ReconnectableConnection: Connection {
             let nextAttemptInterval = reconnectPolicy.nextAttemptInterval(retryContext: retryContext)
             logger.log(logLevel: .debug, message: "nextAttemptInterval: \(nextAttemptInterval), RetryContext: \(retryContext)")
             if nextAttemptInterval != .never {
-                logger.log(logLevel: .debug, message: "Scheduling reconnect attempt")
+                logger.log(logLevel: .debug, message: "Scheduling reconnect attempt at: \(nextAttemptInterval)")
                 // TODO: can this cause problems because event handlers are dispatched to main queue as well (via `Util.dispatchToMainThread`)
                 DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
                     self.startInternal()
