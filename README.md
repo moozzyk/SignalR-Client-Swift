@@ -2,7 +2,7 @@
 
 A Swift SignalR Client for the Asp.Net Core version of SignalR
 
-Note: If you need to create hub proxies then it means that you are using the previous (non-Core) version of SignalR. The Core and and non-Core versions of SignalR are not compatible and this client only supports the Core version. 
+**Note: If you need to create hub proxies then it means that you are using the previous (non-Core) version of SignalR. The Core and and non-Core versions of SignalR are not compatible and this client only supports the Core version.**
 
 ## Installation
 
