@@ -1089,11 +1089,13 @@ private class InnerWebSocket: Hashable {
             rd.setProperty(StreamNetworkServiceTypeValue.voice.rawValue, forKey: Stream.PropertyKey.networkServiceType)
             wr.setProperty(StreamNetworkServiceTypeValue.voice.rawValue, forKey: Stream.PropertyKey.networkServiceType)
         }
+        #if !os(watchOS)
         if allowSelfSignedSSL {
             let prop: Dictionary<NSObject,NSObject> = [kCFStreamSSLPeerName: kCFNull, kCFStreamSSLValidatesCertificateChain: NSNumber(value: false)]
             rd.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
             wr.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
         }
+        #endif
         rd.delegate = delegate
         wr.delegate = delegate
         rd.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
