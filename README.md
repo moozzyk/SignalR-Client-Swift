@@ -2,7 +2,7 @@
 
 A Swift SignalR Client for the Asp.Net Core version of SignalR
 
-**Note: If you need to create hub proxies then it means that you are using the previous (non-Core) version of SignalR. The Core and and non-Core versions of SignalR are not compatible and this client only supports the Core version.**
+**Before filing an issue please check [Frequently Asked Questions](https://github.com/moozzyk/SignalR-Client-Swift/wiki/Frequently-Asked-Questions)**
 
 ## Installation
 
@@ -33,8 +33,6 @@ Then include `"SignalRClient"` in your target dependencies. For example:
 ```swift
 .target(name: "MySwiftPackage", dependencies: ["SignalRClient"]),
 ```
-
-You may need to add libz.tbd to the libraries your project is linked with (under Build Phases, Linked Frameworks and Libraries) if you see undefined symbol errors similar to ones reported in https://github.com/moozzyk/SignalR-Client-Swift/issues/42.
 
 ### Carthage
 
