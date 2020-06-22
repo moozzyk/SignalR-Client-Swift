@@ -78,6 +78,11 @@ public class WebsocketsTransport: Transport {
                 welf.delegate?.transportDidReceiveData(message as! Data)
             }
         }
+        
+        webSocket!.allowSelfSignedSSL = options.allowSelfSignedSSL
+        webSocket!.secIdentity = options.secIdentity
+        webSocket!.identityCertificate = options.identityCertificate
+
         webSocket!.open()
     }
 

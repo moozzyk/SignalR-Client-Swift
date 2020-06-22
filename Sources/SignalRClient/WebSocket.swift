@@ -543,7 +543,8 @@ private class InnerWebSocket: Hashable {
     var _binaryType = WebSocketBinaryType.uInt8Array
     var _readyState = WebSocketReadyState.connecting
     var _networkTimeout = TimeInterval(-1)
-
+    var _secIdentity: SecIdentity?
+    var _identityCertificate: SecCertificate?
 
     var url : String {
         return request.url!.description
@@ -590,6 +591,14 @@ private class InnerWebSocket: Hashable {
         get { lock(); defer { unlock() }; return _readyState }
         set { lock(); defer { unlock() }; _readyState = newValue }
     }
+    var secIdentity: SecIdentity? {
+        get { lock(); defer { unlock() }; return _secIdentity }
+        set { lock(); defer { unlock() }; _secIdentity = newValue }
+    }
+    var identityCertificate: SecCertificate? {
+        get { lock(); defer { unlock() }; return _identityCertificate }
+        set { lock(); defer { unlock() }; _identityCertificate = newValue }
+    }
 
     func copyOpen(_ request: URLRequest, subProtocols : [String] = []) -> InnerWebSocket{
         let ws = InnerWebSocket(request: request, subProtocols: subProtocols, stub: false)
@@ -600,6 +609,9 @@ private class InnerWebSocket: Hashable {
         ws.event = event
         ws.eventQueue = eventQueue
         ws.binaryType = binaryType
+        ws.secIdentity = secIdentity
+        ws.identityCertificate = identityCertificate
+
         return ws
     }
 
@@ -1090,10 +1102,19 @@ private class InnerWebSocket: Hashable {
             wr.setProperty(StreamNetworkServiceTypeValue.voice.rawValue, forKey: Stream.PropertyKey.networkServiceType)
         }
         #if !os(watchOS)
-        if allowSelfSignedSSL {
-            let prop: Dictionary<NSObject,NSObject> = [kCFStreamSSLPeerName: kCFNull, kCFStreamSSLValidatesCertificateChain: NSNumber(value: false)]
-            rd.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
-            wr.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
+        if allowSelfSignedSSL || secIdentity != nil {
+            var prop = Dictionary<NSObject,NSObject>()
+            if allowSelfSignedSSL {
+                prop[kCFStreamSSLPeerName] = kCFNull
+                prop[kCFStreamSSLValidatesCertificateChain] = NSNumber(value: false)
+            }
+            if let secIdentity = secIdentity {
+                if let identityCertificate = identityCertificate {
+                    prop[kCFStreamSSLCertificates] = NSArray(objects: secIdentity, identityCertificate)
+                } else {
+                    prop[kCFStreamSSLCertificates] = NSArray(objects: secIdentity)
+                }
+            }
         }
         #endif
         rd.delegate = delegate
@@ -1749,6 +1770,17 @@ open class WebSocket: NSObject {
     open var readyState : WebSocketReadyState{
         return ws.readyState
     }
+    /// SecIdentity. Default is nil.
+    open var secIdentity : SecIdentity?{
+        get { return ws.secIdentity }
+        set { ws.secIdentity = newValue }
+    }
+    /// Client Certificate. Default is nil.
+    open var identityCertificate : SecCertificate?{
+        get { return ws.identityCertificate }
+        set { ws.identityCertificate = newValue }
+    }
+
     /// Opens a deferred or closed WebSocket connection to a URL; this should be the URL to which the WebSocket server will respond.
     open func open(_ url: String){
         open(request: URLRequest(url: URL(string: url)!), subProtocols: [])

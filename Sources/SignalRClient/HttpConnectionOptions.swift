@@ -38,6 +38,21 @@ public class HttpConnectionOptions {
 
     */
     public var skipNegotiation: Bool = false
+    
+    /**
+     Disable certificate chain validation
+    */
+    public var allowSelfSignedSSL : Bool = false
+    
+    /**
+     Used for SSL client-side authentication
+    */
+    public var secIdentity: SecIdentity?
+    
+    /**
+     Used for SSL client-side authentication
+    */
+    public var identityCertificate: SecCertificate?
 
     /**
      Initializes an `HttpConnectionOptions`.
