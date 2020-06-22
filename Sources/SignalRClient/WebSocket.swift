@@ -1115,6 +1115,8 @@ private class InnerWebSocket: Hashable {
                     prop[kCFStreamSSLCertificates] = NSArray(objects: secIdentity)
                 }
             }
+            rd.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
+            wr.setProperty(prop, forKey: Stream.PropertyKey(rawValue: kCFStreamPropertySSLSettings as String as String))
         }
         #endif
         rd.delegate = delegate
