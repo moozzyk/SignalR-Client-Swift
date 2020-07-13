@@ -140,23 +140,38 @@ public class HubConnectionBuilder {
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let hubConnection = HubConnection(connection: createHttpConnection(), hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let transportFactory = DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)
+        let httpConnection = createHttpConnection(transportFactory: transportFactory)
+        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
     }
 
-    private func createHttpConnection() -> Connection {
-        let transportFactory = DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)
-        
+    private func createHttpConnection(transportFactory: TransportFactory) -> Connection {
         if useLegacyHttpConnection {
-            if !(reconnectPolicy is NoReconnectPolicy) {
-                logger.log(logLevel: .error, message: "Using reconnect with legacy HttpConnection is not supported. Ignoring reconnect settings.")
-            }
+            return createLegacyHttpConnection(transportFactory: transportFactory)
+        } else {
+            return createReconnectableHttpConnection(transportFactory: transportFactory)
+        }
+    }
+    
+    private func createReconnectableHttpConnection(transportFactory: TransportFactory) -> ReconnectableConnection {
+        // Avoid capturing reference to this builder instance in the factory closure.
+        let url = self.url
+        let httpConnectionOptions = self.httpConnectionOptions
+        let logger = self.logger
+        let connectionFactory = {
             return HttpConnection(url: url, options: httpConnectionOptions, transportFactory: transportFactory, logger: logger)
         }
-
-        let connectionFactory = {return HttpConnection(url: self.url, options: self.httpConnectionOptions, transportFactory: transportFactory, logger: self.logger)}
-        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: self.logger)
+        
+        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: logger)
+    }
+    
+    private func createLegacyHttpConnection(transportFactory: TransportFactory) -> HttpConnection {
+        if !(reconnectPolicy is NoReconnectPolicy) {
+            logger.log(logLevel: .error, message: "Using reconnect with legacy HttpConnection is not supported. Ignoring reconnect settings.")
+        }
+        return HttpConnection(url: url, options: httpConnectionOptions, transportFactory: transportFactory, logger: logger)
     }
 }
 
