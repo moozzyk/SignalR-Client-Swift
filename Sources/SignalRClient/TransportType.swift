@@ -15,9 +15,11 @@ public struct TransportType: OptionSet {
         self.rawValue = rawValue
     }
 
-    static let longPolling = TransportType(rawValue: 1 << 0)
-    static let serverSentEvents = TransportType(rawValue: 1 << 1)
-    static let webSockets = TransportType(rawValue: 1 << 2)
+    public static let longPolling = TransportType(rawValue: 1 << 0)
+    public static let serverSentEvents = TransportType(rawValue: 1 << 1)
+    public static let webSockets = TransportType(rawValue: 1 << 2)
+    
+    public static let all: TransportType = [ .longPolling, .serverSentEvents, .webSockets ]
 }
 
 extension TransportType {

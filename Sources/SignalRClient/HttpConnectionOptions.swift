@@ -26,8 +26,6 @@ public class HttpConnectionOptions {
 
     /**
      A factory for creating an HTTP client.
-
-     - note: currently used only by tests
     */
     public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = { DefaultHttpClient(options: $0) }
 
