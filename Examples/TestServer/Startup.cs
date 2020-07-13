@@ -31,16 +31,18 @@ namespace TestServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo");
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoWebSockets",
+                    options => { options.Transports = HttpTransportType.WebSockets; });
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoLongPolling",
+                    options => { options.Transports = HttpTransportType.LongPolling; });
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoNoTransports",
-                    dispatcherOptions =>
-                    {
-                        dispatcherOptions.Transports = HttpTransportType.None;
-                    });
+                    options => { options.Transports = HttpTransportType.None; });
                 endpoints.MapHub<TestHub>("/testhub");
-                endpoints.MapHub<ChatHub>("/chat", options =>
-                {
-                    options.Transports = HttpTransportType.LongPolling;
-                });
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<ChatHub>("/chatWebsockets",
+                    options => { options.Transports = HttpTransportType.WebSockets; });
+                endpoints.MapHub<ChatHub>("/chatLongPolling",
+                    options => { options.Transports = HttpTransportType.LongPolling; });
                 endpoints.MapHub<PlaygroundHub>("/playground");
             });
 
