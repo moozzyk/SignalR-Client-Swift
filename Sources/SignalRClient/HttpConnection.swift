@@ -93,7 +93,7 @@ public class HttpConnection: Connection {
         negotiateUrl.appendPathComponent("negotiate")
 
         let httpClient = options.httpClientFactory(options)
-        httpClient.post(url: negotiateUrl) {httpResponse, error in
+        httpClient.post(url: negotiateUrl, body: nil) {httpResponse, error in
             if let e = error {
                 self.logger.log(logLevel: .error, message: "Negotiate failed due to: \(e))")
                 self.failOpenWithError(error: e, changeState: true)
@@ -176,7 +176,7 @@ public class HttpConnection: Connection {
         }
     }
 
-    public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
+    public func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .debug, message: "Sending data")
         if state != .connected {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")

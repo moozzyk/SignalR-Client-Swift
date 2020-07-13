@@ -21,10 +21,35 @@ public protocol HttpClientProtocol {
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
 
     /**
-     Sends a `POST` HTTP request.
+     Sends a `POST` HTTP request with body data.
+
+     - parameter url: URL
+     - parameter body: Body data to send to server
+     - parameter completionHandler: callback invoked after the HTTP request has been completed
+     */
+    func post(url: URL, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
+    
+    
+    /**
+     Sends a `DELETE` HTTP request.
 
      - parameter url: URL
      - parameter completionHandler: callback invoked after the HTTP request has been completed
      */
-    func post(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
+    func delete(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
+    
+}
+
+
+public extension HttpClientProtocol {
+    
+    /**
+    Sends a `POST` HTTP request with empty body.
+
+    - parameter url: URL
+    - parameter completionHandler: callback invoked after the HTTP request has been completed
+    */
+    func post(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
+        post(url: url, body: nil, completionHandler: completionHandler)
+    }
 }

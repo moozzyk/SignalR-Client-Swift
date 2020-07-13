@@ -37,7 +37,10 @@ namespace TestServer
                         dispatcherOptions.Transports = HttpTransportType.None;
                     });
                 endpoints.MapHub<TestHub>("/testhub");
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<ChatHub>("/chat", options =>
+                {
+                    options.Transports = HttpTransportType.LongPolling;
+                });
                 endpoints.MapHub<PlaygroundHub>("/playground");
             });
 

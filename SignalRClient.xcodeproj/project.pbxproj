@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		415F5B7024BCA6650071CE5C /* LongPollingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */; };
 		5ACE4BD82382688200F665B6 /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */; };
 		5ACE4BDA2382701000F665B6 /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */; };
 		5ACE4BE1238274B500F665B6 /* ReconnectPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BDF238273DA00F665B6 /* ReconnectPolicyTests.swift */; };
@@ -89,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPollingTransport.swift; sourceTree = "<group>"; };
 		5AC776102341BB6C00486117 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectableConnection.swift; sourceTree = "<group>"; };
 		5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				OBJ_34 /* Util.swift */,
 				OBJ_35 /* WebSocket.swift */,
 				OBJ_36 /* WebsocketsTransport.swift */,
+				415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */,
 				5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */,
 				5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */,
 			);
@@ -402,6 +405,7 @@
 				OBJ_80 /* Logger.swift in Sources */,
 				OBJ_81 /* NegotiationResponse.swift in Sources */,
 				OBJ_82 /* ServerInvocationHandler.swift in Sources */,
+				415F5B7024BCA6650071CE5C /* LongPollingTransport.swift in Sources */,
 				OBJ_83 /* SignalRError.swift in Sources */,
 				OBJ_84 /* StreamHandle.swift in Sources */,
 				OBJ_85 /* TransferFormat.swift in Sources */,

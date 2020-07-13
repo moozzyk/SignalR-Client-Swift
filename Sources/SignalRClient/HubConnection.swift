@@ -82,7 +82,7 @@ public class HubConnection {
                 self.logger.log(logLevel: .error, message: "Sending handshake request failed: \(e)")
                 // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
                 // will be no further reconnect attempts
-                delegate?.connectionDidFailToOpen(error: e)
+                self.delegate?.connectionDidFailToOpen(error: e)
             }
         }
     }
@@ -271,7 +271,7 @@ public class HubConnection {
             connection.send(data: invocationData) { error in
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Invoking server hub method \(method) returned error: \(e)")
-                    failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
+                    self.failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
                 }
             }
         } catch {

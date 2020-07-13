@@ -11,7 +11,7 @@ import Foundation
 public protocol Transport: class {
     var delegate: TransportDelegate? {get set}
     func start(url:URL, options: HttpConnectionOptions) -> Void
-    func send(data: Data, sendDidComplete: (_ error:Error?) -> Void)
+    func send(data: Data, sendDidComplete: @escaping (_ error:Error?) -> Void)
     func close() -> Void
 }
 

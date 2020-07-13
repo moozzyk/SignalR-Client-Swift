@@ -19,6 +19,8 @@ internal class DefaultTransportFactory: TransportFactory {
         for transport in availableTransports {
             if transport.transportType == .webSockets {
                 return WebsocketsTransport(logger: logger)
+            } else if transport.transportType == .longPolling {
+                return LongPollingTransport(logger: logger)
             }
         }
 
