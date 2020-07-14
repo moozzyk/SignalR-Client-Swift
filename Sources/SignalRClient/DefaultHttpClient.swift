@@ -11,10 +11,14 @@ import Foundation
 class DefaultHttpClient: HttpClientProtocol {
 
     private let options: HttpConnectionOptions
-    private let session: URLSession = URLSession.shared
+    private let session: URLSession
 
     public init(options: HttpConnectionOptions) {
         self.options = options
+        
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = options.requestTimeout
+        self.session = URLSession(configuration: sessionConfig)
     }
     
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
