@@ -537,7 +537,6 @@
 					};
 					5AEC70EC20310E3E00616DD2 = {
 						CreatedOnToolsVersion = 9.2;
-						DevelopmentTeam = JG3XY44KS7;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -1062,13 +1061,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JG3XY44KS7;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HubSamplePhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = djr.moozzyk.HubSamplePhone;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1086,13 +1084,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JG3XY44KS7;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HubSamplePhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = djr.moozzyk.HubSamplePhone;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
