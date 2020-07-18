@@ -163,3 +163,6 @@ The new APIs support up to 8 parameters. If you have a hub method taking more th
 ## Disclaimer
 
 I am providing code in the repository to you under an open source license. Because this is my personal repository, the license you receive to my code is from me and not my employer (Facebook)
+
+## Hits
+[![HitCount](http://hits.dwyl.com/moozzyk/Signalr-Client-Swift.svg)](http://hits.dwyl.com/moozzyk/Signalr-Client-Swift)
