@@ -54,7 +54,7 @@ class LongPollingTransportTests: XCTestCase {
         // Unlike the websockets test, we can't get away without doing negotiation.
         // This is a simple implementation of the negotiation process to decouple this test from the real negotiation code.
         // This does not handle all possible circumstances but it works with the TestServer setup.
-        let endpoint = "\(BASE_URL)/echoLongPolling"
+        let endpoint = ECHO_LONGPOLLING_URL.absoluteString
         let negotiateUrl = URL(string: "\(endpoint)/negotiate")!
         var urlRequest = URLRequest(url: negotiateUrl)
         urlRequest.httpMethod = "POST"

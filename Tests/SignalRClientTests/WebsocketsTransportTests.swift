@@ -41,7 +41,7 @@ class WebsocketsTransportTests: XCTestCase {
         }
 
         wsTransport.delegate = transportDelegate
-        wsTransport.start(url: URL(string: "\(BASE_URL)/echoWebsockets")!, options: HttpConnectionOptions())
+        wsTransport.start(url: ECHO_WEBSOCKETS_URL, options: HttpConnectionOptions())
         
         waitForExpectations(timeout: 5 /*seconds*/)
     }

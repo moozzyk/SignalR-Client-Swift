@@ -36,7 +36,7 @@ class HubConnectionTests: XCTestCase {
             XCTAssertNil(error)
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubProtocol(hubProtocolFactory: {_ in HubProtocolFake()})
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
@@ -69,7 +69,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
@@ -100,7 +100,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -112,7 +112,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.start()
         hubConnection.invoke(method: "x", arguments: [], resultType: String.self) {result, error in
             XCTAssertNotNil(error)
@@ -145,7 +145,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
@@ -164,7 +164,7 @@ class HubConnectionTests: XCTestCase {
             hubConnection.stop()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -177,7 +177,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatCanGetConnectionId() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.start()
         hubConnection.invoke(method: "x", arguments: []) {error in
             XCTAssertNotNil(error)
@@ -220,7 +220,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
         hubConnection.start()
@@ -309,7 +309,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
@@ -321,7 +321,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatInvokingStreamingMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.start()
         _ = hubConnection.stream(method: "StreamNumbers", arguments: [], streamItemReceived: { (_: Int) in }, invocationDidComplete: {error in
             XCTAssertNotNil(error)
@@ -368,7 +368,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -406,7 +406,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -474,7 +474,7 @@ class HubConnectionTests: XCTestCase {
         let didCloseExpectation = expectation(description: "connection closed")
         let invocationDidComplete = expectation(description: "stream cancellation completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         var lastItem = -1
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
@@ -553,7 +553,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatCancellingStreamingInvocationRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.start()
         hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "123")) {error in
             XCTAssertEqual("\(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))", "\(error)")
@@ -567,7 +567,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = {hubConnection in
             hubConnection.cancelStreamInvocation(streamHandle: StreamHandle(invocationId: "")) {error in
@@ -603,7 +603,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -642,7 +642,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLogging(minLogLevel: .debug)
             .build()
@@ -684,7 +684,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
@@ -727,7 +727,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withJSONHubProtocol()
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
@@ -771,7 +771,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
 
@@ -791,7 +791,7 @@ class HubConnectionTests: XCTestCase {
     func testTestThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.start()
         hubConnection.send(method: "x", arguments: []) {error in
             XCTAssertNotNil(error)
@@ -855,7 +855,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withJSONHubProtocol()
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
@@ -880,7 +880,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.headers["TestHeader"] = "header"
             }
@@ -908,7 +908,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHttpConnectionOptions() { httpConnectionOptions in
                 httpConnectionOptions.accessTokenProvider = { return "abc" }
             }
@@ -965,6 +965,7 @@ class HubConnectionTests: XCTestCase {
         XCTAssertEqual(String(describing: SignalRError.serverClose(message: "Server Error")), String(describing: fakeConnection.stopError!))
     }
 
+    /// Only applicable to websockets transport due to requirement for skipNegotiation flag.
     func testThatDeadlockDoesNotHappen() {
         let didStop = expectation(description: "connection stopped")
         let hubConnectionDelegate = TestHubConnectionDelegate()
@@ -973,7 +974,7 @@ class HubConnectionTests: XCTestCase {
             didStop.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TESTHUB_WEBSOCKETS_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withHttpConnectionOptions(configureHttpOptions: {options in
@@ -992,7 +993,7 @@ class HubConnectionTests: XCTestCase {
         let connectionDidCloseExpectation = expectation(description: "connection closed")
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
@@ -1034,7 +1035,7 @@ class HubConnectionTests: XCTestCase {
 
         var reconnectAttemptCount = 9
         let hubConnectionDelegate = TestHubConnectionDelegate()
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
@@ -1073,7 +1074,7 @@ class HubConnectionTests: XCTestCase {
         connectionDidCloseExpectation.expectedFulfillmentCount = 5
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .build()
@@ -1102,7 +1103,7 @@ class HubConnectionTests: XCTestCase {
         connectionDidCloseExpectation.expectedFulfillmentCount = 2
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: []))
@@ -1149,7 +1150,7 @@ class HubConnectionTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withLegacyHttpConnection()
             .build()

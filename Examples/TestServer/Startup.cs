@@ -13,10 +13,7 @@ namespace TestServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddConnections();
-            services.AddSignalR(options =>
-            {
-                options.EnableDetailedErrors = true;
-            });
+            services.AddSignalR(options => { options.EnableDetailedErrors = true; });
             services.AddSingleton<EchoConnectionHandler>();
         }
 
@@ -30,19 +27,27 @@ namespace TestServer
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo");
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo",
+                    options => { options.Transports = HttpTransportType.LongPolling; });
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoWebSockets",
                     options => { options.Transports = HttpTransportType.WebSockets; });
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoLongPolling",
                     options => { options.Transports = HttpTransportType.LongPolling; });
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoNoTransports",
                     options => { options.Transports = HttpTransportType.None; });
+
                 endpoints.MapHub<TestHub>("/testhub");
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<TestHub>("/testhubWebsockets",
+                    options => { options.Transports = HttpTransportType.WebSockets; });
+                endpoints.MapHub<TestHub>("/testhubLongPolling",
+                    options => { options.Transports = HttpTransportType.LongPolling; });
+
+                endpoints.MapHub<ChatHub>("/chat", options => { options.Transports = HttpTransportType.LongPolling; });
                 endpoints.MapHub<ChatHub>("/chatWebsockets",
                     options => { options.Transports = HttpTransportType.WebSockets; });
                 endpoints.MapHub<ChatHub>("/chatLongPolling",
                     options => { options.Transports = HttpTransportType.LongPolling; });
+
                 endpoints.MapHub<PlaygroundHub>("/playground");
             });
 
