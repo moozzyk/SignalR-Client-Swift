@@ -117,6 +117,14 @@ public class LongPollingTransport: Transport {
                     self.logger.log(logLevel: .debug, message: "Poll timed out (server side), reissuing.")
                 }
                 
+                
+            case 404:
+                // If we have a poll request in progress when .close() is called, the session will be destroyed and the server
+                // will respond with 404. So if we get a 404 when the active flag is false, this is normal. Otherwise,
+                // we should treat this as an unexpected response.
+                if self.active {
+                    fallthrough
+                }
             default:
                 self.logger.log(logLevel: .error, message: "Unexpected response code \(response.statusCode)")
                 self.closeError = SignalRError.webError(statusCode: response.statusCode)
