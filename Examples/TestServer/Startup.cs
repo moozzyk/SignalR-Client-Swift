@@ -27,8 +27,7 @@ namespace TestServer
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo",
-                    options => { options.Transports = HttpTransportType.LongPolling; });
+                endpoints.MapConnectionHandler<EchoConnectionHandler>("/echo");
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoWebSockets",
                     options => { options.Transports = HttpTransportType.WebSockets; });
                 endpoints.MapConnectionHandler<EchoConnectionHandler>("/echoLongPolling",
