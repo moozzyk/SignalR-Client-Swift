@@ -49,7 +49,7 @@ carthage update
 
 ## Usage
 
-Add `import SwiftSignalRClient` to swift files you would like to use the client in.
+Add `import SwiftSignalRClient` (or `import SignalRClient` if you are using Swift Package Manager) to swift files you would like to use the client in.
 
 A typical implementation looks like the following:
 
