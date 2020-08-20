@@ -12,11 +12,11 @@ import Foundation
  */
 public struct RetryContext {
     /// The number on unsuccesful connect attempts for this reconnect
-    let failedAttemptsCount: Int
+    public let failedAttemptsCount: Int
     /// The time this reconnect started
-    let reconnectStartTime: Date
+    public let reconnectStartTime: Date
     /// The original error that triggered this reconnect
-    let error: Error
+    public let error: Error
 }
 
 /**
