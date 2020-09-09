@@ -16,10 +16,10 @@ public struct TransportType: OptionSet {
     }
 
     public static let longPolling = TransportType(rawValue: 1 << 0)
-    public static let serverSentEvents = TransportType(rawValue: 1 << 1)
+    static let serverSentEvents = TransportType(rawValue: 1 << 1) // Not supported
     public static let webSockets = TransportType(rawValue: 1 << 2)
     
-    public static let all: TransportType = [ .longPolling, .serverSentEvents, .webSockets ]
+    public static let all: TransportType = [ .longPolling, .webSockets ]
 }
 
 extension TransportType {
