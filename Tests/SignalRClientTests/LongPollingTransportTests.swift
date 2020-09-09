@@ -13,7 +13,7 @@ import XCTest
 
 class LongPollingTransportTests: XCTestCase {
 
-    func testThatWebsocketsTransportCanSendAndReceiveMessage() {
+    func testThatLongPollingTransportCanSendAndReceiveMessage() {
         let didOpenExpectation = expectation(description: "transport opened")
         let didReceiveDataExpectation = expectation(description: "transport received data")
         let didCloseExpectation = expectation(description: "transport closed")
