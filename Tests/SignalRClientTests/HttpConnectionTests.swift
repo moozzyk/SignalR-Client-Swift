@@ -10,7 +10,7 @@ import XCTest
 @testable import SignalRClient
 
 class HttpConnectionTests: XCTestCase {
-    
+
     func testThatConnectionCanSendReceiveMessages() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveMessageExpectation = expectation(description: "message received")

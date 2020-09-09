@@ -9,7 +9,6 @@ import XCTest
 @testable import SignalRClient
 
 class HubConnectionExtensionsTests: XCTestCase {
-    
     func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_0arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")

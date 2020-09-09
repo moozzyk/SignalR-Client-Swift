@@ -11,7 +11,7 @@ import XCTest
 
 class WebsocketsTransportTests: XCTestCase {
 
-    func testThatWebsocketsTransportCanSendAndReceiveMessage() {        
+    func testThatWebsocketsTransportCanSendAndReceiveMessage() {
         let didOpenExpectation = expectation(description: "transport opened")
         let didReceiveDataExpectation = expectation(description: "transport received data")
         let didCloseExpectation = expectation(description: "transport closed")

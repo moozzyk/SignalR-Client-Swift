@@ -9,7 +9,6 @@
 import Foundation
 
 class DefaultHttpClient: HttpClientProtocol {
-
     private let options: HttpConnectionOptions
     private let session: URLSession
 
@@ -24,7 +23,7 @@ class DefaultHttpClient: HttpClientProtocol {
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         sendHttpRequest(url:url, method: "GET", body: nil, completionHandler: completionHandler)
     }
-    
+
     func post(url: URL, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         sendHttpRequest(url:url, method: "POST", body: body, completionHandler: completionHandler)
     }

@@ -132,8 +132,6 @@ public class HubConnectionBuilder {
         return self
     }
 
-    
-    
     /**
      Creates a new `HubConnection` using requested configuration.
 
