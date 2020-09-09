@@ -39,17 +39,3 @@ public protocol HttpClientProtocol {
     func delete(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
     
 }
-
-
-public extension HttpClientProtocol {
-    
-    /**
-    Sends a `POST` HTTP request with empty body.
-
-    - parameter url: URL
-    - parameter completionHandler: callback invoked after the HTTP request has been completed
-    */
-    func post(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
-        post(url: url, body: nil, completionHandler: completionHandler)
-    }
-}
