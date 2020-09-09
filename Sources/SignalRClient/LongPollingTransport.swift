@@ -12,6 +12,7 @@ public class LongPollingTransport: Transport {
     public var delegate: TransportDelegate?
     
     private let logger: Logger
+    private let closeQueue = DispatchQueue(label: "LongPollingTransportCloseQueue")
     
     private var active = false
     private var opened = false
@@ -19,6 +20,7 @@ public class LongPollingTransport: Transport {
     private var httpClient: HttpClientProtocol?
     private var url: URL?
     private var closeError: Error?
+    
     
     init(logger: Logger) {
         self.logger = logger
@@ -54,22 +56,23 @@ public class LongPollingTransport: Transport {
     }
     
     public func close() {
-        if !closeCalled {
-            closeCalled = true
-            active = false
-            
-            self.logger.log(logLevel: .debug, message: "Sending LongPolling session DELETE request...")
-            self.httpClient?.delete(url: self.url!, completionHandler: { (_, errorOptional) in
-                if let error = errorOptional {
-                    self.logger.log(logLevel: .error, message: "Error while DELETE-ing long polling session: \(error)")
-                    self.delegate?.transportDidClose(error)
-                } else {
-                    self.logger.log(logLevel: .info, message: "LongPolling transport stopped.")
-                    self.delegate?.transportDidClose(self.closeError)
-                }
-            })
-        } else {
-            self.logger.log(logLevel: .debug, message: "closeCalled flag is already set")
+        closeQueue.sync {
+            if !closeCalled {
+                closeCalled = true
+                active = false
+                self.logger.log(logLevel: .debug, message: "Sending LongPolling session DELETE request...")
+                self.httpClient?.delete(url: self.url!, completionHandler: { (_, errorOptional) in
+                    if let error = errorOptional {
+                        self.logger.log(logLevel: .error, message: "Error while DELETE-ing long polling session: \(error)")
+                        self.delegate?.transportDidClose(error)
+                    } else {
+                        self.logger.log(logLevel: .info, message: "LongPolling transport stopped.")
+                        self.delegate?.transportDidClose(self.closeError)
+                    }
+                })
+            } else {
+                self.logger.log(logLevel: .debug, message: "closeCalled flag is already set")
+            }
         }
     }
     
