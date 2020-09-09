@@ -73,10 +73,6 @@ public class LongPollingTransport: Transport {
         }
     }
     
-    
-    // MARK: - Private methods
-
-    
     private func triggerPoll() {
         if self.active {
             let pollUrl = self.getPollUrl()

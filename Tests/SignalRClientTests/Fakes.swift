@@ -48,22 +48,10 @@ class TestHttpClient: HttpClientProtocol {
     private var postHandler: RequestHandler?
     private var deleteHandler: RequestHandler?
 
-    init(getHandler: RequestHandler?, postHandler: RequestHandler?, deleteHandler: RequestHandler?) {
+    init(getHandler: RequestHandler? = nil, postHandler: RequestHandler? = nil, deleteHandler: RequestHandler? = nil) {
         self.getHandler = getHandler
         self.postHandler = postHandler
         self.deleteHandler = deleteHandler
-    }
-
-    convenience init(getHandler: ((URL) -> (HttpResponse?, Error?))?) {
-        self.init(getHandler: getHandler, postHandler: nil, deleteHandler: nil)
-    }
-
-    convenience init(postHandler: ((URL) -> (HttpResponse?, Error?))?) {
-        self.init(getHandler: nil, postHandler: postHandler, deleteHandler: nil)
-    }
-
-    convenience init() {
-        self.init(getHandler: nil, postHandler: nil, deleteHandler: nil)
     }
 
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
