@@ -36,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
         name = getName()
 
         chatHubConnectionDelegate = ChatHubConnectionDelegate(app: self)
-        chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!)
+        chatHubConnection = HubConnectionBuilder(url: URL(string:"http://localhost:5000/chat")!) // /chat or /chatLongPolling or /chatWebSockets
             .withHubConnectionDelegate(delegate: chatHubConnectionDelegate!)
             .withAutoReconnect()
             .withLogging(minLogLevel: .debug)

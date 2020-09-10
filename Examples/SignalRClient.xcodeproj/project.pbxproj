@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		415F5B7224BCAC4C0071CE5C /* LongPollingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */; };
+		415F5B7324BCAC500071CE5C /* LongPollingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */; };
 		5A13255622B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */; };
 		5A13255722B0CCBC0082C783 /* HubConnectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */; };
 		5A32F4E62079EB150091C185 /* SignalRClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A406F3E2030F4960055671E /* SignalRClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -156,6 +158,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongPollingTransport.swift; sourceTree = "<group>"; };
 		5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionExtensions.swift; sourceTree = "<group>"; };
 		5A3D4EFB22A4D0C2009B0C78 /* CodableHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
 		5A406F3E2030F4960055671E /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,6 +355,7 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */,
 				5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */,
 				5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */,
 				5A13255522B0CCBC0082C783 /* HubConnectionExtensions.swift */,
@@ -630,6 +634,7 @@
 				5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94722510170007BEF23 /* TransferFormat.swift in Sources */,
 				7391A93B22510170007BEF23 /* TransportDelegate.swift in Sources */,
+				415F5B7324BCAC500071CE5C /* LongPollingTransport.swift in Sources */,
 				7391A92D22510170007BEF23 /* TransportType.swift in Sources */,
 				7391A92322510170007BEF23 /* Transport.swift in Sources */,
 				7391A93322510170007BEF23 /* DefaultTransportFactory.swift in Sources */,
@@ -667,6 +672,7 @@
 				5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94622510170007BEF23 /* TransferFormat.swift in Sources */,
 				7391A93A22510170007BEF23 /* TransportDelegate.swift in Sources */,
+				415F5B7224BCAC4C0071CE5C /* LongPollingTransport.swift in Sources */,
 				7391A92C22510170007BEF23 /* TransportType.swift in Sources */,
 				7391A92222510170007BEF23 /* Transport.swift in Sources */,
 				7391A93222510170007BEF23 /* DefaultTransportFactory.swift in Sources */,

@@ -26,8 +26,6 @@ public class HttpConnectionOptions {
 
     /**
      A factory for creating an HTTP client.
-
-     - note: currently used only by tests
     */
     public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = { DefaultHttpClient(options: $0) }
 
@@ -39,6 +37,12 @@ public class HttpConnectionOptions {
     */
     public var skipNegotiation: Bool = false
 
+    
+    /**
+    The timeout value for individual requests, in seconds.
+     */
+    public var requestTimeout: TimeInterval = 120
+    
     /**
      Initializes an `HttpConnectionOptions`.
      */

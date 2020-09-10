@@ -32,7 +32,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -68,7 +68,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -105,7 +105,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -143,7 +143,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -182,7 +182,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -223,7 +223,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -265,7 +265,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -308,7 +308,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -352,7 +352,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -394,7 +394,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -429,7 +429,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -465,7 +465,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -502,7 +502,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -540,7 +540,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -580,7 +580,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -621,7 +621,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -663,7 +663,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -706,7 +706,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -750,7 +750,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -785,7 +785,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -821,7 +821,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -858,7 +858,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -896,7 +896,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -935,7 +935,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -975,7 +975,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -1016,7 +1016,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -1059,7 +1059,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!)
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .build()
         hubConnection.delegate = hubConnectionDelegate
@@ -1103,7 +1103,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1133,7 +1133,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1163,7 +1163,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1193,7 +1193,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1223,7 +1223,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1253,7 +1253,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1283,7 +1283,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1313,7 +1313,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 
@@ -1343,7 +1343,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didCloseExpectation.fulfill()
         }
 
-        let hubConnection = HubConnectionBuilder(url: URL(string: "\(BASE_URL)/testhub")!).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
         hubConnection.delegate = hubConnectionDelegate
         hubConnection.start()
 

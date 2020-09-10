@@ -9,24 +9,6 @@
 import XCTest
 @testable import SignalRClient
 
-class TestTransportDelegate: TransportDelegate {
-    var transportDidOpenHandler: (() -> Void)?
-    var transportDidReceiveDataHandler: ((_ data: Data) -> Void)?
-    var transportDidCloseHandler: ((_ error: Error?) -> Void)?
-
-    func transportDidOpen() -> Void {
-        transportDidOpenHandler?()
-    }
-
-    func transportDidReceiveData(_ data: Data) -> Void {
-        transportDidReceiveDataHandler?(data)
-    }
-
-    func transportDidClose(_ error: Error?) -> Void {
-        transportDidCloseHandler?(error)
-    }
-}
-
 class WebsocketsTransportTests: XCTestCase {
 
     func testThatWebsocketsTransportCanSendAndReceiveMessage() {
@@ -59,16 +41,9 @@ class WebsocketsTransportTests: XCTestCase {
         }
 
         wsTransport.delegate = transportDelegate
-        wsTransport.start(url: URL(string: "\(BASE_URL)/echo")!, options: HttpConnectionOptions())
+        wsTransport.start(url: ECHO_WEBSOCKETS_URL, options: HttpConnectionOptions())
         
         waitForExpectations(timeout: 5 /*seconds*/)
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
     }
 
 }
