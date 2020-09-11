@@ -140,7 +140,7 @@ public class LongPollingTransport: Transport {
         if components.queryItems == nil {
             components.queryItems = []
         }
-        let millisecondUnixTime = Int(Date().timeIntervalSince1970 * 1000)
+        let millisecondUnixTime = Int64(Date().timeIntervalSince1970 * 1000)
         components.queryItems?.append(URLQueryItem(name: "_", value: String(millisecondUnixTime)))
         let pollUrl = components.url
         return pollUrl!
