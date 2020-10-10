@@ -22,10 +22,14 @@ internal protocol NegotiationPayload {
 
 internal class NegotiationResponse: NegotiationPayload {
     let connectionId: String
+    let connectionToken: String
+    let version: Int
     let availableTransports: [TransportDescription]
 
-    init(connectionId: String, availableTransports: [TransportDescription]) {
+    init(connectionId: String, connectionToken: String, version: Int, availableTransports: [TransportDescription]) {
         self.connectionId = connectionId
+        self.connectionToken = connectionToken
+        self.version = version
         self.availableTransports = availableTransports
     }
 }
@@ -66,18 +70,29 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseNegotiation(_ negotiationResponseJSON: [String: Any]) throws -> NegotiationResponse {
-        let connectionId = try parseConnectionId(negotiationResponseJSON: negotiationResponseJSON)
+        let connectionId = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionId")
+        let connectionToken = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionToken")
+        let version = try parseIntNumberProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "negotiateVersion")
+
         let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
 
-        return NegotiationResponse(connectionId: connectionId, availableTransports: availableTransports)
+        return NegotiationResponse(connectionId: connectionId, connectionToken: connectionToken, version: version, availableTransports: availableTransports)
     }
 
-    private static func parseConnectionId(negotiationResponseJSON: [String: Any]) throws -> String {
-        guard let connectionId = negotiationResponseJSON["connectionId"] as? String else {
-            throw SignalRError.invalidNegotiationResponse(message: "connectionId property not found or invalid")
+    private static func parseStringProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> String {
+        guard let propertyValue = negotiationResponseJSON[propertyName] as? String else {
+            throw SignalRError.invalidNegotiationResponse(message: "\(propertyName) property not found or invalid")
         }
 
-        return connectionId
+        return propertyValue
+    }
+
+    private static func parseIntNumberProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> Int {
+        guard let propertyValue = negotiationResponseJSON[propertyName] as? Int else {
+            throw SignalRError.invalidNegotiationResponse(message: "\(propertyName) property not found or invalid")
+        }
+
+        return propertyValue
     }
 
     private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws -> [TransportDescription] {

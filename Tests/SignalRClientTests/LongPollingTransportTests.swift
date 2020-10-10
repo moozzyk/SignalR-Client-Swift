@@ -55,7 +55,7 @@ class LongPollingTransportTests: XCTestCase {
         // This is a simple implementation of the negotiation process to decouple this test from the real negotiation code.
         // This does not handle all possible circumstances but it works with the TestServer setup.
         let endpoint = ECHO_LONGPOLLING_URL.absoluteString
-        let negotiateUrl = URL(string: "\(endpoint)/negotiate")!
+        let negotiateUrl = URL(string: "\(endpoint)/negotiate?negotiateVersion=1")!
         var urlRequest = URLRequest(url: negotiateUrl)
         urlRequest.httpMethod = "POST"
         
@@ -75,10 +75,8 @@ class LongPollingTransportTests: XCTestCase {
         XCTAssertNotNil(responseData)
         
         let response = try! NegotiationPayloadParser.parse(payload: responseData) as! NegotiationResponse
-        let connectionId = response.connectionId
+        let connectionId = response.connectionToken
         let connectionUrl = URL(string: "\(endpoint)?id=\(connectionId)")!
         return connectionUrl
     }
-
-
 }

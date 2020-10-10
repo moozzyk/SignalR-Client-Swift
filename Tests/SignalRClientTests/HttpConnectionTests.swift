@@ -540,7 +540,7 @@ class HttpConnectionTests: XCTestCase {
         let httpConnectionOptions = HttpConnectionOptions()
         let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, logger: PrintLogger())
         let httpClient = TestHttpClient(postHandler: { _ in
-            let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[]}"
+            let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"connectionToken\": \"9AnFxsjXqnRuz4UBt2W8\",\"negotiateVersion\":1,\"availableTransports\":[]}"
             return (HttpResponse(statusCode: 200, contents: negotiatePayload.data(using: .utf8)!), nil)
         })
         httpConnectionOptions.httpClientFactory = { options in httpClient }
@@ -557,7 +557,7 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    private let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
+    private let negotiatePayload = "{\"connectionId\":\"6baUtSEmluCoKvmUIqLUJw\",\"connectionToken\": \"9AnFxsjXqnRuz4UBt2W8\",\"negotiateVersion\":1,\"availableTransports\":[{\"transport\":\"WebSockets\",\"transferFormats\":[\"Text\",\"Binary\"]},{\"transport\":\"ServerSentEvents\",\"transferFormats\":[\"Text\"]},{\"transport\":\"LongPolling\",\"transferFormats\":[\"Text\",\"Binary\"]}]}"
 
     private class TestTransportFactory: TransportFactory {
         let createTransport: () -> Transport
@@ -579,7 +579,7 @@ class HttpConnectionTests: XCTestCase {
 
         let httpConnectionOptions = HttpConnectionOptions()
         let httpClient = TestHttpClient(postHandler: { url in
-            if (url.absoluteString == initialUrl + "/negotiate") {
+            if (url.absoluteString == initialUrl + "/negotiate?negotiateVersion=1") {
                 let negotiatePayload = "{\"accessToken\":\"xyz\",\"url\":\"https://service/?abcdef\"}"
                 return (HttpResponse(statusCode: 200, contents: negotiatePayload.data(using: .utf8)!), nil)
             }
@@ -608,7 +608,7 @@ class HttpConnectionTests: XCTestCase {
     func testConnectionPassesConnectionIdWhenStartingTransport() {
         class ConnectionIdTransport: TestTransport {
             override func start(url: URL, options: HttpConnectionOptions) {
-                XCTAssertTrue(url.absoluteString.contains("?id=6baUtSEmluCoKvmUIqLUJw"))
+                XCTAssertTrue(url.absoluteString.contains("?id=9AnFxsjXqnRuz4UBt2W8"))
                 super.start(url: url, options: options)
             }
         }
@@ -648,7 +648,7 @@ class HttpConnectionTests: XCTestCase {
         
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
-            XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", connection.connectionId)
+            XCTAssertEqual("9AnFxsjXqnRuz4UBt2W8", connection.connectionId)
             connectionIdSetExpectation.fulfill()
             httpConnection.stop();
         }
