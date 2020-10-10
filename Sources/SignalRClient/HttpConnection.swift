@@ -69,7 +69,7 @@ public class HttpConnection: Connection {
             transport = try! self.transportFactory.createTransport(availableTransports: [TransportDescription(transportType: TransportType.webSockets, transferFormats: [TransferFormat.text, TransferFormat.binary])])
             startTransport(connectionId: nil)
         } else {
-            negotiate(accessToken: nil) { negotiationResponse in
+            negotiate(negotiateUrl: createNegotiateUrl(), accessToken: nil) { negotiationResponse in
                 do {
                     self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
                 } catch {
@@ -78,19 +78,16 @@ public class HttpConnection: Connection {
                     return
                 }
 
-                self.startTransport(connectionId: negotiationResponse.connectionId)
+                self.startTransport(connectionId: negotiationResponse.connectionToken)
             }
         }
     }
 
-    private func negotiate(accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
+    private func negotiate(negotiateUrl: URL, accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
         if let accessToken = accessToken {
             logger.log(logLevel: .debug, message: "Overriding accessToken")
             options.accessTokenProvider = { accessToken }
         }
-
-        var negotiateUrl = self.url
-        negotiateUrl.appendPathComponent("negotiate")
 
         let httpClient = options.httpClientFactory(options)
         httpClient.post(url: negotiateUrl, body: nil) {httpResponse, error in
@@ -117,7 +114,9 @@ public class HttpConnection: Connection {
                     case let redirection as Redirection:
                         self.logger.log(logLevel: .debug, message: "Negotiate redirects to \(redirection.url)")
                         self.url = redirection.url
-                        self.negotiate(accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
+                        var negotiateUrl = self.url
+                        negotiateUrl.appendPathComponent("negotiate") // TODO: needs negotiateVersion?
+                        self.negotiate(negotiateUrl: negotiateUrl, accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
                     case let negotiationResponse as NegotiationResponse:
                         self.logger.log(logLevel: .debug, message: "Negotiation response received")
                         negotiateDidComplete(negotiationResponse)
@@ -147,6 +146,14 @@ public class HttpConnection: Connection {
         self.transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
         self.transport!.delegate = self.transportDelegate
         self.transport!.start(url: startUrl, options: self.options)
+    }
+
+    private func createNegotiateUrl() -> URL {
+        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = [URLQueryItem(name: "negotiateVersion", value: "1")]
+        var negotiateUrl = urlComponents.url!
+        negotiateUrl.appendPathComponent("negotiate")
+        return negotiateUrl
     }
 
     private func createStartUrl(connectionId: String?) -> URL {
