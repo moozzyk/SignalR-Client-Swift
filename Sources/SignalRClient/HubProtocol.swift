@@ -215,7 +215,7 @@ public class PingMessage : HubMessage {
 }
 
 public class CloseMessage: HubMessage, Decodable {
-    public let type = MessageType.Close
+    public private(set) var type = MessageType.Close
     public let error: String?
 
     init(error: String?) {
