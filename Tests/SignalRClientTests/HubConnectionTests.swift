@@ -474,7 +474,9 @@ class HubConnectionTests: XCTestCase {
         let didCloseExpectation = expectation(description: "connection closed")
         let invocationDidComplete = expectation(description: "stream cancellation completed")
 
-        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
         var lastItem = -1
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
@@ -497,7 +499,7 @@ class HubConnectionTests: XCTestCase {
 
         hubConnectionDelegate.connectionDidCloseHandler = { error in
             XCTAssertNil(error)
-            XCTAssert(lastItem < 50)
+            XCTAssert(lastItem < 200)
             didCloseExpectation.fulfill()
         }
 
@@ -897,7 +899,7 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             hubConnection.invoke(method: "GetHeader", arguments: ["Authorization"], resultType: String.self, invocationDidComplete: { result, error in
                 XCTAssertNil(error)
-                XCTAssertEqual("Bearer abc", result)
+                XCTAssertEqual("Bearer abc", result) // This assert fails with SignalR Azure Service
                 hubConnection.stop()
             })
         }
