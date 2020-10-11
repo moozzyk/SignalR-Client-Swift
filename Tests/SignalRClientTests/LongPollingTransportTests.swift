@@ -75,7 +75,7 @@ class LongPollingTransportTests: XCTestCase {
         XCTAssertNotNil(responseData)
         
         let response = try! NegotiationPayloadParser.parse(payload: responseData) as! NegotiationResponse
-        let connectionId = response.connectionToken
+        let connectionId = response.connectionToken!
         let connectionUrl = URL(string: "\(endpoint)?id=\(connectionId)")!
         return connectionUrl
     }

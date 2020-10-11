@@ -78,7 +78,7 @@ public class HttpConnection: Connection {
                     return
                 }
 
-                self.startTransport(connectionId: negotiationResponse.connectionToken)
+                self.startTransport(connectionId: negotiationResponse.connectionToken ?? negotiationResponse.connectionId)
             }
         }
     }
@@ -115,7 +115,7 @@ public class HttpConnection: Connection {
                         self.logger.log(logLevel: .debug, message: "Negotiate redirects to \(redirection.url)")
                         self.url = redirection.url
                         var negotiateUrl = self.url
-                        negotiateUrl.appendPathComponent("negotiate") // TODO: needs negotiateVersion?
+                        negotiateUrl.appendPathComponent("negotiate")
                         self.negotiate(negotiateUrl: negotiateUrl, accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
                     case let negotiationResponse as NegotiationResponse:
                         self.logger.log(logLevel: .debug, message: "Negotiation response received")

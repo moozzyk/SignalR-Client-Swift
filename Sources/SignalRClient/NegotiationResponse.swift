@@ -22,11 +22,11 @@ internal protocol NegotiationPayload {
 
 internal class NegotiationResponse: NegotiationPayload {
     let connectionId: String
-    let connectionToken: String
+    let connectionToken: String?
     let version: Int
     let availableTransports: [TransportDescription]
 
-    init(connectionId: String, connectionToken: String, version: Int, availableTransports: [TransportDescription]) {
+    init(connectionId: String, connectionToken: String?, version: Int, availableTransports: [TransportDescription]) {
         self.connectionId = connectionId
         self.connectionToken = connectionToken
         self.version = version
@@ -70,9 +70,12 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseNegotiation(_ negotiationResponseJSON: [String: Any]) throws -> NegotiationResponse {
+        let version = try parseIntNumberProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "negotiateVersion") ?? 0
         let connectionId = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionId")
-        let connectionToken = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionToken")
-        let version = try parseIntNumberProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "negotiateVersion")
+        var connectionToken: String? = nil
+        if version > 0 {
+            connectionToken = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionToken")
+        }
 
         let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
 
@@ -87,8 +90,8 @@ internal class NegotiationPayloadParser {
         return propertyValue
     }
 
-    private static func parseIntNumberProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> Int {
-        guard let propertyValue = negotiationResponseJSON[propertyName] as? Int else {
+    private static func parseIntNumberProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> Int? {
+        guard let propertyValue = negotiationResponseJSON[propertyName] as? Int? else {
             throw SignalRError.invalidNegotiationResponse(message: "\(propertyName) property not found or invalid")
         }
 
