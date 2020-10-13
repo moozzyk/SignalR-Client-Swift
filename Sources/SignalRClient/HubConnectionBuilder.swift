@@ -27,7 +27,8 @@ public class HubConnectionBuilder {
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
     private var useLegacyHttpConnection = false
     private var permittedTransportTypes: TransportType = .all
-
+    private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
+        { logger, permittedTransportTypes in DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)}
     /**
      Initializes a `HubConnectionBuilder` with a URL.
 
@@ -132,14 +133,18 @@ public class HubConnectionBuilder {
         return self
     }
 
+    internal func withCustomTransportFactory(transportFactory: @escaping (Logger, TransportType) -> TransportFactory) -> HubConnectionBuilder {
+        self.transportFactory = transportFactory
+        return self
+    }
+
     /**
      Creates a new `HubConnection` using requested configuration.
 
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let transportFactory = DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)
-        let httpConnection = createHttpConnection(transportFactory: transportFactory)
+        let httpConnection = createHttpConnection(transportFactory: transportFactory(logger, permittedTransportTypes))
         let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
         hubConnection.delegate = delegate
         return hubConnection

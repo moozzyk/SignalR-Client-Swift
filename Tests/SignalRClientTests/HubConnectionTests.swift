@@ -597,6 +597,7 @@ class HubConnectionTests: XCTestCase {
             hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
             })
         }
 
@@ -615,7 +616,6 @@ class HubConnectionTests: XCTestCase {
             XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
             XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -636,6 +636,7 @@ class HubConnectionTests: XCTestCase {
             hubConnection.invoke(method: "InvokeManyArgs", arguments: [[42, 43]], invocationDidComplete: { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
             })
         }
 
@@ -656,7 +657,6 @@ class HubConnectionTests: XCTestCase {
             XCTAssertEqual(43, try argumentExtractor.getArgument(type: Int.self))
             XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -678,6 +678,7 @@ class HubConnectionTests: XCTestCase {
             hubConnection.invoke(method: "InvokeGetNumber", arguments: [42], invocationDidComplete: { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
             })
         }
 
@@ -699,7 +700,6 @@ class HubConnectionTests: XCTestCase {
             XCTAssertEqual(42, try argumentExtractor.getArgument(type: Int.self))
             XCTAssertFalse(argumentExtractor.hasMoreArgs())
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -721,6 +721,7 @@ class HubConnectionTests: XCTestCase {
             hubConnection.invoke(method: "InvokeGetPerson", arguments: [person], invocationDidComplete: { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
             })
         }
 
@@ -744,7 +745,6 @@ class HubConnectionTests: XCTestCase {
             XCTAssertEqual(179.0, person.height)
             XCTAssertEqual(Sex.Male, person.sex)
             didInvokeClientMethod.fulfill()
-            hubConnection.stop()
         })
 
         hubConnection.start()
@@ -994,15 +994,17 @@ class HubConnectionTests: XCTestCase {
         let connectionDidReconnectExpectation = expectation(description: "connection did reconnect")
         let connectionDidCloseExpectation = expectation(description: "connection closed")
 
+        let testTransportFactory = TestTransportFactory()
         let hubConnectionDelegate = TestHubConnectionDelegate()
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withCustomTransportFactory(transportFactory: {_, _ in return testTransportFactory})
             .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
             .build()
 
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
-            hubConnection.send(method: "KillConnection")
+            testTransportFactory.currentTransport!.close()
         }
 
         hubConnectionDelegate.connectionWillReconnectHandler = { error in
@@ -1029,6 +1031,8 @@ class HubConnectionTests: XCTestCase {
     }
 
     func testThatConnectionCanReconnectMultipleTimes() {
+        let testTransportFactory = TestTransportFactory()
+
         let connectionWillReconnectExpectation = expectation(description: "connection will reconnect")
         connectionWillReconnectExpectation.expectedFulfillmentCount = 10
         let connectionDidReconnectExpectation = expectation(description: "connection did reconnect")
@@ -1041,10 +1045,11 @@ class HubConnectionTests: XCTestCase {
             .withLogging(minLogLevel: .debug)
             .withHubConnectionDelegate(delegate: hubConnectionDelegate)
             .withAutoReconnect(reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [DispatchTimeInterval.milliseconds(0)]))
+            .withCustomTransportFactory(transportFactory: {_, _ in return testTransportFactory })
             .build()
 
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
-            hubConnection.send(method: "KillConnection")
+            testTransportFactory.currentTransport!.close()
         }
 
         hubConnectionDelegate.connectionWillReconnectHandler = { error in
@@ -1055,7 +1060,7 @@ class HubConnectionTests: XCTestCase {
             connectionDidReconnectExpectation.fulfill()
             if (reconnectAttemptCount > 0) {
                 reconnectAttemptCount -= 1
-                hubConnection.send(method: "KillConnection")
+                testTransportFactory.currentTransport!.close()
             } else {
                 hubConnection.stop()
             }
@@ -1210,6 +1215,19 @@ class TestConnection: Connection {
     func stop(stopError: Error? = nil) -> Void {
         connectionId = nil
         delegate?.connectionDidClose(error: stopError)
+    }
+}
+
+class TestTransportFactory: TransportFactory {
+    public var currentTransport: Transport?
+
+    func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
+        if availableTransports.contains(where: {$0.transportType == .webSockets}) {
+            currentTransport = WebsocketsTransport(logger: PrintLogger())
+        } else if availableTransports.contains(where: {$0.transportType == .longPolling}) {
+            currentTransport = LongPollingTransport(logger: PrintLogger())
+        }
+        return currentTransport!
     }
 }
 
