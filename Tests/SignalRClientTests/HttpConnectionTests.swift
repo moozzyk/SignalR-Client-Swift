@@ -696,5 +696,4 @@ class HttpConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
-
 }
