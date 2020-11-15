@@ -148,7 +148,7 @@
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* CodableHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableHelpers.swift; sourceTree = "<group>"; };
 		"SignalRClient::SignalRClient::Product" /* SignalRClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SignalRClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"SignalRClient::SignalRClientTests::Product" /* SignalRClientTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"SignalRClient::SignalRClientTests::Product" /* SignalRClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = SignalRClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -475,7 +475,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SignalRClient.xcodeproj/SignalRClientTests_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
@@ -499,7 +499,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SignalRClient.xcodeproj/SignalRClientTests_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
