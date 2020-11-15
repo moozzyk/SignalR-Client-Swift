@@ -127,7 +127,6 @@ public class HubConnectionBuilder {
     /**
     In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency measure only and will be removed in future versions.
      */
-    @available(*, deprecated)
     public func withLegacyHttpConnection() -> HubConnectionBuilder {
         useLegacyHttpConnection = true
         return self
