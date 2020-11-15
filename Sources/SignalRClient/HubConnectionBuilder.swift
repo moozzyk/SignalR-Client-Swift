@@ -63,7 +63,7 @@ public class HubConnectionBuilder {
      Allows configuring `PrintLogger` logging.
 
      - parameter minLogLevel: minimum log level
-     - note: By default logging is disabled. When using this overload all log entries whose level is greater or equal than `minLogLevel` will be written using the `print` function.
+     - note: By default logging is disabled. When using this overload all log entries whose level is greater or equal than `minLogLevel` (with `debug` being the lowest logging level) will be written using the `print` function.
      */
     public func withLogging(minLogLevel: LogLevel) -> HubConnectionBuilder {
         logger = FilteringLogger(minLogLevel: minLogLevel, logger: PrintLogger())
