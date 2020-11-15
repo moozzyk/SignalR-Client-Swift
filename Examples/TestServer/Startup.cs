@@ -44,7 +44,7 @@ namespace TestServer
                 endpoints.MapHub<TestHub>("/testhubLongPolling",
                     options => { options.Transports = HttpTransportType.LongPolling; });
 
-                endpoints.MapHub<ChatHub>("/chat", options => { options.Transports = HttpTransportType.LongPolling; });
+                endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapHub<ChatHub>("/chatWebsockets",
                     options => { options.Transports = HttpTransportType.WebSockets; });
                 endpoints.MapHub<ChatHub>("/chatLongPolling",
