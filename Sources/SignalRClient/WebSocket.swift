@@ -410,7 +410,8 @@ private class Inflater {
     var windowBits = 0
     var strm = z_stream()
     var tInput = [[UInt8]]()
-    var inflateEnd : [UInt8] = [0x00, 0x00, 0xFF, 0xFF]
+    let inflateEndSize: Int
+    let inflateEnd : UnsafeMutablePointer<UInt8>
     var bufferSize = windowBufferSize
     var buffer = malloc(windowBufferSize)
     init?(windowBits : Int){
@@ -422,10 +423,16 @@ private class Inflater {
         if ret != 0 {
             return nil
         }
+
+        var inflateEndBytes : [UInt8] = [0x00, 0x00, 0xFF, 0xFF]
+        inflateEndSize = inflateEndBytes.count
+        inflateEnd = UnsafeMutablePointer<UInt8>.allocate(capacity: inflateEndSize)
+        inflateEnd.initialize(from: &inflateEndBytes, count: inflateEndSize)
     }
     deinit{
         _ = inflateEndG(&strm)
         free(buffer)
+        inflateEnd.deallocate()
     }
     func inflate(_ bufin : UnsafePointer<UInt8>, length : Int, final : Bool) throws -> (p : UnsafeMutablePointer<UInt8>, n : Int){
         var buf = buffer
@@ -439,7 +446,7 @@ private class Inflater {
                 if !final {
                     break
                 }
-                strm.avail_in = CUnsignedInt(inflateEnd.count)
+                strm.avail_in = CUnsignedInt(inflateEndSize)
                 strm.next_in = UnsafePointer<UInt8>(inflateEnd)
             }
             while true {
@@ -1052,7 +1059,7 @@ private class InnerWebSocket: Hashable {
         for i in 0 ..< 4 {
             keyb[i] = arc4random()
         }
-        let rkey = Data(bytes: UnsafePointer(keyb), count: 16).base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+        let rkey = Data(bytes: keyb, count: 16).base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
         reqs += "Sec-WebSocket-Key: \(rkey)\r\n"
         reqs += "\r\n"
         var header = [UInt8]()
