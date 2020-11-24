@@ -69,7 +69,6 @@
 		OBJ_87 /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* TransportDelegate.swift */; };
 		OBJ_88 /* TransportType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* TransportType.swift */; };
 		OBJ_89 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* Util.swift */; };
-		OBJ_90 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* WebSocket.swift */; };
 		OBJ_91 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_36 /* WebsocketsTransport.swift */; };
 		OBJ_98 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 /* End PBXBuildFile section */
@@ -126,7 +125,6 @@
 		OBJ_32 /* TransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
 		OBJ_33 /* TransportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportType.swift; sourceTree = "<group>"; };
 		OBJ_34 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
-		OBJ_35 /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		OBJ_36 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
 		OBJ_39 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		OBJ_40 /* HandshakeProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandshakeProtocolTests.swift; sourceTree = "<group>"; };
@@ -273,7 +271,6 @@
 				OBJ_32 /* TransportDelegate.swift */,
 				OBJ_33 /* TransportType.swift */,
 				OBJ_34 /* Util.swift */,
-				OBJ_35 /* WebSocket.swift */,
 				OBJ_36 /* WebsocketsTransport.swift */,
 				415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */,
 				5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */,
@@ -421,7 +418,6 @@
 				OBJ_87 /* TransportDelegate.swift in Sources */,
 				OBJ_88 /* TransportType.swift in Sources */,
 				OBJ_89 /* Util.swift in Sources */,
-				OBJ_90 /* WebSocket.swift in Sources */,
 				5ACE4BDA2382701000F665B6 /* ReconnectPolicy.swift in Sources */,
 				OBJ_91 /* WebsocketsTransport.swift in Sources */,
 			);

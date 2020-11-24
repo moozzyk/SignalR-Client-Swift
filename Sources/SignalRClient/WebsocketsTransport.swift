@@ -8,12 +8,16 @@
 
 import Foundation
 
-public class WebsocketsTransport: Transport {
-    private var isTransportClosed = false
+@available(OSX 10.15, iOS 13.0, watchOS 6.0, *)
+public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelegate {
     private let logger: Logger
+    private let dispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
+    private var urlSession: URLSession?
+    private var webSocketTask: URLSessionWebSocketTask?
 
-    var webSocket:WebSocket? = nil
-    public weak var delegate: TransportDelegate? = nil
+    private var isTransportClosed = false
+
+    public var delegate: TransportDelegate?
 
     init(logger: Logger) {
         self.logger = logger
@@ -21,73 +25,122 @@ public class WebsocketsTransport: Transport {
 
     public func start(url: URL, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
-        var request = URLRequest(url: convertUrl(url: url))
 
+        var request = URLRequest(url: convertUrl(url: url))
         populateHeaders(headers: options.headers, request: &request)
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
-
-        webSocket = WebSocket(request: request)
-        webSocket!.eventQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
-
-        webSocket!.event.open = { [weak self] in
-            guard let welf = self else { return }
-            welf.logger.log(logLevel: .info, message: "WebSocket open")
-
-            welf.delegate?.transportDidOpen()
-        }
-
-        webSocket!.event.close = { [weak self] (code, reason, clean) in
-            guard let welf = self else { return }
-            welf.logger.log(logLevel: .info, message: "WebSocket close. Clean: \(clean), code: \(code), reason: \(reason)")
-
-            // the transport could have already been closed as a result of an error. In this case we should not call
-            // transportDidClose again on the delegate.
-            guard !welf.markTransportClosed() else {
-                welf.logger.log(logLevel: .debug, message: "Transport already marked as closed due to an error - ignoring close")
-                return
-            }
-
-            if clean {
-                welf.delegate?.transportDidClose(nil)
-            } else {
-                welf.delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: code, reason: reason))
-            }
-        }
-
-        webSocket!.event.error = { [weak self] error in
-            guard let welf = self else { return }
-
-            welf.logger.log(logLevel: .info, message: "WebSocket error. Error: \(error)")
-            // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
-            // on the delegate multiple times so we can as well add the check and log
-            guard !welf.markTransportClosed() else {
-                welf.logger.log(logLevel: .info, message: "Transport already marked as closed - ignoring error")
-                return
-            }
-
-            welf.delegate?.transportDidClose(error)
-        }
-
-        webSocket!.event.message = { [weak self] message in
-            guard let welf = self else { return }
-            if let text = message as? String {
-                welf.delegate?.transportDidReceiveData(text.data(using: .utf8)!)
-            } else if let bytes = message as? [UInt8] {
-                welf.delegate?.transportDidReceiveData(Data(bytes))
-            } else {
-                welf.delegate?.transportDidReceiveData(message as! Data)
-            }
-        }
-        webSocket!.open()
+        urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+        webSocketTask = urlSession!.webSocketTask(with: request)
+        
+        webSocketTask!.resume()
     }
 
-    public func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
-        webSocket?.send(data: data)
-        sendDidComplete(nil)
+    public func send(data: Data, sendDidComplete: @escaping (Error?) -> Void) {
+        let message = URLSessionWebSocketTask.Message.data(data)
+        webSocketTask?.send(message, completionHandler: sendDidComplete)
     }
 
     public func close() {
-        webSocket?.close()
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        urlSession?.finishTasksAndInvalidate()
+    }
+
+    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+        logger.log(logLevel: .info, message: "WebSocket open")
+        delegate?.transportDidOpen()
+        readMessage()
+    }
+
+    private func readMessage()  {
+        webSocketTask?.receive { result in
+            switch result {
+            case .failure(let error):
+                // This failure always occurrs when the task is cancelled. If the code
+                // is not normalClosure this is a real error.
+                if self.webSocketTask?.closeCode != .normalClosure {
+                    self.handleError(error: error)
+                }
+            case .success(let message):
+                self.handleMessage(message: message)
+                self.readMessage()
+            }
+        }
+    }
+
+    private func handleMessage(message: URLSessionWebSocketTask.Message) {
+        switch message {
+        case .string(let text):
+            delegate?.transportDidReceiveData(text.data(using: .utf8)!)
+        case .data(let data):
+            delegate?.transportDidReceiveData(data)
+        @unknown default:
+            fatalError()
+        }
+    }
+
+    private func handleError(error: Error) {
+        logger.log(logLevel: .info, message: "WebSocket error. Error: \(error). Websocket status: \(webSocketTask?.state.rawValue ?? -1)")
+        // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
+        // on the delegate multiple times so we can as well add the check and log
+        guard !markTransportClosed() else {
+            logger.log(logLevel: .debug, message: "Transport already marked as closed - ignoring error. (handleError)")
+            return
+        }
+        delegate?.transportDidClose(error)
+        shutdownTransport()
+    }
+
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard error != nil else {
+            // As per docs: "Error may be nil, which implies that no error occurred and this task is complete."
+            return
+        }
+
+        guard !markTransportClosed() else {
+            logger.log(logLevel: .debug, message: "Transport already marked as closed - ignoring error. (didCompleteWithError)")
+            return
+        }
+
+        let statusCode = (webSocketTask?.response as? HTTPURLResponse)?.statusCode ?? -1
+        logger.log(logLevel: .info, message: "Error starting webSocket. Error: \(error!), HttpStatusCode: \(statusCode), WebSocket closeCode: \(webSocketTask?.closeCode.rawValue ?? -1)")
+        delegate?.transportDidClose(error)
+        shutdownTransport()
+    }
+
+    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        var reasonString = ""
+        if let reason = reason {
+            reasonString = String(decoding: reason, as: UTF8.self)
+        }
+        logger.log(logLevel: .info, message: "WebSocket close. Code: \(closeCode.rawValue), reason: \(reasonString)")
+
+        // the transport could have already been closed as a result of an error. In this case we should not call
+        // transportDidClose again on the delegate.
+        guard !markTransportClosed() else {
+            logger.log(logLevel: .debug, message: "Transport already marked as closed due to an error - ignoring close. (didCloseWith)")
+            return
+        }
+
+        if closeCode == .normalClosure {
+            delegate?.transportDidClose(nil)
+        } else {
+            delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: closeCode.rawValue, reason: reasonString))
+        }
+    }
+
+    private func markTransportClosed() -> Bool {
+        logger.log(logLevel: .debug, message: "Marking transport as closed.")
+        var previousCloseStatus = false
+        dispatchQueue.sync {
+            previousCloseStatus = isTransportClosed
+            isTransportClosed = true
+        }
+        return previousCloseStatus
+    }
+
+    private func shutdownTransport() {
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        urlSession?.finishTasksAndInvalidate()
     }
 
     private func convertUrl(url: URL) -> URL {
@@ -113,15 +166,6 @@ public class WebsocketsTransport: Transport {
         if let accessToken = accessTokenProvider() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
-    }
-
-    private func markTransportClosed() -> Bool {
-        // The assumption is that this method will not be invoked concurrently
-        // Currently it is guaranteed because it is only invoked from webSocket
-        // event handlers which share the same queue
-        let previousCloseStatus = isTransportClosed
-        isTransportClosed = true
-        return previousCloseStatus
     }
 }
 

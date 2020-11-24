@@ -457,7 +457,8 @@ class HttpConnectionTests: XCTestCase {
         }
         connectionDelegate.connectionDidCloseHandler = { error in
             XCTAssertNotNil(error)
-            XCTAssertEqual("InvalidResponse(HTTP/1.1 200 OK)", "\(error!)")
+            XCTAssertTrue("\(error!)".contains("Code=-1011"))
+            // This test is not determinitstic and either of the handlers can be invoked
             didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
@@ -524,7 +525,7 @@ class HttpConnectionTests: XCTestCase {
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
-            XCTAssertEqual("InvalidResponse(HTTP/1.1 404 Not Found)", "\(error)")
+            XCTAssertTrue("\(error)".contains("Code=-1011"))
             didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
