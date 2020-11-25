@@ -8,7 +8,7 @@ namespace TestServer
     {
         public async override Task OnConnectedAsync(ConnectionContext connection)
         {
-           while (true)
+            while (true)
             {
                 var result = await connection.Transport.Input.ReadAsync();
                 var buffer = result.Buffer;

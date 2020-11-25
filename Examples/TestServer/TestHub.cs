@@ -96,7 +96,8 @@ namespace TestServer
             return Clients.Client(Context.ConnectionId).SendCoreAsync("ManyArgs", args);
         }
 
-        public async Task<bool> InvokeNoArgs() {
+        public async Task<bool> InvokeNoArgs()
+        {
             await Clients.Client(Context.ConnectionId).SendAsync("ManyArgs");
             return true;
         }
@@ -156,52 +157,53 @@ namespace TestServer
 
         public ChannelReader<object> StreamManyArgs0()
         {
-            return StreamManyArgs(new object[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+            return StreamManyArgs(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
         }
 
         public ChannelReader<object> StreamManyArgs1(object n1)
         {
-            return StreamManyArgs(new []{ n1 });
+            return StreamManyArgs(new[] { n1 });
         }
 
         public ChannelReader<object> StreamManyArgs2(object n1, object n2)
         {
-            return StreamManyArgs(new []{ n1, n2 });
+            return StreamManyArgs(new[] { n1, n2 });
         }
 
         public ChannelReader<object> StreamManyArgs3(object n1, object n2, object n3)
         {
-            return StreamManyArgs(new []{ n1, n2, n3 });
+            return StreamManyArgs(new[] { n1, n2, n3 });
         }
 
         public ChannelReader<object> StreamManyArgs4(object n1, object n2, object n3, object n4)
         {
-            return StreamManyArgs(new [] { n1, n2, n3, n4 });
+            return StreamManyArgs(new[] { n1, n2, n3, n4 });
         }
 
         public ChannelReader<object> StreamManyArgs5(object n1, object n2, object n3, object n4, object n5)
         {
-            return StreamManyArgs(new [] { n1, n2, n3, n4, n5 });
+            return StreamManyArgs(new[] { n1, n2, n3, n4, n5 });
         }
         public ChannelReader<object> StreamManyArgs6(object n1, object n2, object n3, object n4, object n5, object n6)
         {
-            return StreamManyArgs(new [] { n1, n2, n3, n4, n5, n6 });
+            return StreamManyArgs(new[] { n1, n2, n3, n4, n5, n6 });
         }
 
         public ChannelReader<object> StreamManyArgs7(object n1, object n2, object n3, object n4, object n5, object n6, object n7)
         {
-            return StreamManyArgs(new [] { n1, n2, n3, n4, n5, n6, n7 });
+            return StreamManyArgs(new[] { n1, n2, n3, n4, n5, n6, n7 });
         }
 
         public ChannelReader<object> StreamManyArgs8(object n1, object n2, object n3, object n4, object n5, object n6, object n7, object n8)
         {
-            return StreamManyArgs(new [] { n1, n2, n3, n4, n5, n6, n7, n8 });
+            return StreamManyArgs(new[] { n1, n2, n3, n4, n5, n6, n7, n8 });
         }
 
         private ChannelReader<object> StreamManyArgs(object[] items)
         {
             var channel = Channel.CreateUnbounded<object>();
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 foreach (var item in items)
                 {
                     await channel.Writer.WriteAsync(item);
