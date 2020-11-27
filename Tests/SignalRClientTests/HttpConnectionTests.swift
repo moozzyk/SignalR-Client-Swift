@@ -593,7 +593,7 @@ class HttpConnectionTests: XCTestCase {
         })
 
         httpConnectionOptions.httpClientFactory = { options in httpClient }
-        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org")!, options: httpConnectionOptions)
+        let httpConnection = HttpConnection(url: URL(string: initialUrl)!, options: httpConnectionOptions)
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { _ in
@@ -691,6 +691,31 @@ class HttpConnectionTests: XCTestCase {
             connectionIdNotSetExpectation.fulfill()
         }
 
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatNegotiatePreservesQueryParameters() {
+        let negotiateExpectation = expectation(description: "negotiate")
+        let connectionDidFailToOpenExpectation = expectation(description: "failedToOpen")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let httpClient = TestHttpClient(postHandler: { url in
+            XCTAssertEqual("http://fakeuri.org/negotiate?testParam=42&negotiateVersion=1", url.absoluteString)
+            negotiateExpectation.fulfill()
+            return (HttpResponse(statusCode: 500, contents: nil), nil)
+        })
+
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+        let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org?testParam=42")!, options: httpConnectionOptions)
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { _ in
+            connectionDidFailToOpenExpectation.fulfill()
+        }
         httpConnection.delegate = connectionDelegate
 
         httpConnection.start()

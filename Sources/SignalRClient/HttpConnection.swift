@@ -150,7 +150,9 @@ public class HttpConnection: Connection {
 
     private func createNegotiateUrl() -> URL {
         var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
-        urlComponents.queryItems = [URLQueryItem(name: "negotiateVersion", value: "1")]
+        var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
+        queryItems.append(URLQueryItem(name: "negotiateVersion", value: "1"))
+        urlComponents.queryItems = queryItems
         var negotiateUrl = urlComponents.url!
         negotiateUrl.appendPathComponent("negotiate")
         return negotiateUrl
