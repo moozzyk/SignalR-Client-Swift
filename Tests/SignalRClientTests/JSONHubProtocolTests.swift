@@ -250,13 +250,16 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual("42", json["invocationId"] as! String)
     }
 
-    func testThatWritingStreamItemMessageIsNotSupported() {
-        let messagePayload = "{ \"type\": 2, \"invocationId\": \"12\" }".data(using: .utf8)!
-        let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
+    func testThatCanWriteStreamItemMessage() {
+        let streamItemMessage = StreamItemMessage(invocationId: "12", item: 42)
+        let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: streamItemMessage)
+        let message = String(data: payload, encoding: .utf8)!
+        let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
+        let json = (try! JSONSerialization.jsonObject(with: data!) as? [String: Any])!
 
-        XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).writeMessage(message: streamItemMessage)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidOperation(message: "Unexpected MessageType.")))
-        }
+        XCTAssertEqual(2, json["type"] as! Int)
+        XCTAssertEqual("12", json["invocationId"] as! String)
+        XCTAssertEqual(42, json["item"] as! Int)
     }
 
     func testThatWritingCompletionMessageIsNotSupported() {

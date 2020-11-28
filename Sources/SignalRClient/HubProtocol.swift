@@ -116,25 +116,48 @@ public class ClientInvocationMessage: HubMessage, Decodable {
     }
 }
 
-public class StreamItemMessage: HubMessage, Decodable {
+public class StreamItemMessage: HubMessage, Codable {
     public let type = MessageType.StreamItem
     public let invocationId: String
-    let container: KeyedDecodingContainer<StreamItemMessage.CodingKeys>
+    let container: KeyedDecodingContainer<StreamItemMessage.CodingKeys>?
+    let item: Encodable?
 
     public required init (from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
-        invocationId = try container.decode(String.self, forKey: .invocationId)
+        invocationId = try container!.decode(String.self, forKey: .invocationId)
+        item = nil
+    }
+
+    public init (invocationId: String, item: Encodable) {
+        self.invocationId = invocationId
+        self.item = item
+        container = nil
     }
 
     public func getItem<T: Decodable>(_ type: T.Type) throws -> T {
+        guard item != nil else {
+            throw SignalRError.invalidOperation(message: "Internal error - StreamItemMessage.container is nil.")
+        }
+
         do {
-            return try container.decode(T.self, forKey: .item)
+            return try container!.decode(T.self, forKey: .item)
         } catch {
             throw SignalRError.serializationError(underlyingError: error)
         }
     }
 
+    public func encode(to encoder: Encoder) throws {
+        guard item != nil else {
+            throw SignalRError.invalidOperation(message: "Internal error - StreamItemMessage.item is nil.")
+        }
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(invocationId, forKey: .invocationId)
+        try container.encode(AnyEncodable(value: item!), forKey: .item)
+    }
+
     enum CodingKeys : String, CodingKey {
+        case type
         case invocationId
         case item
     }
@@ -194,7 +217,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
         try container.encode(invocationId, forKey: .invocationId)
         var argumentsContainer = container.nestedUnkeyedContainer(forKey: .arguments)
         try arguments.forEach {
-            try argumentsContainer.encode(AnyEncodable(value:$0))
+            try argumentsContainer.encode(AnyEncodable(value: $0))
         }
         if let streamIds = streamIds {
             try container.encode(streamIds, forKey: .streamIds)

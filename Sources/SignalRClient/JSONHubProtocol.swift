@@ -89,6 +89,8 @@ public class JSONHubProtocol: HubProtocol {
         switch message.type {
         case .Invocation:
             return try encoder.encode(message as! ServerInvocationMessage)
+        case .StreamItem:
+            return try encoder.encode(message as! StreamItemMessage)
         case .StreamInvocation:
             return try encoder.encode(message as! StreamInvocationMessage)
         case .CancelInvocation:
