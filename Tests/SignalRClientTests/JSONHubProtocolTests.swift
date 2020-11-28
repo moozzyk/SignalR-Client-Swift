@@ -206,7 +206,7 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteServerInvocationMessage() {
-        let invocationMessage = ServerInvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
+        let invocationMessage = ServerInvocationMessage(invocationId: "12", target: "myMethod", arguments: [], streamIds: [])
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
@@ -218,7 +218,7 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteInvocationMessageWithoutInvocationId() {
-        let invocationMessage = ServerInvocationMessage(target: "myMethod", arguments: [])
+        let invocationMessage = ServerInvocationMessage(target: "myMethod", arguments: [], streamIds: [])
         let message = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: invocationMessage)
 
         let deserializedMessage = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: message)[0] as! ClientInvocationMessage
@@ -228,7 +228,7 @@ class JSONHubProtocolTests: XCTestCase {
     }
 
     func testThatCanWriteStreamInvocationMessage() {
-        let streamInvocationMessage = StreamInvocationMessage(invocationId: "12", target: "myMethod", arguments: [])
+        let streamInvocationMessage = StreamInvocationMessage(invocationId: "12", target: "myMethod", arguments: [], streamIds: [])
         let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: streamInvocationMessage)
         let message = String(data: payload, encoding: .utf8)!
         let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)

@@ -136,7 +136,7 @@ public class HubConnection {
         }
 
         do {
-            let invocationMessage = ServerInvocationMessage(target: method, arguments: arguments)
+            let invocationMessage = ServerInvocationMessage(target: method, arguments: arguments, streamIds: [])
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
         } catch {
@@ -265,7 +265,7 @@ public class HubConnection {
         }
 
         do {
-            let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id, method: method, arguments: arguments)
+            let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id, method: method, arguments: arguments, streamIds: [])
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
 
             connection.send(data: invocationData) { error in

@@ -40,15 +40,17 @@ public class ServerInvocationMessage: HubMessage, Encodable {
     public let invocationId: String?
     public let target: String
     public let arguments: [Encodable]
+    public let streamIds: [String]?
 
-    convenience init(target: String, arguments: [Encodable]) {
-        self.init(invocationId: nil, target: target, arguments: arguments)
+    convenience init(target: String, arguments: [Encodable], streamIds: [String]?) {
+        self.init(invocationId: nil, target: target, arguments: arguments, streamIds: streamIds)
     }
 
-    init(invocationId: String?, target: String, arguments: [Encodable]) {
+    init(invocationId: String?, target: String, arguments: [Encodable], streamIds: [String]?) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
+        self.streamIds = streamIds
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -61,6 +63,9 @@ public class ServerInvocationMessage: HubMessage, Encodable {
         try arguments.forEach {
             try argumentsContainer.encode(AnyEncodable(value:$0))
         }
+        if let streamIds = streamIds {
+            try container.encode(streamIds, forKey: .streamIds)
+        }
     }
 
     enum CodingKeys : String, CodingKey {
@@ -68,6 +73,7 @@ public class ServerInvocationMessage: HubMessage, Encodable {
         case target
         case invocationId
         case arguments
+        case streamIds
     }
 }
 
@@ -172,11 +178,13 @@ public class StreamInvocationMessage: HubMessage, Encodable {
     public let invocationId: String
     public let target: String
     public let arguments: [Encodable]
+    public let streamIds: [String]?
 
-    init(invocationId: String, target: String, arguments: [Encodable]) {
+    init(invocationId: String, target: String, arguments: [Encodable], streamIds: [String]?) {
         self.invocationId = invocationId
         self.target = target
         self.arguments = arguments
+        self.streamIds = streamIds
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -188,6 +196,9 @@ public class StreamInvocationMessage: HubMessage, Encodable {
         try arguments.forEach {
             try argumentsContainer.encode(AnyEncodable(value:$0))
         }
+        if let streamIds = streamIds {
+            try container.encode(streamIds, forKey: .streamIds)
+        }
     }
 
     enum CodingKeys : String, CodingKey {
@@ -195,6 +206,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
         case target
         case invocationId
         case arguments
+        case streamIds
     }
 }
 

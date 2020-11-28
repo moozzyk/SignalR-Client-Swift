@@ -13,7 +13,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
         let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), invocationDidComplete: { result, error in })
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? ServerInvocationMessage
+        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"]) as? ServerInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.Invocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
@@ -21,6 +21,9 @@ class InvocationHandlerTests: XCTestCase {
         XCTAssertEqual(2, invocationMessage!.arguments.count)
         XCTAssertEqual(1, invocationMessage!.arguments[0] as? Int)
         XCTAssertEqual("abc", invocationMessage!.arguments[1] as? String)
+        XCTAssertEqual(2, invocationMessage!.streamIds?.count ?? 0)
+        XCTAssertEqual("1", invocationMessage!.streamIds![0])
+        XCTAssertEqual("2", invocationMessage!.streamIds![1])
     }
 
     func testThatInvocationHandlerReturnsErrorForStreamItem() {
@@ -113,7 +116,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
         let invocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), streamItemReceived: { item in }, invocationDidComplete: { error in })
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments:[1, "abc"]) as? StreamInvocationMessage
+        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"]) as? StreamInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.StreamInvocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
@@ -121,6 +124,9 @@ class StreamInvocationHandlerTests: XCTestCase {
         XCTAssertEqual(2, invocationMessage!.arguments.count)
         XCTAssertEqual(1, invocationMessage!.arguments[0] as? Int)
         XCTAssertEqual("abc", invocationMessage!.arguments[1] as? String)
+        XCTAssertEqual(2, invocationMessage!.streamIds?.count ?? 0)
+        XCTAssertEqual("1", invocationMessage!.streamIds![0])
+        XCTAssertEqual("2", invocationMessage!.streamIds![1])
     }
 
     func testThatInvocationInvokesCallbackForStreamItem() {
