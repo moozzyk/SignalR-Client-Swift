@@ -95,6 +95,8 @@ public class JSONHubProtocol: HubProtocol {
             return try encoder.encode(message as! StreamInvocationMessage)
         case .CancelInvocation:
             return try encoder.encode(message as! CancelInvocationMessage)
+        case .Completion:
+            return try encoder.encode(message as! CompletionMessage)
         default:
             throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
         }

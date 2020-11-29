@@ -262,13 +262,16 @@ class JSONHubProtocolTests: XCTestCase {
         XCTAssertEqual(42, json["item"] as! Int)
     }
 
-    func testThatWritingCompletionMessageIsNotSupported() {
-        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\" }".data(using: .utf8)!
-        let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
+    func testThatCanWriteCompletionMessage() {
+        let completionMessage = CompletionMessage(invocationId: "12", error: "Error occurred")
+        let payload = try! JSONHubProtocol(logger: NullLogger()).writeMessage(message: completionMessage)
+        let message = String(data: payload, encoding: .utf8)!
+        let data = message[..<message.index(before: message.endIndex)].data(using: .utf8)
+        let json = (try! JSONSerialization.jsonObject(with: data!) as? [String: Any])!
 
-        XCTAssertThrowsError(try JSONHubProtocol(logger: NullLogger()).writeMessage(message: completionMessage)) {
-            error in XCTAssertEqual(String(describing: error), String(describing: SignalRError.invalidOperation(message: "Unexpected MessageType.")))
-        }
+        XCTAssertEqual(3, json["type"] as! Int)
+        XCTAssertEqual("12", json["invocationId"] as! String)
+        XCTAssertEqual("Error occurred", json["error"] as! String)
     }
 
     private static func isProtocolViolation(_ error: Error) -> Bool {

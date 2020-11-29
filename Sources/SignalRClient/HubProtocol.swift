@@ -135,7 +135,7 @@ public class StreamItemMessage: HubMessage, Codable {
     }
 
     public func getItem<T: Decodable>(_ type: T.Type) throws -> T {
-        guard item != nil else {
+        guard container != nil else {
             throw SignalRError.invalidOperation(message: "Internal error - StreamItemMessage.container is nil.")
         }
 
@@ -163,24 +163,35 @@ public class StreamItemMessage: HubMessage, Codable {
     }
 }
 
-public class CompletionMessage: HubMessage, Decodable {
+public class CompletionMessage: HubMessage, Codable {
     public let type = MessageType.Completion
     public let invocationId: String
     public let error: String?
     public let hasResult: Bool
-    let container: KeyedDecodingContainer<CompletionMessage.CodingKeys>
+    let container: KeyedDecodingContainer<CompletionMessage.CodingKeys>?
 
     public required init (from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
-        invocationId = try container.decode(String.self, forKey: .invocationId)
-        error = try container.decodeIfPresent(String.self, forKey: .error)
-        hasResult = container.contains(.result)
+        invocationId = try container!.decode(String.self, forKey: .invocationId)
+        error = try container!.decodeIfPresent(String.self, forKey: .error)
+        hasResult = container!.contains(.result)
+    }
+
+    public init (invocationId: String, error: String?) {
+        self.invocationId = invocationId
+        self.error = error
+        hasResult = false
+        container = nil
     }
 
     public func getResult<T: Decodable>(_ type: T.Type) throws -> T? {
+        guard container != nil else {
+            throw SignalRError.invalidOperation(message: "Internal error - CompletionMessage.container is nil.")
+        }
+
         if hasResult {
             do {
-                return try container.decode(T.self, forKey: .result)
+                return try container!.decode(T.self, forKey: .result)
             } catch {
                 throw SignalRError.serializationError(underlyingError: error)
             }
@@ -189,7 +200,17 @@ public class CompletionMessage: HubMessage, Decodable {
         return nil
     }
 
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(invocationId, forKey: .invocationId)
+        if let error = error {
+            try container.encode(error, forKey: .error)
+        }
+    }
+
     enum CodingKeys : String, CodingKey {
+        case type
         case invocationId
         case error
         case result
