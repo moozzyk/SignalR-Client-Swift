@@ -204,7 +204,7 @@ public class HttpConnection: Connection {
             return
         }
 
-        if previousState == .initial {
+        if previousState == .initial || previousState == .connecting {
             logger.log(logLevel: .warning, message: "Connection not yet started")
             return
         }
