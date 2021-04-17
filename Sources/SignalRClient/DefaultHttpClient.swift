@@ -8,16 +8,20 @@
 
 import Foundation
 
-class DefaultHttpClient: HttpClientProtocol {
+class DefaultHttpClient: NSObject, HttpClientProtocol {
     private let options: HttpConnectionOptions
-    private let session: URLSession
+    private var session: URLSession!
 
     public init(options: HttpConnectionOptions) {
         self.options = options
-        
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = options.requestTimeout
-        self.session = URLSession(configuration: sessionConfig)
+        super.init()
+        self.session = URLSession(
+            configuration: sessionConfig,
+            delegate: self,
+            delegateQueue: nil
+        )
     }
     
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
@@ -60,6 +64,30 @@ class DefaultHttpClient: HttpClientProtocol {
     @inline(__always) private func setAccessToken(accessTokenProvider: () -> String?, request: inout URLRequest) {
         if let accessToken = accessTokenProvider() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+    }
+}
+
+extension DefaultHttpClient: URLSessionDelegate {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+            completionHandler(.useCredential, nil)
+        }
+        
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodClientCertificate,
+           let certOptions = options.clientCertificate {
+            let localCertPath = Bundle.main.url(forResource: certOptions.fileName, withExtension: certOptions.fileExtension)!
+            let localCertData = try? Data(contentsOf: localCertPath)
+            
+            let identityAndTrust = PKCS12Extractor.extractIdentity(certData: localCertData! as NSData, certPassword: certOptions.password ?? "")
+            
+            let urlCredential: URLCredential = URLCredential(
+                identity: identityAndTrust.identityRef,
+                certificates: identityAndTrust.certArray as [AnyObject],
+                persistence: .permanent)
+            
+            completionHandler(.useCredential, urlCredential)
         }
     }
 }

@@ -41,6 +41,9 @@ public class HttpConnectionOptions {
      */
     public var requestTimeout: TimeInterval = 120
     
+    /// Client side certificate configuration
+    public var clientCertificate: ClientCertificateOptions?
+    
     /**
      Initializes an `HttpConnectionOptions`.
      */
