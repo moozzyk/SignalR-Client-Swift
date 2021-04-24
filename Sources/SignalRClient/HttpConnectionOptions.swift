@@ -41,8 +41,7 @@ public class HttpConnectionOptions {
      */
     public var requestTimeout: TimeInterval = 120
     
-    /// Client side certificate configuration
-    public var clientCertificate: ClientCertificateOptions?
+    public var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
     
     /**
      Initializes an `HttpConnectionOptions`.

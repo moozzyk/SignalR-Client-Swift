@@ -75,19 +75,10 @@ extension DefaultHttpClient: URLSessionDelegate {
             completionHandler(.useCredential, nil)
         }
         
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodClientCertificate,
-           let certOptions = options.clientCertificate {
-            let localCertPath = Bundle.main.url(forResource: certOptions.fileName, withExtension: certOptions.fileExtension)!
-            let localCertData = try? Data(contentsOf: localCertPath)
-            
-            let identityAndTrust = PKCS12Extractor.extractIdentity(certData: localCertData! as NSData, certPassword: certOptions.password ?? "")
-            
-            let urlCredential: URLCredential = URLCredential(
-                identity: identityAndTrust.identityRef,
-                certificates: identityAndTrust.certArray as [AnyObject],
-                persistence: .permanent)
-            
-            completionHandler(.useCredential, urlCredential)
+        if let challengeHandler = options.authenticationChallengeHandler {
+            challengeHandler(session, challenge, completionHandler)
+        } else {
+            completionHandler(.performDefaultHandling, nil)
         }
     }
 }
