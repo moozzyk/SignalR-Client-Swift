@@ -16,10 +16,11 @@ class DefaultHttpClient: NSObject, HttpClientProtocol {
         self.options = options
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = options.requestTimeout
+        DefaultHttpClientSessionDelegate.shared.authenticationChallengeHandler = options.authenticationChallengeHandler
         super.init()
         self.session = URLSession(
             configuration: sessionConfig,
-            delegate: self,
+            delegate: DefaultHttpClientSessionDelegate.shared,
             delegateQueue: nil
         )
     }
@@ -68,14 +69,14 @@ class DefaultHttpClient: NSObject, HttpClientProtocol {
     }
 }
 
-extension DefaultHttpClient: URLSessionDelegate {
+fileprivate class DefaultHttpClientSessionDelegate: NSObject, URLSessionDelegate {
+    
+    static var shared = DefaultHttpClientSessionDelegate()
+    
+    var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            completionHandler(.useCredential, nil)
-        }
-        
-        if let challengeHandler = options.authenticationChallengeHandler {
+        if let challengeHandler = authenticationChallengeHandler {
             challengeHandler(session, challenge, completionHandler)
         } else {
             completionHandler(.performDefaultHandling, nil)
