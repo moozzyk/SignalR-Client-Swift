@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DefaultHttpClient: NSObject, HttpClientProtocol {
+class DefaultHttpClient: HttpClientProtocol {
     private let options: HttpConnectionOptions
     private var session: URLSession!
 
@@ -17,7 +17,6 @@ class DefaultHttpClient: NSObject, HttpClientProtocol {
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = options.requestTimeout
         DefaultHttpClientSessionDelegate.shared.authenticationChallengeHandler = options.authenticationChallengeHandler
-        super.init()
         self.session = URLSession(
             configuration: sessionConfig,
             delegate: DefaultHttpClientSessionDelegate.shared,
