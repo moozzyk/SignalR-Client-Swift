@@ -10,7 +10,7 @@ import Foundation
 
 class DefaultHttpClient: HttpClientProtocol {
     private let options: HttpConnectionOptions
-    private var session: URLSession!
+    private let session: URLSession
 
     public init(options: HttpConnectionOptions) {
         self.options = options
