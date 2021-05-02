@@ -41,6 +41,8 @@ public class HttpConnectionOptions {
      */
     public var requestTimeout: TimeInterval = 120
     
+    public var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
+    
     /**
      Initializes an `HttpConnectionOptions`.
      */
