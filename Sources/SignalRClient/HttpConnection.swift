@@ -22,6 +22,7 @@ public class HttpConnection: Connection {
     private var state: State
     private var transport: Transport?
     private var stopError: Error?
+    private var useResponseCookie: Bool?
 
     public weak var delegate: ConnectionDelegate?
     public private(set) var connectionId: String?
@@ -32,12 +33,16 @@ public class HttpConnection: Connection {
         case connected = "connected"
         case stopped = "stopped"
     }
-
-    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger()) {
-        self.init(url: url, options: options, transportFactory: DefaultTransportFactory(logger: logger), logger: logger)
+    
+    private enum HTTPKey: String {
+        case setCookie = "Set-Cookie"
     }
 
-    init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: Logger) {
+    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger(), isEnableCookie: Bool = false) {
+        self.init(url: url, options: options, transportFactory: DefaultTransportFactory(logger: logger), logger: logger, isEnableCookie: isEnableCookie)
+    }
+
+    init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: Logger, isEnableCookie: Bool) {
         logger.log(logLevel: .debug, message: "HttpConnection init")
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()
@@ -47,6 +52,7 @@ public class HttpConnection: Connection {
         self.transportFactory = transportFactory
         self.logger = logger
         self.state = .initial
+        self.useResponseCookie = isEnableCookie
     }
 
     deinit {
@@ -69,7 +75,8 @@ public class HttpConnection: Connection {
             transport = try! self.transportFactory.createTransport(availableTransports: [TransportDescription(transportType: TransportType.webSockets, transferFormats: [TransferFormat.text, TransferFormat.binary])])
             startTransport(connectionId: nil)
         } else {
-            negotiate(negotiateUrl: createNegotiateUrl(), accessToken: nil) { negotiationResponse in
+            negotiate(negotiateUrl: createNegotiateUrl(), accessToken: nil) {[weak self] negotiationResponse in
+                guard let self = self else { return }
                 do {
                     self.transport = try self.transportFactory.createTransport(availableTransports: negotiationResponse.availableTransports)
                 } catch {
@@ -77,10 +84,16 @@ public class HttpConnection: Connection {
                     self.failOpenWithError(error: error, changeState: true)
                     return
                 }
-
+                
+                self.addCookieToHeader(headers: negotiationResponse.headers)
                 self.startTransport(connectionId: negotiationResponse.connectionToken ?? negotiationResponse.connectionId)
             }
         }
+    }
+    
+    private func addCookieToHeader(headers: [AnyHashable: Any]?) {
+        guard useResponseCookie ?? false else { return }
+        self.options.headers["Set-Cookie"] = (String(describing: headers?["Set-Cookie"]))
     }
 
     private func negotiate(negotiateUrl: URL, accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
@@ -96,7 +109,7 @@ public class HttpConnection: Connection {
                 self.failOpenWithError(error: e, changeState: true)
                 return
             }
-
+            
             guard let httpResponse = httpResponse else {
                 self.logger.log(logLevel: .error, message: "Negotiate returned (nil) httpResponse")
                 self.failOpenWithError(error: SignalRError.invalidNegotiationResponse(message: "negotiate returned nil httpResponse."), changeState: true)
@@ -119,6 +132,7 @@ public class HttpConnection: Connection {
                         self.negotiate(negotiateUrl: negotiateUrl, accessToken: redirection.accessToken, negotiateDidComplete: negotiateDidComplete)
                     case let negotiationResponse as NegotiationResponse:
                         self.logger.log(logLevel: .debug, message: "Negotiation response received")
+                        negotiationResponse.headers = httpResponse.headers
                         negotiateDidComplete(negotiationResponse)
                     default:
                         throw SignalRError.invalidNegotiationResponse(message: "internal error - unexpected negotiation payload")

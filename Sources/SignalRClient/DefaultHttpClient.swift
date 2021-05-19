@@ -45,13 +45,14 @@ class DefaultHttpClient: HttpClientProtocol {
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &urlRequest)
         
         session.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
-
-            var resp:HttpResponse?
+            
+            var _response: HttpResponse?
             if error == nil {
-                resp = HttpResponse(statusCode: (response as! HTTPURLResponse).statusCode, contents: data)
+                let _httpURLResponse = response as? HTTPURLResponse
+                _response = HttpResponse(statusCode: _httpURLResponse?.statusCode ?? 200, contents: data, headers: _httpURLResponse?.allHeaderFields)
             }
-
-            completionHandler(resp, error)
+        
+            completionHandler(_response, error)
         }).resume()
     }
     

@@ -19,6 +19,11 @@ public class HttpResponse {
     let statusCode: Int
 
     /**
+     HTTP response header.
+     */
+    let headers: [AnyHashable: Any]?
+
+    /**
      HTTP response data.
     */
     let contents: Data?
@@ -26,8 +31,9 @@ public class HttpResponse {
     /**
      Initializes an `HttpResponse` with `statusCode` and `contents`.
      */
-    init(statusCode: Int, contents: Data?) {
+    init(statusCode: Int, contents: Data?, headers: [AnyHashable: Any]?) {
         self.statusCode = statusCode
         self.contents = contents
+        self.headers = headers
     }
 }

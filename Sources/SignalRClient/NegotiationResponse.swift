@@ -25,6 +25,7 @@ internal class NegotiationResponse: NegotiationPayload {
     let connectionToken: String?
     let version: Int
     let availableTransports: [TransportDescription]
+    var headers: [AnyHashable: Any]?
 
     init(connectionId: String, connectionToken: String?, version: Int, availableTransports: [TransportDescription]) {
         self.connectionId = connectionId

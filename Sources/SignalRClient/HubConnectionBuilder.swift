@@ -26,6 +26,7 @@ public class HubConnectionBuilder {
     private var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
     private var useLegacyHttpConnection = false
+    private lazy var useResponseCookie = false
     private var permittedTransportTypes: TransportType = .all
     private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
         { logger, permittedTransportTypes in DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)}
@@ -123,6 +124,14 @@ public class HubConnectionBuilder {
         self.permittedTransportTypes = permittedTransportTypes
         return self
     }
+    
+    /**
+     Sets which transport types are turned on. Defaults to all types availble. Currently, only websockets and long polling are implemented.
+     */
+    public func withRepsoneCookie() -> HubConnectionBuilder {
+        useResponseCookie = true
+        return self
+    }
 
     /**
     In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency measure only and will be removed in future versions.
@@ -162,7 +171,7 @@ public class HubConnectionBuilder {
         let url = self.url
         let httpConnectionOptions = self.httpConnectionOptions
         let logger = self.logger
-        let connectionFactory: () -> HttpConnection = {
+        let connectionFactory: () -> HttpConnection = { [self] in
             // HttpConnection may overwrite some properties (most notably accessTokenProvider
             // when connecting to Azure SingalR Service) so needs its own copy to not corrupt
             // the instance provided by the user
@@ -172,7 +181,7 @@ public class HubConnectionBuilder {
             httpConnectionOptionsCopy.httpClientFactory = httpConnectionOptions.httpClientFactory
             httpConnectionOptionsCopy.skipNegotiation = httpConnectionOptions.skipNegotiation
             httpConnectionOptionsCopy.requestTimeout = httpConnectionOptions.requestTimeout
-            return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
+            return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger, isEnableCookie: self.useResponseCookie)
         }
         
         return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: logger)
@@ -182,7 +191,7 @@ public class HubConnectionBuilder {
         if !(reconnectPolicy is NoReconnectPolicy) {
             logger.log(logLevel: .error, message: "Using reconnect with legacy HttpConnection is not supported. Ignoring reconnect settings.")
         }
-        return HttpConnection(url: url, options: httpConnectionOptions, transportFactory: transportFactory, logger: logger)
+        return HttpConnection(url: url, options: httpConnectionOptions, transportFactory: transportFactory, logger: logger, isEnableCookie: useResponseCookie)
     }
 }
 
