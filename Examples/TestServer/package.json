@@ -10,6 +10,6 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "@microsoft/signalr": "^5.0.0"
+    "@microsoft/signalr": "^5.0.6"
   }
 }
