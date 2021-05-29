@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
-    "@microsoft/signalr": "^5.0.6"
+    "@microsoft/signalr": "^5.0.6",
+    "@microsoft/signalr-protocol-msgpack": "^5.0.6"
   }
 }

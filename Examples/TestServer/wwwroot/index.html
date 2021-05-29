@@ -21,10 +21,13 @@
 </body>
 </html>
 <script src="js/signalr.js" ></script>
+<script src="js/msgpack5.js"></script>
+<script src="js/signalr-protocol-msgpack.js"></script>
 <script type="text/javascript">
     let name = prompt('Enter your name:', '');
     let hubConnection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Trace)
+        .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
         .withUrl(`http://${document.location.host}/chat`)
         .build();
 
