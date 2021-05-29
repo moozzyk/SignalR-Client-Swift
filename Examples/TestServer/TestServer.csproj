@@ -9,6 +9,10 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="5.0.6" />
+  </ItemGroup>
+
   <Target Name="CopyClient" BeforeTargets="AfterBuild">
     <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@microsoft\signalr\dist\browser\signalr.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
   </Target>
