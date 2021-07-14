@@ -13,3 +13,4 @@ public protocol TransportDelegate: class {
     func transportDidReceiveData(_ data: Data) -> Void
     func transportDidClose(_ error: Error?) -> Void
 }
+
