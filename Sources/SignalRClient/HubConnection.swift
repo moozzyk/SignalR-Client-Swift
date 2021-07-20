@@ -26,7 +26,7 @@ public class HubConnection {
     private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
-    private let keepAliveIntervalInSeconds: Double = 15
+    public var keepAliveIntervalInSeconds: Double = 15
     private var keepAlivePingTask: DispatchWorkItem?
 
     /**
@@ -72,7 +72,6 @@ public class HubConnection {
         self.connection.delegate = connectionDelegate
         logger.log(logLevel: .info, message: "Starting hub connection")
         connection.start()
-        resetKeepAlive()
     }
 
     fileprivate func initiateHandshake() {
@@ -144,6 +143,7 @@ public class HubConnection {
             let invocationMessage = ServerInvocationMessage(target: method, arguments: arguments, streamIds: [])
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             resetKeepAlive()
+
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
         } catch {
             logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
@@ -310,6 +310,7 @@ public class HubConnection {
     fileprivate func connectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
         resetKeepAlive()
+
         var data = data
         if !handshakeStatus.isHandled {
             logger.log(logLevel: .debug, message: "Processing handshake response: \(String(data: data, encoding: .utf8) ?? "(invalid)")")
@@ -441,6 +442,10 @@ public class HubConnection {
     }
 
     private func resetKeepAlive() {
+        if connection.inherentKeepAlive {
+            return
+        }
+
         logger.log(logLevel: .debug, message: "Reset keep alive")
         keepAlivePingTask?.cancel()
 
