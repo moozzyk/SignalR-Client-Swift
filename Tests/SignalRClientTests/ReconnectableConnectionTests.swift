@@ -148,6 +148,8 @@ class ReconnectableConnectionTests: XCTestCase {
     }
 
     class TestConnection: Connection {
+        var inherentKeepAlive: Bool = false
+
         var delegate: ConnectionDelegate?
         var openError: Error?
 

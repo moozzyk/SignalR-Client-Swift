@@ -25,6 +25,7 @@ public class HttpConnection: Connection {
 
     public weak var delegate: ConnectionDelegate?
     public private(set) var connectionId: String?
+    public private(set) var inherentKeepAlive: Bool = false
 
     private enum State: String {
         case initial = "initial"
@@ -81,6 +82,8 @@ public class HttpConnection: Connection {
                 self.startTransport(connectionId: negotiationResponse.connectionToken ?? negotiationResponse.connectionId)
             }
         }
+
+        inherentKeepAlive = transport is LongPollingTransport
     }
 
     private func negotiate(negotiateUrl: URL, accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {
@@ -187,7 +190,7 @@ public class HttpConnection: Connection {
 
     public func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .debug, message: "Sending data")
-        if state != .connected {
+        guard state == .connected else {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
             sendDidComplete(SignalRError.invalidState)
             return

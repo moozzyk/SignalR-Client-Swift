@@ -263,7 +263,7 @@ public class CancelInvocationMessage: HubMessage, Encodable {
     }
 }
 
-public class PingMessage : HubMessage {
+public class PingMessage : HubMessage, Encodable {
     public let type = MessageType.Ping
     private init() { }
 

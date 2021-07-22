@@ -32,6 +32,7 @@ internal class ReconnectableConnection: Connection {
     var connectionId: String? {
         return underlyingConnection.connectionId
     }
+    var inherentKeepAlive: Bool = false
 
     init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy, logger: Logger) {
         self.connectionFactory = connectionFactory
