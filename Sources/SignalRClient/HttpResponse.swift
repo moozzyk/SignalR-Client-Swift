@@ -26,7 +26,7 @@ public class HttpResponse {
     /**
      Initializes an `HttpResponse` with `statusCode` and `contents`.
      */
-    init(statusCode: Int, contents: Data?) {
+    public init(statusCode: Int, contents: Data?) {
         self.statusCode = statusCode
         self.contents = contents
     }
