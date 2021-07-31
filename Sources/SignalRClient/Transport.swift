@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Transport: class {
+public protocol Transport: AnyObject {
     var delegate: TransportDelegate? {get set}
     func start(url:URL, options: HttpConnectionOptions) -> Void
     func send(data: Data, sendDidComplete: @escaping (_ error:Error?) -> Void)

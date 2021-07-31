@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol ConnectionDelegate: class {
+public protocol ConnectionDelegate: AnyObject {
     func connectionDidOpen(connection: Connection)
     func connectionDidFailToOpen(error: Error)
     func connectionDidReceiveData(connection: Connection, data: Data)
