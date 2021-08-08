@@ -473,6 +473,8 @@ class HttpConnectionTests: XCTestCase {
             var delegate: TransportDelegate?
             var httpConnection: Connection?
 
+            let inherentKeepAlive = false
+
             func start(url: URL, options: HttpConnectionOptions) {
                 DispatchQueue.global().async {
                     self.httpConnection!.stop(stopError: nil)
@@ -721,5 +723,31 @@ class HttpConnectionTests: XCTestCase {
         httpConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testConnectionForwardsInherentKeepAliveFromTransport() {
+        for inherentKeepAlive in [true, false] {
+            let connectionOpenedExpectation = expectation(description: "connection opened")
+            let httpConnectionOptions = HttpConnectionOptions()
+            let transport = TestTransport()
+            transport.inherentKeepAlive = inherentKeepAlive
+            let httpConnection = HttpConnection(url: URL(string:"http://fakeuri.org/")!, options: httpConnectionOptions, transportFactory: TestTransportFactory(transport), logger: PrintLogger())
+            let httpClient = TestHttpClient(postHandler: { _ in
+                return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+            })
+            httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+            let connectionDelegate = TestConnectionDelegate()
+            connectionDelegate.connectionDidOpenHandler = { connection in
+                connectionOpenedExpectation.fulfill()
+                connection.stop(stopError: nil)
+            }
+
+            httpConnection.delegate = connectionDelegate
+            httpConnection.start()
+            XCTAssertEqual(inherentKeepAlive, httpConnection.inherentKeepAlive)
+
+            waitForExpectations(timeout: 5 /*seconds*/)
+        }
     }
 }

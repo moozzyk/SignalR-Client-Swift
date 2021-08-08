@@ -46,4 +46,7 @@ class WebsocketsTransportTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testHasInherentKeepAlive() {
+        XCTAssertFalse(WebsocketsTransport(logger: NullLogger()).inherentKeepAlive)
+    }
 }

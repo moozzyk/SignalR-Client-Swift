@@ -79,4 +79,8 @@ class LongPollingTransportTests: XCTestCase {
         let connectionUrl = URL(string: "\(endpoint)?id=\(connectionId)")!
         return connectionUrl
     }
+
+    func testHasInherentKeepAlive() {
+        XCTAssertTrue(LongPollingTransport(logger: NullLogger()).inherentKeepAlive)
+    }
 }

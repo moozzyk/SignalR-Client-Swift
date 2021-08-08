@@ -1198,6 +1198,8 @@ class TestConnection: Connection {
     var delegate: ConnectionDelegate?
     var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
 
+    let inherentKeepAlive = false
+
     func start() {
         connectionId = "00000000-0000-0000-C000-000000000046"
         delegate?.connectionDidOpen(connection: self)

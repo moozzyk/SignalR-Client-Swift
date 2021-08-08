@@ -147,11 +147,21 @@ class ReconnectableConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    public func testReconnectableConnectionForwardsInherentKeepAliveFromConnection() {
+        for inherentKeepAlive in [true, false] {
+            let testConnection = TestConnection()
+            testConnection.inherentKeepAlive = inherentKeepAlive
+            let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), logger: PrintLogger())
+            XCTAssertEqual(inherentKeepAlive, reconnectableConnection.inherentKeepAlive)
+        }
+    }
+
     class TestConnection: Connection {
         var delegate: ConnectionDelegate?
         var openError: Error?
 
         var connectionId: String?
+        var inherentKeepAlive = false
 
         func start() {
             if let e = openError {
