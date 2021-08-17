@@ -10,8 +10,8 @@ import Foundation
 @testable import SignalRClient
 
 class TestTransport: Transport {
- 
     weak var delegate: TransportDelegate?
+    var inherentKeepAlive: Bool = false
 
     func start(url:URL, options: HttpConnectionOptions = HttpConnectionOptions()) -> Void {
         delegate?.transportDidOpen()

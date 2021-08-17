@@ -15,7 +15,7 @@ import Foundation
 
  - note: The user is responsible for maintaining the reference to the delegate.
  */
-public protocol HubConnectionDelegate: class {
+public protocol HubConnectionDelegate: AnyObject {
     /**
      Invoked when the connection to the server opened successfully.
 
