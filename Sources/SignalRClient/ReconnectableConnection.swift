@@ -32,7 +32,6 @@ internal class ReconnectableConnection: Connection {
     var connectionId: String? {
         return underlyingConnection.connectionId
     }
-    var inherentKeepAlive: Bool = false
 
     var inherentKeepAlive: Bool {
         return underlyingConnection.inherentKeepAlive

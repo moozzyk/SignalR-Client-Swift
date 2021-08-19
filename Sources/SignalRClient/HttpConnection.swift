@@ -84,8 +84,6 @@ public class HttpConnection: Connection {
                 self.startTransport(connectionId: negotiationResponse.connectionToken ?? negotiationResponse.connectionId)
             }
         }
-
-        inherentKeepAlive = transport is LongPollingTransport
     }
 
     private func negotiate(negotiateUrl: URL, accessToken: String?, negotiateDidComplete: @escaping (NegotiationResponse) -> Void) {

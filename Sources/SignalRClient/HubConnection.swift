@@ -410,6 +410,7 @@ public class HubConnection {
 
     fileprivate func connectionDidClose(error: Error?) {
         logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
+        cleanUpKeepAlive()
 
         var invocationHandlers: [ServerInvocationHandler] = []
         hubConnectionQueue.sync {
@@ -451,7 +452,11 @@ public class HubConnection {
 
         keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds, execute: keepAlivePingTask!)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) {
+            if let keepAlivePingTask = self.keepAlivePingTask {
+                keepAlivePingTask.perform()
+            }
+        }
     }
 
     private func sendKeepAlivePing() {
@@ -480,6 +485,11 @@ public class HubConnection {
             logger.log(logLevel: .error, message: "Couldn't write keep alive message \(error.localizedDescription)")
             keepAlivePingTask = nil
         }
+    }
+
+    private func cleanUpKeepAlive() {
+        keepAlivePingTask?.cancel()
+        keepAlivePingTask = nil
     }
 }
 
