@@ -28,6 +28,7 @@ public class HubConnection {
 
     public var keepAliveIntervalInSeconds: Double = 15
     private var keepAlivePingTask: DispatchWorkItem?
+    private let keepAliveSemaphore = DispatchSemaphore(value: 1)
 
     /**
     Allows setting a delegate that will be notified about connection lifecycle events
@@ -309,7 +310,6 @@ public class HubConnection {
 
     fileprivate func connectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
-        resetKeepAlive()
 
         var data = data
         if !handshakeStatus.isHandled {
@@ -331,6 +331,7 @@ public class HubConnection {
                 delegate?.connectionDidOpen(hubConnection: self)
             }
         }
+        resetKeepAlive()
         do {
             let messages = try hubProtocol.parseMessages(input: data)
             for incomingMessage in messages {
@@ -447,12 +448,14 @@ public class HubConnection {
             return
         }
 
+        keepAliveSemaphore.wait()
         logger.log(logLevel: .debug, message: "Reset keep alive")
         keepAlivePingTask?.cancel()
 
         keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
+        keepAliveSemaphore.signal()
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) {
+        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) {
             if let keepAlivePingTask = self.keepAlivePingTask {
                 keepAlivePingTask.perform()
             }
@@ -463,7 +466,7 @@ public class HubConnection {
         logger.log(logLevel: .debug, message: "Send keep alive called")
         guard handshakeStatus.isHandled else {
             logger.log(logLevel: .debug, message: "Send keep alive called but not connected")
-            keepAlivePingTask = nil
+            cleanUpKeepAlive()
             return
         }
 
@@ -473,23 +476,24 @@ public class HubConnection {
             connection.send(data: cachedPingMessage, sendDidComplete: { error in
                 if let error = error {
                     self.logger.log(logLevel: .error, message: "Keep alive Error recevied \(error.localizedDescription)")
-                    self.keepAlivePingTask = nil
                 } else {
                     self.logger.log(logLevel: .debug, message: "Keep alive - Still alive")
-                    self.resetKeepAlive()
                 }
+                self.resetKeepAlive()
             })
         } catch {
             // We don't care about the error. It should be seen elsewhere in the client.
             // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
             logger.log(logLevel: .error, message: "Couldn't write keep alive message \(error.localizedDescription)")
-            keepAlivePingTask = nil
+            cleanUpKeepAlive()
         }
     }
 
     private func cleanUpKeepAlive() {
+        keepAliveSemaphore.wait()
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
+        keepAliveSemaphore.signal()
     }
 }
 
