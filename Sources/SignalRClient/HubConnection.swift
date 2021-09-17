@@ -455,10 +455,12 @@ public class HubConnection {
         keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
         keepAliveSemaphore.signal()
 
-        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) {
-            if let keepAlivePingTask = self.keepAlivePingTask {
+        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) { [weak self] in
+            self?.keepAliveSemaphore.wait()
+            if let keepAlivePingTask = self?.keepAlivePingTask {
                 keepAlivePingTask.perform()
             }
+            self?.keepAliveSemaphore.signal()
         }
     }
 
