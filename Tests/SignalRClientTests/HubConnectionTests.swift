@@ -105,7 +105,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatInvokingHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -150,7 +150,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didOpenExpectation = expectation(description: "connection opened")
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
@@ -170,7 +170,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatCanGetConnectionId() {
+    func testThatCanGetConnectionId() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -314,7 +314,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatInvokingStreamingMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatInvokingStreamingMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -548,7 +548,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatCancellingStreamingInvocationRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatCancellingStreamingInvocationRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -562,7 +562,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
     
-    func testTestThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -786,7 +786,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testTestThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -1162,6 +1162,64 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 5 /*seconds*/)
     }
+
+    func testThatKeepAlivePingIsSentWhenInherentKeepAliveIsNotActive() {
+        let didSendPingExpectation = expectation(description: "ping sent")
+        let testConnection = TestConnection()
+        testConnection.inherentKeepAlive = false
+        testConnection.sendDelegate = { data, sendDidComplete in
+            let msg = String(data: data, encoding: .utf8)!
+            if msg.contains("\"type\":6") {
+                didSendPingExpectation.fulfill()
+            }
+        }
+
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
+        hubConnection.keepAliveIntervalInSeconds = 4
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatKeepAlivePingIsNoLongerSentWhenConnectionIsStopped() {
+        let didSendPingExpectation = expectation(description: "ping sent")
+        didSendPingExpectation.isInverted = true
+        let testConnection = TestConnection()
+        testConnection.inherentKeepAlive = false
+        testConnection.sendDelegate = { data, sendDidComplete in
+            let msg = String(data: data, encoding: .utf8)!
+            if msg.contains("\"type\":6") {
+                didSendPingExpectation.fulfill()
+            }
+        }
+
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
+        hubConnection.keepAliveIntervalInSeconds = 4
+        hubConnection.start()
+        Thread.sleep(forTimeInterval: 2)
+        hubConnection.stop()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatNoKeepAlivePingIsSentWhenInherentKeepAliveIsActive() {
+        let didSendPingExpectation = expectation(description: "ping sent")
+        didSendPingExpectation.isInverted = true
+        let testConnection = TestConnection()
+        testConnection.inherentKeepAlive = true
+        testConnection.sendDelegate = { data, sendDidComplete in
+            let msg = String(data: data, encoding: .utf8)!
+            if msg.contains("\"type\":6") {
+                didSendPingExpectation.fulfill()
+            }
+        }
+
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
+        hubConnection.keepAliveIntervalInSeconds = 4
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {
@@ -1198,7 +1256,7 @@ class TestConnection: Connection {
     var delegate: ConnectionDelegate?
     var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
 
-    let inherentKeepAlive = false
+    var inherentKeepAlive = false
 
     func start() {
         connectionId = "00000000-0000-0000-C000-000000000046"

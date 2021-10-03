@@ -10,7 +10,7 @@ import Foundation
 
 public protocol Connection {
     var delegate: ConnectionDelegate? {get set}
-    var inherentKeepAlive: Bool { get }
+    var inherentKeepAlive: Bool {get}
     var connectionId: String? {get}
     func start() -> Void
     func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) -> Void

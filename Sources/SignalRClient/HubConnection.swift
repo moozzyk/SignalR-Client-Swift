@@ -26,6 +26,10 @@ public class HubConnection {
     private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
+    public var keepAliveIntervalInSeconds: Double = 15
+    private var keepAlivePingTask: DispatchWorkItem?
+    private let keepAliveSemaphore = DispatchSemaphore(value: 1)
+
     /**
     Allows setting a delegate that will be notified about connection lifecycle events
 
@@ -131,13 +135,16 @@ public class HubConnection {
     public func send(method: String, arguments:[Encodable], sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .info, message: "Sending to server side hub method: '\(method)'")
 
-        if !ensureConnectionStarted(errorHandler: {sendDidComplete($0)}) {
+        guard ensureConnectionStarted(errorHandler: {sendDidComplete($0)}) else {
+            logger.log(logLevel: .warning, message: "Sending to server side hub method '\(method)' failed, connection not started")
             return
         }
 
         do {
             let invocationMessage = ServerInvocationMessage(target: method, arguments: arguments, streamIds: [])
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
+            resetKeepAlive()
+
             connection.send(data: invocationData, sendDidComplete: sendDidComplete)
         } catch {
             logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
@@ -293,7 +300,7 @@ public class HubConnection {
     }
 
     private func ensureConnectionStarted(errorHandler: (Error)->Void) -> Bool {
-        if !handshakeStatus.isHandled {
+        guard handshakeStatus.isHandled else {
             logger.log(logLevel: .error, message: "Attempting to send data before connection has been started.")
             errorHandler(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))
             return false
@@ -303,6 +310,7 @@ public class HubConnection {
 
     fileprivate func connectionDidReceiveData(data: Data) {
         logger.log(logLevel: .debug, message: "Data received")
+
         var data = data
         if !handshakeStatus.isHandled {
             logger.log(logLevel: .debug, message: "Processing handshake response: \(String(data: data, encoding: .utf8) ?? "(invalid)")")
@@ -323,6 +331,7 @@ public class HubConnection {
                 delegate?.connectionDidOpen(hubConnection: self)
             }
         }
+        resetKeepAlive()
         do {
             let messages = try hubProtocol.parseMessages(input: data)
             for incomingMessage in messages {
@@ -402,6 +411,7 @@ public class HubConnection {
 
     fileprivate func connectionDidClose(error: Error?) {
         logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
+        cleanUpKeepAlive()
 
         var invocationHandlers: [ServerInvocationHandler] = []
         hubConnectionQueue.sync {
@@ -431,6 +441,61 @@ public class HubConnection {
 
     fileprivate func connectionDidReconnect() {
         initiateHandshake()
+    }
+
+    private func resetKeepAlive() {
+        if connection.inherentKeepAlive {
+            return
+        }
+
+        keepAliveSemaphore.wait()
+        logger.log(logLevel: .debug, message: "Reset keep alive")
+        keepAlivePingTask?.cancel()
+
+        keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
+        keepAliveSemaphore.signal()
+
+        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) { [weak self] in
+            self?.keepAliveSemaphore.wait()
+            if let keepAlivePingTask = self?.keepAlivePingTask {
+                keepAlivePingTask.perform()
+            }
+            self?.keepAliveSemaphore.signal()
+        }
+    }
+
+    private func sendKeepAlivePing() {
+        logger.log(logLevel: .debug, message: "Send keep alive called")
+        guard handshakeStatus.isHandled else {
+            logger.log(logLevel: .debug, message: "Send keep alive called but not connected")
+            cleanUpKeepAlive()
+            return
+        }
+
+        do {
+            let cachedPingMessage = try hubProtocol.writeMessage(message: PingMessage.instance)
+            logger.log(logLevel: .debug, message: "Send keep alive")
+            connection.send(data: cachedPingMessage, sendDidComplete: { error in
+                if let error = error {
+                    self.logger.log(logLevel: .error, message: "Keep alive Error recevied \(error.localizedDescription)")
+                } else {
+                    self.logger.log(logLevel: .debug, message: "Keep alive - Still alive")
+                }
+                self.resetKeepAlive()
+            })
+        } catch {
+            // We don't care about the error. It should be seen elsewhere in the client.
+            // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
+            logger.log(logLevel: .error, message: "Couldn't write keep alive message \(error.localizedDescription)")
+            cleanUpKeepAlive()
+        }
+    }
+
+    private func cleanUpKeepAlive() {
+        keepAliveSemaphore.wait()
+        keepAlivePingTask?.cancel()
+        keepAlivePingTask = nil
+        keepAliveSemaphore.signal()
     }
 }
 
