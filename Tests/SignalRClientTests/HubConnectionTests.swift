@@ -953,6 +953,10 @@ class HubConnectionTests: XCTestCase {
             override func stop(stopError: Error?) {
                 self.stopError = stopError
             }
+
+            override var inherentKeepAlive: Bool {
+                return true
+            }
         }
 
         let fakeConnection = FakeHttpConnection(url: URL(string: "http://fakeuri.org")!)
