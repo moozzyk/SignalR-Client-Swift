@@ -1178,8 +1178,9 @@ class HubConnectionTests: XCTestCase {
             }
         }
 
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
-        hubConnection.keepAliveIntervalInSeconds = 4
+        let hubConnectionOptions = HubConnectionOptions()
+        hubConnectionOptions.keepAliveInterval = 4
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
@@ -1197,8 +1198,9 @@ class HubConnectionTests: XCTestCase {
             }
         }
 
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
-        hubConnection.keepAliveIntervalInSeconds = 4
+        let hubConnectionOptions = HubConnectionOptions()
+        hubConnectionOptions.keepAliveInterval = 4
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
         hubConnection.start()
         Thread.sleep(forTimeInterval: 2)
         hubConnection.stop()
@@ -1218,8 +1220,9 @@ class HubConnectionTests: XCTestCase {
             }
         }
 
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
-        hubConnection.keepAliveIntervalInSeconds = 4
+        let hubConnectionOptions = HubConnectionOptions()
+        hubConnectionOptions.keepAliveInterval = 4
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)

@@ -9,7 +9,7 @@
 import Foundation
 
 /**
-
+HttpConnection configuration options.
  */
 public class HttpConnectionOptions {
     /**
