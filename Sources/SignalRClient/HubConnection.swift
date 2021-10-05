@@ -26,7 +26,7 @@ public class HubConnection {
     private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
-    public var keepAliveIntervalInSeconds: Double = 15
+    private let keepAliveIntervalInSeconds: Double
     private var keepAlivePingTask: DispatchWorkItem?
     private let keepAliveSemaphore = DispatchSemaphore(value: 1)
 
@@ -51,10 +51,15 @@ public class HubConnection {
      - parameter hubProtocol: `HubProtocol` to use to communicate with the server
      - parameter logger: optional logger to write logs. If not provided no log will be written
      */
-    public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
+    convenience public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
+        self.init(connection: connection, hubProtocol: hubProtocol, hubConnectionOptions: HubConnectionOptions(), logger: logger)
+    }
+
+    public init(connection: Connection, hubProtocol: HubProtocol, hubConnectionOptions: HubConnectionOptions, logger: Logger = NullLogger()) {
         logger.log(logLevel: .debug, message: "HubConnection init")
         self.connection = connection
         self.hubProtocol = hubProtocol
+        self.keepAliveIntervalInSeconds = hubConnectionOptions.keepAliveInterval
         self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
     }

@@ -24,6 +24,7 @@
 		415F5B7024BCA6650071CE5C /* LongPollingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */; };
 		415F5B7624BDCB270071CE5C /* LongPollingTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B7424BDCB1F0071CE5C /* LongPollingTransportTests.swift */; };
 		415F5B7824BDCBC60071CE5C /* TestTransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415F5B7724BDCBC60071CE5C /* TestTransportDelegate.swift */; };
+		5A4933C6270C150700413903 /* HubConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4933C5270C150700413903 /* HubConnectionOptions.swift */; };
 		5ACE4BD82382688200F665B6 /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */; };
 		5ACE4BDA2382701000F665B6 /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */; };
 		5ACE4BE1238274B500F665B6 /* ReconnectPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACE4BDF238273DA00F665B6 /* ReconnectPolicyTests.swift */; };
@@ -94,6 +95,7 @@
 		415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPollingTransport.swift; sourceTree = "<group>"; };
 		415F5B7424BDCB1F0071CE5C /* LongPollingTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPollingTransportTests.swift; sourceTree = "<group>"; };
 		415F5B7724BDCBC60071CE5C /* TestTransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTransportDelegate.swift; sourceTree = "<group>"; };
+		5A4933C5270C150700413903 /* HubConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubConnectionOptions.swift; sourceTree = "<group>"; };
 		5AC776102341BB6C00486117 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectableConnection.swift; sourceTree = "<group>"; };
 		5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				415F5B6F24BCA6650071CE5C /* LongPollingTransport.swift */,
 				5ACE4BD72382688200F665B6 /* ReconnectableConnection.swift */,
 				5ACE4BD92382701000F665B6 /* ReconnectPolicy.swift */,
+				5A4933C5270C150700413903 /* HubConnectionOptions.swift */,
 			);
 			name = SignalRClient;
 			path = Sources/SignalRClient;
@@ -392,6 +395,7 @@
 			files = (
 				OBJ_64 /* CodableHelpers.swift in Sources */,
 				OBJ_65 /* Connection.swift in Sources */,
+				5A4933C6270C150700413903 /* HubConnectionOptions.swift in Sources */,
 				OBJ_66 /* ConnectionDelegate.swift in Sources */,
 				OBJ_67 /* DefaultHttpClient.swift in Sources */,
 				OBJ_68 /* DefaultTransportFactory.swift in Sources */,
