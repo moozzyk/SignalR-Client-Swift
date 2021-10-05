@@ -22,6 +22,7 @@ public class HubConnectionBuilder {
     private let url: URL
     private var hubProtocolFactory: (Logger) -> HubProtocol = {logger in JSONHubProtocol(logger: logger)}
     private let httpConnectionOptions = HttpConnectionOptions()
+    private let hubConnectionOptions = HubConnectionOptions()
     private var logger: Logger = NullLogger()
     private var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
@@ -56,6 +57,16 @@ public class HubConnectionBuilder {
     */
     public func withHttpConnectionOptions(configureHttpOptions: (_ httpConnectionOptions: HttpConnectionOptions) -> Void) -> HubConnectionBuilder {
         configureHttpOptions(httpConnectionOptions)
+        return self
+    }
+
+    /**
+     Allows configuring HubConnection options.
+
+     - parameter configureHubConnectionOptions: a callback allowing to configure HubConnectionOptions
+     */
+    public func withHubConnectionOptions(configureHubConnectionOptions: (_ hubConnectionOptions: HubConnectionOptions) -> Void) -> HubConnectionBuilder {
+        configureHubConnectionOptions(hubConnectionOptions)
         return self
     }
 
@@ -144,7 +155,7 @@ public class HubConnectionBuilder {
      */
     public func build() -> HubConnection {
         let httpConnection = createHttpConnection(transportFactory: transportFactory(logger, permittedTransportTypes))
-        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), logger: logger)
+        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), hubConnectionOptions: hubConnectionOptions, logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
     }
