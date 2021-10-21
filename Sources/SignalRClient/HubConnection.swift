@@ -503,6 +503,9 @@ public class HubConnection {
     }
 
     private func cleanUpKeepAlive() {
+        guard keepAliveIntervalInSeconds != nil else {
+            return
+        }
         keepAliveSemaphore.wait()
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
