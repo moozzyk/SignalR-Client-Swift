@@ -26,7 +26,7 @@ public class HubConnection {
     private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
-    private let keepAliveIntervalInSeconds: Double
+    private let keepAliveIntervalInSeconds: Double?
     private var keepAlivePingTask: DispatchWorkItem?
     private let keepAliveSemaphore = DispatchSemaphore(value: 1)
 
@@ -450,6 +450,12 @@ public class HubConnection {
 
     private func resetKeepAlive() {
         if connection.inherentKeepAlive {
+            logger.log(logLevel: .debug, message: "Not scheduling sending keep alive - inherent keep alive")
+            return
+        }
+
+        guard let keepAliveInterval = keepAliveIntervalInSeconds else {
+            logger.log(logLevel: .debug, message: "Not scheduling sending keep alive - keep alive disabled")
             return
         }
 
@@ -460,7 +466,7 @@ public class HubConnection {
         keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
         keepAliveSemaphore.signal()
 
-        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveIntervalInSeconds) { [weak self] in
+        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval) { [weak self] in
             self?.keepAliveSemaphore.wait()
             if let keepAlivePingTask = self?.keepAlivePingTask {
                 keepAlivePingTask.perform()
