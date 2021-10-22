@@ -60,7 +60,7 @@ internal class DefaultTransportFactory: TransportFactory {
     
     /// Creates a Transport instance for the given (singular) transport type
     private func buildTransport(type: TransportType?) -> Transport? {
-        if #available(OSX 10.15, iOS 13.0, watchOS 6.0, *) {
+        if #available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
             if type == .webSockets {
                 logger.log(logLevel: .info, message: "Selected WebSockets transport")
                 return WebsocketsTransport(logger: logger)

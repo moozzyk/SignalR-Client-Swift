@@ -8,7 +8,7 @@
 
 import Foundation
 
-@available(OSX 10.15, iOS 13.0, watchOS 6.0, *)
+@available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelegate {
     private let logger: Logger
     private let dispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
