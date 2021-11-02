@@ -28,7 +28,6 @@ public class HubConnection {
 
     private let keepAliveIntervalInSeconds: Double?
     private var keepAlivePingTask: DispatchWorkItem?
-    private let keepAliveSemaphore = DispatchSemaphore(value: 1)
 
     /**
     Allows setting a delegate that will be notified about connection lifecycle events
@@ -459,19 +458,12 @@ public class HubConnection {
             return
         }
 
-        keepAliveSemaphore.wait()
         logger.log(logLevel: .debug, message: "Reset keep alive")
         keepAlivePingTask?.cancel()
-
         keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
-        keepAliveSemaphore.signal()
 
-        hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval) { [weak self] in
-            self?.keepAliveSemaphore.wait()
-            if let keepAlivePingTask = self?.keepAlivePingTask {
-                keepAlivePingTask.perform()
-            }
-            self?.keepAliveSemaphore.signal()
+        if let keepAlivePingTask = keepAlivePingTask {
+            hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask)
         }
     }
 
@@ -503,13 +495,11 @@ public class HubConnection {
     }
 
     private func cleanUpKeepAlive() {
-        guard keepAliveIntervalInSeconds != nil else {
+        if keepAliveIntervalInSeconds == nil {
             return
         }
-        keepAliveSemaphore.wait()
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
-        keepAliveSemaphore.signal()
     }
 }
 

@@ -26,7 +26,7 @@ public class HttpConnection: Connection {
     public weak var delegate: ConnectionDelegate?
     public private(set) var connectionId: String?
     public var inherentKeepAlive: Bool {
-        return transport!.inherentKeepAlive
+        return transport?.inherentKeepAlive ?? true
     }
 
     private enum State: String {
