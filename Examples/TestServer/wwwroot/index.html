@@ -28,7 +28,7 @@
     let hubConnection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Trace)
         .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
-        .withUrl(`http://${document.location.host}/chat`)
+        .withUrl('/chat')
         .build();
 
     hubConnection.on('NewMessage', (sender, message) => {
