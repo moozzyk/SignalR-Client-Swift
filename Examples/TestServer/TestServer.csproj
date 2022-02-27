@@ -20,6 +20,9 @@
   <Target Name="CopyClient" BeforeTargets="AfterBuild">
     <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@microsoft\signalr\dist\browser\signalr.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
     <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\@microsoft\signalr-protocol-msgpack\dist\browser\signalr-protocol-msgpack.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)node_modules\msgpack5\dist\msgpack5.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
+    <ItemGroup>
+    	<MsgPackFiles Include="$(MSBuildThisFileDirectory)node_modules\@msgpack\msgpack\dist\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MsgPackFiles)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\js" />
   </Target>
 </Project>
