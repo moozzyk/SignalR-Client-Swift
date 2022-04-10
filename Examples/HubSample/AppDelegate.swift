@@ -40,6 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDataSource, NSTab
             .withHubConnectionDelegate(delegate: chatHubConnectionDelegate!)
             .withAutoReconnect()
             .withLogging(minLogLevel: .debug)
+            .withHubConnectionOptions(configureHubConnectionOptions: {options in options.keepAliveInterval = 10 })
             .build()
 
         chatHubConnection!.on(method: "NewMessage", callback: { (user: String, message: String) in

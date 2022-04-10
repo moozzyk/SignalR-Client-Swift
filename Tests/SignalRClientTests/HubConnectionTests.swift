@@ -512,7 +512,7 @@ class HubConnectionTests: XCTestCase {
         let testConnection = TestConnection()
         testConnection.sendDelegate = { data, sendDidComplete in
             let msg = String(data: data, encoding: .utf8)!
-            sendDidComplete(msg.contains("\"type\":5") ? SignalRError.invalidOperation(message: "test") : nil)
+            DispatchQueue.main.async {sendDidComplete(msg.contains("\"type\":5") ? SignalRError.invalidOperation(message: "test") : nil)}
         }
 
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))
@@ -1169,21 +1169,26 @@ class HubConnectionTests: XCTestCase {
 
     func testThatKeepAlivePingIsSentWhenInherentKeepAliveIsNotActive() {
         let didSendPingExpectation = expectation(description: "ping sent")
+        didSendPingExpectation.expectedFulfillmentCount = 5
+
         let testConnection = TestConnection()
         testConnection.inherentKeepAlive = false
+
         testConnection.sendDelegate = { data, sendDidComplete in
             let msg = String(data: data, encoding: .utf8)!
             if msg.contains("\"type\":6") {
                 didSendPingExpectation.fulfill()
             }
+            DispatchQueue.main.async {sendDidComplete(nil)}
         }
 
         let hubConnectionOptions = HubConnectionOptions()
-        hubConnectionOptions.keepAliveInterval = 4
-        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
+        hubConnectionOptions.keepAliveInterval = 0.1
+        let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: PrintLogger()), hubConnectionOptions: hubConnectionOptions, logger: PrintLogger())
         hubConnection.start()
 
         waitForExpectations(timeout: 5 /*seconds*/)
+        hubConnection.stop()
     }
 
     func testThatKeepAlivePingIsNoLongerSentWhenConnectionIsStopped() {
@@ -1196,16 +1201,17 @@ class HubConnectionTests: XCTestCase {
             if msg.contains("\"type\":6") {
                 didSendPingExpectation.fulfill()
             }
+            DispatchQueue.main.async {sendDidComplete(nil)}
         }
 
         let hubConnectionOptions = HubConnectionOptions()
-        hubConnectionOptions.keepAliveInterval = 4
+        hubConnectionOptions.keepAliveInterval = 1
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
         hubConnection.start()
-        Thread.sleep(forTimeInterval: 2)
+        Thread.sleep(forTimeInterval: 0.5)
         hubConnection.stop()
 
-        waitForExpectations(timeout: 5 /*seconds*/)
+        waitForExpectations(timeout: 2 /*seconds*/)
     }
 
     func testThatNoKeepAlivePingIsSentWhenInherentKeepAliveIsActive() {
@@ -1218,14 +1224,16 @@ class HubConnectionTests: XCTestCase {
             if msg.contains("\"type\":6") {
                 didSendPingExpectation.fulfill()
             }
+            DispatchQueue.main.async {sendDidComplete(nil)}
         }
 
         let hubConnectionOptions = HubConnectionOptions()
-        hubConnectionOptions.keepAliveInterval = 4
+        hubConnectionOptions.keepAliveInterval = 0.5
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()), hubConnectionOptions: hubConnectionOptions)
         hubConnection.start()
 
-        waitForExpectations(timeout: 5 /*seconds*/)
+        waitForExpectations(timeout: 1 /*seconds*/)
+        hubConnection.stop()
     }
 }
 
@@ -1261,7 +1269,7 @@ class TestConnection: Connection {
     var connectionId: String?
 
     var delegate: ConnectionDelegate?
-    var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
+    var sendDelegate: ((_ data: Data, _ sendDidComplete: @escaping (_ error: Error?) -> Void) -> Void)?
 
     var inherentKeepAlive = false
 
@@ -1271,7 +1279,7 @@ class TestConnection: Connection {
         delegate?.connectionDidReceiveData(connection: self, data: "{}\u{1e}".data(using: .utf8)!)
     }
 
-    func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
+    func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
         sendDelegate?(data, sendDidComplete)
     }
 

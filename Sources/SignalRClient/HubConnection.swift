@@ -322,6 +322,7 @@ public class HubConnection {
             data = remainingData
             let originalHandshakeStatus = handshakeStatus
             handshakeStatus = .handled
+            keepAlivePingTask = DispatchWorkItem{}
             if let e = error {
                 // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
                 // will be no further reconnect attempts
@@ -415,7 +416,10 @@ public class HubConnection {
 
     fileprivate func connectionDidClose(error: Error?) {
         logger.log(logLevel: .info, message: "HubConnection closing with error: \(String(describing: error))")
-        cleanUpKeepAlive()
+
+        hubConnectionQueue.sync {
+            cleanUpKeepAlive()
+        }
 
         var invocationHandlers: [ServerInvocationHandler] = []
         hubConnectionQueue.sync {
@@ -458,12 +462,15 @@ public class HubConnection {
             return
         }
 
-        logger.log(logLevel: .debug, message: "Reset keep alive")
-        keepAlivePingTask?.cancel()
-        keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
-
-        if let keepAlivePingTask = keepAlivePingTask {
-            hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask)
+        hubConnectionQueue.sync {
+            guard keepAlivePingTask != nil else {
+                logger.log(logLevel: .debug, message: "Connection stopped - ignore keep alive reset")
+                return
+            }
+            logger.log(logLevel: .debug, message: "Reset keep alive")
+            keepAlivePingTask!.cancel()
+            keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
+            hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask!)
         }
     }
 
@@ -488,16 +495,14 @@ public class HubConnection {
             })
         } catch {
             // We don't care about the error. It should be seen elsewhere in the client.
-            // The connection is probably in a bad or closed state now, cleanup the timer so it stops triggering
+            // The connection is probably in a bad or closed state now, cancel the timer but not set the task to nil to allow to continue to trigger in case this
             logger.log(logLevel: .error, message: "Couldn't write keep alive message \(error.localizedDescription)")
-            cleanUpKeepAlive()
+            keepAlivePingTask?.cancel()
         }
     }
 
     private func cleanUpKeepAlive() {
-        if keepAliveIntervalInSeconds == nil {
-            return
-        }
+        //Note: needs to be run on hubConnectionQueue to avoid races
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
     }
