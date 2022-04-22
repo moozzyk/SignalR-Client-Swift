@@ -21,7 +21,7 @@ class HandshakeProtocolTests: XCTestCase {
         XCTAssertNil(HandshakeProtocol.parseHandshakeResponse(data: "{ }\u{1e}".data(using: .utf8)!).0)
     }
 
-    public func testThatHandshakeProtocolReturnsErroHandshakeResponse() {
+    public func testThatHandshakeProtocolReturnsErrorHandshakeResponse() {
         let (error, _) = HandshakeProtocol.parseHandshakeResponse(data: "{ \"error\": \"handshake failed\"}\u{1e}".data(using: .utf8)!)
         switch (error as? SignalRError) {
         case .handshakeError(let errorMessage)?:
@@ -33,7 +33,7 @@ class HandshakeProtocolTests: XCTestCase {
         }
     }
 
-    public func testThatHandshakeProtocolReturnsErroForUnexpectedResponse() {
+    public func testThatHandshakeProtocolReturnsErrorForUnexpectedResponse() {
         let testResponses = ["{ \"message\": \"hello\"}\u{1e}", "{ \"message\": \"hello\", \"answer\": 42 }\u{1e}", "[]\u{1e}"]
 
         testResponses.forEach {
@@ -49,12 +49,12 @@ class HandshakeProtocolTests: XCTestCase {
         }
     }
 
-    public func testThatHandshakeProtocolReturnsErroForInvalidJson() {
+    public func testThatHandshakeProtocolReturnsErrorForInvalidJson() {
         let error = HandshakeProtocol.parseHandshakeResponse(data: "{\u{1e}".data(using: .utf8)!)
         XCTAssertNotNil(error)
     }
 
-    public func testThatHandshakeProtocolReturnsErroForPartialHandshakePayload() {
+    public func testThatHandshakeProtocolReturnsErrorForPartialHandshakePayload() {
         let testResponses = ["", "{"]
 
         testResponses.forEach {

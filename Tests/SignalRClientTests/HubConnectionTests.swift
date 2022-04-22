@@ -150,7 +150,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatInvokingVoidHubMethodReturnsErrorIfInvokedBeforeHandshakeReceived() {
         let didOpenExpectation = expectation(description: "connection opened")
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
@@ -786,7 +786,7 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatSendReturnsErrorIfInvokedBeforeHandshakeReceived() {
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
