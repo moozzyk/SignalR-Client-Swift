@@ -9,7 +9,8 @@
 import Foundation
 
 /**
-`HubConnection` is the client for interacting with SignalR server. It allows invoking server side hub methods and register handlers for client side methods that can be invoked from the server.
+`HubConnection` is the client for interacting with SignalR server. It allows invoking server side hub methods and register handlers for client side methods
+ that can be invoked from the server.
 
  - note: You need to maintain the reference to the `HubConnection` instance until the connection is stopped
  */
@@ -37,7 +38,8 @@ public class HubConnection {
     public weak var delegate: HubConnectionDelegate?
     
     /**
-     Gets the connections connectionId. This value will be cleared when the connection is stopped and will have a new value every time the connection is successfully started.
+     Gets the connections connectionId. This value will be cleared when the connection is stopped and will have a new value every time the connection is
+     successfully started.
      */
     public var connectionId: String? {
         return connection.connectionId
@@ -81,7 +83,7 @@ public class HubConnection {
 
     fileprivate func initiateHandshake() {
         logger.log(logLevel: .info, message: "Hub connection started")
-        // TODO: support custom protcols
+        // TODO: support custom protocols
         // TODO: add negative test (e.g. invalid protocol)
         let handshakeRequest = HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol)
         logger.log(logLevel: .debug, message: "Sending handshake request: \(handshakeRequest)")
@@ -128,11 +130,13 @@ public class HubConnection {
     /**
      Invokes a server side hub method in a fire-and-forget manner.
 
-     When a hub method is invoked in a fire-and-forget manner the client never receives any result of the invocation nor is notified about the invocation status.
+     When a hub method is invoked in a fire-and-forget manner the client never receives any result of the invocation nor is notified about the invocation
+     status.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      - note: Consider using typed `.send()` extension methods defined on the `HubConnectionExtensions` class.
      */
@@ -159,7 +163,10 @@ public class HubConnection {
     /**
      Invokes a server side hub method that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
@@ -176,7 +183,10 @@ public class HubConnection {
     /**
      Invokes a server side hub method that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
@@ -203,7 +213,10 @@ public class HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete`
+                                 callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+                                 (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
@@ -353,7 +366,7 @@ public class HubConnection {
                     // no action required for ping messages
                     break
                 default:
-                    logger.log(logLevel: .error, message: "Usupported message type: \(incomingMessage.type.rawValue)")
+                    logger.log(logLevel: .error, message: "Unsupported message type: \(incomingMessage.type.rawValue)")
                 }
             }
         } catch {
@@ -487,7 +500,7 @@ public class HubConnection {
             logger.log(logLevel: .debug, message: "Send keep alive")
             connection.send(data: cachedPingMessage, sendDidComplete: { error in
                 if let error = error {
-                    self.logger.log(logLevel: .error, message: "Keep alive Error recevied \(error.localizedDescription)")
+                    self.logger.log(logLevel: .error, message: "Keep alive Error received \(error.localizedDescription)")
                 } else {
                     self.logger.log(logLevel: .debug, message: "Keep alive - Still alive")
                 }
@@ -568,7 +581,7 @@ public class ArgumentExtractor {
     }
 
     /**
-     Allows to check if there are more arguments to retrieve.
+     Checks if there are more arguments to retrieve.
 
      - returns: `true` if there are more arguments to retrieve. `false` otherwise
      */
