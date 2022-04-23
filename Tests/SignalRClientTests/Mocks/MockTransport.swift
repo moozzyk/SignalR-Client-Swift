@@ -9,7 +9,9 @@
 import Foundation
 @testable import SignalRClient
 
-class TestTransport: Transport {
+typealias TestTransport = MockTransport
+
+class MockTransport: Transport {
     weak var delegate: TransportDelegate?
     var inherentKeepAlive: Bool = false
 

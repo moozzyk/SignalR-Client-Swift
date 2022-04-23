@@ -7,10 +7,11 @@
 //
 
 import Foundation
-
 @testable import SignalRClient
 
-public class HubProtocolFake: HubProtocol {
+typealias HubProtocolFake = MockHubProtocol
+
+public class MockHubProtocol: HubProtocol {
     public let name = "fakeProtocol"
     public let version = 42
     public let type = ProtocolType.Binary

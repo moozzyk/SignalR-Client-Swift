@@ -9,9 +9,10 @@
 import XCTest
 @testable import SignalRClient
 
-class WebsocketsTransportTests: XCTestCase {
+class WebsocketsTransportTests: SignalRClientTestCase {
 
-    func testThatWebsocketsTransportCanSendAndReceiveMessage() {
+    func testThatWebsocketsTransportCanSendAndReceiveMessage() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "transport opened")
         let didReceiveDataExpectation = expectation(description: "transport received data")
         let didCloseExpectation = expectation(description: "transport closed")

@@ -57,8 +57,14 @@ class NegotiationResponseTests: XCTestCase {
     }
 
     public func testThatParseThrowsForInvalidPayloads() {
+        #if swift(>=5.6)
+        let serializationError = "Error Domain=NSCocoaErrorDomain Code=3840 \"JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.\" UserInfo={NSDebugDescription=JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0., NSJSONSerializationErrorIndex=0}"
+        #else
+        let serializationError = "Error Domain=NSCocoaErrorDomain Code=3840 \"JSON text did not start with array or object and option to allow fragments not set.\" UserInfo={NSDebugDescription=JSON text did not start with array or object and option to allow fragments not set.}"
+        #endif
+        
         let testCases = [
-            "1": "Error Domain=NSCocoaErrorDomain Code=3840 \"JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.\" UserInfo={NSDebugDescription=JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0., NSJSONSerializationErrorIndex=0}",
+            "1": serializationError,
             "[1]": "negotiation response is not a JSON object",
             "{}" : "connectionId property not found or invalid",
             "{\"connectionId\": []}" : "connectionId property not found or invalid",

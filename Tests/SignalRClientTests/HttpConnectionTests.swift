@@ -9,9 +9,10 @@
 import XCTest
 @testable import SignalRClient
 
-class HttpConnectionTests: XCTestCase {
+class HttpConnectionTests: SignalRClientTestCase {
 
-    func testThatConnectionCanSendReceiveMessages() {
+    func testThatConnectionCanSendReceiveMessages() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveMessageExpectation = expectation(description: "message received")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -46,7 +47,8 @@ class HttpConnectionTests: XCTestCase {
     }
 
     /// Only expected to pass if the server ONLY supports WebSockets.
-    func testThatConnectionCanSendReceiveMessagesWithSkipNegotiation() {
+    func testThatConnectionCanSendReceiveMessagesWithSkipNegotiation() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveMessageExpectation = expectation(description: "message received")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -87,7 +89,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatOpeningConnectionFailsIfConnectionNotInInitialState() {
+    func testThatOpeningConnectionFailsIfConnectionNotInInitialState() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
@@ -112,7 +115,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionDidFailToOpenInvokedIfCantConnectToServer() {
+    func testThatConnectionDidFailToOpenInvokedIfCantConnectToServer() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
 
         let connectionDelegate = TestConnectionDelegate()
@@ -128,7 +132,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionDidFailToOpenInvokedIfHttpResponseNotOK() {
+    func testThatConnectionDidFailToOpenInvokedIfHttpResponseNotOK() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
 
         let connectionDelegate = TestConnectionDelegate()
@@ -144,7 +149,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendThrowsIfInvokedBeforeStartingConnection() {
+    func testThatSendThrowsIfInvokedBeforeStartingConnection() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let sendFailedExpectation = expectation(description: "send fails expectation")
         let connection = HttpConnection(url: URL(string: "http://fakeuri.org")!)
 
@@ -157,7 +163,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendThrowsIfInvokedAfterConnectionFailedToStart() {
+    func testThatSendThrowsIfInvokedAfterConnectionFailedToStart() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let sendFailedExpectation = expectation(description: "send failed")
         let connection = HttpConnection(url: URL(string: "\(BASE_URL)/throw")!)
         let connectionDelegate = TestConnectionDelegate()
@@ -175,7 +182,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendThrowsIfInvokedAfterConnectionClosed() {
+    func testThatSendThrowsIfInvokedAfterConnectionClosed() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let sendFailedExpectation = expectation(description: "send failed")
 
         let testTransport = TestTransport()
@@ -201,7 +209,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendThrowsIfInvokedAfterConnectionStopped() {
+    func testThatSendThrowsIfInvokedAfterConnectionStopped() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let sendFailedExpectation = expectation(description: "send failed")
 
         let connection = HttpConnection(url: TARGET_ECHO_URL)
@@ -217,7 +226,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCannotStartConnectionAfterItWasStopped() {
+    func testThatCannotStartConnectionAfterItWasStopped() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
         let didFailToOpen = expectation(description: "connection failed to open")
@@ -244,7 +254,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCantStartConnectionThatIsStarting() {
+    func testThatCantStartConnectionThatIsStarting() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didFailToOpen = expectation(description: "connection failed to open")
 
@@ -266,7 +277,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCantStartConnectionThatIsAlreadyRunning() {
+    func testThatCantStartConnectionThatIsAlreadyRunning() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
         let didFailToOpen = expectation(description: "connection failed to open")
@@ -293,7 +305,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCanStopConnectionThatIsStarting() {
+    func testThatCanStopConnectionThatIsStarting() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let connection = HttpConnection(url: TARGET_ECHO_URL, options: HttpConnectionOptions(), logger: PrintLogger())
@@ -312,7 +325,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCanStopConnectionThatFailsNegotiation() {
+    func testThatCanStopConnectionThatFailsNegotiation() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpen = expectation(description: "connection did fail to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
@@ -336,7 +350,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionStoppedWithErrorPassesErrorToDelegate() {
+    func testThatConnectionStoppedWithErrorPassesErrorToDelegate() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         enum testError: Error {
             case stopError
         }
@@ -437,7 +452,8 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionFailsToOpenIfStopCalledDuringNegotiate() {
+    func testThatConnectionFailsToOpenIfStopCalledDuringNegotiate() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpConnectionOptions = HttpConnectionOptions()
@@ -515,7 +531,8 @@ class HttpConnectionTests: XCTestCase {
         transport.httpConnection = nil
     }
 
-    func testThatConnectionFailsToOpenIfStartingTheTransportFails() {
+    func testThatConnectionFailsToOpenIfStartingTheTransportFails() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection did fail to open")
 
         let httpConnectionOptions = HttpConnectionOptions()

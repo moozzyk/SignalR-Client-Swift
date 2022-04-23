@@ -8,7 +8,9 @@
 import Foundation
 @testable import SignalRClient
 
-class TestTransportDelegate: TransportDelegate {
+typealias TestTransportDelegate = MockTransportDelegate
+
+class MockTransportDelegate: TransportDelegate {
     var transportDidOpenHandler: (() -> Void)?
     var transportDidReceiveDataHandler: ((_ data: Data) -> Void)?
     var transportDidCloseHandler: ((_ error: Error?) -> Void)?

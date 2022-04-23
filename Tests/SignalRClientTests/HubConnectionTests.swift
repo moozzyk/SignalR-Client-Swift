@@ -9,9 +9,10 @@
 import XCTest
 @testable import SignalRClient
 
-class HubConnectionTests: XCTestCase {
+class HubConnectionTests: SignalRClientTestCase {
 
-    func testThatOpeningHubConnectionFailsIfHandshakeFails() {
+    func testThatOpeningHubConnectionFailsIfHandshakeFails() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didFailToOpenExpectation = expectation(description: "connection failed to open")
         let didCloseExpectation = expectation(description: "connection closed")
 
@@ -42,7 +43,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatHubMethodCanBeInvoked() {
+    func testThatHubMethodCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -74,7 +76,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatHubMethodWithHeterogenousArgumentsCanBeInvoked() {
+    func testThatHubMethodWithHeterogenousArgumentsCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -120,7 +123,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatVoidHubMethodCanBeInvoked() {
+    func testThatVoidHubMethodCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -150,7 +154,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
 
         let hubConnectionDelegate = TestHubConnectionDelegate()
@@ -185,7 +190,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatExceptionsInHubMethodsAreTurnedIntoErrors() {
+    func testThatExceptionsInHubMethodsAreTurnedIntoErrors() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -282,7 +288,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingHubMethodCanBeInvoked() {
+    func testThatStreamingHubMethodCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -329,7 +336,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatExceptionsInHubStreamingMethodsCloseStreamWithError() {
+    func testThatExceptionsInHubStreamingMethodsCloseStreamWithError() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationError = expectation(description: "received invocation error")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -373,7 +381,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatExceptionsWhileProcessingStreamItemCloseStreamWithError() {
+    func testThatExceptionsWhileProcessingStreamItemCloseStreamWithError() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationError = expectation(description: "received invocation error")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -465,7 +474,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatCanCancelStreamingInvocations() {
+    func testThatCanCancelStreamingInvocations() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
         let invocationDidComplete = expectation(description: "stream cancellation completed")
@@ -562,7 +572,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
     
-    func testThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatCancellingStreamingInvocationWithInvalidStreamHandleRetunsErrorIfInvokedBeforeHandshakeReceived() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -580,7 +591,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientMethodsCanBeInvoked() {
+    func testThatClientMethodsCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -619,7 +631,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientMethodsCanBeInvokedMultipleArgs() {
+    func testThatClientMethodsCanBeInvokedMultipleArgs() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -661,7 +674,8 @@ class HubConnectionTests: XCTestCase {
     }
 
 
-    func testThatClientMethodsCanBeOverwritten() {
+    func testThatClientMethodsCanBeOverwritten() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -703,7 +717,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientMethodsCanBeInvokedWithTypedStructuralArgument() {
+    func testThatClientMethodsCanBeInvokedWithTypedStructuralArgument() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -748,7 +763,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendInvokesMethodsOnServer() {
+    func testThatSendInvokesMethodsOnServer() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let sendCompletedExpectation = expectation(description: "send completed")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -786,7 +802,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() {
+    func testThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didComplete = expectation(description: "test completed")
 
         let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL).build()
@@ -814,7 +831,8 @@ class HubConnectionTests: XCTestCase {
         let sex: Sex?
     }
 
-    func testThatHubMethodUsingComplexTypesCanBeInvoked() {
+    func testThatHubMethodUsingComplexTypesCanBeInvoked() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -862,7 +880,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatHubConnectionSendsHeaders() {
+    func testThatHubConnectionSendsHeaders() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             hubConnection.invoke(method: "GetHeader", arguments: ["TestHeader"], resultType: String.self, invocationDidComplete: { result, error in
@@ -890,7 +909,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatHubConnectionSendsAuthToken() {
+    func testThatHubConnectionSendsAuthToken() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             hubConnection.invoke(method: "GetHeader", arguments: ["Authorization"], resultType: String.self, invocationDidComplete: { result, error in
@@ -968,7 +988,8 @@ class HubConnectionTests: XCTestCase {
     }
 
     /// Only applicable to websockets transport due to requirement for skipNegotiation flag.
-    func testThatDeadlockDoesNotHappen() {
+    func testThatDeadlockDoesNotHappen() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didStop = expectation(description: "connection stopped")
         let hubConnectionDelegate = TestHubConnectionDelegate()
         hubConnectionDelegate.connectionDidCloseHandler = { error in
@@ -989,7 +1010,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionCanReconnect() {
+    func testThatConnectionCanReconnect() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let connectionWillReconnectExpectation = expectation(description: "connection will reconnect")
         let connectionDidReconnectExpectation = expectation(description: "connection did reconnect")
         let connectionDidCloseExpectation = expectation(description: "connection closed")
@@ -1030,7 +1052,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionCanReconnectMultipleTimes() {
+    func testThatConnectionCanReconnectMultipleTimes() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let testTransportFactory = TestTransportFactory()
 
         let connectionWillReconnectExpectation = expectation(description: "connection will reconnect")
@@ -1076,7 +1099,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionCanBeRestarted() {
+    func testThatConnectionCanBeRestarted() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let connectionDidCloseExpectation = expectation(description: "connection closed")
         connectionDidCloseExpectation.expectedFulfillmentCount = 5
 
@@ -1105,7 +1129,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatConnectionCanBeRestartedAfterFailedReconnect() {
+    func testThatConnectionCanBeRestartedAfterFailedReconnect() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let connectionDidCloseExpectation = expectation(description: "connection closed")
         connectionDidCloseExpectation.expectedFulfillmentCount = 2
 
@@ -1134,7 +1159,8 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatHubMethodCanBeInvokedWithLegacyHttpConnection() {
+    func testThatHubMethodCanBeInvokedWithLegacyHttpConnection() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1191,7 +1217,8 @@ class HubConnectionTests: XCTestCase {
         hubConnection.stop()
     }
 
-    func testThatKeepAlivePingIsNoLongerSentWhenConnectionIsStopped() {
+    func testThatKeepAlivePingIsNoLongerSentWhenConnectionIsStopped() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didSendPingExpectation = expectation(description: "ping sent")
         didSendPingExpectation.isInverted = true
         let testConnection = TestConnection()
@@ -1234,86 +1261,5 @@ class HubConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 1 /*seconds*/)
         hubConnection.stop()
-    }
-}
-
-class TestHubConnectionDelegate: HubConnectionDelegate {
-    var connectionDidOpenHandler: ((_ hubConnection: HubConnection) -> Void)?
-    var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
-    var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
-    var connectionWillReconnectHandler: ((_ error: Error) -> Void)?
-    var connectionDidReconnectHandler: (() -> Void)?
-
-    func connectionDidOpen(hubConnection: HubConnection) {
-        connectionDidOpenHandler?(hubConnection)
-    }
-
-    func connectionDidFailToOpen(error: Error) {
-        connectionDidFailToOpenHandler?(error)
-    }
-
-    func connectionDidClose(error: Error?) {
-        connectionDidCloseHandler?(error)
-    }
-
-    func connectionWillReconnect(error: Error) {
-        connectionWillReconnectHandler?(error)
-    }
-
-    func connectionDidReconnect() {
-        connectionDidReconnectHandler?()
-    }
-}
-
-class TestConnection: Connection {
-    var connectionId: String?
-
-    var delegate: ConnectionDelegate?
-    var sendDelegate: ((_ data: Data, _ sendDidComplete: @escaping (_ error: Error?) -> Void) -> Void)?
-
-    var inherentKeepAlive = false
-
-    func start() {
-        connectionId = "00000000-0000-0000-C000-000000000046"
-        delegate?.connectionDidOpen(connection: self)
-        delegate?.connectionDidReceiveData(connection: self, data: "{}\u{1e}".data(using: .utf8)!)
-    }
-
-    func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
-        sendDelegate?(data, sendDidComplete)
-    }
-
-    func stop(stopError: Error? = nil) -> Void {
-        connectionId = nil
-        delegate?.connectionDidClose(error: stopError)
-    }
-}
-
-class TestTransportFactory: TransportFactory {
-    public var currentTransport: Transport?
-
-    func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
-        if availableTransports.contains(where: {$0.transportType == .webSockets}) {
-            currentTransport = WebsocketsTransport(logger: PrintLogger())
-        } else if availableTransports.contains(where: {$0.transportType == .longPolling}) {
-            currentTransport = LongPollingTransport(logger: PrintLogger())
-        }
-        return currentTransport!
-    }
-}
-
-class ArgumentExtractorTests: XCTestCase {
-    func testThatArgumentExtractorCallsIntoClientInvocationMessage() {
-        let payload = "{ \"type\": 1, \"target\": \"method\", \"arguments\": [42, \"abc\"] }\u{001e}"
-
-        let hubMessages = try! JSONHubProtocol(logger: NullLogger()).parseMessages(input: payload.data(using: .utf8)!)
-        XCTAssertEqual(1, hubMessages.count)
-        let msg = hubMessages[0] as! ClientInvocationMessage
-        let argumentExtractor = ArgumentExtractor(clientInvocationMessage: msg)
-        XCTAssertTrue(argumentExtractor.hasMoreArgs())
-        XCTAssertEqual(42, try! argumentExtractor.getArgument(type: Int.self))
-        XCTAssertTrue(argumentExtractor.hasMoreArgs())
-        XCTAssertEqual("abc", try! argumentExtractor.getArgument(type: String.self))
-        XCTAssertFalse(argumentExtractor.hasMoreArgs())
     }
 }

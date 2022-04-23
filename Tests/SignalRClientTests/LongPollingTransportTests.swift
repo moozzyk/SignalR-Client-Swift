@@ -11,9 +11,10 @@ import Foundation
 import XCTest
 @testable import SignalRClient
 
-class LongPollingTransportTests: XCTestCase {
+class LongPollingTransportTests: SignalRClientTestCase {
 
-    func testThatLongPollingTransportCanSendAndReceiveMessage() {
+    func testThatLongPollingTransportCanSendAndReceiveMessage() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "transport opened")
         let didReceiveDataExpectation = expectation(description: "transport received data")
         let didCloseExpectation = expectation(description: "transport closed")

@@ -8,8 +8,9 @@
 import XCTest
 @testable import SignalRClient
 
-class HubConnectionExtensionsTests: XCTestCase {
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_0arg() {
+class HubConnectionExtensionsTests: SignalRClientTestCase {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_0arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -45,7 +46,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_1arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_1arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -82,7 +84,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_2arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_2arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -120,7 +123,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_3arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_3arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -159,7 +163,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_4arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_4arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -199,7 +204,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_5arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_5arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -241,7 +247,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_6arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_6arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -284,7 +291,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_7arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_7arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -328,7 +336,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_8arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericInvokeMethod_8arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -373,7 +382,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_0arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_0arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -408,7 +418,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_1arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_1arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -444,7 +455,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_2arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_2arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -481,7 +493,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_3arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_3arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -519,7 +532,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_4arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_4arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -558,7 +572,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_5arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_5arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -599,7 +614,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_6arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_6arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -641,7 +657,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_7arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_7arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -684,7 +701,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_8arg() {
+    func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_8arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -728,7 +746,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_0arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_0arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -763,7 +782,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_1arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_1arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -799,7 +819,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_2arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_2arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -836,7 +857,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_3arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_3arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -874,7 +896,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_4arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_4arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -913,7 +936,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_5arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_5arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -953,7 +977,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_6arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_6arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -994,7 +1019,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_7arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_7arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1036,7 +1062,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_8arg() {
+    func testThatClientHubMethodRegisteredWithGenericOnMethodCanBeInvoked_8arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveInvocationResult = expectation(description: "received invocation result")
         let didInvokeClientMethod = expectation(description: "client method invoked")
@@ -1080,7 +1107,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_0arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_0arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1110,7 +1138,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_1arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_1arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1140,7 +1169,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_2arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_2arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1170,7 +1200,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_3arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_3arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1200,7 +1231,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_4arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_4arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1230,7 +1262,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_5arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_5arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1260,7 +1293,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_6arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_6arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1290,7 +1324,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_7arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_7arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
@@ -1320,7 +1355,8 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_8arg() {
+    func testThatStreamingServerHubMethodCanBeInvokedWithGenericStreamMethod_8arg() throws {
+        try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveStreamItems = expectation(description: "received stream items")
         let didCloseExpectation = expectation(description: "connection closed")
