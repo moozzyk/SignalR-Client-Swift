@@ -49,15 +49,6 @@ internal class DefaultTransportFactory: TransportFactory {
         return chosen
     }
     
-    /// Sets the chosen type to have lowest priority for future reconnect attempts, to allow fallback when a transport does not work properly, e.g. due to
-    /// network conditions.
-    private func recordChoice(_ choice: TransportType?) {
-        if let choice = choice {
-            orderOfPreference.removeAll(where: { $0 == choice })
-            orderOfPreference.append(choice)
-        }
-    }
-    
     /// Creates a Transport instance for the given (singular) transport type
     private func buildTransport(type: TransportType?) -> Transport? {
         if #available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
