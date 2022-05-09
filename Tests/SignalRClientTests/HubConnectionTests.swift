@@ -154,7 +154,7 @@ class HubConnectionTests: SignalRClientTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatInvokingVoidHubMethodRetunsErrorIfInvokedBeforeHandshakeReceived() throws {
+    func testThatInvokingVoidHubMethodReturnsErrorIfInvokedBeforeHandshakeReceived() throws {
         try XCTSkipIf(runningWithoutLiveServer)
         let didOpenExpectation = expectation(description: "connection opened")
 
@@ -802,7 +802,7 @@ class HubConnectionTests: SignalRClientTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
-    func testThatSendRetunsErrorIfInvokedBeforeHandshakeReceived() throws {
+    func testThatSendReturnsErrorIfInvokedBeforeHandshakeReceived() throws {
         try XCTSkipIf(runningWithoutLiveServer)
         let didComplete = expectation(description: "test completed")
 

@@ -11,7 +11,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with no parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
@@ -24,7 +27,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 1 parameter that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -38,7 +44,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 2 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -53,7 +62,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 3 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -69,7 +81,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 4 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -86,7 +101,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 5 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -104,7 +122,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 6 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -123,7 +144,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 7 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -143,7 +167,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 8 parameters that does not return a result.
 
-     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failue details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the server side threw an exception.
+     The `invoke` method invokes a server side hub method and returns the status of the invocation. The `error` parameter of the `invocationDidComplete`
+     callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure can be local - e.g. the
+     invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g. the hub method on the
+     server side threw an exception.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -164,7 +191,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with no parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter resultType: the type of the result returned by the hub method
@@ -179,7 +209,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 1 parameter that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -195,7 +228,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 2 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -212,7 +248,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 3 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -230,7 +269,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 4 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -249,7 +291,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 5 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -269,7 +314,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 6 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -290,7 +338,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 7 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -312,7 +363,10 @@ public extension HubConnection {
     /**
      Invokes a server side hub method with 8 parameters that returns a result.
 
-     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     The `invoke` method invokes a server side hub method and returns the result of the invocation or error. If the server side method completed successfully
+     the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise the `error` parameter of the
+     `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+     (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -338,7 +392,8 @@ public extension HubConnection {
      When a hub method is invoked in a fire-and-forget manner the client never receives any result of the invocation nor is notified about the invocation status.
 
      - parameter method: the name of the server side hub method to invoke
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send(method: String, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -352,7 +407,8 @@ public extension HubConnection {
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable>(method: String, _ arg1: T1, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -367,7 +423,8 @@ public extension HubConnection {
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
      - parameter arg2: second argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable>(method: String, _ arg1: T1, _ arg2: T2, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -383,7 +440,8 @@ public extension HubConnection {
      - parameter arg1: first argument of the hub method
      - parameter arg2: second argument of the hub method
      - parameter arg3: third argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -400,7 +458,8 @@ public extension HubConnection {
      - parameter arg2: second argument of the hub method
      - parameter arg3: third argument of the hub method
      - parameter arg4: fourth argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -418,7 +477,8 @@ public extension HubConnection {
      - parameter arg3: third argument of the hub method
      - parameter arg4: fourth argument of the hub method
      - parameter arg5: fifth argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -437,7 +497,8 @@ public extension HubConnection {
      - parameter arg4: fourth argument of the hub method
      - parameter arg5: fifth argument of the hub method
      - parameter arg6: sixth argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -457,7 +518,8 @@ public extension HubConnection {
      - parameter arg5: fifth argument of the hub method
      - parameter arg6: sixth argument of the hub method
      - parameter arg7: seventh argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -478,7 +540,8 @@ public extension HubConnection {
      - parameter arg6: sixth argument of the hub method
      - parameter arg7: seventh argument of the hub method
      - parameter arg8: eighth argument of the hub method
-     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
+                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      */
     func send<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, T5: Encodable, T6: Encodable, T7: Encodable, T8: Encodable>(method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
@@ -739,7 +802,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
@@ -760,7 +826,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -782,7 +851,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -805,7 +877,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -829,7 +904,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -854,7 +932,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -880,7 +961,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -907,7 +991,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method
@@ -935,7 +1022,10 @@ public extension HubConnection {
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
-     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. If the streaming method completed successfully or was
+                                 cancelled the callback will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                 will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                 example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
 
      - parameter method: the name of the server side hub method to invoke
      - parameter arg1: first argument of the hub method

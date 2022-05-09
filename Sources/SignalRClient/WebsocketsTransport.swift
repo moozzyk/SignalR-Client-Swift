@@ -56,7 +56,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         webSocketTask?.receive { result in
             switch result {
             case .failure(let error):
-                // This failure always occurrs when the task is cancelled. If the code
+                // This failure always occurs when the task is cancelled. If the code
                 // is not normalClosure this is a real error.
                 if self.webSocketTask?.closeCode != .normalClosure {
                     self.handleError(error: error)

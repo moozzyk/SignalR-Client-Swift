@@ -8,7 +8,7 @@
 import Foundation
 
 /**
- A handle indentifying a stream.
+ A handle identifying a stream.
 
  The handle is returned by the `HubConnection.stream` method and is required to cancel an active stream invocation.
  */

@@ -282,7 +282,7 @@ public class HttpConnection: Connection {
     private func changeState(from: State?, to: State) -> State? {
         var previousState: State? = nil
 
-        logger.log(logLevel: .debug, message: "Attempting to chage state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
+        logger.log(logLevel: .debug, message: "Attempting to change state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
         connectionQueue.sync {
             if from == nil || from == state {
                 previousState = state

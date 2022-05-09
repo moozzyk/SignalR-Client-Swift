@@ -11,7 +11,8 @@ import Foundation
 /**
  A protocol that allows receiving hub connection lifecycle event notifications.
 
- To receive hub connection lifecycle event notifications create a class that conforms to this protocol and register it using the `HubConnectionBuilder.withHubConnectionDelegate()` method.
+ To receive hub connection lifecycle event notifications create a class that conforms to this protocol and register it using the
+ `HubConnectionBuilder.withHubConnectionDelegate()` method.
 
  - note: The user is responsible for maintaining the reference to the delegate.
  */

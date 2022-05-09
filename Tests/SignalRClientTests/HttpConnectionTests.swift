@@ -474,7 +474,7 @@ class HttpConnectionTests: SignalRClientTestCase {
         connectionDelegate.connectionDidCloseHandler = { error in
             XCTAssertNotNil(error)
             XCTAssertTrue("\(error!)".contains("Code=-1011"))
-            // This test is not determinitstic and either of the handlers can be invoked
+            // This test is not deterministic and either of the handlers can be invoked
             didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
