@@ -74,7 +74,8 @@ public class HubConnectionBuilder {
      Allows configuring `PrintLogger` logging.
 
      - parameter minLogLevel: minimum log level
-     - note: By default logging is disabled. When using this overload all log entries whose level is greater or equal than `minLogLevel` (with `debug` being the lowest logging level) will be written using the `print` function.
+     - note: By default logging is disabled. When using this overload all log entries whose level is greater or equal than `minLogLevel` (with `debug` being
+             the lowest logging level) will be written using the `print` function.
      */
     public func withLogging(minLogLevel: LogLevel) -> HubConnectionBuilder {
         logger = FilteringLogger(minLogLevel: minLogLevel, logger: PrintLogger())
@@ -95,7 +96,8 @@ public class HubConnectionBuilder {
     /**
      Allows setting a custom logger and the minimum log level.
 
-     The log entries sent to the custom logger will be prefiltered and the logger will receive only the entries whose whose log level is greator or equal than `minLogLevel`.
+     The log entries sent to the custom logger will be pre-filtered and the logger will receive only the entries whose whose log level is greater or equal
+     than `minLogLevel`.
 
      - parameter minLogLevel: minimum log level
      - parameter logger: custom logger
@@ -117,10 +119,11 @@ public class HubConnectionBuilder {
     }
 
     /**
-    Allows enablbing and configuring automatic reconnection in case the connection was closed
+    Allows enabling and configuring automatic reconnection in case the connection was closed
 
      - parameter reconnectPolicy: allows setting a reconnect policy that configures reconnection
-     - note: by default the connection is not reconnectable. Calling this method makes it reconnectable. If no `reconnectPolicy` is provided the `DefaultReconnectPolicy` will be used.
+     - note: by default the connection is not reconnectable. Calling this method makes it reconnectable. If no `reconnectPolicy` is provided the
+             `DefaultReconnectPolicy` will be used.
      */
     public func withAutoReconnect(reconnectPolicy: ReconnectPolicy = DefaultReconnectPolicy()) -> HubConnectionBuilder {
         self.reconnectPolicy = reconnectPolicy
@@ -128,7 +131,7 @@ public class HubConnectionBuilder {
     }
     
     /**
-     Sets which transport types are turned on. Defaults to all types availble. Currently, only websockets and long polling are implemented.
+     Sets which transport types are turned on. Defaults to all types available. Currently, only websockets and long polling are implemented.
      */
     public func withPermittedTransportTypes(_ permittedTransportTypes: TransportType) -> HubConnectionBuilder {
         self.permittedTransportTypes = permittedTransportTypes
@@ -136,7 +139,8 @@ public class HubConnectionBuilder {
     }
 
     /**
-    In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency measure only and will be removed in future versions.
+     In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency
+     measure only and will be removed in future versions.
      */
     public func withLegacyHttpConnection() -> HubConnectionBuilder {
         useLegacyHttpConnection = true
