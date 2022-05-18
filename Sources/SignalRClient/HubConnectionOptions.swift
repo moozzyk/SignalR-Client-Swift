@@ -14,7 +14,7 @@ public class HubConnectionOptions {
     /**
      Keep-alive interval in seconds. If nil keep-alive is disabled
      */
-    public var keepAliveInterval: Double? = nil
+    public var keepAliveInterval: Double? = 15
 
     /**
      Initializes `HubConnectionOptions`

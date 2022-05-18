@@ -94,7 +94,7 @@ internal class ReconnectableConnection: Connection {
 
         logger.log(logLevel: .debug, message: {
             let initialStates = from?.map{$0.rawValue}.joined(separator: ", ") ?? "(nil)"
-            return "Attempting to chage state from: '\(initialStates)' to: '\(to)'"
+            return "Attempting to change state from: '\(initialStates)' to: '\(to)'"
         }())
         connectionQueue.sync {
             if from?.contains(self.state) ?? true {

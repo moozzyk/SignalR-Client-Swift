@@ -34,6 +34,8 @@
 		5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F320310E3E00616DD2 /* Main.storyboard */; };
 		5AEC70F720310E3E00616DD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F620310E3E00616DD2 /* Assets.xcassets */; };
 		5AEC70FA20310E3E00616DD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F820310E3E00616DD2 /* LaunchScreen.storyboard */; };
+		5AF2A1E62803939200715C2E /* HubConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF2A1E52803939200715C2E /* HubConnectionOptions.swift */; };
+		5AF2A1E72803939200715C2E /* HubConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF2A1E52803939200715C2E /* HubConnectionOptions.swift */; };
 		7391A92222510170007BEF23 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A90722510170007BEF23 /* Transport.swift */; };
 		7391A92322510170007BEF23 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A90722510170007BEF23 /* Transport.swift */; };
 		7391A92422510170007BEF23 /* WebsocketsTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A90822510170007BEF23 /* WebsocketsTransport.swift */; };
@@ -184,6 +186,7 @@
 		5AEC70F620310E3E00616DD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5AEC70F920310E3E00616DD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5AEC70FB20310E3F00616DD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AF2A1E52803939200715C2E /* HubConnectionOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubConnectionOptions.swift; sourceTree = "<group>"; };
 		5AF307B822EACFD5001D3BFE /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		7391A90722510170007BEF23 /* Transport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		7391A90822510170007BEF23 /* WebsocketsTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketsTransport.swift; sourceTree = "<group>"; };
@@ -352,6 +355,7 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5AF2A1E52803939200715C2E /* HubConnectionOptions.swift */,
 				415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */,
 				5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */,
 				5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */,
@@ -612,6 +616,7 @@
 			files = (
 				5A3D4EFD22A4D0C2009B0C78 /* CodableHelpers.swift in Sources */,
 				7391A94522510170007BEF23 /* NegotiationResponse.swift in Sources */,
+				5AF2A1E72803939200715C2E /* HubConnectionOptions.swift in Sources */,
 				7391A92722510170007BEF23 /* HttpConnectionOptions.swift in Sources */,
 				7391A93922510170007BEF23 /* HttpResponse.swift in Sources */,
 				7391A92922510170007BEF23 /* Connection.swift in Sources */,
@@ -649,6 +654,7 @@
 			files = (
 				5A3D4EFC22A4D0C2009B0C78 /* CodableHelpers.swift in Sources */,
 				7391A94422510170007BEF23 /* NegotiationResponse.swift in Sources */,
+				5AF2A1E62803939200715C2E /* HubConnectionOptions.swift in Sources */,
 				7391A92622510170007BEF23 /* HttpConnectionOptions.swift in Sources */,
 				7391A93822510170007BEF23 /* HttpResponse.swift in Sources */,
 				7391A92822510170007BEF23 /* Connection.swift in Sources */,

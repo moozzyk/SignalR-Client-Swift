@@ -26,7 +26,7 @@ public class HttpConnection: Connection {
     public weak var delegate: ConnectionDelegate?
     public private(set) var connectionId: String?
     public var inherentKeepAlive: Bool {
-        return transport!.inherentKeepAlive
+        return transport?.inherentKeepAlive ?? true
     }
 
     private enum State: String {
@@ -282,7 +282,7 @@ public class HttpConnection: Connection {
     private func changeState(from: State?, to: State) -> State? {
         var previousState: State? = nil
 
-        logger.log(logLevel: .debug, message: "Attempting to chage state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
+        logger.log(logLevel: .debug, message: "Attempting to change state from: '\(from?.rawValue ?? "(nil)")' to: '\(to)'")
         connectionQueue.sync {
             if from == nil || from == state {
                 previousState = state

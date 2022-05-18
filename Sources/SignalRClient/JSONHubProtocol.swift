@@ -27,7 +27,7 @@ public class JSONHubProtocol: HubProtocol {
 
     public func parseMessages(input: Data) throws -> [HubMessage] {
         let payloads = input.split(separator: JSONHubProtocol.recordSeparator)
-        // do not try to parse the last payload if it is not terminated with record sparator
+        // do not try to parse the last payload if it is not terminated with record separator
         var count = payloads.count
         if count > 0 && input.last != JSONHubProtocol.recordSeparator {
             logger.log(logLevel: .warning, message: "Partial message received. Here be dragons...")

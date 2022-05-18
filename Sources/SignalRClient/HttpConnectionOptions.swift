@@ -20,7 +20,8 @@ public class HttpConnectionOptions {
     /**
      A factory for creating access tokens that will be included in HTTP requests sent by the client.
 
-     - note: the factory will be called before each http request and will set the `Authorization` token value to: `Bearer {token-returned-by-factory}` unless the returned value is `nil` in which case the `Authorization` header will not be created
+     - note: the factory will be called before each http request and will set the `Authorization` token value to: `Bearer {token-returned-by-factory}` unless
+             the returned value is `nil` in which case the `Authorization` header will not be created
     */
     public var accessTokenProvider: () -> String? = { return nil }
 
