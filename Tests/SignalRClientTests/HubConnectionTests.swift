@@ -522,7 +522,9 @@ class HubConnectionTests: SignalRClientTestCase {
         let testConnection = TestConnection()
         testConnection.sendDelegate = { data, sendDidComplete in
             let msg = String(data: data, encoding: .utf8)!
-            DispatchQueue.main.async {sendDidComplete(msg.contains("\"type\":5") ? SignalRError.invalidOperation(message: "test") : nil)}
+            DispatchQueue.main.async {
+                sendDidComplete(msg.contains("\"type\":5") ? SignalRError.invalidOperation(message: "test") : nil)
+            }
         }
 
         let hubConnection = HubConnection(connection: testConnection, hubProtocol: JSONHubProtocol(logger: NullLogger()))

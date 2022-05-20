@@ -7,7 +7,7 @@ class MockConnection: Connection {
     var connectionId: String?
 
     var delegate: ConnectionDelegate?
-    var sendDelegate: ((_ data: Data, _ sendDidComplete: (_ error: Error?) -> Void) -> Void)?
+    var sendDelegate: ((_ data: Data, _ sendDidComplete: @escaping (_ error: Error?) -> Void) -> Void)?
 
     var inherentKeepAlive = false
 
@@ -17,7 +17,7 @@ class MockConnection: Connection {
         delegate?.connectionDidReceiveData(connection: self, data: "{}\u{1e}".data(using: .utf8)!)
     }
 
-    func send(data: Data, sendDidComplete: (_ error: Error?) -> Void) {
+    func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
         sendDelegate?(data, sendDidComplete)
     }
 

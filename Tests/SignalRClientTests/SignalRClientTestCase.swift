@@ -30,6 +30,10 @@ class SignalRClientTestCase: XCTestCase {
         #if WITHOUT_LIVE_SERVER
         return true
         #else
+        /*
+         When running the unit tests via the Package.swift file, manually change this to 'true'
+         if you want to skip the tests requiring a live server.
+         */
         return false
         #endif
     }
