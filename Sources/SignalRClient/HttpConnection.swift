@@ -192,7 +192,11 @@ public class HttpConnection: Connection {
         logger.log(logLevel: .debug, message: "Sending data")
         guard state == .connected else {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
-            sendDidComplete(SignalRError.invalidState)
+
+            // Never synchronously respond to avoid upstream deadlocks based on async assumptions
+            connectionQueue.async {
+                sendDidComplete(SignalRError.invalidState)
+            }
             return
         }
         transport!.send(data: data, sendDidComplete: sendDidComplete)
