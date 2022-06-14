@@ -216,18 +216,18 @@ public class HttpConnection: Connection {
             return
         }
 
-        self.startDispatchGroup.wait()
-        
-        // The transport can be nil if connection was stopped immediately after starting
-        // or failed to start. In this case we need to call connectionDidClose ourselves.
-        if let t = transport {
-            self.stopError = stopError
-            t.close()
-        } else {
-            logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
-            logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-            Util.dispatchToMainThread {
-                self.delegate?.connectionDidClose(error: stopError)
+        self.startDispatchGroup.notify(queue: DispatchQueue.global(qos: .default)) {
+            // The transport can be nil if connection was stopped immediately after starting
+            // or failed to start. In this case we need to call connectionDidClose ourselves.
+            if let t = transport {
+                self.stopError = stopError
+                t.close()
+            } else {
+                logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
+                logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+                Util.dispatchToMainThread {
+                    self.delegate?.connectionDidClose(error: stopError)
+                }
             }
         }
     }
