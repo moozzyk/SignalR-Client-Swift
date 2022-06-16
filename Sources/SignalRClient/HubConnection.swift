@@ -347,9 +347,10 @@ public class HubConnection {
                 delegate?.connectionDidReconnect()
             } else {
                 delegate?.connectionDidOpen(hubConnection: self)
+                resetKeepAlive()
             }
         }
-        resetKeepAlive()
+
         do {
             let messages = try hubProtocol.parseMessages(input: data)
             for incomingMessage in messages {
