@@ -153,7 +153,12 @@ public class HubConnection {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             resetKeepAlive()
 
-            connection.send(data: invocationData, sendDidComplete: sendDidComplete)
+            connection.send(data: invocationData, sendDidComplete: { error in
+                if error == nil {
+                    self.resetKeepAlive()
+                }
+                sendDidComplete(error)
+            })
         } catch {
             logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
             sendDidComplete(error)
@@ -271,6 +276,8 @@ public class HubConnection {
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub returned error: \(e)")
                     cancelDidFail(e)
+                } else {
+                    self.resetKeepAlive()
                 }
             })
         } catch {
@@ -296,6 +303,8 @@ public class HubConnection {
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Invoking server hub method \(method) returned error: \(e)")
                     self.failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
+                } else {
+                    self.resetKeepAlive()
                 }
             }
         } catch {
@@ -481,7 +490,7 @@ public class HubConnection {
                 logger.log(logLevel: .debug, message: "Connection stopped - ignore keep alive reset")
                 return
             }
-            logger.log(logLevel: .debug, message: "Reset keep alive")
+            logger.log(logLevel: .debug, message: "Resetting keep alive")
             keepAlivePingTask!.cancel()
             keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
             hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask!)
@@ -498,12 +507,12 @@ public class HubConnection {
 
         do {
             let cachedPingMessage = try hubProtocol.writeMessage(message: PingMessage.instance)
-            logger.log(logLevel: .debug, message: "Send keep alive")
+            logger.log(logLevel: .debug, message: "Sending keep alive")
             connection.send(data: cachedPingMessage, sendDidComplete: { error in
                 if let error = error {
-                    self.logger.log(logLevel: .error, message: "Keep alive Error received \(error.localizedDescription)")
+                    self.logger.log(logLevel: .error, message: "Keep alive send error:  \(error.localizedDescription)")
                 } else {
-                    self.logger.log(logLevel: .debug, message: "Keep alive - Still alive")
+                    self.logger.log(logLevel: .debug, message: "Keep alive sent successfully")
                 }
                 self.resetKeepAlive()
             })
