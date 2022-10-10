@@ -35,7 +35,13 @@ public class HttpConnectionOptions {
 
      - note: the negotiation request can be skipped only when using the WebSockets transport and cannot be skipped when connecting to SignalR Azure Service
     */
-    public var skipNegotiation: Bool = false
+    public var skipNegotiation: Bool {
+        get { return skipNegotiationValue }
+        
+        @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+        set { skipNegotiationValue = newValue }
+    }
+    private var skipNegotiationValue = false
 
     /**
     The timeout value for individual requests, in seconds.
