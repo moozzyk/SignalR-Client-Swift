@@ -58,7 +58,7 @@ internal class ReconnectableConnection: Connection {
         logger.log(logLevel: .info, message: "Received send request")
         guard state != .reconnecting else {
             // TODO: consider buffering
-            connectionQueue.async {
+            Util.dispatchToMainThread {
                 sendDidComplete(SignalRError.connectionIsReconnecting)
             }
             return

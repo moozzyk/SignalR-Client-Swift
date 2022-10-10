@@ -194,7 +194,7 @@ public class HttpConnection: Connection {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
 
             // Never synchronously respond to avoid upstream deadlocks based on async assumptions
-            connectionQueue.async {
+            Util.dispatchToMainThread {
                 sendDidComplete(SignalRError.invalidState)
             }
             return
