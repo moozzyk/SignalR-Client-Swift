@@ -30,6 +30,8 @@ public class HubConnection {
     private let keepAliveIntervalInSeconds: Double?
     private var keepAlivePingTask: DispatchWorkItem?
 
+    private let callbackQueue: DispatchQueue
+
     /**
     Allows setting a delegate that will be notified about connection lifecycle events
 
@@ -61,6 +63,7 @@ public class HubConnection {
         self.connection = connection
         self.hubProtocol = hubProtocol
         self.keepAliveIntervalInSeconds = hubConnectionOptions.keepAliveInterval
+        self.callbackQueue = hubConnectionOptions.callbackQueue
         self.logger = logger
         self.hubConnectionQueue = DispatchQueue(label: "SignalR.hubconnection.queue")
     }
@@ -157,11 +160,15 @@ public class HubConnection {
                 if error == nil {
                     self.resetKeepAlive()
                 }
-                sendDidComplete(error)
+                self.callbackQueue.async {
+                    sendDidComplete(error)
+                }
             })
         } catch {
             logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
-            sendDidComplete(error)
+            self.callbackQueue.async {
+                sendDidComplete(error)
+            }
         }
     }
 
@@ -208,7 +215,7 @@ public class HubConnection {
             return
         }
 
-        let invocationHandler = InvocationHandler<T>(logger: logger, invocationDidComplete: invocationDidComplete)
+        let invocationHandler = InvocationHandler<T>(logger: logger, callbackQueue: callbackQueue, invocationDidComplete: invocationDidComplete)
 
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
@@ -242,7 +249,7 @@ public class HubConnection {
             return StreamHandle(invocationId: "")
         }
 
-        let streamInvocationHandler = StreamInvocationHandler<T>(logger: logger, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+        let streamInvocationHandler = StreamInvocationHandler<T>(logger: logger, callbackQueue: callbackQueue, streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
         let id = invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
 
@@ -265,7 +272,9 @@ public class HubConnection {
 
         if streamHandle.invocationId == "" {
             logger.log(logLevel: .error, message: "Invalid stream handle")
-            cancelDidFail(SignalRError.invalidOperation(message: "Invalid stream handle."))
+            callbackQueue.async {
+                cancelDidFail(SignalRError.invalidOperation(message: "Invalid stream handle."))
+            }
             return
         }
 
@@ -275,14 +284,18 @@ public class HubConnection {
             connection.send(data: cancelInvocationData, sendDidComplete: {error in
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub returned error: \(e)")
-                    cancelDidFail(e)
+                    self.callbackQueue.async {
+                        cancelDidFail(e)
+                    }
                 } else {
                     self.resetKeepAlive()
                 }
             })
         } catch {
             logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub method failed: \(error)")
-            cancelDidFail(error)
+            self.callbackQueue.async {
+                cancelDidFail(error)
+            }
         }
     }
 
@@ -320,15 +333,17 @@ public class HubConnection {
             _ = pendingCalls.removeValue(forKey: invocationId)
         }
 
-        Util.dispatchToMainThread {
+        callbackQueue.async {
             invocationHandler.raiseError(error: error)
         }
     }
 
-    private func ensureConnectionStarted(errorHandler: (Error)->Void) -> Bool {
+    private func ensureConnectionStarted(errorHandler: @escaping (Error)->Void) -> Bool {
         guard handshakeStatus.isHandled else {
             logger.log(logLevel: .error, message: "Attempting to send data before connection has been started.")
-            errorHandler(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))
+            callbackQueue.async {
+                errorHandler(SignalRError.invalidOperation(message: "Attempting to send data before connection has been started."))
+            }
             return false
         }
         return true
@@ -349,13 +364,19 @@ public class HubConnection {
                 // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
                 // will be no further reconnect attempts
                 logger.log(logLevel: .error, message: "Parsing handshake response failed: \(e)")
-                delegate?.connectionDidFailToOpen(error: e)
+                callbackQueue.async {
+                    self.delegate?.connectionDidFailToOpen(error: e)
+                }
                 return
             }
             if originalHandshakeStatus.isReconnect {
-                delegate?.connectionDidReconnect()
+                callbackQueue.async {
+                    self.delegate?.connectionDidReconnect()
+                }
             } else {
-                delegate?.connectionDidOpen(hubConnection: self)
+                callbackQueue.async {
+                    self.delegate?.connectionDidOpen(hubConnection: self)
+                }
                 resetKeepAlive()
             }
         }
@@ -391,7 +412,7 @@ public class HubConnection {
         }
 
         if serverInvocationHandler != nil {
-            Util.dispatchToMainThread {
+            callbackQueue.async {
                 serverInvocationHandler!.processCompletion(completionMessage: message)
             }
         } else {
@@ -406,11 +427,9 @@ public class HubConnection {
         }
 
         if serverInvocationHandler != nil {
-            Util.dispatchToMainThread {
-                if let error = serverInvocationHandler!.processStreamItem(streamItemMessage: message) {
-                    self.logger.log(logLevel: .error, message: "Processing stream item failed: \(error)")
-                    self.failInvocationWithError(invocationHandler: serverInvocationHandler!, invocationId: message.invocationId, error: error)
-                }
+            if let error = serverInvocationHandler!.processStreamItem(streamItemMessage: message) {
+                logger.log(logLevel: .error, message: "Processing stream item failed: \(error)")
+                failInvocationWithError(invocationHandler: serverInvocationHandler!, invocationId: message.invocationId, error: error)
             }
         } else {
             logger.log(logLevel: .error, message: "Could not find callback with id \(message.invocationId)")
@@ -425,7 +444,7 @@ public class HubConnection {
         }
 
         if callback != nil {
-            Util.dispatchToMainThread {
+            callbackQueue.async {
                 do {
                     try callback!(ArgumentExtractor(clientInvocationMessage: message))
                 } catch {
@@ -453,21 +472,25 @@ public class HubConnection {
         logger.log(logLevel: .info, message: "Terminating \(invocationHandlers.count) pending hub methods")
         let invocationError = error ?? SignalRError.hubInvocationCancelled
         for serverInvocationHandler in invocationHandlers {
-            Util.dispatchToMainThread {
-                serverInvocationHandler.raiseError(error: invocationError)
-            }
+            serverInvocationHandler.raiseError(error: invocationError)
         }
         handshakeStatus = .needsHandling(false)
-        delegate?.connectionDidClose(error: error)
+        callbackQueue.async {
+            self.delegate?.connectionDidClose(error: error)
+        }
     }
 
     fileprivate func connectionDidFailToOpen(error: Error) {
-        delegate?.connectionDidFailToOpen(error: error)
+        callbackQueue.async {
+            self.delegate?.connectionDidFailToOpen(error: error)
+        }
     }
 
     fileprivate func connectionWillReconnect(error: Error) {
         handshakeStatus = .needsHandling(true)
-        delegate?.connectionWillReconnect(error: error)
+        callbackQueue.async {
+            self.delegate?.connectionWillReconnect(error: error)
+        }
     }
 
     fileprivate func connectionDidReconnect() {

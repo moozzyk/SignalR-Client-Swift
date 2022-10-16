@@ -58,9 +58,7 @@ internal class ReconnectableConnection: Connection {
         logger.log(logLevel: .info, message: "Received send request")
         guard state != .reconnecting else {
             // TODO: consider buffering
-            Util.dispatchToMainThread {
-                sendDidComplete(SignalRError.connectionIsReconnecting)
-            }
+            sendDidComplete(SignalRError.connectionIsReconnecting)
             return
         }
         underlyingConnection.send(data: data, sendDidComplete: sendDidComplete)
@@ -117,11 +115,12 @@ internal class ReconnectableConnection: Connection {
             logger.log(logLevel: .debug, message: "nextAttemptInterval: \(nextAttemptInterval), RetryContext: \(retryContext)")
             if nextAttemptInterval != .never {
                 logger.log(logLevel: .debug, message: "Scheduling reconnect attempt at: \(nextAttemptInterval)")
-                // TODO: can this cause problems because event handlers are dispatched to main queue as well (via `Util.dispatchToMainThread`)
+                // TODO: not great but running on the connectionQueue deadlocks
                 DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
                     self.startInternal()
                 }
-                // TODO: again, running on a random (possibly main) queue
+                // running on a random (possibly main) queue but HubConnection will
+                // dispatch to the configured queue
                 if (retryContext.failedAttemptsCount == 0) {
                     delegate?.connectionWillReconnect(error: retryContext.error)
                 }
