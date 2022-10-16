@@ -49,7 +49,12 @@ public class HttpConnectionOptions {
     public var requestTimeout: TimeInterval = 120
     
     public var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
-    
+
+    /**
+    The queue to run callbacks on
+     */
+    public var callbackQueue: DispatchQueue = DispatchQueue(label: "SignalR.connection.callbackQueue")
+
     /**
      Initializes an `HttpConnectionOptions`.
      */

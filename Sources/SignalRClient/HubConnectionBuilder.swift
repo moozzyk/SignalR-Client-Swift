@@ -189,6 +189,7 @@ public class HubConnectionBuilder {
                 httpConnectionOptionsCopy.skipNegotiation = httpConnectionOptions.skipNegotiation
             }
             httpConnectionOptionsCopy.requestTimeout = httpConnectionOptions.requestTimeout
+            httpConnectionOptionsCopy.callbackQueue = httpConnectionOptions.callbackQueue
             return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
         }
         
