@@ -19,9 +19,11 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
     private let invocationDidComplete: (T?, Error?) -> Void
 
-    init(logger: Logger, invocationDidComplete: @escaping (T?, Error?) -> Void) {
+    init(logger: Logger, callbackQueue: DispatchQueue, invocationDidComplete: @escaping (T?, Error?) -> Void) {
         self.logger = logger
-        self.invocationDidComplete = invocationDidComplete
+        self.invocationDidComplete = {result, error in
+            callbackQueue.async { invocationDidComplete(result, error)}
+        }
     }
 
     func createInvocationMessage(invocationId: String, method: String, arguments: [Encodable], streamIds: [String]?) -> HubMessage {
@@ -70,10 +72,10 @@ internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let streamItemReceived: (T) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
-    init(logger: Logger, streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
+    init(logger: Logger, callbackQueue: DispatchQueue, streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
         self.logger = logger
-        self.streamItemReceived = streamItemReceived
-        self.invocationDidComplete = invocationDidComplete
+        self.streamItemReceived =  { item in callbackQueue.async { streamItemReceived(item) } }
+        self.invocationDidComplete = { error in callbackQueue.async { invocationDidComplete(error) } }
     }
 
     func createInvocationMessage(invocationId: String, method: String, arguments: [Encodable], streamIds: [String]?) -> HubMessage {
