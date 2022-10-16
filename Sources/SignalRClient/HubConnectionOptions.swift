@@ -17,6 +17,11 @@ public class HubConnectionOptions {
     public var keepAliveInterval: Double? = 15
 
     /**
+    The queue to run callbacks on
+     */
+    public var callbackQueue: DispatchQueue = DispatchQueue.main
+    
+    /**
      Initializes `HubConnectionOptions`
      */
     public init() {

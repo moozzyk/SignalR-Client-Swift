@@ -37,7 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction func btnOpen(sender: AnyObject) {
         let url = URL(string: urlTextField.stringValue)!
-        echoConnection = HttpConnection(url: url)
+        let options = HttpConnectionOptions()
+        options.callbackQueue = DispatchQueue.main
+        echoConnection = HttpConnection(url: url, options: options)
         echoConnectionDelegate = EchoConnectionDelegate(app: self)
         echoConnection!.delegate = echoConnectionDelegate
         echoConnection!.start()

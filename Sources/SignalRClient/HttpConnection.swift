@@ -183,7 +183,7 @@ public class HttpConnection: Connection {
         }
 
         logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
-        Util.dispatchToMainThread {
+        options.callbackQueue.async {
             self.delegate?.connectionDidFailToOpen(error: error)
         }
     }
@@ -194,7 +194,7 @@ public class HttpConnection: Connection {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
 
             // Never synchronously respond to avoid upstream deadlocks based on async assumptions
-            Util.dispatchToMainThread {
+            options.callbackQueue.async {
                 sendDidComplete(SignalRError.invalidState)
             }
             return
@@ -226,7 +226,7 @@ public class HttpConnection: Connection {
         } else {
             logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-            Util.dispatchToMainThread {
+            options.callbackQueue.async {
                 self.delegate?.connectionDidClose(error: stopError)
             }
         }
@@ -242,7 +242,7 @@ public class HttpConnection: Connection {
         if  previousState != nil {
             logger.log(logLevel: .debug, message: "Invoking connectionDidOpen")
             self.connectionId = connectionId
-            Util.dispatchToMainThread {
+            options.callbackQueue.async {
                 self.delegate?.connectionDidOpen(connection: self)
             }
         } else {
@@ -252,7 +252,7 @@ public class HttpConnection: Connection {
 
     fileprivate func transportDidReceiveData(_ data: Data) {
         logger.log(logLevel: .debug, message: "Received data from transport")
-        Util.dispatchToMainThread {
+        options.callbackQueue.async {
             self.delegate?.connectionDidReceiveData(connection: self, data: data)
         }
     }
@@ -269,7 +269,7 @@ public class HttpConnection: Connection {
             startDispatchGroup.leave()
 
             logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
-            Util.dispatchToMainThread {
+            options.callbackQueue.async {
                 self.delegate?.connectionDidFailToOpen(error: self.stopError ?? error!)
             }
         } else {
@@ -277,7 +277,7 @@ public class HttpConnection: Connection {
 
             self.connectionId = nil
 
-            Util.dispatchToMainThread {
+            options.callbackQueue.async {
                 self.delegate?.connectionDidClose(error: self.stopError ?? error)
             }
         }
