@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                   = "SwiftSignalRClient"
-  s.version                = "0.9.0"
+  s.version                = "0.9.1"
   s.summary                = "Swift SignalR Client for the ASP.Net Core version of SignalR."
   s.homepage               = "https://github.com/moozzyk/SignalR-Client-Swift"
   s.license                = { :type => "Attribution License", :file => "LICENSE" }
@@ -11,7 +11,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target  = "9.0"
   s.osx.deployment_target  = "10.13"
   s.tvos.deployment_target = "9.0"
+#  Enable once https://github.com/CocoaPods/CocoaPods/issues/11558 is fixed
+#  s.watchos.deployment_target = "6.0"
   s.source_files           = "Sources/SignalRClient/*.swift"
   s.requires_arc           = true
-  s.libraries              = 'z'
 end
