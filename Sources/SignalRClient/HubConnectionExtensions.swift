@@ -797,6 +797,174 @@ public extension HubConnection {
         self.on(method: method, callback: cb)
     }
 
+        /**
+     Allows registering callbacks for client side hub methods with 9 parameters.
+
+     - parameter method: the name of the client side method to register the callback for
+     - parameter callback: a callback that will be called when the client side method is invoked from the server
+     - parameter arg1: first argument of the client side hub method
+     - parameter arg2: second argument of the client side hub method
+     - parameter arg3: third argument of the client side hub method
+     - parameter arg4: fourth argument of the client side hub method
+     - parameter arg5: fifth argument of the client side hub method
+     - parameter arg6: sixth argument of the client side hub method
+     - parameter arg7: seventh argument of the client side hub method
+     - parameter arg8: eighth argument of the client side hub method
+     - parameter arg9: eighth argument of the client side hub method
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
+     ```
+     hubConnection.on(method: "AddMessage") {(user: String, message: String) in
+        print(">>> \(user): \(message)")
+     }
+     ```
+     */
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable, T9: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, _ arg9: T9) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+            let arg8 = try argumentExtractor.getArgument(type: T8.self)
+            let arg9 = try argumentExtractor.getArgument(type: T9.self)
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+        /**
+     Allows registering callbacks for client side hub methods with 10 parameters.
+
+     - parameter method: the name of the client side method to register the callback for
+     - parameter callback: a callback that will be called when the client side method is invoked from the server
+     - parameter arg1: first argument of the client side hub method
+     - parameter arg2: second argument of the client side hub method
+     - parameter arg3: third argument of the client side hub method
+     - parameter arg4: fourth argument of the client side hub method
+     - parameter arg5: fifth argument of the client side hub method
+     - parameter arg6: sixth argument of the client side hub method
+     - parameter arg7: seventh argument of the client side hub method
+     - parameter arg8: eighth argument of the client side hub method
+     - parameter arg9: eighth argument of the client side hub method
+     - parameter arg10: eighth argument of the client side hub method
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
+     ```
+     hubConnection.on(method: "AddMessage") {(user: String, message: String) in
+        print(">>> \(user): \(message)")
+     }
+     ```
+     */
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable, T9: Decodable, T10: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, _ arg9: T9, _ arg10: T10) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+            let arg8 = try argumentExtractor.getArgument(type: T8.self)
+            let arg9 = try argumentExtractor.getArgument(type: T9.self)
+            let arg10 = try argumentExtractor.getArgument(type: T10.self)
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+        /**
+     Allows registering callbacks for client side hub methods with 11 parameters.
+
+     - parameter method: the name of the client side method to register the callback for
+     - parameter callback: a callback that will be called when the client side method is invoked from the server
+     - parameter arg1: first argument of the client side hub method
+     - parameter arg2: second argument of the client side hub method
+     - parameter arg3: third argument of the client side hub method
+     - parameter arg4: fourth argument of the client side hub method
+     - parameter arg5: fifth argument of the client side hub method
+     - parameter arg6: sixth argument of the client side hub method
+     - parameter arg7: seventh argument of the client side hub method
+     - parameter arg8: eighth argument of the client side hub method
+     - parameter arg9: eighth argument of the client side hub method
+     - parameter arg10: eighth argument of the client side hub method
+     - parameter arg11: eighth argument of the client side hub method
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
+     ```
+     hubConnection.on(method: "AddMessage") {(user: String, message: String) in
+        print(">>> \(user): \(message)")
+     }
+     ```
+     */
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable, T9: Decodable, T10: Decodable, T11: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, _ arg9: T9, _ arg10: T10, _ arg11: T11) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+            let arg8 = try argumentExtractor.getArgument(type: T8.self)
+            let arg9 = try argumentExtractor.getArgument(type: T9.self)
+            let arg10 = try argumentExtractor.getArgument(type: T10.self)
+            let arg11 = try argumentExtractor.getArgument(type: T11.self)
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
+            /**
+     Allows registering callbacks for client side hub methods with 12 parameters.
+
+     - parameter method: the name of the client side method to register the callback for
+     - parameter callback: a callback that will be called when the client side method is invoked from the server
+     - parameter arg1: first argument of the client side hub method
+     - parameter arg2: second argument of the client side hub method
+     - parameter arg3: third argument of the client side hub method
+     - parameter arg4: fourth argument of the client side hub method
+     - parameter arg5: fifth argument of the client side hub method
+     - parameter arg6: sixth argument of the client side hub method
+     - parameter arg7: seventh argument of the client side hub method
+     - parameter arg8: eighth argument of the client side hub method
+     - parameter arg9: eighth argument of the client side hub method
+     - parameter arg10: eighth argument of the client side hub method
+     - parameter arg11: eighth argument of the client side hub method
+     - parameter arg12: eighth argument of the client side hub method
+     - note: the callback parameters may need to be typed if the types cannot be inferred e.g.:
+     ```
+     hubConnection.on(method: "AddMessage") {(user: String, message: String) in
+        print(">>> \(user): \(message)")
+     }
+     ```
+     */
+
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable, T9: Decodable, T10: Decodable, T11: Decodable, T12: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8, _ arg9: T9, _ arg10: T10, _ arg11: T11, _ arg12: T12) -> Void) {
+        let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
+            let arg1 = try argumentExtractor.getArgument(type: T1.self)
+            let arg2 = try argumentExtractor.getArgument(type: T2.self)
+            let arg3 = try argumentExtractor.getArgument(type: T3.self)
+            let arg4 = try argumentExtractor.getArgument(type: T4.self)
+            let arg5 = try argumentExtractor.getArgument(type: T5.self)
+            let arg6 = try argumentExtractor.getArgument(type: T6.self)
+            let arg7 = try argumentExtractor.getArgument(type: T7.self)
+            let arg8 = try argumentExtractor.getArgument(type: T8.self)
+            let arg9 = try argumentExtractor.getArgument(type: T9.self)
+            let arg10 = try argumentExtractor.getArgument(type: T10.self)
+            let arg11 = try argumentExtractor.getArgument(type: T11.self)
+            let arg12 = try argumentExtractor.getArgument(type: T12.self)
+            callback(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
+        }
+
+        self.on(method: method, callback: cb)
+    }
+
     /**
      Invokes a streaming server side hub method with no parameters.
 
