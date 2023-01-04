@@ -193,7 +193,7 @@ public class HubConnectionBuilder {
             return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
         }
         
-        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, logger: logger)
+        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, callbackQueue: httpConnectionOptions.callbackQueue, logger: logger)
     }
     
     private func createLegacyHttpConnection(transportFactory: TransportFactory) -> HttpConnection {

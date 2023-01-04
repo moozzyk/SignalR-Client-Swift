@@ -9,6 +9,7 @@ import Foundation
 
 internal class ReconnectableConnection: Connection {
     private let connectionQueue = DispatchQueue(label: "SignalR.reconnection.queue")
+    private let callbackQueue: DispatchQueue
 
     private let connectionFactory: () -> Connection
     private let reconnectPolicy: ReconnectPolicy
@@ -37,11 +38,12 @@ internal class ReconnectableConnection: Connection {
         return underlyingConnection.inherentKeepAlive
     }
 
-    init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy, logger: Logger) {
+    init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy, callbackQueue: DispatchQueue, logger: Logger) {
         self.connectionFactory = connectionFactory
         self.reconnectPolicy = reconnectPolicy
         self.logger = logger
         self.underlyingConnection = connectionFactory()
+        self.callbackQueue = callbackQueue
     }
 
     func start() {
@@ -58,7 +60,10 @@ internal class ReconnectableConnection: Connection {
         logger.log(logLevel: .info, message: "Received send request")
         guard state != .reconnecting else {
             // TODO: consider buffering
-            sendDidComplete(SignalRError.connectionIsReconnecting)
+            // Never synchronously respond to avoid upstream deadlocks based on async assumptions
+            callbackQueue.async {
+                sendDidComplete(SignalRError.connectionIsReconnecting)
+            }
             return
         }
         underlyingConnection.send(data: data, sendDidComplete: sendDidComplete)
