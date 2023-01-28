@@ -651,7 +651,7 @@ class HttpConnectionTests: XCTestCase {
         
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidOpenHandler = { connection in
-            XCTAssertEqual("9AnFxsjXqnRuz4UBt2W8", connection.connectionId)
+            XCTAssertEqual("6baUtSEmluCoKvmUIqLUJw", connection.connectionId)
             connectionIdSetExpectation.fulfill()
             httpConnection.stop();
         }
