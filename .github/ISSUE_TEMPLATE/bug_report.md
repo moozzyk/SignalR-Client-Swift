@@ -1,26 +1,31 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+I am looking at issues **weekly**. Urgent issues can be [**prioritized**](https://github.com/sponsors/moozzyk?frequency=one-time&sponsor=moozzyk).
 
----
 
-**Before filing an issue**
-Check [Frequently Asked Questions](https://github.com/moozzyk/SignalR-Client-Swift/wiki/Frequently-Asked-Questions)
+Please provide the details below to avoid unnecessary turnaround:
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+- **Before filing an issue**
+  Check [Frequently Asked Questions](https://github.com/moozzyk/SignalR-Client-Swift/wiki/Frequently-Asked-Questions)
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+- **Client version**
 
-**Enable logging at the debug level and attach/past to the issue**
-Attach logs
+  Which version of the client are you using? Is it from Cocoapods?
 
-**Code To Reproduce the Issue**
-Show code that reproduces the issue
+- **Describe the bug**
 
-**Additional context**
-Add any other context about the problem here.
+  A clear and concise description of what the bug is.
+
+- **Expected behavior**
+
+  A clear and concise description of what you expected to happen.
+
+- **Enable logging at the debug level and attach/past to the issue**
+
+  Attach logs capture at the Diagnostic level
+
+- **Code To Reproduce the Issue**
+
+  Show code that reproduces the issue
+
+- **Additional context**
+
+  Add any other context about the problem here.
