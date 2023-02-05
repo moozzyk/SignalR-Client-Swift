@@ -190,6 +190,7 @@ public class HubConnectionBuilder {
             }
             httpConnectionOptionsCopy.requestTimeout = httpConnectionOptions.requestTimeout
             httpConnectionOptionsCopy.callbackQueue = httpConnectionOptions.callbackQueue
+            httpConnectionOptionsCopy.authenticationChallengeHandler = httpConnectionOptions.authenticationChallengeHandler
             return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
         }
         
