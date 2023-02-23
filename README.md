@@ -61,6 +61,8 @@ public class SignalRService {
     private var connection: HubConnection
     
     public init(url: URL) {
+    //To Ignore Insecure Certificate Validation 
+    HttpConnectionOptions.IgnoreInsecureCert = true
         connection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .error).build()
         connection.on(method: "MessageReceived", callback: { (user: String, message: String) in
             do {
