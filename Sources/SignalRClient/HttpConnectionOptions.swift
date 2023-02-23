@@ -12,6 +12,7 @@ import Foundation
 HttpConnection configuration options.
  */
 public class HttpConnectionOptions {
+    public static var IgnoreInsecureCert : Bool = false
     /**
      A dictionary containing headers to be included in HTTP requests sent by the client.
     */

@@ -11,12 +11,13 @@ import Foundation
 class DefaultHttpClient: HttpClientProtocol {
     private let options: HttpConnectionOptions
     private let session: URLSession
-
+ 
     public init(options: HttpConnectionOptions) {
         self.options = options
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = options.requestTimeout
         DefaultHttpClientSessionDelegate.shared.authenticationChallengeHandler = options.authenticationChallengeHandler
+    
         self.session = URLSession(
             configuration: sessionConfig,
             delegate: DefaultHttpClientSessionDelegate.shared,
@@ -71,14 +72,31 @@ class DefaultHttpClient: HttpClientProtocol {
 fileprivate class DefaultHttpClientSessionDelegate: NSObject, URLSessionDelegate {
     
     static var shared = DefaultHttpClientSessionDelegate()
-    
+   
     var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        if let challengeHandler = authenticationChallengeHandler {
-            challengeHandler(session, challenge, completionHandler)
-        } else {
-            completionHandler(.performDefaultHandling, nil)
+        if HttpConnectionOptions.IgnoreInsecureCert
+        {
+            if challenge.protectionSpace.serverTrust == nil {
+                completionHandler(.useCredential, nil)
+            } else {
+                let trust: SecTrust = challenge.protectionSpace.serverTrust!
+                //("is self-signed: %@", trust.isSelfSigned.flatMap { "\($0)" } ?? "unknown" )
+                let credential = URLCredential(trust: trust)
+                completionHandler(.useCredential, credential)
+            }
         }
+        else
+        {
+            if let challengeHandler = authenticationChallengeHandler {
+                challengeHandler(session, challenge, completionHandler)
+            } else {
+                completionHandler(.performDefaultHandling, nil)
+            }
+        }
+
     }
 }
+
+
