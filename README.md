@@ -1,6 +1,7 @@
-# SwiftSignalRClient
+# SwiftSignalRClient 
 
-A Swift SignalR Client for the Asp.Net Core version of SignalR
+A Swift SignalR Client for the Asp.Net Core version of SignalR original fork From https://github.com/moozzyk/SignalR-Client-Swift
+Only Add to allow Insecure Certificate Validation.
 
 **Before filing an issue please check [Frequently Asked Questions](https://github.com/moozzyk/SignalR-Client-Swift/wiki/Frequently-Asked-Questions)**
 
