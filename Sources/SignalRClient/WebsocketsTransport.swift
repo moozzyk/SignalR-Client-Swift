@@ -47,7 +47,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        logger.log(logLevel: .info, message: "WebSocket open")
+        logger.log(logLevel: .info, message: "urlSession didOpenWithProtocol invoked. WebSocket open")
         delegate?.transportDidOpen()
         readMessage()
     }
@@ -92,7 +92,9 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        logger.log(logLevel: .debug, message: "urlSession didCompleteWithError invoked")
         guard error != nil else {
+            logger.log(logLevel: .debug, message: "error is nil - ignoring error")
             // As per docs: "Error may be nil, which implies that no error occurred and this task is complete."
             return
         }
@@ -109,6 +111,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        logger.log(logLevel: .debug, message: "urlSession didCloseWith invoked")
         var reasonString = ""
         if let reason = reason {
             reasonString = String(decoding: reason, as: UTF8.self)
