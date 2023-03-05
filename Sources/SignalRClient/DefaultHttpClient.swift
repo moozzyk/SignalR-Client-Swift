@@ -69,7 +69,6 @@ class DefaultHttpClient: HttpClientProtocol {
 }
 
 fileprivate class DefaultHttpClientSessionDelegate: NSObject, URLSessionDelegate {
-    
     static var shared = DefaultHttpClientSessionDelegate()
     
     var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?

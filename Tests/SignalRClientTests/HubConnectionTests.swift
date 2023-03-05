@@ -1316,4 +1316,57 @@ class ArgumentExtractorTests: XCTestCase {
         XCTAssertEqual("abc", try! argumentExtractor.getArgument(type: String.self))
         XCTAssertFalse(argumentExtractor.hasMoreArgs())
     }
+
+    func testAuthChallengeHandlerInvoked() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didCloseExpectation = expectation(description: "connection closed")
+        let authChallengeHandlerInvokedExpectation = expectation(description: "Auth challenge handler invoked")
+        authChallengeHandlerInvokedExpectation.expectedFulfillmentCount = 2 // negotiate, websockets
+
+        let message = "Hello, World!"
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            hubConnection.invoke(method: "Echo", arguments: [message], resultType: String.self) {result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual(message, result)
+                didReceiveInvocationResult.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: URL(string: "https://localhost:5001/testHubWebSockets")!)
+            .withHubConnectionDelegate(delegate: hubConnectionDelegate)
+            .withHttpConnectionOptions(configureHttpOptions: {options in
+                options.authenticationChallengeHandler = {
+                    session, challenge, completionHandler in
+                    authChallengeHandlerInvokedExpectation.fulfill()
+
+                    // This is a controlled test environment. **NEVER** do this in real life applications
+                    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                        if let serverTrust = challenge.protectionSpace.serverTrust {
+                            if (challenge.protectionSpace.host == "localhost") {
+                                completionHandler(.useCredential, URLCredential(trust: serverTrust))
+                                return
+                            }
+                        }
+                    }
+                    // If the certificate is not valid, cancel the authentication challenge
+                    completionHandler(.cancelAuthenticationChallenge, nil)
+                }
+            })
+            .withLogging(minLogLevel: .debug)
+            .build()
+
+        hubConnection.start()
+
+        waitForExpectations(timeout: 30 /*seconds*/)
+    }
 }

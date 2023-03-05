@@ -14,6 +14,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     private let dispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
+    private var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
 
     private var isTransportClosed = false
 
@@ -26,6 +27,8 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
 
     public func start(url: URL, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
+
+        authenticationChallengeHandler = options.authenticationChallengeHandler
 
         var request = URLRequest(url: convertUrl(url: url))
         populateHeaders(headers: options.headers, request: &request)
@@ -129,6 +132,16 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
             delegate?.transportDidClose(nil)
         } else {
             delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: closeCode.rawValue, reason: reasonString))
+        }
+    }
+
+    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if authenticationChallengeHandler != nil {
+            logger.log(logLevel: .debug, message: "(ws) invoking custom auth challenge handler")
+            authenticationChallengeHandler!(session, challenge, completionHandler)
+        } else {
+            logger.log(logLevel: .debug, message: "(ws) no auth challenge handler registered - falling back to default handling")
+            completionHandler(.performDefaultHandling, nil)
         }
     }
 
