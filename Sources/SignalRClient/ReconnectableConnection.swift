@@ -126,7 +126,7 @@ internal class ReconnectableConnection: Connection {
                 }
                 // running on a random (possibly main) queue but HubConnection will
                 // dispatch to the configured queue
-                if (retryContext.failedAttemptsCount == 0) {
+                if (currentState == .reconnecting && retryContext.failedAttemptsCount == 0) {
                     delegate?.connectionWillReconnect(error: retryContext.error)
                 }
                 return
