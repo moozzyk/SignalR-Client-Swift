@@ -7,6 +7,6 @@ Please provide the details below to avoid unnecessary turnaround:
 - **Client version** - Which version of the client are you using? Is it from Cocoapods?
 - **Describe the bug** - A clear and concise description of what the bug is
 - **Expected behavior** - A clear and concise description of what you expected to happen
-- **Enable logging at the debug level and attach/past to the issue** - Attach logs capture at the Diagnostic level
+- **Enable logging at the `.debug` level and attach/past to the issue** - Attach logs captured at the `.debug` level
 - **Code To Reproduce the Issue** - Show code that reproduces the issue
-- **Additional context** - Add any other context about the problem
+- **Additional context** - Add any other context about the problem (e.g. stack trace)
