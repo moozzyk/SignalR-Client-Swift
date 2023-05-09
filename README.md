@@ -22,7 +22,9 @@ pod install
 
 ### Swift Package Manager
 
-Add the following to your `Package` dependencies:
+The easiest way to is to use Use XCode UI (`File -> Add Packages...`) 
+
+Alternatively, add the following to your `Package` dependencies:
 
 ```swift
 .package(url: "https://github.com/moozzyk/SignalR-Client-Swift", .upToNextMinor(from: "0.9.0")),
