@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 I am looking at issues **weekly**. Urgent issues can be [**prioritized**](https://github.com/sponsors/moozzyk?frequency=one-time&sponsor=moozzyk).
 
 
