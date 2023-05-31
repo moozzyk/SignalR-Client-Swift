@@ -9,6 +9,7 @@ assignees: ''
 
 I am looking at issues **weekly**. Urgent issues can be [**prioritized**](https://github.com/sponsors/moozzyk?frequency=one-time&sponsor=moozzyk).
 
+My [Swift SignalR Client Course](https://www.udemy.com/course/build-real-time-ios-apps-with-asp-net-core-signalr) contains the most complete and up-to-date information about using the client.
 
 Please provide the details below to avoid unnecessary turnaround:
 
