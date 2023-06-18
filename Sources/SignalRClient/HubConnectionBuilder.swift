@@ -26,7 +26,6 @@ public class HubConnectionBuilder {
     private var logger: Logger = NullLogger()
     private var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
-    private var useLegacyHttpConnection = false
     private var permittedTransportTypes: TransportType = .all
     private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
         { logger, permittedTransportTypes in DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)}
@@ -138,15 +137,6 @@ public class HubConnectionBuilder {
         return self
     }
 
-    /**
-     In case support for automatic reconnects  introduces issues this method allows to get to the previous behavior. It should be treated as an emergency
-     measure only and will be removed in future versions.
-     */
-    public func withLegacyHttpConnection() -> HubConnectionBuilder {
-        useLegacyHttpConnection = true
-        return self
-    }
-
     internal func withCustomTransportFactory(transportFactory: @escaping (Logger, TransportType) -> TransportFactory) -> HubConnectionBuilder {
         self.transportFactory = transportFactory
         return self
@@ -158,18 +148,10 @@ public class HubConnectionBuilder {
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let httpConnection = createHttpConnection(transportFactory: transportFactory(logger, permittedTransportTypes))
+        let httpConnection = createReconnectableHttpConnection(transportFactory: transportFactory(logger, permittedTransportTypes))
         let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), hubConnectionOptions: hubConnectionOptions, logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
-    }
-
-    private func createHttpConnection(transportFactory: TransportFactory) -> Connection {
-        if useLegacyHttpConnection {
-            return createLegacyHttpConnection(transportFactory: transportFactory)
-        } else {
-            return createReconnectableHttpConnection(transportFactory: transportFactory)
-        }
     }
     
     private func createReconnectableHttpConnection(transportFactory: TransportFactory) -> ReconnectableConnection {
@@ -195,13 +177,6 @@ public class HubConnectionBuilder {
         }
         
         return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, callbackQueue: httpConnectionOptions.callbackQueue, logger: logger)
-    }
-    
-    private func createLegacyHttpConnection(transportFactory: TransportFactory) -> HttpConnection {
-        if !(reconnectPolicy is NoReconnectPolicy) {
-            logger.log(logLevel: .error, message: "Using reconnect with legacy HttpConnection is not supported. Ignoring reconnect settings.")
-        }
-        return HttpConnection(url: url, options: httpConnectionOptions, transportFactory: transportFactory, logger: logger)
     }
 }
 
