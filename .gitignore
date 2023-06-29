@@ -20,3 +20,5 @@ Pods/
 Package.resolved
 .swiftpm/
 .build/
+.dependencies/
+.derivedData/

@@ -46,6 +46,7 @@ class HttpConnectionTests: XCTestCase {
     }
 
     /// Only expected to pass if the server ONLY supports WebSockets.
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func testThatConnectionCanSendReceiveMessagesWithSkipNegotiation() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didReceiveMessageExpectation = expectation(description: "message received")

@@ -968,6 +968,7 @@ class HubConnectionTests: XCTestCase {
     }
 
     /// Only applicable to websockets transport due to requirement for skipNegotiation flag.
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func testThatDeadlockDoesNotHappen() {
         let didStop = expectation(description: "connection stopped")
         let hubConnectionDelegate = TestHubConnectionDelegate()
@@ -1261,7 +1262,9 @@ class TestTransportFactory: TransportFactory {
 
     func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
         if availableTransports.contains(where: {$0.transportType == .webSockets}) {
-            currentTransport = WebsocketsTransport(logger: PrintLogger())
+            if #available (OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
+                currentTransport = WebsocketsTransport(logger: PrintLogger())
+            }
         } else if availableTransports.contains(where: {$0.transportType == .longPolling}) {
             currentTransport = LongPollingTransport(logger: PrintLogger())
         }
