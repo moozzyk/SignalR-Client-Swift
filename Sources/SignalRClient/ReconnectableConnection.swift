@@ -71,12 +71,11 @@ internal class ReconnectableConnection: Connection {
 
     func stop(stopError: Error?) {
         logger.log(logLevel: .info, message: "Received connection stop request")
-        guard self.state != .disconnected else {
-            logger.log(logLevel: .warning, message: "Reconnectable connection is already in the disconnected state. Ignoring stop request")
-            return
+        if changeState(from: [.starting, .reconnecting, .running], to: .stopping) != nil {
+          underlyingConnection.stop(stopError: stopError)
+        } else {
+          logger.log(logLevel: .warning, message: "Reconnectable connection is already in the disconnected state. Ignoring stop request")
         }
-        _ = changeState(from: nil, to: .stopping)
-        underlyingConnection.stop(stopError: stopError)
     }
 
     private func startInternal() {
