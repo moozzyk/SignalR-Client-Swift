@@ -116,10 +116,5 @@ There are several sample projects in the `Examples` folder. They include:
     **"Failed to bind to address http://0.0.0.0:5000: address already in use."**. This is due to Apple now advertising an 'AirPlay Receiver' on that port.
     This port can be freed by disabling the receiver: Navigate to _System Preferences > Sharing_ and uncheck _AirPlay Receiver_.
 
-## Disclaimer
-
-I am providing code in the repository to you under an open source license. Because this is my personal repository, the license you receive to my code is from me 
-and not my employer (Facebook)
-
 ## Hits
 [![HitCount](http://hits.dwyl.com/moozzyk/Signalr-Client-Swift.svg)](http://hits.dwyl.com/moozzyk/Signalr-Client-Swift)
