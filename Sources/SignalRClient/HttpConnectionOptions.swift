@@ -47,7 +47,14 @@ public class HttpConnectionOptions {
     The timeout value for individual requests, in seconds.
      */
     public var requestTimeout: TimeInterval = 120
-    
+
+    /**
+     The maximum number of bytes to buffer before the receive call fails with an error.
+
+     This value includes the sum of all bytes from continuation frames. Receive calls will fail once the task reaches this limit. (URLSessionWebSocketTask)
+    */
+    public var maximumWebsocketMessageSize: Int?
+
     public var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
 
     /**
