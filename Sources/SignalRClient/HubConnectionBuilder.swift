@@ -171,6 +171,7 @@ public class HubConnectionBuilder {
                 httpConnectionOptionsCopy.skipNegotiation = httpConnectionOptions.skipNegotiation
             }
             httpConnectionOptionsCopy.requestTimeout = httpConnectionOptions.requestTimeout
+            httpConnectionOptionsCopy.maximumWebsocketMessageSize = httpConnectionOptions.maximumWebsocketMessageSize
             httpConnectionOptionsCopy.callbackQueue = httpConnectionOptions.callbackQueue
             httpConnectionOptionsCopy.authenticationChallengeHandler = httpConnectionOptions.authenticationChallengeHandler
             return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
