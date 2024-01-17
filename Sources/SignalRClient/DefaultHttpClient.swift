@@ -23,6 +23,10 @@ class DefaultHttpClient: HttpClientProtocol {
             delegateQueue: nil
         )
     }
+
+    deinit {
+        NSLog("DefaultHttpClient deinit")
+    }
     
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         sendHttpRequest(url:url, method: "GET", body: nil, completionHandler: completionHandler)
