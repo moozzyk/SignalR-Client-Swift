@@ -215,19 +215,22 @@ public class HttpConnection: Connection {
             logger.log(logLevel: .warning, message: "Connection not yet started")
             return
         }
-
-        self.startDispatchGroup.wait()
         
-        // The transport can be nil if connection was stopped immediately after starting
-        // or failed to start. In this case we need to call connectionDidClose ourselves.
-        if let t = transport {
-            self.stopError = stopError
-            t.close()
-        } else {
-            logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
-            logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-            options.callbackQueue.async {
-                self.delegate?.connectionDidClose(error: stopError)
+        self.startDispatchGroup.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let self else {
+                return
+            }
+            // The transport can be nil if connection was stopped immediately after starting
+            // or failed to start. In this case we need to call connectionDidClose ourselves.
+            if let t = transport {
+                self.stopError = stopError
+                t.close()
+            } else {
+                logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
+                logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+                options.callbackQueue.async {
+                    self.delegate?.connectionDidClose(error: stopError)
+                }
             }
         }
     }
