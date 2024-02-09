@@ -24,6 +24,10 @@ class DefaultHttpClient: HttpClientProtocol {
         )
     }
     
+    deinit {
+        session.finishTasksAndInvalidate()
+    }
+    
     func get(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         sendHttpRequest(url:url, method: "GET", body: nil, completionHandler: completionHandler)
     }
