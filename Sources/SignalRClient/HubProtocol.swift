@@ -68,7 +68,7 @@ public class ServerInvocationMessage: HubMessage, Encodable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -82,7 +82,7 @@ public class ClientInvocationMessage: HubMessage, Decodable {
     public let target: String
     private var arguments: UnkeyedDecodingContainer?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         target = try container.decode(String.self, forKey: .target)
         if container.contains(.arguments) {
@@ -90,14 +90,14 @@ public class ClientInvocationMessage: HubMessage, Decodable {
         }
     }
 
-    public func getArgument<T: Decodable>(type: T.Type) throws -> T {
+    public func getArgument<T: Decodable>(type: T.Type) throws -> T? {
         guard var arguments else {
             throw SignalRError.invalidOperation(message: "No arguments exist.")
         }
-        return try arguments.decode(T.self)
+        return try arguments.decodeIfPresent(T.self)
     }
 
-    var hasMoreArgs : Bool {
+    var hasMoreArgs: Bool {
         get {
             if let arguments {
                 return !arguments.isAtEnd
@@ -106,7 +106,7 @@ public class ClientInvocationMessage: HubMessage, Decodable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -120,13 +120,13 @@ public class StreamItemMessage: HubMessage, Codable {
     let container: KeyedDecodingContainer<StreamItemMessage.CodingKeys>?
     let item: Encodable?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
-        invocationId = try container!.decode(String.self, forKey: .invocationId)
+        invocationId = try container?.decode(String.self, forKey: .invocationId) ?? ""
         item = nil
     }
 
-    public init (invocationId: String, item: Encodable) {
+    public init(invocationId: String, item: Encodable) {
         self.invocationId = invocationId
         self.item = item
         container = nil
@@ -145,16 +145,16 @@ public class StreamItemMessage: HubMessage, Codable {
     }
 
     public func encode(to encoder: Encoder) throws {
-        guard item != nil else {
+        guard let item else {
             throw SignalRError.invalidOperation(message: "Internal error - StreamItemMessage.item is nil.")
         }
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(type, forKey: .type)
         try container.encode(invocationId, forKey: .invocationId)
-        try container.encode(AnyEncodable(value: item!), forKey: .item)
+        try container.encode(AnyEncodable(value: item), forKey: .item)
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case invocationId
         case item
@@ -168,14 +168,14 @@ public class CompletionMessage: HubMessage, Codable {
     public let hasResult: Bool
     let container: KeyedDecodingContainer<CompletionMessage.CodingKeys>?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
-        invocationId = try container!.decode(String.self, forKey: .invocationId)
-        error = try container!.decodeIfPresent(String.self, forKey: .error)
-        hasResult = container!.contains(.result)
+        invocationId = try container?.decode(String.self, forKey: .invocationId) ?? ""
+        error = try container?.decodeIfPresent(String.self, forKey: .error)
+        hasResult = container?.contains(.result) ?? false
     }
 
-    public init (invocationId: String, error: String?) {
+    public init(invocationId: String, error: String?) {
         self.invocationId = invocationId
         self.error = error
         hasResult = false
@@ -189,12 +189,11 @@ public class CompletionMessage: HubMessage, Codable {
 
         if hasResult {
             do {
-                return try container.decode(T.self, forKey: .result)
+                return try container.decodeIfPresent(T.self, forKey: .result)
             } catch {
                 throw SignalRError.serializationError(underlyingError: error)
             }
         }
-
         return nil
     }
 
@@ -207,7 +206,7 @@ public class CompletionMessage: HubMessage, Codable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case invocationId
         case error
@@ -243,7 +242,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -263,7 +262,7 @@ public class CancelInvocationMessage: HubMessage, Encodable {
 
 public class PingMessage : HubMessage, Encodable {
     public let type = MessageType.Ping
-    private init() { }
+    private init() {}
 
     static let instance = PingMessage()
 }

@@ -624,7 +624,7 @@ public class ArgumentExtractor {
         - the requested `type` is not compatible with the actual value
         - there are no more arguments to be retrieved
      */
-    public func getArgument<T: Decodable>(type: T.Type) throws -> T {
+    public func getArgument<T: Decodable>(type: T.Type) throws -> T? {
         return try clientInvocationMessage.getArgument(type: type)
     }
 

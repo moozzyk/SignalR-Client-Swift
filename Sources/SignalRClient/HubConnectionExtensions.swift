@@ -575,7 +575,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable>(method: String, callback: @escaping (_ arg1: T1) -> Void) {
+    func on<T1: Decodable>(method: String, callback: @escaping (_ arg1: T1?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             callback(arg1)
@@ -598,7 +598,8 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2) -> Void) {
+    func on<T1: Decodable, T2: Decodable>(method: String,
+                                          callback: @escaping (_ arg1: T1?, _ arg2: T2?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -623,7 +624,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -650,7 +651,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?, _ arg4: T4?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -679,7 +680,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?, _ arg4: T4?, _ arg5: T5?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -711,7 +712,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?, _ arg4: T4?, _ arg5: T5?, _ arg6: T6?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -745,7 +746,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?, _ arg4: T4?, _ arg5: T5?, _ arg6: T6?, _ arg7: T7?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)
@@ -781,7 +782,7 @@ public extension HubConnection {
      }
      ```
      */
-    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable>(method: String, callback: @escaping (_ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, _ arg5: T5, _ arg6: T6, _ arg7: T7, _ arg8: T8) -> Void) {
+    func on<T1: Decodable, T2: Decodable, T3: Decodable, T4: Decodable, T5: Decodable, T6: Decodable, T7: Decodable, T8: Decodable>(method: String, callback: @escaping (_ arg1: T1?, _ arg2: T2?, _ arg3: T3?, _ arg4: T4?, _ arg5: T5?, _ arg6: T6?, _ arg7: T7?, _ arg8: T8?) -> Void) {
         let cb: (ArgumentExtractor) throws -> Void = { argumentExtractor in
             let arg1 = try argumentExtractor.getArgument(type: T1.self)
             let arg2 = try argumentExtractor.getArgument(type: T2.self)

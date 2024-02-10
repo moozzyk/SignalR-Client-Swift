@@ -21,8 +21,8 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
 
     init(logger: Logger, callbackQueue: DispatchQueue, invocationDidComplete: @escaping (T?, Error?) -> Void) {
         self.logger = logger
-        self.invocationDidComplete = {result, error in
-            callbackQueue.async { invocationDidComplete(result, error)}
+        self.invocationDidComplete = { result, error in
+            callbackQueue.async { invocationDidComplete(result, error) }
         }
     }
 
