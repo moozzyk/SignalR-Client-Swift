@@ -199,7 +199,7 @@ public class HttpConnection: Connection {
             }
             return
         }
-        transport!.send(data: data, sendDidComplete: sendDidComplete)
+        transport?.send(data: data, sendDidComplete: sendDidComplete)
     }
 
     public func stop(stopError: Error? = nil) {
@@ -216,7 +216,7 @@ public class HttpConnection: Connection {
             return
         }
 
-        self.startDispatchGroup.wait()
+        startDispatchGroup.wait()
         
         // The transport can be nil if connection was stopped immediately after starting
         // or failed to start. In this case we need to call connectionDidClose ourselves.
@@ -226,8 +226,8 @@ public class HttpConnection: Connection {
         } else {
             logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-            options.callbackQueue.async {
-                self.delegate?.connectionDidClose(error: stopError)
+            options.callbackQueue.async { [weak self] in
+                self?.delegate?.connectionDidClose(error: stopError)
             }
         }
     }
@@ -239,10 +239,11 @@ public class HttpConnection: Connection {
 
         logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
         startDispatchGroup.leave()
-        if  previousState != nil {
+        if previousState != nil {
             logger.log(logLevel: .debug, message: "Invoking connectionDidOpen")
             self.connectionId = connectionId
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidOpen(connection: self)
             }
         } else {
@@ -252,7 +253,8 @@ public class HttpConnection: Connection {
 
     fileprivate func transportDidReceiveData(_ data: Data) {
         logger.log(logLevel: .debug, message: "Received data from transport")
-        options.callbackQueue.async {
+        options.callbackQueue.async { [weak self] in
+            guard let self else { return }
             self.delegate?.connectionDidReceiveData(connection: self, data: data)
         }
     }
@@ -269,15 +271,16 @@ public class HttpConnection: Connection {
             startDispatchGroup.leave()
 
             logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidFailToOpen(error: self.stopError ?? error!)
             }
         } else {
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+            connectionId = nil
 
-            self.connectionId = nil
-
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidClose(error: self.stopError ?? error)
             }
         }

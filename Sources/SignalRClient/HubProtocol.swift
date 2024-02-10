@@ -91,19 +91,17 @@ public class ClientInvocationMessage: HubMessage, Decodable {
     }
 
     public func getArgument<T: Decodable>(type: T.Type) throws -> T {
-        guard arguments != nil else {
+        guard var arguments else {
             throw SignalRError.invalidOperation(message: "No arguments exist.")
         }
-
-        return try arguments!.decode(T.self)
+        return try arguments.decode(T.self)
     }
 
     var hasMoreArgs : Bool {
         get {
-            if arguments != nil {
-                return !arguments!.isAtEnd
+            if let arguments {
+                return !arguments.isAtEnd
             }
-
             return false
         }
     }
@@ -135,12 +133,12 @@ public class StreamItemMessage: HubMessage, Codable {
     }
 
     public func getItem<T: Decodable>(_ type: T.Type) throws -> T {
-        guard container != nil else {
+        guard let container else {
             throw SignalRError.invalidOperation(message: "Internal error - StreamItemMessage.container is nil.")
         }
 
         do {
-            return try container!.decode(T.self, forKey: .item)
+            return try container.decode(T.self, forKey: .item)
         } catch {
             throw SignalRError.serializationError(underlyingError: error)
         }
@@ -185,13 +183,13 @@ public class CompletionMessage: HubMessage, Codable {
     }
 
     public func getResult<T: Decodable>(_ type: T.Type) throws -> T? {
-        guard container != nil else {
+        guard let container else {
             throw SignalRError.invalidOperation(message: "Internal error - CompletionMessage.container is nil.")
         }
 
         if hasResult {
             do {
-                return try container!.decode(T.self, forKey: .result)
+                return try container.decode(T.self, forKey: .result)
             } catch {
                 throw SignalRError.serializationError(underlyingError: error)
             }

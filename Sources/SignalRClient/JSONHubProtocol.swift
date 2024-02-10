@@ -88,17 +88,35 @@ public class JSONHubProtocol: HubProtocol {
     private func createMessageData(message: HubMessage) throws -> Data {
         switch message.type {
         case .Invocation:
-            return try encoder.encode(message as! ServerInvocationMessage)
+            guard let msg = message as? ServerInvocationMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         case .StreamItem:
-            return try encoder.encode(message as! StreamItemMessage)
+            guard let msg = message as? StreamItemMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         case .StreamInvocation:
-            return try encoder.encode(message as! StreamInvocationMessage)
+            guard let msg = message as? StreamInvocationMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         case .CancelInvocation:
-            return try encoder.encode(message as! CancelInvocationMessage)
+            guard let msg = message as? CancelInvocationMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         case .Completion:
-            return try encoder.encode(message as! CompletionMessage)
+            guard let msg = message as? CompletionMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         case .Ping:
-            return try encoder.encode(message as! PingMessage)
+            guard let msg = message as? PingMessage else {
+                throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
+            }
+            return try encoder.encode(msg)
         default:
             throw SignalRError.invalidOperation(message: "Unexpected MessageType.")
         }
