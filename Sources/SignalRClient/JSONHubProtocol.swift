@@ -36,7 +36,7 @@ public class JSONHubProtocol: HubProtocol {
 
         logger.log(logLevel: .debug, message: "Payload contains \(count) message(s)")
 
-        return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
+        return try payloads[0..<count].map { try createHubMessage(payload: $0) }
     }
 
     public func createHubMessage(payload: Data) throws -> HubMessage {

@@ -25,12 +25,16 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         self.logger = logger
     }
 
-    public func start(url: URL, options: HttpConnectionOptions) {
+    public func start(url: URL?, options: HttpConnectionOptions) {
+        guard let url, let convertedUrl = convertUrl(url: url) else {
+            handleError(error: SignalRError.connectionIsBeingClosed)
+            return
+        }
+        
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
-
         authenticationChallengeHandler = options.authenticationChallengeHandler
 
-        var request = URLRequest(url: convertUrl(url: url))
+        var request = URLRequest(url: convertedUrl)
         populateHeaders(headers: options.headers, request: &request)
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
@@ -164,14 +168,14 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         urlSession?.finishTasksAndInvalidate()
     }
 
-    private func convertUrl(url: URL) -> URL {
+    private func convertUrl(url: URL) -> URL? {
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             if (components.scheme == "http") {
                 components.scheme = "ws"
             } else if (components.scheme == "https") {
                 components.scheme = "wss"
             }
-            return components.url!
+            return components.url
         }
 
         return url

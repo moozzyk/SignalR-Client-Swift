@@ -306,7 +306,7 @@ public class HubConnection {
     @discardableResult
     fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Encodable]) -> String {
         logger.log(logLevel: .info, message: "Invoking server side hub method '\(method)' with \(arguments.count) argument(s)")
-        var id:String = ""
+        var id: String = ""
         hubConnectionQueue.sync {
             invocationId = invocationId + 1
             id = "\(invocationId)"
@@ -529,9 +529,10 @@ public class HubConnection {
                 return
             }
             logger.log(logLevel: .debug, message: "Resetting keep alive")
-            keepAlivePingTask!.cancel()
-            keepAlivePingTask = DispatchWorkItem { [weak self] in self?.sendKeepAlivePing() }
-            hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask!)
+            keepAlivePingTask?.cancel()
+            let workItem = DispatchWorkItem { [weak self] in self?.sendKeepAlivePing() }
+            hubConnectionQueue.asyncAfter(deadline: .now() + keepAliveInterval, execute: workItem)
+            keepAlivePingTask = workItem
         }
     }
 

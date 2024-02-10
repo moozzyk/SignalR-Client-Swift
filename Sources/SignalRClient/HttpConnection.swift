@@ -139,20 +139,20 @@ public class HttpConnection: Connection {
 
     private func startTransport(connectionId: String?, connectionToken: String?) {
         // connection is being stopped even though start has not finished yet
-        if (self.state != .connecting) {
-            self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
-            self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+        if (state != .connecting) {
+            logger.log(logLevel: .info, message: "Connection closed during negotiate")
+            failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
             return
         }
 
-        let startUrl = self.createStartUrl(connectionId: connectionToken ?? connectionId)
-        self.transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
-        self.transport!.delegate = self.transportDelegate
-        self.transport!.start(url: startUrl, options: self.options)
+        let startUrl = createStartUrl(connectionId: connectionToken ?? connectionId)
+        transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
+        transport?.delegate = transportDelegate
+        transport?.start(url: startUrl, options: options)
     }
 
     private func createNegotiateUrl() -> URL {
-        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "negotiateVersion", value: "1"))
         urlComponents.queryItems = queryItems
@@ -161,15 +161,15 @@ public class HttpConnection: Connection {
         return negotiateUrl
     }
 
-    private func createStartUrl(connectionId: String?) -> URL {
+    private func createStartUrl(connectionId: String?) -> URL? {
         if connectionId == nil {
-            return self.url
+            return url
         }
-        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
-        var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        var queryItems = (urlComponents?.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "id", value: connectionId))
-        urlComponents.queryItems = queryItems
-        return urlComponents.url!
+        urlComponents?.queryItems = queryItems
+        return urlComponents?.url
     }
 
     private func failOpenWithError(error: Error, changeState: Bool, leaveStartDispatchGroup: Bool = true) {

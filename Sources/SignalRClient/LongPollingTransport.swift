@@ -27,7 +27,7 @@ public class LongPollingTransport: Transport {
         self.logger = logger
     }
     
-    public func start(url: URL, options: HttpConnectionOptions) {
+    public func start(url: URL?, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting LongPolling transport")
         httpClient = options.httpClientFactory(options)
         self.url = url
@@ -120,8 +120,6 @@ public class LongPollingTransport: Transport {
                 } else {
                     self.logger.log(logLevel: .debug, message: "Poll timed out (server side), reissuing.")
                 }
-                
-                
             case 404:
                 // If we have a poll request in progress when .close() is called, the session will be destroyed and the server
                 // will respond with 404. So if we get a 404 when the active flag is false, this is normal. Otherwise,
