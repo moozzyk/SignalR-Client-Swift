@@ -27,7 +27,7 @@ public class LongPollingTransport: Transport {
         self.logger = logger
     }
     
-    public func start(url: URL, options: HttpConnectionOptions) {
+    public func start(url: URL?, options: HttpConnectionOptions) {
         logger.log(logLevel: .info, message: "Starting LongPolling transport")
         httpClient = options.httpClientFactory(options)
         self.url = url
@@ -58,11 +58,15 @@ public class LongPollingTransport: Transport {
     
     public func close() {
         closeQueue.sync {
-            if !closeCalled {
+            if !closeCalled, let url {
                 closeCalled = true
                 active = false
-                self.logger.log(logLevel: .debug, message: "Sending LongPolling session DELETE request...")
-                self.httpClient?.delete(url: self.url!, completionHandler: { (_, errorOptional) in
+                logger.log(logLevel: .debug, message: "Sending LongPolling session DELETE request...")
+                httpClient?.delete(url: url, completionHandler: { [weak self] (_, errorOptional) in
+                    guard let self else {
+                        self?.delegate?.transportDidClose(nil)
+                        return
+                    }
                     if let error = errorOptional {
                         self.logger.log(logLevel: .error, message: "Error while DELETE-ing long polling session: \(error)")
                         self.delegate?.transportDidClose(error)
@@ -72,19 +76,19 @@ public class LongPollingTransport: Transport {
                     }
                 })
             } else {
-                self.logger.log(logLevel: .debug, message: "closeCalled flag is already set")
+                logger.log(logLevel: .debug, message: "closeCalled flag is already set")
             }
         }
     }
     
     private func triggerPoll() {
-        if self.active {
-            let pollUrl = self.getPollUrl()
-            self.logger.log(logLevel: .debug, message: "Polling \(pollUrl)")
-            self.httpClient?.get(url: pollUrl, completionHandler: self.handlePollResponse(response:error:))
+        if active {
+            let pollUrl = getPollUrl()
+            logger.log(logLevel: .debug, message: "Polling \(pollUrl)")
+            httpClient?.get(url: pollUrl, completionHandler: handlePollResponse(response:error:))
         } else {
-            self.logger.log(logLevel: .debug, message: "Long Polling transport polling complete.")
-            self.close()
+            logger.log(logLevel: .debug, message: "Long Polling transport polling complete.")
+            close()
         }
     }
     
@@ -116,8 +120,6 @@ public class LongPollingTransport: Transport {
                 } else {
                     self.logger.log(logLevel: .debug, message: "Poll timed out (server side), reissuing.")
                 }
-                
-                
             case 404:
                 // If we have a poll request in progress when .close() is called, the session will be destroyed and the server
                 // will respond with 404. So if we get a 404 when the active flag is false, this is normal. Otherwise,

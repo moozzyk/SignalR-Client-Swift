@@ -41,7 +41,7 @@ class DefaultHttpClient: HttpClientProtocol {
     }
     
 
-    func sendHttpRequest(url: URL, method: String, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Swift.Void) {
+    func sendHttpRequest(url: URL, method: String, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method
         urlRequest.httpBody = body
@@ -49,12 +49,10 @@ class DefaultHttpClient: HttpClientProtocol {
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &urlRequest)
         
         session.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
-
-            var resp:HttpResponse?
+            var resp: HttpResponse?
             if error == nil {
                 resp = HttpResponse(statusCode: (response as! HTTPURLResponse).statusCode, contents: data)
             }
-
             completionHandler(resp, error)
         }).resume()
     }

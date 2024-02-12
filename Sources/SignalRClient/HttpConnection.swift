@@ -139,20 +139,20 @@ public class HttpConnection: Connection {
 
     private func startTransport(connectionId: String?, connectionToken: String?) {
         // connection is being stopped even though start has not finished yet
-        if (self.state != .connecting) {
-            self.logger.log(logLevel: .info, message: "Connection closed during negotiate")
-            self.failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
+        if (state != .connecting) {
+            logger.log(logLevel: .info, message: "Connection closed during negotiate")
+            failOpenWithError(error: SignalRError.connectionIsBeingClosed, changeState: false)
             return
         }
 
-        let startUrl = self.createStartUrl(connectionId: connectionToken ?? connectionId)
-        self.transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
-        self.transport!.delegate = self.transportDelegate
-        self.transport!.start(url: startUrl, options: self.options)
+        let startUrl = createStartUrl(connectionId: connectionToken ?? connectionId)
+        transportDelegate = ConnectionTransportDelegate(connection: self, connectionId: connectionId)
+        transport?.delegate = transportDelegate
+        transport?.start(url: startUrl, options: options)
     }
 
     private func createNegotiateUrl() -> URL {
-        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "negotiateVersion", value: "1"))
         urlComponents.queryItems = queryItems
@@ -161,15 +161,15 @@ public class HttpConnection: Connection {
         return negotiateUrl
     }
 
-    private func createStartUrl(connectionId: String?) -> URL {
+    private func createStartUrl(connectionId: String?) -> URL? {
         if connectionId == nil {
-            return self.url
+            return url
         }
-        var urlComponents = URLComponents(url: self.url, resolvingAgainstBaseURL: false)!
-        var queryItems = (urlComponents.queryItems ?? []) as [URLQueryItem]
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        var queryItems = (urlComponents?.queryItems ?? []) as [URLQueryItem]
         queryItems.append(URLQueryItem(name: "id", value: connectionId))
-        urlComponents.queryItems = queryItems
-        return urlComponents.url!
+        urlComponents?.queryItems = queryItems
+        return urlComponents?.url
     }
 
     private func failOpenWithError(error: Error, changeState: Bool, leaveStartDispatchGroup: Bool = true) {
@@ -199,7 +199,7 @@ public class HttpConnection: Connection {
             }
             return
         }
-        transport!.send(data: data, sendDidComplete: sendDidComplete)
+        transport?.send(data: data, sendDidComplete: sendDidComplete)
     }
 
     public func stop(stopError: Error? = nil) {
@@ -216,7 +216,7 @@ public class HttpConnection: Connection {
             return
         }
 
-        self.startDispatchGroup.wait()
+        startDispatchGroup.wait()
         
         // The transport can be nil if connection was stopped immediately after starting
         // or failed to start. In this case we need to call connectionDidClose ourselves.
@@ -226,8 +226,8 @@ public class HttpConnection: Connection {
         } else {
             logger.log(logLevel: .debug, message: "Connection being stopped before transport initialized")
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
-            options.callbackQueue.async {
-                self.delegate?.connectionDidClose(error: stopError)
+            options.callbackQueue.async { [weak self] in
+                self?.delegate?.connectionDidClose(error: stopError)
             }
         }
     }
@@ -239,10 +239,11 @@ public class HttpConnection: Connection {
 
         logger.log(logLevel: .debug, message: "Leaving startDispatchGroup (\(#function): \(#line))")
         startDispatchGroup.leave()
-        if  previousState != nil {
+        if previousState != nil {
             logger.log(logLevel: .debug, message: "Invoking connectionDidOpen")
             self.connectionId = connectionId
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidOpen(connection: self)
             }
         } else {
@@ -252,7 +253,8 @@ public class HttpConnection: Connection {
 
     fileprivate func transportDidReceiveData(_ data: Data) {
         logger.log(logLevel: .debug, message: "Received data from transport")
-        options.callbackQueue.async {
+        options.callbackQueue.async { [weak self] in
+            guard let self else { return }
             self.delegate?.connectionDidReceiveData(connection: self, data: data)
         }
     }
@@ -269,15 +271,16 @@ public class HttpConnection: Connection {
             startDispatchGroup.leave()
 
             logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidFailToOpen(error: self.stopError ?? error!)
             }
         } else {
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")
+            connectionId = nil
 
-            self.connectionId = nil
-
-            options.callbackQueue.async {
+            options.callbackQueue.async { [weak self] in
+                guard let self else { return }
                 self.delegate?.connectionDidClose(error: self.stopError ?? error)
             }
         }

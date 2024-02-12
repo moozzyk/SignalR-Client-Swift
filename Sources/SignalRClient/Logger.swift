@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 public enum LogLevel: Int {
     case error = 1
@@ -44,6 +45,7 @@ public extension LogLevel {
  */
 public class PrintLogger: Logger {
     let dateFormatter: DateFormatter
+    let osLogger = os.Logger(subsystem: "signalR.com", category: "logs")
 
     /**
      Initializes a `PrintLogger`.
@@ -63,7 +65,8 @@ public class PrintLogger: Logger {
      - parameter message: log entry
     */
     public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-        print("\(dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())")
+        let item = "\(dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())"
+        osLogger.debug("\(item, privacy: .auto)")
     }
 }
 
@@ -83,8 +86,7 @@ public class NullLogger: Logger {
      - parameter logLevel: ignored
      - parameter message: ignored
     */
-    public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-    }
+    public func log(logLevel: LogLevel, message: @autoclosure () -> String) {}
 }
 
 class FilteringLogger: Logger {

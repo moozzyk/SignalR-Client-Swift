@@ -48,7 +48,7 @@ internal class ReconnectableConnection: Connection {
 
     func start() {
         logger.log(logLevel: .info, message: "Starting reconnectable connection")
-        if changeState(from:[.disconnected], to: .starting) != nil {
+        if changeState(from: [.disconnected], to: .starting) != nil {
             wrappedDelegate = ReconnectableConnectionDelegate(connection: self)
             startInternal()
         } else {
@@ -101,12 +101,12 @@ internal class ReconnectableConnection: Connection {
         var previousState: State? = nil
 
         logger.log(logLevel: .debug, message: {
-            let initialStates = from?.map{$0.rawValue}.joined(separator: ", ") ?? "(nil)"
+            let initialStates = from?.map{ $0.rawValue }.joined(separator: ", ") ?? "(nil)"
             return "Attempting to change state from: '\(initialStates)' to: '\(to)'"
         }())
         connectionQueue.sync {
-            if from?.contains(self.state) ?? true {
-                previousState = self.state
+            if from?.contains(state) ?? true {
+                previousState = state
                 state = to
             }
         }
@@ -124,8 +124,8 @@ internal class ReconnectableConnection: Connection {
             if nextAttemptInterval != .never {
                 logger.log(logLevel: .debug, message: "Scheduling reconnect attempt at: \(nextAttemptInterval)")
                 // TODO: not great but running on the connectionQueue deadlocks
-                DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) {
-                    self.startInternal()
+                DispatchQueue.main.asyncAfter(deadline: .now() + nextAttemptInterval) { [weak self] in
+                    self?.startInternal()
                 }
                 // running on a random (possibly main) queue but HubConnection will
                 // dispatch to the configured queue
@@ -153,12 +153,12 @@ internal class ReconnectableConnection: Connection {
         var attemptsCount = -1
         var startTime = Date()
         connectionQueue.sync {
-            attemptsCount = self.failedAttemptsCount
+            attemptsCount = failedAttemptsCount
             if attemptsCount == 0 {
-                self.reconnectStartTime = Date()
+                reconnectStartTime = Date()
             }
-            startTime = self.reconnectStartTime
-            self.failedAttemptsCount += 1
+            startTime = reconnectStartTime
+            failedAttemptsCount += 1
         }
 
         if error == nil {
@@ -171,7 +171,7 @@ internal class ReconnectableConnection: Connection {
 
     private func resetRetryAttempts() {
         connectionQueue.sync {
-            self.failedAttemptsCount = 0
+            failedAttemptsCount = 0
             // no need to reset start time - it will be set next time reconnect happens
         }
     }

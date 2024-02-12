@@ -23,5 +23,4 @@ extension Encodable {
     }
 }
 
-struct DecodableVoid: Decodable {
-}
+struct DecodableVoid: Decodable {}

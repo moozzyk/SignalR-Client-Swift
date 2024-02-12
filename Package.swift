@@ -1,12 +1,12 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "SignalRClient",
+    platforms: [.iOS(.v15), .macOS(.v12)],
     products: [
-        // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "SignalRClient",
             targets: ["SignalRClient"]),
@@ -24,6 +24,5 @@ let package = Package(
         .testTarget(
             name: "SignalRClientTests",
             dependencies: ["SignalRClient"]),
-    ],
-    swiftLanguageVersions: [.v4, .v4_2, .v5]
+    ]
 )

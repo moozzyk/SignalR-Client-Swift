@@ -65,6 +65,5 @@ public class HttpConnectionOptions {
     /**
      Initializes an `HttpConnectionOptions`.
      */
-    public init() {
-    }
+    public init() {}
 }

@@ -25,21 +25,25 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         self.logger = logger
     }
 
-    public func start(url: URL, options: HttpConnectionOptions) {
+    public func start(url: URL?, options: HttpConnectionOptions) {
+        guard let url, let convertedUrl = convertUrl(url: url) else {
+            handleError(error: SignalRError.connectionIsBeingClosed)
+            return
+        }
+        
         logger.log(logLevel: .info, message: "Starting WebSocket transport")
-
         authenticationChallengeHandler = options.authenticationChallengeHandler
 
-        var request = URLRequest(url: convertUrl(url: url))
+        var request = URLRequest(url: convertedUrl)
         populateHeaders(headers: options.headers, request: &request)
         setAccessToken(accessTokenProvider: options.accessTokenProvider, request: &request)
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-        webSocketTask = urlSession!.webSocketTask(with: request)
+        webSocketTask = urlSession?.webSocketTask(with: request)
         if let maximumWebsocketMessageSize = options.maximumWebsocketMessageSize {
             webSocketTask?.maximumMessageSize = maximumWebsocketMessageSize
         }
 
-        webSocketTask!.resume()
+        webSocketTask?.resume()
     }
 
     public func send(data: Data, sendDidComplete: @escaping (Error?) -> Void) {
@@ -59,17 +63,17 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 
     private func readMessage()  {
-        webSocketTask?.receive { result in
+        webSocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
                 // This failure always occurs when the task is cancelled. If the code
                 // is not normalClosure this is a real error.
-                if self.webSocketTask?.closeCode != .normalClosure {
-                    self.handleError(error: error)
+                if self?.webSocketTask?.closeCode != .normalClosure {
+                    self?.handleError(error: error)
                 }
             case .success(let message):
-                self.handleMessage(message: message)
-                self.readMessage()
+                self?.handleMessage(message: message)
+                self?.readMessage()
             }
         }
     }
@@ -77,7 +81,8 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     private func handleMessage(message: URLSessionWebSocketTask.Message) {
         switch message {
         case .string(let text):
-            delegate?.transportDidReceiveData(text.data(using: .utf8)!)
+            let data = text.data(using: .utf8) ?? Data()
+            delegate?.transportDidReceiveData(data)
         case .data(let data):
             delegate?.transportDidReceiveData(data)
         @unknown default:
@@ -163,14 +168,14 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         urlSession?.finishTasksAndInvalidate()
     }
 
-    private func convertUrl(url: URL) -> URL {
+    private func convertUrl(url: URL) -> URL? {
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             if (components.scheme == "http") {
                 components.scheme = "ws"
             } else if (components.scheme == "https") {
                 components.scheme = "wss"
             }
-            return components.url!
+            return components.url
         }
 
         return url
