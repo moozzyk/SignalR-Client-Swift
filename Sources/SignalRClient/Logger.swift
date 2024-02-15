@@ -89,18 +89,28 @@ public class NullLogger: Logger {
     public func log(logLevel: LogLevel, message: @autoclosure () -> String) {}
 }
 
+public protocol LoggerProxy: AnyObject {
+    func didLog(_ message: String)
+}
+
 class FilteringLogger: Logger {
     private let minLogLevel: LogLevel
     private let logger: Logger
+    weak var delegate: LoggerProxy?
 
-    init(minLogLevel: LogLevel, logger: Logger) {
+    init(minLogLevel: LogLevel, logger: Logger, delegate: LoggerProxy?) {
         self.minLogLevel = minLogLevel
         self.logger = logger
+        self.delegate = delegate
     }
 
     func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-        if (logLevel.rawValue <= minLogLevel.rawValue) {
-            logger.log(logLevel: logLevel, message: message())
+        if let delegate {
+            delegate.didLog(message())
+        } else {
+            if (logLevel.rawValue <= minLogLevel.rawValue) {
+                logger.log(logLevel: logLevel, message: message())
+            }
         }
     }
 }
