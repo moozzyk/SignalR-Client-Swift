@@ -74,8 +74,6 @@
 		7391A94722510170007BEF23 /* TransferFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91922510170007BEF23 /* TransferFormat.swift */; };
 		7391A94822510170007BEF23 /* HubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91A22510170007BEF23 /* HubProtocol.swift */; };
 		7391A94922510170007BEF23 /* HubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91A22510170007BEF23 /* HubProtocol.swift */; };
-		7391A94A22510170007BEF23 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91B22510170007BEF23 /* Util.swift */; };
-		7391A94B22510170007BEF23 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91B22510170007BEF23 /* Util.swift */; };
 		7391A94E22510170007BEF23 /* JSONHubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91D22510170007BEF23 /* JSONHubProtocol.swift */; };
 		7391A94F22510170007BEF23 /* JSONHubProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91D22510170007BEF23 /* JSONHubProtocol.swift */; };
 		7391A95022510170007BEF23 /* HttpConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7391A91E22510170007BEF23 /* HttpConnection.swift */; };
@@ -207,7 +205,6 @@
 		7391A91822510170007BEF23 /* NegotiationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationResponse.swift; sourceTree = "<group>"; };
 		7391A91922510170007BEF23 /* TransferFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFormat.swift; sourceTree = "<group>"; };
 		7391A91A22510170007BEF23 /* HubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubProtocol.swift; sourceTree = "<group>"; };
-		7391A91B22510170007BEF23 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		7391A91D22510170007BEF23 /* JSONHubProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHubProtocol.swift; sourceTree = "<group>"; };
 		7391A91E22510170007BEF23 /* HttpConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpConnection.swift; sourceTree = "<group>"; };
 		7391A91F22510170007BEF23 /* ConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegate.swift; sourceTree = "<group>"; };
@@ -380,7 +377,6 @@
 				7391A91822510170007BEF23 /* NegotiationResponse.swift */,
 				7391A91922510170007BEF23 /* TransferFormat.swift */,
 				7391A91A22510170007BEF23 /* HubProtocol.swift */,
-				7391A91B22510170007BEF23 /* Util.swift */,
 				7391A91D22510170007BEF23 /* JSONHubProtocol.swift */,
 				7391A91E22510170007BEF23 /* HttpConnection.swift */,
 				7391A91F22510170007BEF23 /* ConnectionDelegate.swift */,
@@ -537,6 +533,7 @@
 					};
 					5AEC70EC20310E3E00616DD2 = {
 						CreatedOnToolsVersion = 9.2;
+						DevelopmentTeam = K8A9GZ95QZ;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -629,7 +626,6 @@
 				7391A92F22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94322510170007BEF23 /* HttpClientProtocol.swift in Sources */,
 				7391A93122510170007BEF23 /* DefaultHttpClient.swift in Sources */,
-				7391A94B22510170007BEF23 /* Util.swift in Sources */,
 				7391A93F22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
 				5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94722510170007BEF23 /* TransferFormat.swift in Sources */,
@@ -667,7 +663,6 @@
 				7391A92E22510170007BEF23 /* ServerInvocationHandler.swift in Sources */,
 				7391A94222510170007BEF23 /* HttpClientProtocol.swift in Sources */,
 				7391A93022510170007BEF23 /* DefaultHttpClient.swift in Sources */,
-				7391A94A22510170007BEF23 /* Util.swift in Sources */,
 				7391A93E22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
 				5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94622510170007BEF23 /* TransferFormat.swift in Sources */,
@@ -1063,12 +1058,13 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K8A9GZ95QZ;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HubSamplePhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplee.kostas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1086,12 +1082,13 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K8A9GZ95QZ;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HubSamplePhone/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplePhone;
+				PRODUCT_BUNDLE_IDENTIFIER = moozzyk.HubSamplee.kostas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;

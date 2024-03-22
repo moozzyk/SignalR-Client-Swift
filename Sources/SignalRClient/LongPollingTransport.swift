@@ -9,7 +9,7 @@ import Foundation
 
 public class LongPollingTransport: Transport {
     
-    public var delegate: TransportDelegate?
+    public weak var delegate: TransportDelegate?
     
     private let logger: Logger
     private let closeQueue = DispatchQueue(label: "LongPollingTransportCloseQueue")
