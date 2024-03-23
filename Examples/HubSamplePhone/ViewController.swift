@@ -11,7 +11,7 @@ import SignalRClient
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Update the Url accordingly
-    private let serverUrl = "http://192.168.86.250:5000/chat"  // /chat or /chatLongPolling or /chatWebSockets
+    private let serverUrl = "http://127.0.0.1:5000/chat"  // /chat or /chatLongPolling or /chatWebSockets
     private let dispatchQueue = DispatchQueue(label: "hubsamplephone.queue.dispatcheueuq")
 
     private var chatHubConnection: HubConnection?
@@ -35,18 +35,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         alert.addTextField() { textField in textField.placeholder = "Name"}
         let OKAction = UIAlertAction(title: "OK", style: .default) { action in
             self.name = alert.textFields?.first?.text ?? "John Doe"
-
-            self.chatHubConnectionDelegate = ChatHubConnectionDelegate(controller: self)
-            self.chatHubConnection = HubConnectionBuilder(url: URL(string: self.serverUrl)!)
-                .withLogging(minLogLevel: .debug)
-                .withAutoReconnect()
-                .withHubConnectionDelegate(delegate: self.chatHubConnectionDelegate!)
-                .build()
-
-            self.chatHubConnection!.on(method: "NewMessage", callback: {(user: String, message: String) in
-                self.appendMessage(message: "\(user): \(message)")
-            })
-            self.chatHubConnection!.start()
+            (1...10).forEach { item in
+                let randomTimeAwait = Double.random(in: 0.5..<0.7) * Double(Int.random(in: 1..<7))
+                DispatchQueue.global().asyncAfter(deadline: .now() + randomTimeAwait) { [weak self] in
+                    guard let self else { return }
+                    self.chatHubConnectionDelegate = ChatHubConnectionDelegate(controller: self)
+                    self.chatHubConnection = HubConnectionBuilder(url: URL(string: self.serverUrl)!)
+                        .withLogging(minLogLevel: .debug)
+                        .withAutoReconnect()
+                        .withHubConnectionDelegate(delegate: self.chatHubConnectionDelegate!)
+                        .build()
+                    
+                    self.chatHubConnection!.on(method: "NewMessage", callback: {(user: String, message: String) in
+                        self.appendMessage(message: "\(user): \(message)")
+                    })
+                    self.chatHubConnection!.start()
+                }
+            }
         }
         alert.addAction(OKAction)
         self.present(alert, animated: true)
