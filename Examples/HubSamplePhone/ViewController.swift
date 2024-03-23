@@ -11,7 +11,7 @@ import SignalRClient
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // Update the Url accordingly
-    private let serverUrl = "http://127.0.0.1:5000/chat"  // /chat or /chatLongPolling or /chatWebSockets
+    private let serverUrl = "http://0.0.0.0:5000/chat"  // /chat or /chatLongPolling or /chatWebSockets
     private let dispatchQueue = DispatchQueue(label: "hubsamplephone.queue.dispatcheueuq")
 
     private var chatHubConnection: HubConnection?
