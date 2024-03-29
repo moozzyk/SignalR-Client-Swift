@@ -44,6 +44,7 @@ public class LongPollingTransport: Transport {
             return
         }
         httpClient.post(url: url, body: data) { (responseOptional, errorOptional) in
+            //If for any reason you need self instance please added as weak to prevent ARC count up and lead to memory leak
             if let error = errorOptional {
                 sendDidComplete(error)
             } else if let response = responseOptional {
@@ -62,7 +63,8 @@ public class LongPollingTransport: Transport {
                 closeCalled = true
                 active = false
                 self.logger.log(logLevel: .debug, message: "Sending LongPolling session DELETE request...")
-                self.httpClient?.delete(url: self.url!, completionHandler: { (_, errorOptional) in
+                self.httpClient?.delete(url: self.url!, completionHandler: { [weak self] (_, errorOptional) in
+                    guard let self else { return }
                     if let error = errorOptional {
                         self.logger.log(logLevel: .error, message: "Error while DELETE-ing long polling session: \(error)")
                         self.delegate?.transportDidClose(error)
@@ -81,7 +83,10 @@ public class LongPollingTransport: Transport {
         if self.active {
             let pollUrl = self.getPollUrl()
             self.logger.log(logLevel: .debug, message: "Polling \(pollUrl)")
-            self.httpClient?.get(url: pollUrl, completionHandler: self.handlePollResponse(response:error:))
+            self.httpClient?.get(url: pollUrl, completionHandler: { [weak self] response,error in
+                guard let self else { return }
+                self.handlePollResponse(response: response, error: error)
+            })
         } else {
             self.logger.log(logLevel: .debug, message: "Long Polling transport polling complete.")
             self.close()
