@@ -24,7 +24,7 @@ public class HubConnection {
     private let logger: Logger
 
     private var connection: Connection
-    private weak var connectionDelegate: HubConnectionConnectionDelegate?
+    private var connectionDelegate: HubConnectionConnectionDelegate?
     private var hubProtocol: HubProtocol
 
     private let keepAliveIntervalInSeconds: Double?
