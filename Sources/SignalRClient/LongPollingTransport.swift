@@ -58,7 +58,8 @@ public class LongPollingTransport: Transport {
     }
     
     public func close() {
-        closeQueue.sync {
+        closeQueue.sync { [weak self] in
+            guard let self else { return }
             if !closeCalled {
                 closeCalled = true
                 active = false
