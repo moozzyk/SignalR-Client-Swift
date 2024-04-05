@@ -112,7 +112,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
 
         let statusCode = (webSocketTask?.response as? HTTPURLResponse)?.statusCode ?? -1
         logger.log(logLevel: .info, message: "Error starting webSocket. Error: \(error!), HttpStatusCode: \(statusCode), WebSocket closeCode: \(webSocketTask?.closeCode.rawValue ?? -1)")
-        delegate?.transportDidClose(error)
+        delegate?.transportDidClose((statusCode != -1 && statusCode != 200) ? SignalRError.webError(statusCode: statusCode) : error)
         shutdownTransport()
     }
 

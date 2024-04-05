@@ -528,7 +528,7 @@ class HttpConnectionTests: XCTestCase {
 
         let connectionDelegate = TestConnectionDelegate()
         connectionDelegate.connectionDidFailToOpenHandler = { error in
-            XCTAssertTrue("\(error)".contains("Code=-1011"))
+            XCTAssertEqual("\(SignalRError.webError(statusCode: 404))", "\(error)")
             didFailToOpenExpectation.fulfill()
         }
         httpConnection.delegate = connectionDelegate
