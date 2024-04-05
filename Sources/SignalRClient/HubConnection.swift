@@ -90,7 +90,8 @@ public class HubConnection {
         // TODO: add negative test (e.g. invalid protocol)
         let handshakeRequest = HandshakeProtocol.createHandshakeRequest(hubProtocol: hubProtocol)
         logger.log(logLevel: .debug, message: "Sending handshake request: \(handshakeRequest)")
-        connection.send(data: "\(handshakeRequest)".data(using: .utf8)!) { error in
+        connection.send(data: "\(handshakeRequest)".data(using: .utf8)!) { [weak self] error in
+            guard let self else { return }
             if let e = error {
                 self.logger.log(logLevel: .error, message: "Sending handshake request failed: \(e)")
                 // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
@@ -156,7 +157,8 @@ public class HubConnection {
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
             resetKeepAlive()
 
-            connection.send(data: invocationData, sendDidComplete: { error in
+            connection.send(data: invocationData, sendDidComplete: { [weak self] error in
+                guard let self else { return }
                 if error == nil {
                     self.resetKeepAlive()
                 }
@@ -281,7 +283,8 @@ public class HubConnection {
         let cancelInvocationMessage = CancelInvocationMessage(invocationId: streamHandle.invocationId)
         do {
             let cancelInvocationData = try hubProtocol.writeMessage(message: cancelInvocationMessage)
-            connection.send(data: cancelInvocationData, sendDidComplete: {error in
+            connection.send(data: cancelInvocationData, sendDidComplete: { [weak self] error in
+                guard let self else { return }
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Sending cancellation of server side streaming hub returned error: \(e)")
                     self.callbackQueue.async {
@@ -312,7 +315,8 @@ public class HubConnection {
             let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id, method: method, arguments: arguments, streamIds: [])
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
 
-            connection.send(data: invocationData) { error in
+            connection.send(data: invocationData) { [weak self] error in
+                guard let self else { return }
                 if let e = error {
                     self.logger.log(logLevel: .error, message: "Invoking server hub method \(method) returned error: \(e)")
                     self.failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
@@ -364,17 +368,20 @@ public class HubConnection {
                 // TODO: (BUG) if this fails when reconnecting the callback should not be called and there
                 // will be no further reconnect attempts
                 logger.log(logLevel: .error, message: "Parsing handshake response failed: \(e)")
-                callbackQueue.async {
+                callbackQueue.async { [weak self] in
+                    guard let self else { return }
                     self.delegate?.connectionDidFailToOpen(error: e)
                 }
                 return
             }
             if originalHandshakeStatus.isReconnect {
-                callbackQueue.async {
+                callbackQueue.async { [weak self] in
+                    guard let self else { return }
                     self.delegate?.connectionDidReconnect()
                 }
             } else {
-                callbackQueue.async {
+                callbackQueue.async { [weak self] in
+                    guard let self else { return }
                     self.delegate?.connectionDidOpen(hubConnection: self)
                 }
                 resetKeepAlive()
@@ -515,7 +522,10 @@ public class HubConnection {
             }
             logger.log(logLevel: .debug, message: "Resetting keep alive")
             keepAlivePingTask!.cancel()
-            keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
+            keepAlivePingTask = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.sendKeepAlivePing()
+            }
             hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask!)
         }
     }
@@ -531,7 +541,8 @@ public class HubConnection {
         do {
             let cachedPingMessage = try hubProtocol.writeMessage(message: PingMessage.instance)
             logger.log(logLevel: .debug, message: "Sending keep alive")
-            connection.send(data: cachedPingMessage, sendDidComplete: { error in
+            connection.send(data: cachedPingMessage, sendDidComplete: { [weak self] error in
+                guard let self else { return }
                 if let error = error {
                     self.logger.log(logLevel: .error, message: "Keep alive send error:  \(error.localizedDescription)")
                 } else {

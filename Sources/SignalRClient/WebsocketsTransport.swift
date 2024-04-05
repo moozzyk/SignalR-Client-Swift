@@ -18,7 +18,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
 
     private var isTransportClosed = false
 
-    public var delegate: TransportDelegate?
+    public weak var delegate: TransportDelegate?
     public let inherentKeepAlive = false
 
     init(logger: Logger) {
