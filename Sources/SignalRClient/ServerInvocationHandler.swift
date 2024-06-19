@@ -16,10 +16,10 @@ internal protocol ServerInvocationHandler {
 }
 
 internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
-    private let logger: Logger
+    private let logger: LoggerProtocol
     private let invocationDidComplete: (T?, Error?) -> Void
 
-    init(logger: Logger, callbackQueue: DispatchQueue, invocationDidComplete: @escaping (T?, Error?) -> Void) {
+    init(logger: LoggerProtocol, callbackQueue: DispatchQueue, invocationDidComplete: @escaping (T?, Error?) -> Void) {
         self.logger = logger
         self.invocationDidComplete = {result, error in
             callbackQueue.async { invocationDidComplete(result, error)}
@@ -68,11 +68,11 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
 }
 
 internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
-    private let logger: Logger
+    private let logger: LoggerProtocol
     private let streamItemReceived: (T) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
-    init(logger: Logger, callbackQueue: DispatchQueue, streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
+    init(logger: LoggerProtocol, callbackQueue: DispatchQueue, streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void) {
         self.logger = logger
         self.streamItemReceived =  { item in callbackQueue.async { streamItemReceived(item) } }
         self.invocationDidComplete = { error in callbackQueue.async { invocationDidComplete(error) } }

@@ -12,12 +12,12 @@ public class JSONHubProtocol: HubProtocol {
     private static let recordSeparator = UInt8(0x1e)
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
-    private let logger: Logger
+    private let logger: LoggerProtocol
     public let name = "json"
     public let version = 1
     public let type = ProtocolType.Text
 
-    public init(logger: Logger,
+    public init(logger: LoggerProtocol,
                 encoder: JSONEncoder = JSONEncoder(),
                 decoder: JSONDecoder = JSONDecoder()) {
         self.logger = logger

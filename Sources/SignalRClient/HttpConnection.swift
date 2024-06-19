@@ -15,7 +15,7 @@ public class HttpConnection: Connection {
     private var url: URL
     private let options: HttpConnectionOptions
     private let transportFactory: TransportFactory
-    private let logger: Logger
+    private let logger: LoggerProtocol
 
     private var transportDelegate: TransportDelegate?
 
@@ -36,11 +36,11 @@ public class HttpConnection: Connection {
         case stopped = "stopped"
     }
 
-    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: Logger = NullLogger()) {
+    public convenience init(url: URL, options: HttpConnectionOptions = HttpConnectionOptions(), logger: LoggerProtocol = NullLogger()) {
         self.init(url: url, options: options, transportFactory: DefaultTransportFactory(logger: logger), logger: logger)
     }
 
-    init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: Logger) {
+    init(url: URL, options: HttpConnectionOptions, transportFactory: TransportFactory, logger: LoggerProtocol) {
         logger.log(logLevel: .debug, message: "HttpConnection init")
         connectionQueue = DispatchQueue(label: "SignalR.connection.queue")
         startDispatchGroup = DispatchGroup()

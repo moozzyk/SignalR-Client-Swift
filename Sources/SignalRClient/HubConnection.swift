@@ -21,7 +21,7 @@ public class HubConnection {
     private var pendingCalls = [String: ServerInvocationHandler]()
     private var callbacks = [String: (ArgumentExtractor) throws -> Void]()
     private var handshakeStatus: HandshakeStatus = .needsHandling(false)
-    private let logger: Logger
+    private let logger: LoggerProtocol
 
     private var connection: Connection
     private var connectionDelegate: HubConnectionConnectionDelegate?
@@ -54,11 +54,11 @@ public class HubConnection {
      - parameter hubProtocol: `HubProtocol` to use to communicate with the server
      - parameter logger: optional logger to write logs. If not provided no log will be written
      */
-    convenience public init(connection: Connection, hubProtocol: HubProtocol, logger: Logger = NullLogger()) {
+    convenience public init(connection: Connection, hubProtocol: HubProtocol, logger: LoggerProtocol = NullLogger()) {
         self.init(connection: connection, hubProtocol: hubProtocol, hubConnectionOptions: HubConnectionOptions(), logger: logger)
     }
 
-    public init(connection: Connection, hubProtocol: HubProtocol, hubConnectionOptions: HubConnectionOptions, logger: Logger = NullLogger()) {
+    public init(connection: Connection, hubProtocol: HubProtocol, hubConnectionOptions: HubConnectionOptions, logger: LoggerProtocol = NullLogger()) {
         logger.log(logLevel: .debug, message: "HubConnection init")
         self.connection = connection
         self.hubProtocol = hubProtocol

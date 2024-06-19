@@ -20,14 +20,14 @@ import Foundation
  */
 public class HubConnectionBuilder {
     private let url: URL
-    private var hubProtocolFactory: (Logger) -> HubProtocol = {logger in JSONHubProtocol(logger: logger)}
+    private var hubProtocolFactory: (LoggerProtocol) -> HubProtocol = {logger in JSONHubProtocol(logger: logger)}
     private let httpConnectionOptions = HttpConnectionOptions()
     private let hubConnectionOptions = HubConnectionOptions()
-    private var logger: Logger = NullLogger()
+    private var logger: LoggerProtocol = NullLogger()
     private var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
     private var permittedTransportTypes: TransportType = .all
-    private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
+    private var transportFactory: ((LoggerProtocol, TransportType) -> TransportFactory) =
         { logger, permittedTransportTypes in DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)}
     /**
      Initializes a `HubConnectionBuilder` with a URL.
@@ -44,7 +44,7 @@ public class HubConnectionBuilder {
      - parameter hubProtocolFactory: a factory for creating the `HubProtocol` used by the client
      - note: By default the client will use the `JSONHubProtocol`.
     */
-    public func withHubProtocol(hubProtocolFactory: @escaping (Logger) -> HubProtocol) -> HubConnectionBuilder {
+    public func withHubProtocol(hubProtocolFactory: @escaping (LoggerProtocol) -> HubProtocol) -> HubConnectionBuilder {
         self.hubProtocolFactory = hubProtocolFactory
         return self
     }
@@ -87,7 +87,7 @@ public class HubConnectionBuilder {
      The custom logger will receive all log entries written by the client.
      - parameter logger: custom logger
      */
-    public func withLogging(logger: Logger) -> HubConnectionBuilder {
+    public func withLogging(logger: LoggerProtocol) -> HubConnectionBuilder {
         self.logger = logger
         return self
     }
@@ -101,7 +101,7 @@ public class HubConnectionBuilder {
      - parameter minLogLevel: minimum log level
      - parameter logger: custom logger
      */
-    public func withLogging(minLogLevel: LogLevel, logger: Logger) -> HubConnectionBuilder {
+    public func withLogging(minLogLevel: LogLevel, logger: LoggerProtocol) -> HubConnectionBuilder {
         self.logger = FilteringLogger(minLogLevel: minLogLevel, logger: logger)
         return self
     }
@@ -137,7 +137,7 @@ public class HubConnectionBuilder {
         return self
     }
 
-    internal func withCustomTransportFactory(transportFactory: @escaping (Logger, TransportType) -> TransportFactory) -> HubConnectionBuilder {
+    internal func withCustomTransportFactory(transportFactory: @escaping (LoggerProtocol, TransportType) -> TransportFactory) -> HubConnectionBuilder {
         self.transportFactory = transportFactory
         return self
     }

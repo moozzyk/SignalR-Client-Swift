@@ -13,7 +13,7 @@ internal class ReconnectableConnection: Connection {
 
     private let connectionFactory: () -> Connection
     private let reconnectPolicy: ReconnectPolicy
-    private let logger: Logger
+    private let logger: LoggerProtocol
 
     private var underlyingConnection: Connection
     private var wrappedDelegate: ConnectionDelegate?
@@ -38,7 +38,7 @@ internal class ReconnectableConnection: Connection {
         return underlyingConnection.inherentKeepAlive
     }
 
-    init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy, callbackQueue: DispatchQueue, logger: Logger) {
+    init(connectionFactory: @escaping () -> Connection, reconnectPolicy: ReconnectPolicy, callbackQueue: DispatchQueue, logger: LoggerProtocol) {
         self.connectionFactory = connectionFactory
         self.reconnectPolicy = reconnectPolicy
         self.logger = logger

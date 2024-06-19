@@ -9,11 +9,11 @@
 import Foundation
 
 internal class DefaultTransportFactory: TransportFactory {
-    let logger: Logger
+    let logger: LoggerProtocol
     let permittedTransportTypes: TransportType
     var orderOfPreference: [TransportType] = [.webSockets, .longPolling]
         
-    init(logger: Logger, permittedTransportTypes: TransportType = .all) {
+    init(logger: LoggerProtocol, permittedTransportTypes: TransportType = .all) {
         self.logger = logger
         self.permittedTransportTypes = permittedTransportTypes
     }

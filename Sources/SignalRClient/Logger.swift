@@ -89,9 +89,23 @@ public class PrintLogger: LoggerProtocol {
 public class NullLogger: LoggerProtocol {
     /**
      Initializes a `NullLogger`.
+    
     */
+    
+    private let logger = Logger(
+        subsystem: "ru.medsi.smartmed.dev",
+        category: "SignalR"
+    )
+    
     public init() {
+        dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
     }
+    
+    let dateFormatter: DateFormatter
 
     /**
      Discards all log entries.
@@ -100,6 +114,13 @@ public class NullLogger: LoggerProtocol {
      - parameter message: ignored
     */
     public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
+        let logMessage = "\(self.dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())"
+        
+        logger.log(
+            level: .info,
+            "\(logMessage)"
+        )
+        
     }
 }
 

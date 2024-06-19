@@ -10,7 +10,7 @@ import Foundation
 
 @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelegate {
-    private let logger: Logger
+    private let logger: LoggerProtocol
     private let dispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
@@ -21,7 +21,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     public var delegate: TransportDelegate?
     public let inherentKeepAlive = false
 
-    init(logger: Logger) {
+    init(logger: LoggerProtocol) {
         self.logger = logger
     }
 
