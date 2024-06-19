@@ -6,6 +6,7 @@
 //  Copyright © 2018 Pawel Kadluczka. All rights reserved.
 //
 
+import OSLog
 import Foundation
 
 public enum LogLevel: Int {
@@ -18,7 +19,7 @@ public enum LogLevel: Int {
 /**
  Protocol for implementing loggers.
  */
-public protocol Logger {
+public protocol LoggerProtocol {
     /**
      Invoked by the client to write a log entry.
 
@@ -42,9 +43,14 @@ public extension LogLevel {
 /**
  Logger that log entries with the `print()` function.
  */
-public class PrintLogger: Logger {
+public class PrintLogger: LoggerProtocol {
     let dateFormatter: DateFormatter
-
+    
+    private let logger = Logger(
+        subsystem: "ru.medsi.smartmed.dev",
+        category: "SignalR"
+    )
+    
     /**
      Initializes a `PrintLogger`.
      */
@@ -55,22 +61,32 @@ public class PrintLogger: Logger {
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
     }
-
+    
     /**
      Writes log entries with the `print()` function.
-
+     
      - parameter logLevel: the log level of the entry to write
      - parameter message: log entry
-    */
-    public func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-        print("\(dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())")
+     */
+    public func log(
+        logLevel: LogLevel,
+        message: @autoclosure () -> String
+    ) {
+        let logMessage = "\(self.dateFormatter.string(from: Date())) \(logLevel.toString()): \(message())"
+        
+        logger.log(
+            level: .info,
+            "\(logMessage)"
+        )
+        
+        print(logMessage)
     }
 }
 
 /**
  Logger that discards all log entries.
  */
-public class NullLogger: Logger {
+public class NullLogger: LoggerProtocol {
     /**
      Initializes a `NullLogger`.
     */
@@ -87,11 +103,11 @@ public class NullLogger: Logger {
     }
 }
 
-class FilteringLogger: Logger {
+class FilteringLogger: LoggerProtocol {
     private let minLogLevel: LogLevel
-    private let logger: Logger
+    private let logger: LoggerProtocol
 
-    init(minLogLevel: LogLevel, logger: Logger) {
+    init(minLogLevel: LogLevel, logger: LoggerProtocol) {
         self.minLogLevel = minLogLevel
         self.logger = logger
     }
