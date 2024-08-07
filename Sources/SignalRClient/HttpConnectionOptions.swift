@@ -30,6 +30,9 @@ public class HttpConnectionOptions {
     */
     public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = { DefaultHttpClient(options: $0) }
 
+    
+    public var sessionConfiguration: URLSessionConfiguration = .default
+    
     /**
      Whether to skip the negotiation request when starting a connection.
 

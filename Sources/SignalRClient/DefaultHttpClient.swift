@@ -14,7 +14,7 @@ class DefaultHttpClient: HttpClientProtocol {
 
     public init(options: HttpConnectionOptions) {
         self.options = options
-        let sessionConfig = URLSessionConfiguration.default
+        let sessionConfig = options.sessionConfiguration
         sessionConfig.timeoutIntervalForRequest = options.requestTimeout
         DefaultHttpClientSessionDelegate.shared.authenticationChallengeHandler = options.authenticationChallengeHandler
         self.session = URLSession(
