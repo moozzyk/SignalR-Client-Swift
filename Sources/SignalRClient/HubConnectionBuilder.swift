@@ -167,6 +167,7 @@ public class HubConnectionBuilder {
             httpConnectionOptionsCopy.headers = httpConnectionOptions.headers
             httpConnectionOptionsCopy.accessTokenProvider = httpConnectionOptions.accessTokenProvider
             httpConnectionOptionsCopy.httpClientFactory = httpConnectionOptions.httpClientFactory
+            httpConnectionOptionsCopy.sessionConfiguration = httpConnectionOptions.sessionConfiguration
             if #available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
                 httpConnectionOptionsCopy.skipNegotiation = httpConnectionOptions.skipNegotiation
             }
