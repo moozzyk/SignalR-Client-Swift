@@ -60,3 +60,26 @@ internal class NoReconnectPolicy: ReconnectPolicy {
         return DispatchTimeInterval.never
     }
 }
+
+/**
+ Infinite reconnect policy that allows providing custom intervals for connect attempts.
+ Does not stop when last interval was reached, instead repeats last interval infinitely.
+ */
+public class InfiniteReconnectPolicy: ReconnectPolicy {
+    let retryIntervals: [DispatchTimeInterval]
+
+    /**
+     Initializes a new `InfiniteReconnectPolicy` with the provided retry time intervals.
+     - parameter retryIntervals: an array of retry intervals. If not provided the following intervals will be used 0, 2, 10 and 15 seconds.
+     */
+    public init(retryIntervals: [DispatchTimeInterval] = [.milliseconds(0), .seconds(2), .seconds(10), .seconds(15)]) {
+        self.retryIntervals = retryIntervals
+    }
+
+    public func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval {
+        if retryContext.failedAttemptsCount >= retryIntervals.count {
+            return retryIntervals[retryIntervals.count - 1]
+        }
+        return retryIntervals[retryContext.failedAttemptsCount]
+    }
+}
