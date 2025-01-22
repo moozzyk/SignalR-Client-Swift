@@ -15,6 +15,7 @@
         <input type="text" id="message" />
         <input type="button" id="sendmessage" value="Send" />
         <input type="hidden" id="displayname" />
+        <input type="button" id="stream" value="Stream numbers" />
         <ul id="discussion">
         </ul>
     </div>
@@ -27,7 +28,7 @@
     let name = prompt('Enter your name:', '');
     let hubConnection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Trace)
-        .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
+        // .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
         .withUrl('/chat')
         .build();
 
@@ -43,6 +44,20 @@
             hubConnection.invoke('Broadcast', name, messageTextBox.value);
             messageTextBox.value = "";
             event.preventDefault();
+        });
+
+        document.getElementById('stream').addEventListener('click', event => {
+            const subject = new signalR.Subject();
+            hubConnection.send("StreamingMax", name, subject);
+            let iteration = 0;
+            const intervalHandle = setInterval(() => {
+                iteration++;
+                subject.next(Math.floor(Math.random() * 1000));
+                if (iteration === 10) {
+                    clearInterval(intervalHandle);
+                    subject.complete();
+                }
+            }, 500);
         });
     })
 </script>
