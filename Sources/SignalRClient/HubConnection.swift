@@ -33,12 +33,12 @@ public class HubConnection {
     private let callbackQueue: DispatchQueue
 
     /**
-    Allows setting a delegate that will be notified about connection lifecycle events
+     Allows setting a delegate that will be notified about connection lifecycle events
 
      - note: You need to maintain the reference of the `HubConnectionDelegate` instance for the entire lifetime of the connection
      */
     public weak var delegate: HubConnectionDelegate?
-    
+
     /**
      Gets the connections connectionId. This value will be cleared when the connection is stopped and will have a new value every time the connection is
      successfully started.
@@ -76,7 +76,7 @@ public class HubConnection {
      Starts the connection.
 
      - note: Use `HubConnectionDelegate` to receive connection lifecycle notifications.
-    */
+     */
     public func start() {
         self.connectionDelegate = HubConnectionConnectionDelegate(hubConnection: self)
         self.connection.delegate = connectionDelegate
@@ -102,7 +102,7 @@ public class HubConnection {
 
     /**
      Stops the connection.
-    */
+     */
     public func stop() {
         logger.log(logLevel: .info, message: "Stopping hub connection")
         connection.stop(stopError: nil)
@@ -139,7 +139,7 @@ public class HubConnection {
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
      - parameter sendDidComplete: a completion handler that allows to track whether the client was able to successfully initiate the invocation. If the
-                                  invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
+     invocation was successfully initiated the `error` will be `nil`. Otherwise the `error` will contain failure details
      - parameter error: contains failure details if the invocation was not initiated successfully. `nil` otherwise
      - note: Consider using typed `.send()` extension methods defined on the `HubConnectionExtensions` class.
      */
@@ -164,6 +164,58 @@ public class HubConnection {
                     sendDidComplete(error)
                 }
             })
+        } catch {
+            logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
+            self.callbackQueue.async {
+                sendDidComplete(error)
+            }
+        }
+    }
+
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func send(method: String, arguments: [Encodable], streams: [AsyncStream<some Encodable>], sendDidComplete: @escaping (_ error: Error?) ->Void) {
+        logger.log(logLevel: .info, message: "Sending to server side hub method: '\(method)'")
+
+        guard ensureConnectionStarted(errorHandler: {sendDidComplete($0)}) else {
+            logger.log(logLevel: .warning, message: "Sending to server side hub method '\(method)' failed, connection not started")
+            return
+        }
+
+        do {
+            var id = ""
+            hubConnectionQueue.sync {
+                invocationId = invocationId + 1
+                id = "\(invocationId)"
+            }
+
+            let invocationMessage = ServerInvocationMessage(target: method, arguments: arguments, streamIds: [id])
+            let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
+            resetKeepAlive()
+
+
+            connection.send(data: invocationData, sendDidComplete: { error in
+                if error == nil {
+                    self.resetKeepAlive()
+                }
+                self.callbackQueue.async {
+                    sendDidComplete(error)
+                }
+            })
+
+            Task {
+                for await value in streams[0] {
+                    let streamItemMessage = StreamItemMessage(invocationId: id, item: value)
+                    let invocationData = try hubProtocol.writeMessage(message: streamItemMessage)
+                    connection.send(data: invocationData, sendDidComplete: {
+                        e in print("Item: \(value), error \(String(describing: e))")})
+                }
+
+                let completionMessage = CompletionMessage(invocationId: id, error: nil)
+                let completionData = try hubProtocol.writeMessage(message: completionMessage)
+                connection.send(data: completionData, sendDidComplete: { e in
+                    print("Sent stream completion. Error \(String(describing: e))")})
+                print("Stream finished")
+            }
         } catch {
             logger.log(logLevel: .error, message: "Sending to server side hub method '\(method)' failed. Error: \(error)")
             self.callbackQueue.async {

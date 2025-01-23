@@ -548,6 +548,11 @@ public extension HubConnection {
         self.send(method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8], sendDidComplete: sendDidComplete)
     }
 
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    func send(method: String, _ arg1: Encodable, _ stream1: AsyncStream<some Encodable>, sendDidComplete: @escaping (_ error: Error?) -> Void = {_ in}) {
+        self.send(method: method, arguments: [arg1], streams: [stream1], sendDidComplete: sendDidComplete)
+    }
+
     /**
      Allows registering callbacks for client side hub methods with no parameters.
 

@@ -1339,4 +1339,43 @@ class ArgumentExtractorTests: XCTestCase {
 
         waitForExpectations(timeout: 30 /*seconds*/)
     }
+
+    func testServerStream() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+
+            let stream = AsyncStream<Int> { continuation in
+                DispatchQueue.global().async {
+                    for i in 1...5 {
+                        continuation.yield(i)
+                        sleep(1)
+                    }
+                    continuation.finish()
+                    sleep(1) // Issue: Race
+                    hubConnection.stop()
+                }
+            }
+            hubConnection.send(method: "StreamingMax", "moozzyk", stream)
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "NewMessage", callback: { (user: String, message: String) in
+            print("\(user): \(message)")
+        })
+        hubConnection.start()
+
+        waitForExpectations(timeout: 45 /*seconds*/)
+    }
 }
