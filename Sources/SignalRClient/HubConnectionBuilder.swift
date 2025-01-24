@@ -24,7 +24,7 @@ public class HubConnectionBuilder {
     private let httpConnectionOptions = HttpConnectionOptions()
     private let hubConnectionOptions = HubConnectionOptions()
     private var logger: Logger = NullLogger()
-    private var delegate: HubConnectionDelegate?
+    private weak var delegate: HubConnectionDelegate?
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
     private var permittedTransportTypes: TransportType = .all
     private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
