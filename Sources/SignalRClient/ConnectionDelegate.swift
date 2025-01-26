@@ -17,7 +17,7 @@ public protocol ConnectionDelegate: AnyObject {
     func connectionDidReconnect()
 }
 
-public extension ConnectionDelegate {
-    func connectionWillReconnect(error: Error) {}
-    func connectionDidReconnect() {}
+extension ConnectionDelegate {
+    public func connectionWillReconnect(error: Error) {}
+    public func connectionDidReconnect() {}
 }

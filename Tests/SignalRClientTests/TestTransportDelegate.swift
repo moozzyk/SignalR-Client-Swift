@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 @testable import SignalRClient
 
 class TestTransportDelegate: TransportDelegate {
@@ -13,15 +14,15 @@ class TestTransportDelegate: TransportDelegate {
     var transportDidReceiveDataHandler: ((_ data: Data) -> Void)?
     var transportDidCloseHandler: ((_ error: Error?) -> Void)?
 
-    func transportDidOpen() -> Void {
+    func transportDidOpen() {
         transportDidOpenHandler?()
     }
 
-    func transportDidReceiveData(_ data: Data) -> Void {
+    func transportDidReceiveData(_ data: Data) {
         transportDidReceiveDataHandler?(data)
     }
 
-    func transportDidClose(_ error: Error?) -> Void {
+    func transportDidClose(_ error: Error?) {
         transportDidCloseHandler?(error)
     }
 }

@@ -7,10 +7,11 @@
 //
 
 import XCTest
+
 @testable import SignalRClient
 
 class HandshakeProtocolTests: XCTestCase {
-    
+
     public func testThatHandshakeProtocolWritesCorrectHandshakeMessage() {
         let handshakeMessage = HandshakeProtocol.createHandshakeRequest(hubProtocol: HubProtocolFake())
         XCTAssertEqual("{\"protocol\": \"fakeProtocol\", \"version\": 42}\u{1e}", handshakeMessage)
@@ -22,8 +23,9 @@ class HandshakeProtocolTests: XCTestCase {
     }
 
     public func testThatHandshakeProtocolReturnsErrorHandshakeResponse() {
-        let (error, _) = HandshakeProtocol.parseHandshakeResponse(data: "{ \"error\": \"handshake failed\"}\u{1e}".data(using: .utf8)!)
-        switch (error as? SignalRError) {
+        let (error, _) = HandshakeProtocol.parseHandshakeResponse(
+            data: "{ \"error\": \"handshake failed\"}\u{1e}".data(using: .utf8)!)
+        switch error as? SignalRError {
         case .handshakeError(let errorMessage)?:
             XCTAssertEqual("handshake failed", errorMessage)
             break
@@ -34,11 +36,13 @@ class HandshakeProtocolTests: XCTestCase {
     }
 
     public func testThatHandshakeProtocolReturnsErrorForUnexpectedResponse() {
-        let testResponses = ["{ \"message\": \"hello\"}\u{1e}", "{ \"message\": \"hello\", \"answer\": 42 }\u{1e}", "[]\u{1e}"]
+        let testResponses = [
+            "{ \"message\": \"hello\"}\u{1e}", "{ \"message\": \"hello\", \"answer\": 42 }\u{1e}", "[]\u{1e}",
+        ]
 
         testResponses.forEach {
             let (error, _) = HandshakeProtocol.parseHandshakeResponse(data: $0.data(using: .utf8)!)
-            switch (error as? SignalRError) {
+            switch error as? SignalRError {
             case .handshakeError(let errorMessage)?:
                 XCTAssertEqual("Invalid handshake response.", errorMessage)
                 break
@@ -60,7 +64,7 @@ class HandshakeProtocolTests: XCTestCase {
         testResponses.forEach {
             let data = $0.data(using: .utf8)!
             let (error, remainingData) = HandshakeProtocol.parseHandshakeResponse(data: data)
-            switch (error as? SignalRError) {
+            switch error as? SignalRError {
             case .handshakeError(let errorMessage)?:
                 XCTAssertEqual("Received partial handshake response.", errorMessage)
                 XCTAssertTrue(remainingData.elementsEqual(data))

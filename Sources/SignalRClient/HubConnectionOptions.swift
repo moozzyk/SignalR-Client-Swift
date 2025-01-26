@@ -7,9 +7,7 @@
 
 import Foundation
 
-/**
- HubConnection configuration options.
- */
+/// HubConnection configuration options.
 public class HubConnectionOptions {
     /**
      Keep-alive interval in seconds. If nil keep-alive is disabled
@@ -20,7 +18,7 @@ public class HubConnectionOptions {
     The queue to run callbacks on
      */
     public var callbackQueue: DispatchQueue = DispatchQueue.main
-    
+
     /**
      Initializes `HubConnectionOptions`
      */

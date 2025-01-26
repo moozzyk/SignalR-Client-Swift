@@ -12,12 +12,12 @@ internal class DefaultTransportFactory: TransportFactory {
     let logger: Logger
     let permittedTransportTypes: TransportType
     var orderOfPreference: [TransportType] = [.webSockets, .longPolling]
-        
+
     init(logger: Logger, permittedTransportTypes: TransportType = .all) {
         self.logger = logger
         self.permittedTransportTypes = permittedTransportTypes
     }
-    
+
     func createTransport(availableTransports: [TransportDescription]) throws -> Transport {
         let choices = determineAvailableTypes(availableTransports: availableTransports)
         let chosenType = chooseType(choices: choices, orderOfPreference: orderOfPreference)
@@ -26,7 +26,7 @@ internal class DefaultTransportFactory: TransportFactory {
         }
         return transport
     }
-    
+
     /// Builds the set of available transport types from the list of TransportDescriptions
     private func determineAvailableTypes(availableTransports: [TransportDescription]) -> TransportType {
         var choices: TransportType = .init()
@@ -36,7 +36,7 @@ internal class DefaultTransportFactory: TransportFactory {
         choices.formIntersection(permittedTransportTypes)
         return choices
     }
-    
+
     /// Chooses a transport type from the supplied set of choices according to the supplied order of preference
     private func chooseType(choices: TransportType, orderOfPreference: [TransportType]) -> TransportType? {
         var chosen: TransportType? = nil
@@ -48,7 +48,7 @@ internal class DefaultTransportFactory: TransportFactory {
         }
         return chosen
     }
-    
+
     /// Creates a Transport instance for the given (singular) transport type
     private func buildTransport(type: TransportType?) -> Transport? {
         if #available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {

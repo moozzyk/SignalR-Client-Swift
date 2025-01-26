@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- Represents an HTTP Response.
- */
+/// Represents an HTTP Response.
 public class HttpResponse {
 
     /**

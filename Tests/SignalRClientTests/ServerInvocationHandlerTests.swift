@@ -7,14 +7,19 @@
 //
 
 import XCTest
+
 @testable import SignalRClient
 
 class InvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in })
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"]) as? ServerInvocationMessage
+        let invocationHandler = InvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in })
+        let invocationMessage =
+            invocationHandler.createInvocationMessage(
+                invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"])
+            as? ServerInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.Invocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
@@ -28,7 +33,8 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerReturnsErrorForStreamItem() {
-        let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in })
+        let invocationHandler = InvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in })
         let messagePayload = "{ \"type\": 2, \"invocationId\": \"42\", \"item\": \"abc\" }".data(using: .utf8)!
         let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
 
@@ -45,22 +51,29 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
-        let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in
-            XCTAssertNil(result)
-            XCTAssertNotNil(error)
-            XCTAssertEqual(String(describing: error as! SignalRError), String(describing: SignalRError.hubInvocationError(message: "Error occurred!")))
-        })
+        let invocationHandler = InvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(result)
+                XCTAssertNotNil(error)
+                XCTAssertEqual(
+                    String(describing: error as! SignalRError),
+                    String(describing: SignalRError.hubInvocationError(message: "Error occurred!")))
+            })
 
-        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"error\": \"Error occurred!\" }".data(using: .utf8)!
+        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"error\": \"Error occurred!\" }".data(
+            using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
         invocationHandler.processCompletion(completionMessage: completionMessage)
     }
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
-        let invocationHandler = InvocationHandler<DecodableVoid>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in
-            XCTAssertNil(error)
-            XCTAssertNil(result)
-        })
+        let invocationHandler = InvocationHandler<DecodableVoid>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(error)
+                XCTAssertNil(result)
+            })
 
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\" }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
@@ -68,10 +81,12 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesValueForResultCompletionMessage() {
-        let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in
-            XCTAssertNil(error)
-            XCTAssertEqual(42, result)
-        })
+        let invocationHandler = InvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(error)
+                XCTAssertEqual(42, result)
+            })
 
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"result\": 42 }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
@@ -79,15 +94,17 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesErrorIfResultConversionFails() {
-        let invocationHandler = InvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in
-            XCTAssertNil(result)
-            switch (error as! SignalRError) {
-            case SignalRError.serializationError:
-                break
-            default:
-                XCTFail()
-            }
-        })
+        let invocationHandler = InvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(result)
+                switch error as! SignalRError {
+                case SignalRError.serializationError:
+                    break
+                default:
+                    XCTFail()
+                }
+            })
 
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"result\": \"abc\" }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
@@ -95,11 +112,13 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatRaiseErrorPassesError() {
-        let invocationHandler = InvocationHandler<String>(logger: NullLogger(), callbackQueue: callbackQueue, invocationDidComplete: { result, error in
-            XCTAssertNil(result)
-            XCTAssertNotNil(error)
-            XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
-        })
+        let invocationHandler = InvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(result)
+                XCTAssertNotNil(error)
+                XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
+            })
 
         invocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
     }
@@ -109,8 +128,13 @@ class StreamInvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let invocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in }, invocationDidComplete: { error in })
-        let invocationMessage = invocationHandler.createInvocationMessage(invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"]) as? StreamInvocationMessage
+        let invocationHandler = StreamInvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in },
+            invocationDidComplete: { error in })
+        let invocationMessage =
+            invocationHandler.createInvocationMessage(
+                invocationId: "42", method: "testMethod", arguments: [1, "abc"], streamIds: ["1", "2"])
+            as? StreamInvocationMessage
         XCTAssertNotNil(invocationMessage)
         XCTAssertEqual(MessageType.StreamInvocation, invocationMessage!.type)
         XCTAssertEqual("42", invocationMessage!.invocationId)
@@ -127,10 +151,12 @@ class StreamInvocationHandlerTests: XCTestCase {
         let streamItemReceivedExpectation = expectation(description: "stream item received")
 
         var receivedItem = -1
-        let invocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in
-            receivedItem = 7
-            streamItemReceivedExpectation.fulfill()
-        }, invocationDidComplete: { error in XCTFail()})
+        let invocationHandler = StreamInvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue,
+            streamItemReceived: { item in
+                receivedItem = 7
+                streamItemReceivedExpectation.fulfill()
+            }, invocationDidComplete: { error in XCTFail() })
 
         let messagePayload = "{ \"type\": 2, \"invocationId\": \"42\", \"item\": 7 }".data(using: .utf8)!
         let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
@@ -142,13 +168,15 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationReturnsErrorIfProcessingStreamItemFails() {
-        let invocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in XCTFail()}, invocationDidComplete: { error in XCTFail()})
+        let invocationHandler = StreamInvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in XCTFail() },
+            invocationDidComplete: { error in XCTFail() })
 
         let messagePayload = "{ \"type\": 2, \"invocationId\": \"42\", \"item\": \"abc\" }".data(using: .utf8)!
         let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
 
         if let error = invocationHandler.processStreamItem(streamItemMessage: streamItemMessage) as? SignalRError {
-            switch (error) {
+            switch error {
             case SignalRError.serializationError:
                 break
             default:
@@ -160,19 +188,26 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
-        let streamInvocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in }, invocationDidComplete: { error in
-            XCTAssertEqual(String(describing: error as! SignalRError), String(describing: SignalRError.hubInvocationError(message: "Error occurred!")))
-        })
+        let streamInvocationHandler = StreamInvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in },
+            invocationDidComplete: { error in
+                XCTAssertEqual(
+                    String(describing: error as! SignalRError),
+                    String(describing: SignalRError.hubInvocationError(message: "Error occurred!")))
+            })
 
-        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"error\": \"Error occurred!\" }".data(using: .utf8)!
+        let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"error\": \"Error occurred!\" }".data(
+            using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
         streamInvocationHandler.processCompletion(completionMessage: completionMessage)
     }
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
-        let streamInvocationHandler = StreamInvocationHandler<Int>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in }, invocationDidComplete: { error in
-            XCTAssertNil(error)
-        })
+        let streamInvocationHandler = StreamInvocationHandler<Int>(
+            logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in },
+            invocationDidComplete: { error in
+                XCTAssertNil(error)
+            })
 
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\" }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
@@ -180,10 +215,12 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatRaiseErrorPassesError() {
-        let streamInvocationHandler = StreamInvocationHandler<String>(logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in }, invocationDidComplete: { error in
-            XCTAssertNotNil(error)
-            XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
-        })
+        let streamInvocationHandler = StreamInvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue, streamItemReceived: { item in },
+            invocationDidComplete: { error in
+                XCTAssertNotNil(error)
+                XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
+            })
 
         streamInvocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
     }

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+
 @testable import SignalRClient
 
 class ReconnectPolicyTests: XCTestCase {
@@ -17,15 +18,29 @@ class ReconnectPolicyTests: XCTestCase {
     }
 
     public func testDefaultReconnectPolicyReturnsDefaultIntervals() {
-        XCTAssertEqual(.milliseconds(0), DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 0)))
-        XCTAssertEqual(.seconds(2), DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 1)))
-        XCTAssertEqual(.seconds(10), DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 2)))
-        XCTAssertEqual(.seconds(30), DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 3)))
-        XCTAssertEqual(.never, DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 4)))
-        XCTAssertEqual(.never, DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 42)))
+        XCTAssertEqual(
+            .milliseconds(0),
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 0)))
+        XCTAssertEqual(
+            .seconds(2),
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 1)))
+        XCTAssertEqual(
+            .seconds(10),
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 2)))
+        XCTAssertEqual(
+            .seconds(30),
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 3)))
+        XCTAssertEqual(
+            .never,
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 4)))
+        XCTAssertEqual(
+            .never,
+            DefaultReconnectPolicy().nextAttemptInterval(retryContext: createRetryContext(failedAttemptsCount: 42)))
     }
 
     private func createRetryContext(failedAttemptsCount: Int) -> RetryContext {
-        return RetryContext(failedAttemptsCount: failedAttemptsCount, reconnectStartTime: Date(), error: SignalRError.invalidOperation(message: "blah"))
+        return RetryContext(
+            failedAttemptsCount: failedAttemptsCount, reconnectStartTime: Date(),
+            error: SignalRError.invalidOperation(message: "blah"))
     }
 }

@@ -70,19 +70,27 @@ internal class NegotiationPayloadParser {
     }
 
     private static func parseNegotiation(_ negotiationResponseJSON: [String: Any]) throws -> NegotiationResponse {
-        let version = try parseIntNumberProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "negotiateVersion") ?? 0
-        let connectionId = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionId")
+        let version =
+            try parseIntNumberProperty(
+                negotiationResponseJSON: negotiationResponseJSON, propertyName: "negotiateVersion") ?? 0
+        let connectionId = try parseStringProperty(
+            negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionId")
         var connectionToken: String? = nil
         if version > 0 {
-            connectionToken = try parseStringProperty(negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionToken")
+            connectionToken = try parseStringProperty(
+                negotiationResponseJSON: negotiationResponseJSON, propertyName: "connectionToken")
         }
 
         let availableTransports = try parseAvailableTransports(negotiationResponseJSON: negotiationResponseJSON)
 
-        return NegotiationResponse(connectionId: connectionId, connectionToken: connectionToken, version: version, availableTransports: availableTransports)
+        return NegotiationResponse(
+            connectionId: connectionId, connectionToken: connectionToken, version: version,
+            availableTransports: availableTransports)
     }
 
-    private static func parseStringProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> String {
+    private static func parseStringProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws
+        -> String
+    {
         guard let propertyValue = negotiationResponseJSON[propertyName] as? String else {
             throw SignalRError.invalidNegotiationResponse(message: "\(propertyName) property not found or invalid")
         }
@@ -90,7 +98,9 @@ internal class NegotiationPayloadParser {
         return propertyValue
     }
 
-    private static func parseIntNumberProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws -> Int? {
+    private static func parseIntNumberProperty(negotiationResponseJSON: [String: Any], propertyName: String) throws
+        -> Int?
+    {
         guard let propertyValue = negotiationResponseJSON[propertyName] as? Int? else {
             throw SignalRError.invalidNegotiationResponse(message: "\(propertyName) property not found or invalid")
         }
@@ -98,7 +108,9 @@ internal class NegotiationPayloadParser {
         return propertyValue
     }
 
-    private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws -> [TransportDescription] {
+    private static func parseAvailableTransports(negotiationResponseJSON: [String: Any]) throws
+        -> [TransportDescription]
+    {
         guard let transports = negotiationResponseJSON["availableTransports"] as? [[String: Any]] else {
             throw SignalRError.invalidNegotiationResponse(message: "availableTransports property not found or invalid")
         }
@@ -108,7 +120,8 @@ internal class NegotiationPayloadParser {
 
     private static func parseTransport(transportJSON: [String: Any]) throws -> TransportDescription {
         guard let transportName = transportJSON["transport"] as? String,
-            let transportType = try? TransportType.fromString(transportName: transportName) else {
+            let transportType = try? TransportType.fromString(transportName: transportName)
+        else {
             throw SignalRError.invalidNegotiationResponse(message: "transport property not found or invalid")
         }
 
@@ -118,12 +131,13 @@ internal class NegotiationPayloadParser {
 
         let transferFormats = try transferFormatsJSON.map { (transferFormatName) -> TransferFormat in
             guard let transferFormat = TransferFormat.init(rawValue: transferFormatName) else {
-                throw SignalRError.invalidNegotiationResponse(message: "invalid transfer format '\(transferFormatName)'")
+                throw SignalRError.invalidNegotiationResponse(
+                    message: "invalid transfer format '\(transferFormatName)'")
             }
             return transferFormat
         }
 
-        if (transferFormats.count == 0) {
+        if transferFormats.count == 0 {
             throw SignalRError.invalidNegotiationResponse(message: "empty list of transfer formats")
         }
 

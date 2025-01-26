@@ -17,9 +17,11 @@ public class JSONHubProtocol: HubProtocol {
     public let version = 1
     public let type = ProtocolType.Text
 
-    public init(logger: Logger,
-                encoder: JSONEncoder = JSONEncoder(),
-                decoder: JSONDecoder = JSONDecoder()) {
+    public init(
+        logger: Logger,
+        encoder: JSONEncoder = JSONEncoder(),
+        decoder: JSONDecoder = JSONDecoder()
+    ) {
         self.logger = logger
         self.encoder = encoder
         self.decoder = decoder
@@ -36,14 +38,15 @@ public class JSONHubProtocol: HubProtocol {
 
         logger.log(logLevel: .debug, message: "Payload contains \(count) message(s)")
 
-        return try payloads[0..<count].map{ try createHubMessage(payload: $0) }
+        return try payloads[0..<count].map { try createHubMessage(payload: $0) }
     }
 
     public func createHubMessage(payload: Data) throws -> HubMessage {
-        logger.log(logLevel: .debug, message: "Message received: \(String(data: payload, encoding: .utf8) ?? "(empty)")")
+        logger.log(
+            logLevel: .debug, message: "Message received: \(String(data: payload, encoding: .utf8) ?? "(empty)")")
 
         do {
-        let messageType = try getMessageType(payload: payload)
+            let messageType = try getMessageType(payload: payload)
             switch messageType {
             case .Invocation:
                 return try decoder.decode(ClientInvocationMessage.self, from: payload)

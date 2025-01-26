@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import SignalRClient
 
 class TransportTypeTests: XCTestCase {
@@ -29,7 +30,7 @@ class TransportTypeTests: XCTestCase {
                 _ = try TransportType.fromString(transportName: transportName)
             } catch {
                 let expectedMessage = "Invalid transport name: '\(transportName)'"
-                XCTAssertEqual("\(SignalRError.invalidOperation(message: expectedMessage))" , "\(error)")
+                XCTAssertEqual("\(SignalRError.invalidOperation(message: expectedMessage))", "\(error)")
             }
         }
     }

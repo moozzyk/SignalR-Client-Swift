@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SignalRError : Error {
+public enum SignalRError: Error {
     case invalidState
     case webError(statusCode: Int)
     case hubInvocationError(message: String)

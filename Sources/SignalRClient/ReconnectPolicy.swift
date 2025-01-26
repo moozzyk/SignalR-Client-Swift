@@ -7,9 +7,7 @@
 
 import Foundation
 
-/**
- Contains information about the current reconnection attempt
- */
+/// Contains information about the current reconnection attempt
 public struct RetryContext {
     /// The number on unsuccessful connect attempts for this reconnect
     public let failedAttemptsCount: Int
@@ -19,9 +17,7 @@ public struct RetryContext {
     public let error: Error
 }
 
-/**
- The ReconnectPolicy protocol allows implementing custom reconnect rules
- */
+/// The ReconnectPolicy protocol allows implementing custom reconnect rules
 public protocol ReconnectPolicy {
     /**
      Returns the time interval when the next connect attempt should take place.
@@ -31,9 +27,7 @@ public protocol ReconnectPolicy {
     func nextAttemptInterval(retryContext: RetryContext) -> DispatchTimeInterval
 }
 
-/**
- The default reconnect policy that allows providing custom intervals for connect attempts.
- */
+/// The default reconnect policy that allows providing custom intervals for connect attempts.
 public class DefaultReconnectPolicy: ReconnectPolicy {
     let retryIntervals: [DispatchTimeInterval]
 
@@ -61,10 +55,8 @@ internal class NoReconnectPolicy: ReconnectPolicy {
     }
 }
 
-/**
- Infinite reconnect policy that allows providing custom intervals for connect attempts.
- Does not stop when last interval was reached, instead repeats last interval infinitely.
- */
+/// Infinite reconnect policy that allows providing custom intervals for connect attempts.
+/// Does not stop when last interval was reached, instead repeats last interval infinitely.
 public class InfiniteReconnectPolicy: ReconnectPolicy {
     let retryIntervals: [DispatchTimeInterval]
 

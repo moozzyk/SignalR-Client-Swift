@@ -15,9 +15,7 @@ public enum LogLevel: Int {
     case debug = 4
 }
 
-/**
- Protocol for implementing loggers.
- */
+/// Protocol for implementing loggers.
 public protocol Logger {
     /**
      Invoked by the client to write a log entry.
@@ -28,9 +26,9 @@ public protocol Logger {
     func log(logLevel: LogLevel, message: @autoclosure () -> String)
 }
 
-public extension LogLevel {
-    func toString() -> String {
-        switch (self) {
+extension LogLevel {
+    public func toString() -> String {
+        switch self {
         case .error: return "error"
         case .warning: return "warning"
         case .info: return "info"
@@ -39,9 +37,7 @@ public extension LogLevel {
     }
 }
 
-/**
- Logger that log entries with the `print()` function.
- */
+/// Logger that log entries with the `print()` function.
 public class PrintLogger: Logger {
     let dateFormatter: DateFormatter
 
@@ -67,9 +63,7 @@ public class PrintLogger: Logger {
     }
 }
 
-/**
- Logger that discards all log entries.
- */
+/// Logger that discards all log entries.
 public class NullLogger: Logger {
     /**
      Initializes a `NullLogger`.
@@ -97,7 +91,7 @@ class FilteringLogger: Logger {
     }
 
     func log(logLevel: LogLevel, message: @autoclosure () -> String) {
-        if (logLevel.rawValue <= minLogLevel.rawValue) {
+        if logLevel.rawValue <= minLogLevel.rawValue {
             logger.log(logLevel: logLevel, message: message())
         }
     }

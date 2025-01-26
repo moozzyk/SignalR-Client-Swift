@@ -6,9 +6,8 @@
 //
 
 import Foundation
-
-
 import XCTest
+
 @testable import SignalRClient
 
 class LongPollingTransportTests: XCTestCase {
@@ -42,14 +41,13 @@ class LongPollingTransportTests: XCTestCase {
         }
 
         lpTransport.delegate = transportDelegate
-        
+
         let sessionUrl = getSessionUrl()
         lpTransport.start(url: sessionUrl, options: HttpConnectionOptions())
-        
+
         waitForExpectations(timeout: 5 /*seconds*/)
     }
-    
-    
+
     func getSessionUrl() -> URL {
         // Unlike the websockets test, we can't get away without doing negotiation.
         // This is a simple implementation of the negotiation process to decouple this test from the real negotiation code.
@@ -58,22 +56,26 @@ class LongPollingTransportTests: XCTestCase {
         let negotiateUrl = URL(string: "\(endpoint)/negotiate?negotiateVersion=1")!
         var urlRequest = URLRequest(url: negotiateUrl)
         urlRequest.httpMethod = "POST"
-        
+
         self.continueAfterFailure = false
         let negotiateRequestExpectation = expectation(description: "negotiate response received")
         var responseData: Data? = nil
         let task = URLSession.shared.dataTask(with: urlRequest) { (dataOptional, responseOptional, errorOptional) in
-            if let response = responseOptional as? HTTPURLResponse, let data = dataOptional, errorOptional == nil, response.statusCode == 200 {
+            if let response = responseOptional as? HTTPURLResponse, let data = dataOptional, errorOptional == nil,
+                response.statusCode == 200
+            {
                 responseData = data
                 negotiateRequestExpectation.fulfill()
             } else {
-                XCTFail("Error negotiating session: error=\(String(describing: errorOptional)) response=\(String(describing: responseOptional)) data=\(String(describing: dataOptional))")
+                XCTFail(
+                    "Error negotiating session: error=\(String(describing: errorOptional)) response=\(String(describing: responseOptional)) data=\(String(describing: dataOptional))"
+                )
             }
         }
         task.resume()
         wait(for: [negotiateRequestExpectation], timeout: 5)
         XCTAssertNotNil(responseData)
-        
+
         let response = try! NegotiationPayloadParser.parse(payload: responseData) as! NegotiationResponse
         let connectionId = response.connectionToken!
         let connectionUrl = URL(string: "\(endpoint)?id=\(connectionId)")!

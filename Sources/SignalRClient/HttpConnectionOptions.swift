@@ -8,14 +8,12 @@
 
 import Foundation
 
-/**
-HttpConnection configuration options.
- */
+/// HttpConnection configuration options.
 public class HttpConnectionOptions {
     /**
      A dictionary containing headers to be included in HTTP requests sent by the client.
     */
-    public var headers: [String:String] = [:]
+    public var headers: [String: String] = [:]
 
     /**
      A factory for creating access tokens that will be included in HTTP requests sent by the client.
@@ -28,7 +26,9 @@ public class HttpConnectionOptions {
     /**
      A factory for creating an HTTP client.
     */
-    public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = { DefaultHttpClient(options: $0) }
+    public var httpClientFactory: (_ options: HttpConnectionOptions) -> HttpClientProtocol = {
+        DefaultHttpClient(options: $0)
+    }
 
     /**
      Whether to skip the negotiation request when starting a connection.
@@ -37,7 +37,7 @@ public class HttpConnectionOptions {
     */
     public var skipNegotiation: Bool {
         get { return skipNegotiationValue }
-        
+
         @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
         set { skipNegotiationValue = newValue }
     }
@@ -55,7 +55,13 @@ public class HttpConnectionOptions {
     */
     public var maximumWebsocketMessageSize: Int?
 
-    public var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
+    public var authenticationChallengeHandler:
+        (
+            (
+                _ session: URLSession, _ challenge: URLAuthenticationChallenge,
+                _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+            ) -> Void
+        )?
 
     /**
     The queue to run callbacks on

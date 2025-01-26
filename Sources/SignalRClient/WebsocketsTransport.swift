@@ -14,7 +14,13 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     private let dispatchQueue = DispatchQueue(label: "SignalR.webSocketTransport.queue")
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
-    private var authenticationChallengeHandler: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void)?
+    private var authenticationChallengeHandler:
+        (
+            (
+                _ session: URLSession, _ challenge: URLAuthenticationChallenge,
+                _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+            ) -> Void
+        )?
 
     private var isTransportClosed = false
 
@@ -52,13 +58,15 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         urlSession?.finishTasksAndInvalidate()
     }
 
-    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+    public func urlSession(
+        _ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?
+    ) {
         logger.log(logLevel: .info, message: "urlSession didOpenWithProtocol invoked. WebSocket open")
         delegate?.transportDidOpen()
         readMessage()
     }
 
-    private func readMessage()  {
+    private func readMessage() {
         webSocketTask?.receive { result in
             switch result {
             case .failure(let error):
@@ -86,7 +94,9 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 
     private func handleError(error: Error) {
-        logger.log(logLevel: .info, message: "WebSocket error. Error: \(error). Websocket status: \(webSocketTask?.state.rawValue ?? -1)")
+        logger.log(
+            logLevel: .info,
+            message: "WebSocket error. Error: \(error). Websocket status: \(webSocketTask?.state.rawValue ?? -1)")
         // This handler should not be called after the close event but we need to mark the transport as closed to prevent calling transportDidClose
         // on the delegate multiple times so we can as well add the check and log
         guard !markTransportClosed() else {
@@ -106,17 +116,27 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         }
 
         guard !markTransportClosed() else {
-            logger.log(logLevel: .debug, message: "Transport already marked as closed - ignoring error. (didCompleteWithError)")
+            logger.log(
+                logLevel: .debug, message: "Transport already marked as closed - ignoring error. (didCompleteWithError)"
+            )
             return
         }
 
         let statusCode = (webSocketTask?.response as? HTTPURLResponse)?.statusCode ?? -1
-        logger.log(logLevel: .info, message: "Error starting webSocket. Error: \(error!), HttpStatusCode: \(statusCode), WebSocket closeCode: \(webSocketTask?.closeCode.rawValue ?? -1)")
-        delegate?.transportDidClose((statusCode != -1 && statusCode != 200) ? SignalRError.webError(statusCode: statusCode) : error)
+        logger.log(
+            logLevel: .info,
+            message:
+                "Error starting webSocket. Error: \(error!), HttpStatusCode: \(statusCode), WebSocket closeCode: \(webSocketTask?.closeCode.rawValue ?? -1)"
+        )
+        delegate?.transportDidClose(
+            (statusCode != -1 && statusCode != 200) ? SignalRError.webError(statusCode: statusCode) : error)
         shutdownTransport()
     }
 
-    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+    public func urlSession(
+        _ session: URLSession, webSocketTask: URLSessionWebSocketTask,
+        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?
+    ) {
         logger.log(logLevel: .debug, message: "urlSession didCloseWith invoked")
         var reasonString = ""
         if let reason = reason {
@@ -127,23 +147,31 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         // the transport could have already been closed as a result of an error. In this case we should not call
         // transportDidClose again on the delegate.
         guard !markTransportClosed() else {
-            logger.log(logLevel: .debug, message: "Transport already marked as closed due to an error - ignoring close. (didCloseWith)")
+            logger.log(
+                logLevel: .debug,
+                message: "Transport already marked as closed due to an error - ignoring close. (didCloseWith)")
             return
         }
 
         if closeCode == .normalClosure {
             delegate?.transportDidClose(nil)
         } else {
-            delegate?.transportDidClose(WebSocketsTransportError.webSocketClosed(statusCode: closeCode.rawValue, reason: reasonString))
+            delegate?.transportDidClose(
+                WebSocketsTransportError.webSocketClosed(statusCode: closeCode.rawValue, reason: reasonString))
         }
     }
 
-    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func urlSession(
+        _ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
         if authenticationChallengeHandler != nil {
             logger.log(logLevel: .debug, message: "(ws) invoking custom auth challenge handler")
             authenticationChallengeHandler!(session, challenge, completionHandler)
         } else {
-            logger.log(logLevel: .debug, message: "(ws) no auth challenge handler registered - falling back to default handling")
+            logger.log(
+                logLevel: .debug,
+                message: "(ws) no auth challenge handler registered - falling back to default handling")
             completionHandler(.performDefaultHandling, nil)
         }
     }
@@ -165,9 +193,9 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
 
     private func convertUrl(url: URL) -> URL {
         if var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-            if (components.scheme == "http") {
+            if components.scheme == "http" {
                 components.scheme = "ws"
-            } else if (components.scheme == "https") {
+            } else if components.scheme == "https" {
                 components.scheme = "wss"
             }
             return components.url!
@@ -176,7 +204,7 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
         return url
     }
 
-    @inline(__always) private func populateHeaders(headers: [String : String], request: inout URLRequest) {
+    @inline(__always) private func populateHeaders(headers: [String: String], request: inout URLRequest) {
         headers.forEach { (key, value) in
             request.addValue(value, forHTTPHeaderField: key)
         }
@@ -189,6 +217,6 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
     }
 }
 
-fileprivate enum WebSocketsTransportError: Error {
+private enum WebSocketsTransportError: Error {
     case webSocketClosed(statusCode: Int, reason: String)
 }

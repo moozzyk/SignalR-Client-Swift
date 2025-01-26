@@ -5,6 +5,7 @@
 //  Created by Pawel Kadluczka on 11/23/19.
 //
 import XCTest
+
 @testable import SignalRClient
 
 class ReconnectableConnectionTests: XCTestCase {
@@ -15,7 +16,9 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: NoReconnectPolicy(), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection }, reconnectPolicy: NoReconnectPolicy(),
+            callbackQueue: callbackQueue, logger: PrintLogger())
 
         delegate.connectionDidOpenHandler = { connection in
             testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "error"))
@@ -39,15 +42,19 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection },
+            reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue,
+            logger: PrintLogger())
 
         delegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
-            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+            testConnection.delegate?.connectionDidClose(
+                error: SignalRError.invalidOperation(message: "forcing reconnect"))
         }
 
         delegate.connectionWillReconnectHandler = { error in
-            switch (error as! SignalRError) {
+            switch error as! SignalRError {
             case .invalidOperation(let errorMessage):
                 XCTAssertEqual("forcing reconnect", errorMessage)
                 break
@@ -81,16 +88,21 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10), .milliseconds(10), .milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection },
+            reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [
+                .milliseconds(10), .milliseconds(10), .milliseconds(10),
+            ]), callbackQueue: callbackQueue, logger: PrintLogger())
 
         delegate.connectionDidOpenHandler = { connection in
             didOpenExpectation.fulfill()
             testConnection.openError = SignalRError.invalidNegotiationResponse(message: "Negotiation failed")
-            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+            testConnection.delegate?.connectionDidClose(
+                error: SignalRError.invalidOperation(message: "forcing reconnect"))
         }
 
         delegate.connectionWillReconnectHandler = { error in
-            switch (error as! SignalRError) {
+            switch error as! SignalRError {
             case .invalidOperation(let errorMessage):
                 XCTAssertEqual("forcing reconnect", errorMessage)
                 break
@@ -103,7 +115,7 @@ class ReconnectableConnectionTests: XCTestCase {
 
         delegate.connectionDidCloseHandler = { error in
             XCTAssertNotNil(error)
-            switch (error as! SignalRError) {
+            switch error as! SignalRError {
             case .invalidNegotiationResponse(let errorMessage):
                 XCTAssertEqual("Negotiation failed", errorMessage)
                 break
@@ -126,10 +138,14 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection },
+            reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue,
+            logger: PrintLogger())
 
         delegate.connectionDidOpenHandler = { _ in
-            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+            testConnection.delegate?.connectionDidClose(
+                error: SignalRError.invalidOperation(message: "forcing reconnect"))
             reconnectableConnection.send(data: "Should fail".data(using: .utf8)!) { error in
                 XCTAssertNotNil(error)
                 XCTAssertEqual(String(describing: error!), String(describing: SignalRError.connectionIsReconnecting))
@@ -155,17 +171,22 @@ class ReconnectableConnectionTests: XCTestCase {
 
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection },
+            reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue,
+            logger: PrintLogger())
 
         let tmpQueue = DispatchQueue(label: "SignalR.test.temp.queue")
 
         delegate.connectionDidOpenHandler = { _ in
-            testConnection.delegate?.connectionDidClose(error: SignalRError.invalidOperation(message: "forcing reconnect"))
+            testConnection.delegate?.connectionDidClose(
+                error: SignalRError.invalidOperation(message: "forcing reconnect"))
             tmpQueue.async {
                 reconnectableConnection.send(data: "Should fail".data(using: .utf8)!) { error in
                     tmpQueue.sync {
                         XCTAssertNotNil(error)
-                        XCTAssertEqual(String(describing: error!), String(describing: SignalRError.connectionIsReconnecting))
+                        XCTAssertEqual(
+                            String(describing: error!), String(describing: SignalRError.connectionIsReconnecting))
                         reconnectableConnection.stop(stopError: nil)
                         sendDidFail.fulfill()
                     }
@@ -188,7 +209,10 @@ class ReconnectableConnectionTests: XCTestCase {
         for inherentKeepAlive in [true, false] {
             let testConnection = TestConnection()
             testConnection.inherentKeepAlive = inherentKeepAlive
-            let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+            let reconnectableConnection = ReconnectableConnection(
+                connectionFactory: { return testConnection },
+                reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]),
+                callbackQueue: callbackQueue, logger: PrintLogger())
             XCTAssertEqual(inherentKeepAlive, reconnectableConnection.inherentKeepAlive)
         }
     }
@@ -208,7 +232,10 @@ class ReconnectableConnectionTests: XCTestCase {
         testConnection.openError = SignalRError.invalidNegotiationResponse(message: "Negotiation failed")
 
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection },
+            reconnectPolicy: DefaultReconnectPolicy(retryIntervals: [.milliseconds(10)]), callbackQueue: callbackQueue,
+            logger: PrintLogger())
 
         delegate.connectionDidFailToOpenHandler = { error in
             connectionDidFailToOpenExpectation.fulfill()
@@ -235,46 +262,48 @@ class ReconnectableConnectionTests: XCTestCase {
 
         waitForExpectations(timeout: 2 /*seconds*/)
     }
-    
+
     public func testReconnectableConnectionIgnoreStopRequestWhenDisconnected() {
-        
+
         var isConnectionOpen = false
-        
+
         let testConnection = TestConnection()
         let delegate = TestConnectionDelegate()
-        let reconnectableConnection = ReconnectableConnection(connectionFactory: {return testConnection}, reconnectPolicy: NoReconnectPolicy(), callbackQueue: callbackQueue, logger: PrintLogger())
+        let reconnectableConnection = ReconnectableConnection(
+            connectionFactory: { return testConnection }, reconnectPolicy: NoReconnectPolicy(),
+            callbackQueue: callbackQueue, logger: PrintLogger())
         reconnectableConnection.delegate = delegate
-        
+
         delegate.connectionDidOpenHandler = { connection in
             isConnectionOpen = true
         }
-        
+
         delegate.connectionDidCloseHandler = { connection in
             isConnectionOpen = false
         }
-        
+
         reconnectableConnection.start()
         XCTAssertTrue(isConnectionOpen)
-        
+
         reconnectableConnection.stop(stopError: nil)
         XCTAssertTrue(!isConnectionOpen)
-        
+
         // stop the connection while it is disconnected
         reconnectableConnection.stop(stopError: nil)
         XCTAssertTrue(!isConnectionOpen)
-        
+
         reconnectableConnection.start()
         XCTAssertTrue(isConnectionOpen)
     }
-    
+
     class TestConnection: Connection {
         var delegate: ConnectionDelegate?
         var openError: Error?
-        
+
         var connectionId: String?
         var inherentKeepAlive = false
         var isClosed: Bool = false
-        
+
         func start() {
             if let e = openError {
                 delegate?.connectionDidFailToOpen(error: e)
@@ -283,17 +312,17 @@ class ReconnectableConnectionTests: XCTestCase {
                 self.isClosed = false
             }
         }
-        
+
         func send(data: Data, sendDidComplete: (Error?) -> Void) {
             sendDidComplete(nil)
         }
-        
+
         func stop(stopError: Error?) {
             // Recreating the logic as in HTTPConnection. (the delegate method would only be called when the connection state changes to stopped. Therefore the state transition of ReconnectableConnection to disconnected will not be executed
             guard !self.isClosed else { return }
             self.isClosed = true
             delegate?.connectionDidClose(error: stopError)
         }
-        
+
     }
 }

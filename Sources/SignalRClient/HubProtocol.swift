@@ -61,14 +61,14 @@ public class ServerInvocationMessage: HubMessage, Encodable {
 
         var argumentsContainer = container.nestedUnkeyedContainer(forKey: .arguments)
         try arguments.forEach {
-            try argumentsContainer.encode(AnyEncodable(value:$0))
+            try argumentsContainer.encode(AnyEncodable(value: $0))
         }
         if let streamIds = streamIds {
             try container.encode(streamIds, forKey: .streamIds)
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -82,7 +82,7 @@ public class ClientInvocationMessage: HubMessage, Decodable {
     public let target: String
     private var arguments: UnkeyedDecodingContainer?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         target = try container.decode(String.self, forKey: .target)
         if container.contains(.arguments) {
@@ -98,17 +98,15 @@ public class ClientInvocationMessage: HubMessage, Decodable {
         return try arguments!.decode(T.self)
     }
 
-    var hasMoreArgs : Bool {
-        get {
-            if arguments != nil {
-                return !arguments!.isAtEnd
-            }
-
-            return false
+    var hasMoreArgs: Bool {
+        if arguments != nil {
+            return !arguments!.isAtEnd
         }
+
+        return false
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -122,13 +120,13 @@ public class StreamItemMessage: HubMessage, Codable {
     let container: KeyedDecodingContainer<StreamItemMessage.CodingKeys>?
     let item: Encodable?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
         invocationId = try container!.decode(String.self, forKey: .invocationId)
         item = nil
     }
 
-    public init (invocationId: String, item: Encodable) {
+    public init(invocationId: String, item: Encodable) {
         self.invocationId = invocationId
         self.item = item
         container = nil
@@ -156,7 +154,7 @@ public class StreamItemMessage: HubMessage, Codable {
         try container.encode(AnyEncodable(value: item!), forKey: .item)
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case invocationId
         case item
@@ -170,14 +168,14 @@ public class CompletionMessage: HubMessage, Codable {
     public let hasResult: Bool
     let container: KeyedDecodingContainer<CompletionMessage.CodingKeys>?
 
-    public required init (from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         container = try decoder.container(keyedBy: CodingKeys.self)
         invocationId = try container!.decode(String.self, forKey: .invocationId)
         error = try container!.decodeIfPresent(String.self, forKey: .error)
         hasResult = container!.contains(.result)
     }
 
-    public init (invocationId: String, error: String?) {
+    public init(invocationId: String, error: String?) {
         self.invocationId = invocationId
         self.error = error
         hasResult = false
@@ -209,7 +207,7 @@ public class CompletionMessage: HubMessage, Codable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case invocationId
         case error
@@ -245,7 +243,7 @@ public class StreamInvocationMessage: HubMessage, Encodable {
         }
     }
 
-    enum CodingKeys : String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case type
         case target
         case invocationId
@@ -263,9 +261,9 @@ public class CancelInvocationMessage: HubMessage, Encodable {
     }
 }
 
-public class PingMessage : HubMessage, Encodable {
+public class PingMessage: HubMessage, Encodable {
     public let type = MessageType.Ping
-    private init() { }
+    private init() {}
 
     static let instance = PingMessage()
 }

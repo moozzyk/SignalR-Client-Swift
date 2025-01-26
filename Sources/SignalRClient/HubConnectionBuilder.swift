@@ -8,19 +8,17 @@
 
 import Foundation
 
-/**
- A helper class that makes creating and configuring `HubConnection`s easy.
-
- Typical usage:
- ```
- let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/playground")!)
-    .withLogging(minLogLevel: .info)
-    .build()
- ```
- */
+/// A helper class that makes creating and configuring `HubConnection`s easy.
+///
+/// Typical usage:
+/// ```
+/// let hubConnection = HubConnectionBuilder(url: URL(string: "http://localhost:5000/playground")!)
+///    .withLogging(minLogLevel: .info)
+///    .build()
+/// ```
 public class HubConnectionBuilder {
     private let url: URL
-    private var hubProtocolFactory: (Logger) -> HubProtocol = {logger in JSONHubProtocol(logger: logger)}
+    private var hubProtocolFactory: (Logger) -> HubProtocol = { logger in JSONHubProtocol(logger: logger) }
     private let httpConnectionOptions = HttpConnectionOptions()
     private let hubConnectionOptions = HubConnectionOptions()
     private var logger: Logger = NullLogger()
@@ -28,7 +26,9 @@ public class HubConnectionBuilder {
     private var reconnectPolicy: ReconnectPolicy = NoReconnectPolicy()
     private var permittedTransportTypes: TransportType = .all
     private var transportFactory: ((Logger, TransportType) -> TransportFactory) =
-        { logger, permittedTransportTypes in DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)}
+        { logger, permittedTransportTypes in
+            DefaultTransportFactory(logger: logger, permittedTransportTypes: permittedTransportTypes)
+        }
     /**
      Initializes a `HubConnectionBuilder` with a URL.
 
@@ -54,7 +54,9 @@ public class HubConnectionBuilder {
 
      - parameter configureHttpOptions: a callback allowing to configure HTTP options
     */
-    public func withHttpConnectionOptions(configureHttpOptions: (_ httpConnectionOptions: HttpConnectionOptions) -> Void) -> HubConnectionBuilder {
+    public func withHttpConnectionOptions(
+        configureHttpOptions: (_ httpConnectionOptions: HttpConnectionOptions) -> Void
+    ) -> HubConnectionBuilder {
         configureHttpOptions(httpConnectionOptions)
         return self
     }
@@ -64,7 +66,9 @@ public class HubConnectionBuilder {
 
      - parameter configureHubConnectionOptions: a callback allowing to configure HubConnectionOptions
      */
-    public func withHubConnectionOptions(configureHubConnectionOptions: (_ hubConnectionOptions: HubConnectionOptions) -> Void) -> HubConnectionBuilder {
+    public func withHubConnectionOptions(
+        configureHubConnectionOptions: (_ hubConnectionOptions: HubConnectionOptions) -> Void
+    ) -> HubConnectionBuilder {
         configureHubConnectionOptions(hubConnectionOptions)
         return self
     }
@@ -128,7 +132,7 @@ public class HubConnectionBuilder {
         self.reconnectPolicy = reconnectPolicy
         return self
     }
-    
+
     /**
      Sets which transport types are turned on. Defaults to all types available. Currently, only websockets and long polling are implemented.
      */
@@ -137,7 +141,9 @@ public class HubConnectionBuilder {
         return self
     }
 
-    internal func withCustomTransportFactory(transportFactory: @escaping (Logger, TransportType) -> TransportFactory) -> HubConnectionBuilder {
+    internal func withCustomTransportFactory(transportFactory: @escaping (Logger, TransportType) -> TransportFactory)
+        -> HubConnectionBuilder
+    {
         self.transportFactory = transportFactory
         return self
     }
@@ -148,12 +154,15 @@ public class HubConnectionBuilder {
      - returns: a new `HubConnection` configured as requested
      */
     public func build() -> HubConnection {
-        let httpConnection = createReconnectableHttpConnection(transportFactory: transportFactory(logger, permittedTransportTypes))
-        let hubConnection = HubConnection(connection: httpConnection, hubProtocol: hubProtocolFactory(logger), hubConnectionOptions: hubConnectionOptions, logger: logger)
+        let httpConnection = createReconnectableHttpConnection(
+            transportFactory: transportFactory(logger, permittedTransportTypes))
+        let hubConnection = HubConnection(
+            connection: httpConnection, hubProtocol: hubProtocolFactory(logger),
+            hubConnectionOptions: hubConnectionOptions, logger: logger)
         hubConnection.delegate = delegate
         return hubConnection
     }
-    
+
     private func createReconnectableHttpConnection(transportFactory: TransportFactory) -> ReconnectableConnection {
         // Avoid capturing reference to this builder instance in the factory closure.
         let url = self.url
@@ -173,19 +182,23 @@ public class HubConnectionBuilder {
             httpConnectionOptionsCopy.requestTimeout = httpConnectionOptions.requestTimeout
             httpConnectionOptionsCopy.maximumWebsocketMessageSize = httpConnectionOptions.maximumWebsocketMessageSize
             httpConnectionOptionsCopy.callbackQueue = httpConnectionOptions.callbackQueue
-            httpConnectionOptionsCopy.authenticationChallengeHandler = httpConnectionOptions.authenticationChallengeHandler
-            return HttpConnection(url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
+            httpConnectionOptionsCopy.authenticationChallengeHandler =
+                httpConnectionOptions.authenticationChallengeHandler
+            return HttpConnection(
+                url: url, options: httpConnectionOptionsCopy, transportFactory: transportFactory, logger: logger)
         }
-        
-        return ReconnectableConnection(connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy, callbackQueue: httpConnectionOptions.callbackQueue, logger: logger)
+
+        return ReconnectableConnection(
+            connectionFactory: connectionFactory, reconnectPolicy: reconnectPolicy,
+            callbackQueue: httpConnectionOptions.callbackQueue, logger: logger)
     }
 }
 
-public extension HubConnectionBuilder {
+extension HubConnectionBuilder {
     /**
      A convenience method for configuring a `HubConnection` to use the `JSONHubProtocol`.
      */
-    func withJSONHubProtocol() -> HubConnectionBuilder {
-        return self.withHubProtocol(hubProtocolFactory: {logger in JSONHubProtocol(logger: logger)})
+    public func withJSONHubProtocol() -> HubConnectionBuilder {
+        return self.withHubProtocol(hubProtocolFactory: { logger in JSONHubProtocol(logger: logger) })
     }
 }

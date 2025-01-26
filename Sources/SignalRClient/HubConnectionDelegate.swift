@@ -8,14 +8,12 @@
 
 import Foundation
 
-/**
- A protocol that allows receiving hub connection lifecycle event notifications.
-
- To receive hub connection lifecycle event notifications create a class that conforms to this protocol and register it using the
- `HubConnectionBuilder.withHubConnectionDelegate()` method.
-
- - note: The user is responsible for maintaining the reference to the delegate.
- */
+/// A protocol that allows receiving hub connection lifecycle event notifications.
+///
+/// To receive hub connection lifecycle event notifications create a class that conforms to this protocol and register it using the
+/// `HubConnectionBuilder.withHubConnectionDelegate()` method.
+///
+/// - note: The user is responsible for maintaining the reference to the delegate.
 public protocol HubConnectionDelegate: AnyObject {
     /**
      Invoked when the connection to the server opened successfully.
@@ -51,7 +49,7 @@ public protocol HubConnectionDelegate: AnyObject {
     func connectionDidReconnect()
 }
 
-public extension HubConnectionDelegate {
-    func connectionWillReconnect(error: Error) {}
-    func connectionDidReconnect() {}
+extension HubConnectionDelegate {
+    public func connectionWillReconnect(error: Error) {}
+    public func connectionDidReconnect() {}
 }

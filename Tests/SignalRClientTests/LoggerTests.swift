@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import SignalRClient
 
 class LoggerTests: XCTestCase {
@@ -24,8 +25,8 @@ class LoggerTests: XCTestCase {
         let logger = FilteringLogger(minLogLevel: minLogLevel, logger: testLogger)
 
         let logEntries: [LogLevel] = [.warning, .error, .warning, .info, .debug, .error]
-        logEntries.forEach {logger.log(logLevel: $0, message: "")}
+        logEntries.forEach { logger.log(logLevel: $0, message: "") }
 
-        XCTAssertEqual(logEntries.filter {$0.rawValue <= minLogLevel.rawValue}, testLogger.logLevels)
+        XCTAssertEqual(logEntries.filter { $0.rawValue <= minLogLevel.rawValue }, testLogger.logLevels)
     }
 }

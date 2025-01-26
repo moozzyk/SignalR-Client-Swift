@@ -12,8 +12,8 @@ class TestConnectionDelegate: ConnectionDelegate {
     var connectionDidFailToOpenHandler: ((_ error: Error) -> Void)?
     var connectionDidCloseHandler: ((_ error: Error?) -> Void)?
     var connectionDidReceiveDataHandler: ((_ connection: Connection, _ data: Data) -> Void)?
-    var connectionWillReconnectHandler: ((_ error: Error?)->Void)?
-    var connectionDidReconnectHandler: (()->Void)?
+    var connectionWillReconnectHandler: ((_ error: Error?) -> Void)?
+    var connectionDidReconnectHandler: (() -> Void)?
 
     func connectionDidOpen(connection: Connection) {
         connectionDidOpenHandler?(connection)
@@ -41,9 +41,9 @@ class TestConnectionDelegate: ConnectionDelegate {
 }
 
 class TestHttpClient: HttpClientProtocol {
-    
+
     typealias RequestHandler = (URL) -> (HttpResponse?, Error?)
-    
+
     private var getHandler: RequestHandler?
     private var postHandler: RequestHandler?
     private var deleteHandler: RequestHandler?
@@ -61,12 +61,14 @@ class TestHttpClient: HttpClientProtocol {
     func post(url: URL, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         handleHttpRequest(url: url, body: body, handler: postHandler, completionHandler: completionHandler)
     }
-    
+
     func delete(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
         handleHttpRequest(url: url, body: nil, handler: deleteHandler, completionHandler: completionHandler)
     }
 
-    private func handleHttpRequest(url: URL, body: Data?, handler: RequestHandler?, completionHandler: @escaping (HttpResponse?, Error?) -> Void) {
+    private func handleHttpRequest(
+        url: URL, body: Data?, handler: RequestHandler?, completionHandler: @escaping (HttpResponse?, Error?) -> Void
+    ) {
         let (response, error) = (handler?(url)) ?? (nil, nil)
         completionHandler(response, error)
     }

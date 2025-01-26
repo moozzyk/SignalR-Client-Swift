@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- Http Client protocol.
- */
+/// Http Client protocol.
 public protocol HttpClientProtocol {
     /**
      Sends a `GET` HTTP request.
@@ -28,8 +26,7 @@ public protocol HttpClientProtocol {
      - parameter completionHandler: callback invoked after the HTTP request has been completed
      */
     func post(url: URL, body: Data?, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
-    
-    
+
     /**
      Sends a `DELETE` HTTP request.
 
@@ -37,5 +34,4 @@ public protocol HttpClientProtocol {
      - parameter completionHandler: callback invoked after the HTTP request has been completed
      */
     func delete(url: URL, completionHandler: @escaping (HttpResponse?, Error?) -> Void)
-    
 }
