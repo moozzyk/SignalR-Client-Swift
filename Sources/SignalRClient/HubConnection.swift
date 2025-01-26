@@ -233,9 +233,9 @@ public class HubConnection {
         }
 
         let invocationHandler = InvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, serverStreamWorkers: [],
             invocationDidComplete: invocationDidComplete)
-        _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
+        _ = invoke(invocationHandler: invocationHandler)
     }
 
     /**
@@ -271,10 +271,10 @@ public class HubConnection {
         }
 
         let streamInvocationHandler = StreamInvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, serverStreamWorkers: [],
             streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
-        let id = invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
+        let id = invoke(invocationHandler: streamInvocationHandler)
         return StreamHandle(invocationId: id)
     }
 
@@ -326,9 +326,10 @@ public class HubConnection {
         }
     }
 
-    fileprivate func invoke(invocationHandler: ServerInvocationHandler, method: String, arguments: [Encodable])
-        -> String
+    fileprivate func invoke(invocationHandler: ServerInvocationHandler) -> String
     {
+        let method = invocationHandler.method
+        let arguments = invocationHandler.arguments
         logger.log(
             logLevel: .info, message: "Invoking server side hub method '\(method)' with \(arguments.count) argument(s)")
         var id: String = ""

@@ -14,8 +14,10 @@ class InvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
+        let severStreamWorkers = [DummyServerStreamWorker(streamId: "5"), DummyServerStreamWorker(streamId: "42")]
         let invocationHandler = InvocationHandler<Int>(
             logger: NullLogger(), callbackQueue: callbackQueue, method: "testMethod", arguments: [1, "abc"],
+            serverStreamWorkers: severStreamWorkers,
             invocationDidComplete: { result, error in })
         let invocationMessage =
             invocationHandler.createInvocationMessage(invocationId: "42") as? ServerInvocationMessage
@@ -26,11 +28,12 @@ class InvocationHandlerTests: XCTestCase {
         XCTAssertEqual(2, invocationMessage!.arguments.count)
         XCTAssertEqual(1, invocationMessage!.arguments[0] as? Int)
         XCTAssertEqual("abc", invocationMessage!.arguments[1] as? String)
+        XCTAssertEqual(["5", "42"], invocationMessage!.streamIds)
     }
 
     func testThatInvocationHandlerReturnsErrorForStreamItem() {
         let invocationHandler = InvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in })
         let messagePayload = "{ \"type\": 2, \"invocationId\": \"42\", \"item\": \"abc\" }".data(using: .utf8)!
         let streamItemMessage = try! JSONDecoder().decode(StreamItemMessage.self, from: messagePayload)
@@ -49,7 +52,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
         let invocationHandler = InvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in
                 XCTAssertNil(result)
                 XCTAssertNotNil(error)
@@ -66,7 +69,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
         let invocationHandler = InvocationHandler<DecodableVoid>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in
                 XCTAssertNil(error)
                 XCTAssertNil(result)
@@ -79,7 +82,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesValueForResultCompletionMessage() {
         let invocationHandler = InvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual(42, result)
@@ -92,7 +95,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesErrorIfResultConversionFails() {
         let invocationHandler = InvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in
                 XCTAssertNil(result)
                 switch error as! SignalRError {
@@ -110,7 +113,7 @@ class InvocationHandlerTests: XCTestCase {
 
     func testThatRaiseErrorPassesError() {
         let invocationHandler = InvocationHandler<String>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             invocationDidComplete: { result, error in
                 XCTAssertNil(result)
                 XCTAssertNotNil(error)
@@ -125,8 +128,10 @@ class StreamInvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
+        let severStreamWorkers = [DummyServerStreamWorker(streamId: "5"), DummyServerStreamWorker(streamId: "42")]
         let invocationHandler = StreamInvocationHandler<Int>(
             logger: NullLogger(), callbackQueue: callbackQueue, method: "testMethod", arguments: [1, "abc"],
+            serverStreamWorkers: severStreamWorkers,
             streamItemReceived: { item in }, invocationDidComplete: { error in })
         let invocationMessage =
             invocationHandler.createInvocationMessage(invocationId: "42") as? StreamInvocationMessage
@@ -137,6 +142,7 @@ class StreamInvocationHandlerTests: XCTestCase {
         XCTAssertEqual(2, invocationMessage!.arguments.count)
         XCTAssertEqual(1, invocationMessage!.arguments[0] as? Int)
         XCTAssertEqual("abc", invocationMessage!.arguments[1] as? String)
+        XCTAssertEqual(["5", "42"], invocationMessage?.streamIds)
     }
 
     func testThatInvocationInvokesCallbackForStreamItem() {
@@ -144,7 +150,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
         var receivedItem = -1
         let invocationHandler = StreamInvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             streamItemReceived: { item in
                 receivedItem = 7
                 streamItemReceivedExpectation.fulfill()
@@ -161,7 +167,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatInvocationReturnsErrorIfProcessingStreamItemFails() {
         let invocationHandler = StreamInvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             streamItemReceived: { item in XCTFail() }, invocationDidComplete: { error in XCTFail() })
 
         let messagePayload = "{ \"type\": 2, \"invocationId\": \"42\", \"item\": \"abc\" }".data(using: .utf8)!
@@ -181,7 +187,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesErrorForErrorCompletionMessage() {
         let streamInvocationHandler = StreamInvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             streamItemReceived: { item in },
             invocationDidComplete: { error in
                 XCTAssertEqual(
@@ -197,7 +203,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
         let streamInvocationHandler = StreamInvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             streamItemReceived: { item in },
             invocationDidComplete: { error in
                 XCTAssertNil(error)
@@ -210,7 +216,7 @@ class StreamInvocationHandlerTests: XCTestCase {
 
     func testThatRaiseErrorPassesError() {
         let streamInvocationHandler = StreamInvocationHandler<String>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
             streamItemReceived: { item in },
             invocationDidComplete: { error in
                 XCTAssertNotNil(error)

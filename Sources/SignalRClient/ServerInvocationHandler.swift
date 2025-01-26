@@ -9,6 +9,8 @@
 import Foundation
 
 internal protocol ServerInvocationHandler {
+    var method: String { get }
+    var arguments: [Encodable] { get }
     func createInvocationMessage(invocationId: String) -> HubMessage
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error?
     func processCompletion(completionMessage: CompletionMessage)
@@ -17,27 +19,34 @@ internal protocol ServerInvocationHandler {
 
 internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
-    private let method: String
-    private let arguments: [Encodable]
+    public private(set) var method: String
+    public private(set) var arguments: [Encodable]
+    private let serverStreamWorkers: [ServerStreamWorker]
     private let invocationDidComplete: (T?, Error?) -> Void
 
     init(
         logger: Logger, callbackQueue: DispatchQueue, method: String, arguments: [Encodable],
+        serverStreamWorkers: [ServerStreamWorker],
         invocationDidComplete: @escaping (T?, Error?) -> Void
     ) {
         self.logger = logger
         self.method = method
         self.arguments = arguments
+        self.serverStreamWorkers = serverStreamWorkers
         self.invocationDidComplete = { result, error in
             callbackQueue.async { invocationDidComplete(result, error) }
         }
     }
 
     func createInvocationMessage(invocationId: String) -> HubMessage {
+        let streamIds = serverStreamWorkers.map { $0.streamId }
         logger.log(
             logLevel: .debug,
-            message: "Creating invocation message for method: '\(method)', invocationId: \(invocationId)")
-        return ServerInvocationMessage(invocationId: invocationId, target: method, arguments: arguments, streamIds: [])
+            message:
+                "Creating invocation message for method: '\(method)', invocationId: \(invocationId), streamIds: \(streamIds)"
+        )
+        return ServerInvocationMessage(
+            invocationId: invocationId, target: method, arguments: arguments, streamIds: streamIds)
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
@@ -87,27 +96,34 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
 
 internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
-    private let method: String
-    private let arguments: [Encodable]
+    public private(set) var method: String
+    public private(set) var arguments: [Encodable]
+    private let serverStreamWorkers: [ServerStreamWorker]
     private let streamItemReceived: (T) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
     init(
         logger: Logger, callbackQueue: DispatchQueue, method: String, arguments: [Encodable],
+        serverStreamWorkers: [ServerStreamWorker],
         streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void
     ) {
         self.logger = logger
         self.method = method
         self.arguments = arguments
+        self.serverStreamWorkers = serverStreamWorkers
         self.streamItemReceived = { item in callbackQueue.async { streamItemReceived(item) } }
         self.invocationDidComplete = { error in callbackQueue.async { invocationDidComplete(error) } }
     }
 
     func createInvocationMessage(invocationId: String) -> HubMessage {
+        let streamIds = serverStreamWorkers.map { $0.streamId }
         logger.log(
             logLevel: .debug,
-            message: "Creating invocation message for streaming method: '\(method)', invocationId: \(invocationId)")
-        return StreamInvocationMessage(invocationId: invocationId, target: method, arguments: arguments, streamIds: [])
+            message:
+                "Creating invocation message for streaming method: '\(method)', invocationId: \(invocationId), streamIds: \(streamIds)"
+        )
+        return StreamInvocationMessage(
+            invocationId: invocationId, target: method, arguments: arguments, streamIds: streamIds)
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
