@@ -14,7 +14,7 @@ class InvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let severStreamWorkers = [DummyServerStreamWorker(streamId: "5"), DummyServerStreamWorker(streamId: "42")]
+        let severStreamWorkers = [TestServerStreamWorker(streamId: "5"), TestServerStreamWorker(streamId: "42")]
         let invocationHandler = InvocationHandler<Int>(
             logger: NullLogger(), callbackQueue: callbackQueue, method: "testMethod", arguments: [1, "abc"],
             serverStreamWorkers: severStreamWorkers,
@@ -81,8 +81,16 @@ class InvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesValueForResultCompletionMessage() {
+        let stream1StopExpectation = expectation(description: "stream 1 stopped")
+        let stream2StopExpectation = expectation(description: "stream 2 stopped")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream1StopExpectation.fulfill() }),
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream2StopExpectation.fulfill() }),
+        ]
+
         let invocationHandler = InvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers,
             invocationDidComplete: { result, error in
                 XCTAssertNil(error)
                 XCTAssertEqual(42, result)
@@ -91,6 +99,7 @@ class InvocationHandlerTests: XCTestCase {
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\", \"result\": 42 }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
         invocationHandler.processCompletion(completionMessage: completionMessage)
+        waitForExpectations(timeout: 5)
     }
 
     func testThatInvocationHandlerPassesErrorIfResultConversionFails() {
@@ -122,13 +131,52 @@ class InvocationHandlerTests: XCTestCase {
 
         invocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
     }
+
+    func testThatRaiseErrorStopsStreams() {
+        let stream1StopExpectation = expectation(description: "stream 1 stopped")
+        let stream2StopExpectation = expectation(description: "stream 2 stopped")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream1StopExpectation.fulfill() }),
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream2StopExpectation.fulfill() }),
+        ]
+
+        let invocationHandler = InvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers,
+            invocationDidComplete: { result, error in
+                XCTAssertNil(result)
+                XCTAssertNotNil(error)
+                XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
+            })
+
+        invocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
+        waitForExpectations(timeout: 5)
+    }
+
+    func testThatStartStreamsStartsStreams() {
+        let stream1StartExpectation = expectation(description: "stream 1 started")
+        let stream2StartExpectation = expectation(description: "stream 2 started")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {stream1StartExpectation.fulfill()}, stopHandler: {}),
+            TestServerStreamWorker(streamId: "7", startHandler: {stream2StartExpectation.fulfill()}, stopHandler: {}),
+        ]
+
+        let streamInvocationHandler = InvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers,
+            invocationDidComplete: { result, error in })
+
+        streamInvocationHandler.startStreams()
+
+        waitForExpectations(timeout: 5)
+    }
 }
 
 class StreamInvocationHandlerTests: XCTestCase {
     private let callbackQueue = DispatchQueue(label: "SignalR.tests")
 
     func testThatInvocationHandlerCreatesInvocationMessage() {
-        let severStreamWorkers = [DummyServerStreamWorker(streamId: "5"), DummyServerStreamWorker(streamId: "42")]
+        let severStreamWorkers = [TestServerStreamWorker(streamId: "5"), TestServerStreamWorker(streamId: "42")]
         let invocationHandler = StreamInvocationHandler<Int>(
             logger: NullLogger(), callbackQueue: callbackQueue, method: "testMethod", arguments: [1, "abc"],
             serverStreamWorkers: severStreamWorkers,
@@ -202,8 +250,16 @@ class StreamInvocationHandlerTests: XCTestCase {
     }
 
     func testThatInvocationHandlerPassesNilAsResultForVoidCompletionMessage() {
+        let stream1StopExpectation = expectation(description: "stream 1 stopped")
+        let stream2StopExpectation = expectation(description: "stream 2 stopped")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream1StopExpectation.fulfill() }),
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream2StopExpectation.fulfill() }),
+        ]
+
         let streamInvocationHandler = StreamInvocationHandler<Int>(
-            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [], serverStreamWorkers: [],
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers,
             streamItemReceived: { item in },
             invocationDidComplete: { error in
                 XCTAssertNil(error)
@@ -212,6 +268,7 @@ class StreamInvocationHandlerTests: XCTestCase {
         let messagePayload = "{ \"type\": 3, \"invocationId\": \"12\" }".data(using: .utf8)!
         let completionMessage = try! JSONDecoder().decode(CompletionMessage.self, from: messagePayload)
         streamInvocationHandler.processCompletion(completionMessage: completionMessage)
+        waitForExpectations(timeout: 5)
     }
 
     func testThatRaiseErrorPassesError() {
@@ -224,5 +281,69 @@ class StreamInvocationHandlerTests: XCTestCase {
             })
 
         streamInvocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
+    }
+
+    func testThatRaiseErrorStopsStreams() {
+        let stream1StopExpectation = expectation(description: "stream 1 stopped")
+        let stream2StopExpectation = expectation(description: "stream 2 stopped")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {}, stopHandler: { stream1StopExpectation.fulfill() }),
+            TestServerStreamWorker(streamId: "7", startHandler: {}, stopHandler: { stream2StopExpectation.fulfill() }),
+        ]
+
+        let streamInvocationHandler = StreamInvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers, streamItemReceived: { item in },
+            invocationDidComplete: { error in
+                XCTAssertNotNil(error)
+                XCTAssertEqual(String(describing: error!), String(describing: SignalRError.hubInvocationCancelled))
+            })
+
+        streamInvocationHandler.raiseError(error: SignalRError.hubInvocationCancelled)
+        waitForExpectations(timeout: 5)
+    }
+
+    func testThatStartStreamsStartsStreams() {
+        let stream1StartExpectation = expectation(description: "stream 1 started")
+        let stream2StartExpectation = expectation(description: "stream 2 started")
+        let serverStreamWorkers = [
+            TestServerStreamWorker(streamId: "5", startHandler: {stream1StartExpectation.fulfill()}, stopHandler: {}),
+            TestServerStreamWorker(streamId: "7", startHandler: {stream2StartExpectation.fulfill()}, stopHandler: {}),
+        ]
+
+        let streamInvocationHandler = StreamInvocationHandler<String>(
+            logger: NullLogger(), callbackQueue: callbackQueue, method: "test", arguments: [],
+            serverStreamWorkers: serverStreamWorkers, streamItemReceived: { item in },
+            invocationDidComplete: { error in })
+
+        streamInvocationHandler.startStreams()
+
+        waitForExpectations(timeout: 5)
+    }
+}
+
+class TestServerStreamWorker: ServerStreamWorker {
+    var streamId: String
+    let startHandler: () -> Void
+    let stopHandler: () -> Void
+
+    init(streamId: String) {
+        self.streamId = streamId
+        self.startHandler = {}
+        self.stopHandler = {}
+    }
+
+    init(streamId: String, startHandler: @escaping () -> Void, stopHandler: @escaping () -> Void) {
+        self.streamId = streamId
+        self.startHandler = startHandler
+        self.stopHandler = stopHandler
+    }
+
+    func start() {
+        startHandler()
+    }
+
+    func stop() {
+        stopHandler()
     }
 }

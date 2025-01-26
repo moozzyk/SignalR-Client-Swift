@@ -12,17 +12,3 @@ internal protocol ServerStreamWorker {
     func start()
     func stop()
 }
-
-internal struct DummyServerStreamWorker: ServerStreamWorker {
-    public private(set) var streamId: String
-
-    init(streamId: String) {
-        self.streamId = streamId
-    }
-
-    func start() {
-    }
-
-    func stop() {
-    }
-}

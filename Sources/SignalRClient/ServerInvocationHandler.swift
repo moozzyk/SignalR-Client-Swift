@@ -12,6 +12,7 @@ internal protocol ServerInvocationHandler {
     var method: String { get }
     var arguments: [Encodable] { get }
     func createInvocationMessage(invocationId: String) -> HubMessage
+    func startStreams()
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error?
     func processCompletion(completionMessage: CompletionMessage)
     func raiseError(error: Error)
@@ -34,7 +35,10 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
         self.arguments = arguments
         self.serverStreamWorkers = serverStreamWorkers
         self.invocationDidComplete = { result, error in
-            callbackQueue.async { invocationDidComplete(result, error) }
+            callbackQueue.async {
+                serverStreamWorkers.forEach { $0.stop() }
+                invocationDidComplete(result, error)
+            }
         }
     }
 
@@ -47,6 +51,10 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
         )
         return ServerInvocationMessage(
             invocationId: invocationId, target: method, arguments: arguments, streamIds: streamIds)
+    }
+
+    func startStreams() {
+        serverStreamWorkers.forEach { $0.start() }
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
@@ -112,7 +120,12 @@ internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
         self.arguments = arguments
         self.serverStreamWorkers = serverStreamWorkers
         self.streamItemReceived = { item in callbackQueue.async { streamItemReceived(item) } }
-        self.invocationDidComplete = { error in callbackQueue.async { invocationDidComplete(error) } }
+        self.invocationDidComplete = { error in
+            callbackQueue.async {
+                serverStreamWorkers.forEach { $0.stop() }
+                invocationDidComplete(error)
+            }
+        }
     }
 
     func createInvocationMessage(invocationId: String) -> HubMessage {
@@ -124,6 +137,10 @@ internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
         )
         return StreamInvocationMessage(
             invocationId: invocationId, target: method, arguments: arguments, streamIds: streamIds)
+    }
+
+    func startStreams() {
+        serverStreamWorkers.forEach { $0.start() }
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
