@@ -22,28 +22,28 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
     public private(set) var method: String
     public private(set) var arguments: [Encodable]
-    private let serverStreamWorkers: [ServerStreamWorker]
+    private let clientStreamWorkers: [ClientStreamWorker]
     private let invocationDidComplete: (T?, Error?) -> Void
 
     init(
         logger: Logger, callbackQueue: DispatchQueue, method: String, arguments: [Encodable],
-        serverStreamWorkers: [ServerStreamWorker],
+        clientStreamWorkers: [ClientStreamWorker],
         invocationDidComplete: @escaping (T?, Error?) -> Void
     ) {
         self.logger = logger
         self.method = method
         self.arguments = arguments
-        self.serverStreamWorkers = serverStreamWorkers
+        self.clientStreamWorkers = clientStreamWorkers
         self.invocationDidComplete = { result, error in
             callbackQueue.async {
-                serverStreamWorkers.forEach { $0.stop() }
+                clientStreamWorkers.forEach { $0.stop() }
                 invocationDidComplete(result, error)
             }
         }
     }
 
     func createInvocationMessage(invocationId: String) -> HubMessage {
-        let streamIds = serverStreamWorkers.map { $0.streamId }
+        let streamIds = clientStreamWorkers.map { $0.streamId }
         logger.log(
             logLevel: .debug,
             message:
@@ -54,7 +54,7 @@ internal class InvocationHandler<T: Decodable>: ServerInvocationHandler {
     }
 
     func startStreams() {
-        serverStreamWorkers.forEach { $0.start() }
+        clientStreamWorkers.forEach { $0.start() }
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {
@@ -106,30 +106,30 @@ internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     private let logger: Logger
     public private(set) var method: String
     public private(set) var arguments: [Encodable]
-    private let serverStreamWorkers: [ServerStreamWorker]
+    private let clientStreamWorkers: [ClientStreamWorker]
     private let streamItemReceived: (T) -> Void
     private let invocationDidComplete: (Error?) -> Void
 
     init(
         logger: Logger, callbackQueue: DispatchQueue, method: String, arguments: [Encodable],
-        serverStreamWorkers: [ServerStreamWorker],
+        clientStreamWorkers: [ClientStreamWorker],
         streamItemReceived: @escaping (T) -> Void, invocationDidComplete: @escaping (Error?) -> Void
     ) {
         self.logger = logger
         self.method = method
         self.arguments = arguments
-        self.serverStreamWorkers = serverStreamWorkers
+        self.clientStreamWorkers = clientStreamWorkers
         self.streamItemReceived = { item in callbackQueue.async { streamItemReceived(item) } }
         self.invocationDidComplete = { error in
             callbackQueue.async {
-                serverStreamWorkers.forEach { $0.stop() }
+                clientStreamWorkers.forEach { $0.stop() }
                 invocationDidComplete(error)
             }
         }
     }
 
     func createInvocationMessage(invocationId: String) -> HubMessage {
-        let streamIds = serverStreamWorkers.map { $0.streamId }
+        let streamIds = clientStreamWorkers.map { $0.streamId }
         logger.log(
             logLevel: .debug,
             message:
@@ -140,7 +140,7 @@ internal class StreamInvocationHandler<T: Decodable>: ServerInvocationHandler {
     }
 
     func startStreams() {
-        serverStreamWorkers.forEach { $0.start() }
+        clientStreamWorkers.forEach { $0.start() }
     }
 
     func processStreamItem(streamItemMessage: StreamItemMessage) -> Error? {

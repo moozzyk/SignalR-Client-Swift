@@ -233,7 +233,7 @@ public class HubConnection {
         }
 
         let invocationHandler = InvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, serverStreamWorkers: [],
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, clientStreamWorkers: [],
             invocationDidComplete: invocationDidComplete)
         _ = invoke(invocationHandler: invocationHandler)
     }
@@ -271,7 +271,7 @@ public class HubConnection {
         }
 
         let streamInvocationHandler = StreamInvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, serverStreamWorkers: [],
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments, clientStreamWorkers: [],
             streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
         let id = invoke(invocationHandler: streamInvocationHandler)
@@ -326,8 +326,7 @@ public class HubConnection {
         }
     }
 
-    fileprivate func invoke(invocationHandler: ServerInvocationHandler) -> String
-    {
+    fileprivate func invoke(invocationHandler: ServerInvocationHandler) -> String {
         let method = invocationHandler.method
         let arguments = invocationHandler.arguments
         logger.log(
