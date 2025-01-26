@@ -233,8 +233,8 @@ public class HubConnection {
         }
 
         let invocationHandler = InvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, invocationDidComplete: invocationDidComplete)
-
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            invocationDidComplete: invocationDidComplete)
         _ = invoke(invocationHandler: invocationHandler, method: method, arguments: arguments)
     }
 
@@ -271,11 +271,10 @@ public class HubConnection {
         }
 
         let streamInvocationHandler = StreamInvocationHandler<T>(
-            logger: logger, callbackQueue: callbackQueue, streamItemReceived: streamItemReceived,
-            invocationDidComplete: invocationDidComplete)
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
 
         let id = invoke(invocationHandler: streamInvocationHandler, method: method, arguments: arguments)
-
         return StreamHandle(invocationId: id)
     }
 
@@ -340,8 +339,7 @@ public class HubConnection {
         }
 
         do {
-            let invocationMessage = invocationHandler.createInvocationMessage(
-                invocationId: id, method: method, arguments: arguments, streamIds: [])
+            let invocationMessage = invocationHandler.createInvocationMessage(invocationId: id)
             let invocationData = try hubProtocol.writeMessage(message: invocationMessage)
 
             connection.send(data: invocationData) { error in
