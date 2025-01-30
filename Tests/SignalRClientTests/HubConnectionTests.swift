@@ -1301,6 +1301,61 @@ class HubConnectionTests: XCTestCase {
         waitForExpectations(timeout: 1 /*seconds*/)
         hubConnection.stop()
     }
+
+    func createAsyncStream(items: [Encodable], sleepMs: UInt64) -> AsyncStream<Encodable> {
+        return AsyncStream { continuation in
+            Task {
+                for i in items {
+                    continuation.yield(i)
+                    try? await Task.sleep(nanoseconds: sleepMs * 1_000_000)
+                }
+                continuation.finish()
+            }
+        }
+    }
+
+    struct MessageSHA: Decodable {
+        let value: String
+        let shaType: Int
+    }
+
+    func testBiderectionalStreaming() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didCloseExpectation = expectation(description: "connection closed")
+        let didReceiveStreamItems = expectation(description: "stream items received")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let streamItems = [[1, 2, 3], [1, 1, 1], [3, 2, 1]].map { Data($0).base64EncodedString() }
+            let stream = self.createAsyncStream(items: streamItems, sleepMs: 5)
+            var result: [MessageSHA] = []
+
+            _ = hubConnection.stream(
+                method: "ComputeSHA", arguments: [1], streams: [stream],
+                streamItemReceived: { (item: MessageSHA) in result.append(item) },
+                invocationDidComplete: { error in
+                    XCTAssertNil(error)
+                    XCTAssertEqual(3, result.count)
+                    XCTAssertTrue(result.allSatisfy { $0.shaType == 1 && !$0.value.isEmpty })
+                    didReceiveStreamItems.fulfill()
+                    hubConnection.stop()
+                })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
 }
 
 class TestHubConnectionDelegate: HubConnectionDelegate {

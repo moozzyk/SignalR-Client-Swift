@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
@@ -211,6 +212,42 @@ namespace TestServer
                 channel.Writer.TryComplete();
             });
             return channel.Reader;
+        }
+
+        public enum SHAType
+        {
+            SHA1,
+            SHA256
+        }
+
+        public class MessageSHA
+        {
+            public byte[] Value { get; set; }
+            public SHAType SHAType { get; set; }
+        }
+
+        public async IAsyncEnumerable<MessageSHA> ComputeSHA(IAsyncEnumerable<byte[]> messageStream, SHAType shaType)
+        {
+            HashAlgorithm CreateAlgorithm(SHAType shaType)
+            {
+                switch (shaType)
+                {
+                    case SHAType.SHA1:
+                        return SHA1.Create();
+                    case SHAType.SHA256:
+                        return SHA256.Create();
+                    default:
+                        throw new ArgumentException($"Unrecognized SHA type {shaType}", nameof(shaType));
+                }
+            }
+
+            using (var hashAlgorithm = CreateAlgorithm(shaType))
+            {
+                await foreach (var message in messageStream)
+                {
+                    yield return new MessageSHA { Value = hashAlgorithm.ComputeHash(message), SHAType = shaType };
+                }
+            }
         }
     }
 }

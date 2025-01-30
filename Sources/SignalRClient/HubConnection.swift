@@ -326,6 +326,64 @@ public class HubConnection {
         }
     }
 
+    /**
+     Invokes a streaming server side hub method with client streams.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                               local streams finish sending items. If the streaming method completed successfully or was cancelled the callback
+                               will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete`
+                               callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
+                               (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+     
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter streams: client streams producing items to be sent to the server
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: Consider using typed `.stream()` extension methods defined on the `HubConnectionExtensions` class.
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<T: Decodable>(
+        method: String, arguments: [Encodable], streams: [AsyncStream<Encodable>],
+        streamItemReceived: @escaping (_ item: T) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        logger.log(logLevel: .info, message: "Invoking server side streaming hub method with streams: '\(method)'")
+
+        if !ensureConnectionStarted(errorHandler: { invocationDidComplete($0) }) {
+            return StreamHandle(invocationId: "")
+        }
+
+        var clientStreamWorkers: [ClientStreamWorker] = []
+        for stream in streams {
+            var streamId: String = ""
+            hubConnectionQueue.sync {
+                invocationId = invocationId + 1
+                streamId = "\(invocationId)"
+            }
+            clientStreamWorkers.append(
+                AsyncStreamClientStreamWorker(
+                    streamId: streamId, stream: stream, hubProtocol: hubProtocol, logger: logger, sendFn: sendHubMessage
+                ))
+        }
+
+        let streamInvocationHandler = StreamInvocationHandler<T>(
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            clientStreamWorkers: clientStreamWorkers,
+            streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
+
+        let id = invoke(invocationHandler: streamInvocationHandler)
+        return StreamHandle(invocationId: id)
+    }
+
     fileprivate func invoke(invocationHandler: ServerInvocationHandler) -> String {
         let method = invocationHandler.method
         let arguments = invocationHandler.arguments
@@ -349,6 +407,7 @@ public class HubConnection {
                     self.failInvocationWithError(invocationHandler: invocationHandler, invocationId: id, error: e)
                 } else {
                     self.resetKeepAlive()
+                    invocationHandler.startStreams()
                 }
             }
         } catch {
@@ -594,6 +653,21 @@ public class HubConnection {
         //Note: needs to be run on hubConnectionQueue to avoid races
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
+    }
+
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    private func sendHubMessage(message: HubMessage) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let invocationData = try! hubProtocol.writeMessage(message: message)
+            connection.send(data: invocationData) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    self.resetKeepAlive()
+                    continuation.resume()
+                }
+            }
+        }
     }
 }
 
