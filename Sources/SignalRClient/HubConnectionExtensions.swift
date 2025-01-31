@@ -1241,4 +1241,181 @@ extension HubConnection {
             method: method, arguments: [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8],
             streamItemReceived: streamItemReceived, invocationDidComplete: invocationDidComplete)
     }
+
+    /**
+     Invokes a streaming server side hub method with a client stream and no parameters. It can be used for bidirectional streaming.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                                the client stream completes. If the streaming method completed successfully or was cancelled the callback
+                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter clientStream: client stream producing items to be sent to the server
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<TItemType: Decodable>(
+        method: String, clientStream: AsyncStream<Encodable>, streamItemReceived: @escaping (_ item: TItemType) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        return self.stream(
+            method: method, arguments: [], clientStreams: [clientStream], streamItemReceived: streamItemReceived,
+            invocationDidComplete: invocationDidComplete)
+    }
+
+    /**
+     Invokes a streaming server side hub method with a client stream and no parameters. It can be used for bidirectional streaming.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                                the client stream completes. If the streaming method completed successfully or was cancelled the callback
+                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arg1: first argument of the hub method
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter clientStream: client stream producing items to be sent to the server
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<T1: Encodable, TItemType: Decodable>(
+        method: String, _ arg1: T1, clientStream: AsyncStream<Encodable>,
+        streamItemReceived: @escaping (_ item: TItemType) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        return self.stream(
+            method: method, arguments: [arg1], clientStreams: [clientStream], streamItemReceived: streamItemReceived,
+            invocationDidComplete: invocationDidComplete)
+    }
+
+    /**
+     Invokes a streaming server side hub method with a client stream and no parameters. It can be used for bidirectional streaming.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                                the client stream completes. If the streaming method completed successfully or was cancelled the callback
+                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arg1: first argument of the hub method
+     - parameter arg2: second argument of the hub method
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter clientStream: client stream producing items to be sent to the server
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<T1: Encodable, T2: Encodable, TItemType: Decodable>(
+        method: String, _ arg1: T1, _ arg2: T2, clientStream: AsyncStream<Encodable>,
+        streamItemReceived: @escaping (_ item: TItemType) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        return self.stream(
+            method: method, arguments: [arg1, arg2], clientStreams: [clientStream],
+            streamItemReceived: streamItemReceived,
+            invocationDidComplete: invocationDidComplete)
+    }
+
+    /**
+     Invokes a streaming server side hub method with a client stream and no parameters. It can be used for bidirectional streaming.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                                the client stream completes. If the streaming method completed successfully or was cancelled the callback
+                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arg1: first argument of the hub method
+     - parameter arg2: second argument of the hub method
+     - parameter arg3: third argument of the hub method
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter clientStream: client stream producing items to be sent to the server
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<T1: Encodable, T2: Encodable, T3: Encodable, TItemType: Decodable>(
+        method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, clientStream: AsyncStream<Encodable>,
+        streamItemReceived: @escaping (_ item: TItemType) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        return self.stream(
+            method: method, arguments: [arg1, arg2, arg3], clientStreams: [clientStream],
+            streamItemReceived: streamItemReceived,
+            invocationDidComplete: invocationDidComplete)
+    }
+
+    /**
+     Invokes a streaming server side hub method with a client stream and no parameters. It can be used for bidirectional streaming.
+
+     The `stream` method invokes a streaming server side hub method. It takes two callbacks
+     - `streamItemReceived` - invoked each time a stream item is received
+     - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
+                                the client stream completes. If the streaming method completed successfully or was cancelled the callback
+                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete` callback
+                                will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully (for
+                                example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arg1: first argument of the hub method
+     - parameter arg2: second argument of the hub method
+     - parameter arg3: third argument of the hub method
+     - parameter arg4: fourth argument of the hub method
+     - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
+     - parameter clientStream: client stream producing items to be sent to the server
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - returns: a `StreamHandle` that can be used to cancel the hub method associated with this invocation
+     - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
+     ```
+     hubConnection.stream(method: "StreamNumbers", 10, 1, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     ```
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func stream<T1: Encodable, T2: Encodable, T3: Encodable, T4: Encodable, TItemType: Decodable>(
+        method: String, _ arg1: T1, _ arg2: T2, _ arg3: T3, _ arg4: T4, clientStream: AsyncStream<Encodable>,
+        streamItemReceived: @escaping (_ item: TItemType) -> Void,
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) -> StreamHandle {
+        return self.stream(
+            method: method, arguments: [arg1, arg2, arg3, arg4], clientStreams: [clientStream],
+            streamItemReceived: streamItemReceived,
+            invocationDidComplete: invocationDidComplete)
+    }
 }

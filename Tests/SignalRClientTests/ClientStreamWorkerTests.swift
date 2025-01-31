@@ -11,18 +11,6 @@ import XCTest
 
 @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 class ClientStreamWorkerTests: XCTestCase {
-    func createAsyncStream(items: [Int], sleepMs: UInt64) -> AsyncStream<Encodable> {
-        return AsyncStream { continuation in
-            Task {
-                for i in items {
-                    continuation.yield(i)
-                    try? await Task.sleep(nanoseconds: sleepMs * 1_000_000)
-                }
-                continuation.finish()
-            }
-        }
-    }
-
     func testClientStreamWorkerSendsDataAndCompletion() async {
         let items = Array(1...5)
         let stream = createAsyncStream(items: items, sleepMs: 0)

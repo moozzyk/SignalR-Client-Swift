@@ -327,19 +327,19 @@ public class HubConnection {
     }
 
     /**
-     Invokes a streaming server side hub method with client streams.
+     Invokes a streaming server side hub method with client streams. It can be used for bidirectional streaming.
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
      - `invocationDidComplete` - invoked when the invocation of the streaming method has completed. The server side method completes after
-                               local streams finish sending items. If the streaming method completed successfully or was cancelled the callback
+                               client streams finish sending items. If the streaming method completed successfully or was cancelled the callback
                                will be called with `nil` error. Otherwise the `error` parameter of the `invocationDidComplete`
                                callback will contain failure details. Note that the failure can be local - e.g. the invocation was not initiated successfully
                                (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
-     
+
      - parameter method: the name of the server side hub method to invoke
      - parameter arguments: hub method arguments
-     - parameter streams: client streams producing items to be sent to the server
+     - parameter clientStreams: client streams producing items to be sent to the server
      - parameter streamItemReceived: a handler that will be invoked each time a stream item is received
      - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
      - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
@@ -347,12 +347,12 @@ public class HubConnection {
      - note: Consider using typed `.stream()` extension methods defined on the `HubConnectionExtensions` class.
      - note: the `streamItemReceived` parameter may need to be typed if the type cannot be inferred e.g.:
      ```
-     hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
+     hubConnection.stream(method: "StreamNumbers", arguments: [10, 1], streams: clientStreams, streamItemReceived: { (item: Int) in print("\(item)" }) { error in print("\(error)") }
      ```
      */
     @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     public func stream<T: Decodable>(
-        method: String, arguments: [Encodable], streams: [AsyncStream<Encodable>],
+        method: String, arguments: [Encodable], clientStreams: [AsyncStream<Encodable>],
         streamItemReceived: @escaping (_ item: T) -> Void,
         invocationDidComplete: @escaping (_ error: Error?) -> Void
     ) -> StreamHandle {
@@ -363,7 +363,7 @@ public class HubConnection {
         }
 
         var clientStreamWorkers: [ClientStreamWorker] = []
-        for stream in streams {
+        for stream in clientStreams {
             var streamId: String = ""
             hubConnectionQueue.sync {
                 invocationId = invocationId + 1

@@ -1302,18 +1302,6 @@ class HubConnectionTests: XCTestCase {
         hubConnection.stop()
     }
 
-    func createAsyncStream(items: [Encodable], sleepMs: UInt64) -> AsyncStream<Encodable> {
-        return AsyncStream { continuation in
-            Task {
-                for i in items {
-                    continuation.yield(i)
-                    try? await Task.sleep(nanoseconds: sleepMs * 1_000_000)
-                }
-                continuation.finish()
-            }
-        }
-    }
-
     struct MessageSHA: Decodable {
         let value: String
         let shaType: Int
@@ -1328,11 +1316,11 @@ class HubConnectionTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
             let streamItems = [[1, 2, 3], [1, 1, 1], [3, 2, 1]].map { Data($0).base64EncodedString() }
-            let stream = self.createAsyncStream(items: streamItems, sleepMs: 5)
+            let stream = createAsyncStream(items: streamItems, sleepMs: 5)
             var result: [MessageSHA] = []
 
             _ = hubConnection.stream(
-                method: "ComputeSHA", arguments: [1], streams: [stream],
+                method: "ComputeSHA", arguments: [1], clientStreams: [stream],
                 streamItemReceived: { (item: MessageSHA) in result.append(item) },
                 invocationDidComplete: { error in
                     XCTAssertNil(error)

@@ -214,6 +214,47 @@ namespace TestServer
             return channel.Reader;
         }
 
+        public ChannelReader<object> StreamManyArgs0WithClientStream(IAsyncEnumerable<int> stream)
+        {
+            return StreamWithManyArgsWithClientStream(stream, [1]);
+        }
+
+        public ChannelReader<object> StreamManyArgs1WithClientStream(IAsyncEnumerable<int> stream, int n1)
+        {
+            return StreamWithManyArgsWithClientStream(stream, [n1]);
+        }
+
+        public ChannelReader<object> StreamManyArgs2WithClientStream(IAsyncEnumerable<int> stream, int n1, int n2)
+        {
+            return StreamWithManyArgsWithClientStream(stream, [n1, n2]);
+        }
+
+        public ChannelReader<object> StreamManyArgs3WithClientStream(IAsyncEnumerable<int> stream, int n1, int n2, int n3)
+        {
+            return StreamWithManyArgsWithClientStream(stream, [n1, n2, n3]);
+        }
+
+        public ChannelReader<object> StreamManyArgs4WithClientStream(IAsyncEnumerable<int> stream, int n1, int n2, int n3, int n4)
+        {
+            return StreamWithManyArgsWithClientStream(stream, [n1, n2, n3, n4]);
+        }
+
+        private ChannelReader<object> StreamWithManyArgsWithClientStream(IAsyncEnumerable<int> stream, int[] modifiers)
+        {
+            var channel = Channel.CreateUnbounded<object>();
+            _ = Task.Run(async () =>
+            {
+                var idx = 0;
+                await foreach (var value in stream)
+                {
+                    await channel.Writer.WriteAsync(value * modifiers[idx]);
+                    idx = (idx + 1) % modifiers.Length;
+                }
+                channel.Writer.TryComplete();
+            });
+            return channel.Reader;
+        }
+
         public enum SHAType
         {
             SHA1,
