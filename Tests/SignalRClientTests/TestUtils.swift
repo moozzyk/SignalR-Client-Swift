@@ -18,3 +18,8 @@ func createAsyncStream(items: [Encodable], sleepMs: UInt64) -> AsyncStream<Encod
         }
     }
 }
+
+struct MessageSHA: Decodable {
+    let value: String
+    let shaType: Int
+}

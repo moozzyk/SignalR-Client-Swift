@@ -1302,11 +1302,6 @@ class HubConnectionTests: XCTestCase {
         hubConnection.stop()
     }
 
-    struct MessageSHA: Decodable {
-        let value: String
-        let shaType: Int
-    }
-
     func testBiderectionalStreaming() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")
