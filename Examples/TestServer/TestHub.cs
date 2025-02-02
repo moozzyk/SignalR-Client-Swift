@@ -188,6 +188,31 @@ namespace TestServer
             await Clients.All.SendAsync("ClientStreamResult", result);
         }
 
+        public Task<int> InvokeWithArgs0WithClientStream(IAsyncEnumerable<int> stream)
+        {
+            return InvokeWithManyArgsWithClientStream(stream, [1]);
+        }
+
+        public Task<int> InvokeWithArgs1WithClientStream(IAsyncEnumerable<int> stream, int arg1)
+        {
+            return InvokeWithManyArgsWithClientStream(stream, [arg1]);
+        }
+
+        public Task<int> InvokeWithArgs2WithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2)
+        {
+            return InvokeWithManyArgsWithClientStream(stream, [arg1, arg2]);
+        }
+
+        public Task<int> InvokeWithArgs3WithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2, int arg3)
+        {
+            return InvokeWithManyArgsWithClientStream(stream, [arg1, arg2, arg3]);
+        }
+
+        public Task<int> InvokeWithArgs4WithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2, int arg3, int arg4)
+        {
+            return InvokeWithManyArgsWithClientStream(stream, [arg1, arg2, arg3, arg4]);
+        }
+
         public async Task<int> InvokeWithManyArgsWithClientStream(IAsyncEnumerable<int> stream, int[] modifiers)
         {
             var result = 0;
