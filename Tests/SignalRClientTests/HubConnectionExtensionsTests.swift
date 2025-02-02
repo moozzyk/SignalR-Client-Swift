@@ -398,6 +398,188 @@ class HubConnectionExtensionsTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatVoidServerHubMethodCanBeInvokedWithGenericInvokeMethodAndClientStream_0arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(method: "InvokeWithArgs0VoidWithClientStream", clientStream: stream) { error in
+                XCTAssertNil(error)
+                didReceiveInvocationCompletion.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { result in
+            XCTAssertEqual(15, result)
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatVoidServerHubMethodCanBeInvokedWithGenericInvokeMethodAndClientStream_1arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(method: "InvokeWithArgs1VoidWithClientStream", 5, clientStream: stream) { error in
+                XCTAssertNil(error)
+                didReceiveInvocationCompletion.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { result in
+            XCTAssertEqual(75, result)
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatVoidServerHubMethodCanBeInvokedWithGenericInvokeMethodAndClientStream_2arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(method: "InvokeWithArgs2VoidWithClientStream", 5, 2, clientStream: stream) { error in
+                XCTAssertNil(error)
+                didReceiveInvocationCompletion.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { result in
+            XCTAssertEqual(57, result)
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatVoidServerHubMethodCanBeInvokedWithGenericInvokeMethodAndClientStream_3arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(method: "InvokeWithArgs3VoidWithClientStream", 5, 2, 3, clientStream: stream) {
+                error in
+                XCTAssertNil(error)
+                didReceiveInvocationCompletion.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { result in
+            XCTAssertEqual(48, result)
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testThatVoidServerHubMethodCanBeInvokedWithGenericInvokeMethodAndClientStream_4arg() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(method: "InvokeWithArgs4VoidWithClientStream", 5, 2, 3, 1, clientStream: stream) {
+                error in
+                XCTAssertNil(error)
+                didReceiveInvocationCompletion.fulfill()
+                hubConnection.stop()
+            }
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { result in
+            XCTAssertEqual(47, result)
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatServerHubMethodCanBeInvokedWithGenericSendMethod_0arg() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didSendComplete = expectation(description: "send invocation complete")

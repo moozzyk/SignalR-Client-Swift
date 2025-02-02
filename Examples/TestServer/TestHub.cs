@@ -151,6 +151,31 @@ namespace TestServer
             return true;
         }
 
+        public async Task InvokeWithArgs0VoidWithClientStream(IAsyncEnumerable<int> stream)
+        {
+            await InvokeWithManyArgsVoidWithClientStream(stream, [1]);
+        }
+
+        public async Task InvokeWithArgs1VoidWithClientStream(IAsyncEnumerable<int> stream, int arg1)
+        {
+            await InvokeWithManyArgsVoidWithClientStream(stream, [arg1]);
+        }
+
+        public async Task InvokeWithArgs2VoidWithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2)
+        {
+            await InvokeWithManyArgsVoidWithClientStream(stream, [arg1, arg2]);
+        }
+
+        public async Task InvokeWithArgs3VoidWithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2, int arg3)
+        {
+            await InvokeWithManyArgsVoidWithClientStream(stream, [arg1, arg2, arg3]);
+        }
+
+        public async Task InvokeWithArgs4VoidWithClientStream(IAsyncEnumerable<int> stream, int arg1, int arg2, int arg3, int arg4)
+        {
+            await InvokeWithManyArgsVoidWithClientStream(stream, [arg1, arg2, arg3, arg4]);
+        }
+
         public async Task InvokeWithManyArgsVoidWithClientStream(IAsyncEnumerable<int> stream, int[] modifiers)
         {
             var result = 0;
