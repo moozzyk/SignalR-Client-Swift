@@ -215,6 +215,7 @@ public class HttpConnection: Connection {
 
     public func send(data: Data, sendDidComplete: @escaping (_ error: Error?) -> Void) {
         logger.log(logLevel: .debug, message: "Sending data")
+        print(String(data: data, encoding: .utf8))
         guard state == .connected else {
             logger.log(logLevel: .error, message: "Sending data failed - connection not in the 'connected' state")
 

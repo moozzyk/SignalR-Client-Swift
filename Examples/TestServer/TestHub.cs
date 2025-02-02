@@ -151,6 +151,30 @@ namespace TestServer
             return true;
         }
 
+        public async Task InvokeWithManyArgsVoidWithClientStream(IAsyncEnumerable<int> stream, int[] modifiers)
+        {
+            var result = 0;
+            var idx = 0;
+            await foreach (var value in stream)
+            {
+                result += value * modifiers[idx];
+                idx = (idx + 1) % modifiers.Length;
+            }
+            await Clients.All.SendAsync("ClientStreamResult", result);
+        }
+
+        public async Task<int> InvokeWithManyArgsWithClientStream(IAsyncEnumerable<int> stream, int[] modifiers)
+        {
+            var result = 0;
+            var idx = 0;
+            await foreach (var value in stream)
+            {
+                result += value * modifiers[idx];
+                idx = (idx + 1) % modifiers.Length;
+            }
+            return result;
+        }
+
         public string Concatenate(string s, int n)
         {
             return $"{s} {n}";

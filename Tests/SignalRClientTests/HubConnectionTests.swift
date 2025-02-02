@@ -1302,6 +1302,80 @@ class HubConnectionTests: XCTestCase {
         hubConnection.stop()
     }
 
+    func testInvokeVoidWithClientStream() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didReceiveInvocationCompletion = expectation(description: "received invocation completion")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(
+                method: "InvokeWithManyArgsVoidWithClientStream", arguments: [[1, 2]], clientStreams: [stream],
+                invocationDidComplete: { error in
+                    XCTAssertNil(error)
+                    didReceiveInvocationCompletion.fulfill()
+                    hubConnection.stop()
+                })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.on(method: "ClientStreamResult") { argumentExtractor in
+            XCTAssertTrue(argumentExtractor.hasMoreArgs())
+            XCTAssertEqual(21, try argumentExtractor.getArgument(type: Int.self))
+            didReceiveInvocationResult.fulfill()
+        }
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
+    func testInvokeWithClientStream() {
+        let didOpenExpectation = expectation(description: "connection opened")
+        let didReceiveInvocationResult = expectation(description: "received invocation result")
+        let didCloseExpectation = expectation(description: "connection closed")
+
+        let hubConnectionDelegate = TestHubConnectionDelegate()
+        hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
+            didOpenExpectation.fulfill()
+            let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
+
+            hubConnection.invoke(
+                method: "InvokeWithManyArgsWithClientStream", arguments: [[1, 2]], clientStreams: [stream],
+                resultType: Int.self,
+                invocationDidComplete: { result, error in
+                    XCTAssertEqual(21, result)
+                    XCTAssertNil(error)
+                    didReceiveInvocationResult.fulfill()
+                    hubConnection.stop()
+                })
+        }
+
+        hubConnectionDelegate.connectionDidCloseHandler = { error in
+            XCTAssertNil(error)
+            didCloseExpectation.fulfill()
+        }
+
+        let hubConnection = HubConnectionBuilder(url: TARGET_TESTHUB_URL)
+            .withLogging(minLogLevel: .debug)
+            .build()
+        hubConnection.delegate = hubConnectionDelegate
+        hubConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testBiderectionalStreaming() {
         let didOpenExpectation = expectation(description: "connection opened")
         let didCloseExpectation = expectation(description: "connection closed")

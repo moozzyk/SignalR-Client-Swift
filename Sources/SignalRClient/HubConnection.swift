@@ -239,6 +239,68 @@ public class HubConnection {
     }
 
     /**
+     Invokes a void server side hub method that takes client streams.
+
+     The `invoke` method invokes a void server side hub method that takes client streams and returns the status of the invocation. The `error` parameter
+     of the `invocationDidComplete` callback will be `nil` if the invocation was successful. Otherwise it will contain failure details. Note that the failure
+     can be local - e.g. the invocation was not initiated successfully (for example the connection was not connected when invoking the method), or remote - e.g.,
+     the hub method on the server side threw an exception.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter clientStreams: client streams producing items to be sent to the server
+     - parameter invocationDidComplete: a completion handler that will be invoked when the invocation has completed
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - note: Consider using typed `.invoke()` extension methods defined on the `HubConnectionExtensions` class.
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func invoke(
+        method: String, arguments: [Encodable], clientStreams: [AsyncStream<Encodable>],
+        invocationDidComplete: @escaping (_ error: Error?) -> Void
+    ) {
+        invoke(
+            method: method, arguments: arguments, clientStreams: clientStreams, resultType: DecodableVoid.self,
+            invocationDidComplete: { _, error in
+                invocationDidComplete(error)
+            })
+    }
+
+    /**
+     Invokes a server side hub method that takes client streams and returns a result.
+
+     The `invoke` method invokes a server side hub method that takes client streams and returns the result of the invocation or error. If the server side method
+     completed successfully the `invocationDidComplete` callback will be called with the result returned by the method and `nil` error. Otherwise
+     the `error` parameter of the `invocationDidComplete` callback will contain failure details. Note that the failure can be local - e.g. the invocation
+     was not initiated successfully (for example the connection was not started when invoking the method), or remote - e.g. the hub method threw an error.
+
+     - parameter method: the name of the server side hub method to invoke
+     - parameter arguments: hub method arguments
+     - parameter clientStreams: client streams producing items to be sent to the server
+     - parameter resultType: the type of the result returned by the hub method
+     - parameter invocationDidComplete:  a completion handler that will be invoked when the invocation has completed
+     - parameter result: the result returned by the hub method
+     - parameter error: contains failure details if the invocation was not initiated successfully or the hub method threw an exception. `nil` otherwise
+     - note: Consider using typed `.invoke()` extension methods defined on the `HubConnectionExtensions` class
+     */
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public func invoke<T: Decodable>(
+        method: String, arguments: [Encodable], clientStreams: [AsyncStream<Encodable>], resultType: T.Type,
+        invocationDidComplete: @escaping (_ result: T?, _ error: Error?) -> Void
+    ) {
+        logger.log(logLevel: .info, message: "Invoking server side hub method with client stream: '\(method)'")
+
+        if !ensureConnectionStarted(errorHandler: { invocationDidComplete(nil, $0) }) {
+            return
+        }
+        let clientStreamWorkers = createClientStreamWorkers(clientStreams: clientStreams)
+        let invocationHandler = InvocationHandler<T>(
+            logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
+            clientStreamWorkers: clientStreamWorkers,
+            invocationDidComplete: invocationDidComplete)
+        _ = invoke(invocationHandler: invocationHandler)
+    }
+
+    /**
      Invokes a streaming server side hub method.
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
@@ -362,19 +424,7 @@ public class HubConnection {
             return StreamHandle(invocationId: "")
         }
 
-        var clientStreamWorkers: [ClientStreamWorker] = []
-        for stream in clientStreams {
-            var streamId: String = ""
-            hubConnectionQueue.sync {
-                invocationId = invocationId + 1
-                streamId = "\(invocationId)"
-            }
-            clientStreamWorkers.append(
-                AsyncStreamClientStreamWorker(
-                    streamId: streamId, stream: stream, hubProtocol: hubProtocol, logger: logger, sendFn: sendHubMessage
-                ))
-        }
-
+        let clientStreamWorkers = createClientStreamWorkers(clientStreams: clientStreams)
         let streamInvocationHandler = StreamInvocationHandler<T>(
             logger: logger, callbackQueue: callbackQueue, method: method, arguments: arguments,
             clientStreamWorkers: clientStreamWorkers,
@@ -653,6 +703,21 @@ public class HubConnection {
         //Note: needs to be run on hubConnectionQueue to avoid races
         keepAlivePingTask?.cancel()
         keepAlivePingTask = nil
+    }
+
+    @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    private func createClientStreamWorkers(clientStreams: [AsyncStream<Encodable>]) -> [ClientStreamWorker] {
+        clientStreams.map { clientStream in
+            var streamId: String = ""
+            hubConnectionQueue.sync {
+                invocationId = invocationId + 1
+                streamId = "\(invocationId)"
+            }
+            return AsyncStreamClientStreamWorker(
+                streamId: streamId, stream: clientStream, hubProtocol: hubProtocol, logger: logger,
+                sendFn: sendHubMessage
+            )
+        }
     }
 
     @available(OSX 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
