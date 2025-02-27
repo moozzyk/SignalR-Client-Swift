@@ -58,7 +58,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs1", 42, resultType: Bool.self) { result, error in
+            hubConnection.invoke(method: "InvokeManyArgs1", arguments: 42, resultType: Bool.self) { result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
                 didReceiveInvocationResult.fulfill()
@@ -97,7 +97,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs2", "a", 2, resultType: Bool.self) { result, error in
+            hubConnection.invoke(method: "InvokeManyArgs2", arguments: "a", 2, resultType: Bool.self) { result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
                 didReceiveInvocationResult.fulfill()
@@ -137,7 +137,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs3", "a", 2, "c", resultType: Bool.self) { result, error in
+            hubConnection.invoke(method: "InvokeManyArgs3", arguments: "a", 2, "c", resultType: Bool.self) { result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
                 didReceiveInvocationResult.fulfill()
@@ -178,7 +178,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs4", "a", 2, "c", 4, resultType: Bool.self) { result, error in
+            hubConnection.invoke(method: "InvokeManyArgs4", arguments: "a", 2, "c", 4, resultType: Bool.self) { result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
                 didReceiveInvocationResult.fulfill()
@@ -221,7 +221,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             let arg5: String? = nil
-            hubConnection.invoke(method: "InvokeManyArgs5", "a", 2, "c", 4, arg5, resultType: Bool.self) {
+            hubConnection.invoke(method: "InvokeManyArgs5", arguments: "a", 2, "c", 4, arg5, resultType: Bool.self) {
                 result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
@@ -266,7 +266,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             let arg5: String? = nil
-            hubConnection.invoke(method: "InvokeManyArgs6", "a", 2, "c", 4, arg5, 6, resultType: Bool.self) {
+            hubConnection.invoke(method: "InvokeManyArgs6", arguments: "a", 2, "c", 4, arg5, 6, resultType: Bool.self) {
                 result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
@@ -312,7 +312,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             let arg5: String? = nil
-            hubConnection.invoke(method: "InvokeManyArgs7", "a", 2, "c", 4, arg5, 6, "g", resultType: Bool.self) {
+            hubConnection.invoke(method: "InvokeManyArgs7", arguments: "a", 2, "c", 4, arg5, 6, "g", resultType: Bool.self) {
                 result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
@@ -359,7 +359,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             let arg5: String? = nil
-            hubConnection.invoke(method: "InvokeManyArgs8", "a", 2, "c", 4, arg5, 6, "g", true, resultType: Bool.self) {
+            hubConnection.invoke(method: "InvokeManyArgs8", arguments: "a", 2, "c", 4, arg5, 6, "g", true, resultType: Bool.self) {
                 result, error in
                 XCTAssertNil(error)
                 XCTAssertTrue(result!)
