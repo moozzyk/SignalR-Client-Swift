@@ -1542,7 +1542,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            _ = hubConnection.stream(method: "StreamManyArgs1", 1, streamItemReceived: { item in items.append(item!) })
+            _ = hubConnection.stream(method: "StreamManyArgs1", arguments: 1, streamItemReceived: { item in items.append(item!) })
             { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1], items)
@@ -1574,7 +1574,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs2", 1, 2, streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs2", arguments: 1, 2, streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2], items)
@@ -1606,7 +1606,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs3", "a", "b", "c", streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs3", arguments: "a", "b", "c", streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual(["a", "b", "c"], items)
@@ -1638,7 +1638,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs4", "a", "b", "c", "d", streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs4", arguments: "a", "b", "c", "d", streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual(["a", "b", "c", "d"], items)
@@ -1670,7 +1670,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs5", 1, 2, 3, 4, 5, streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs5", arguments: 1, 2, 3, 4, 5, streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5], items)
@@ -1702,7 +1702,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs6", 1, 2, 3, 4, 5, 6, streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs6", arguments: 1, 2, 3, 4, 5, 6, streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6], items)
@@ -1734,7 +1734,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs7", 1, 2, 3, 4, 5, 6, 7, streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs7", arguments: 1, 2, 3, 4, 5, 6, 7, streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6, 7], items)
@@ -1766,7 +1766,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             _ = hubConnection.stream(
-                method: "StreamManyArgs8", 1, 2, 3, 4, 5, 6, 7, 8, streamItemReceived: { item in items.append(item!) }
+                method: "StreamManyArgs8", arguments: 1, 2, 3, 4, 5, 6, 7, 8, streamItemReceived: { item in items.append(item!) }
             ) { error in
                 XCTAssertNil(error)
                 XCTAssertEqual([1, 2, 3, 4, 5, 6, 7, 8], items)
@@ -1834,7 +1834,7 @@ class HubConnectionExtensionsTests: XCTestCase {
 
             let clientStream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 0)
             _ = hubConnection.stream(
-                method: "StreamManyArgs1WithClientStream", 2, clientStream: clientStream,
+                method: "StreamManyArgs1WithClientStream", arguments: 2, clientStream: clientStream,
                 streamItemReceived: { item in items.append(item!) }
             ) {
                 error in
@@ -1975,7 +1975,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             var result: [MessageSHA] = []
 
             _ = hubConnection.stream(
-                method: "ComputeSHA", 1, clientStream: stream,
+                method: "ComputeSHA", arguments: 1, clientStream: stream,
                 streamItemReceived: { (item: MessageSHA) in result.append(item) },
                 invocationDidComplete: { error in
                     XCTAssertNil(error)
