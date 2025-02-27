@@ -445,7 +445,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
-            hubConnection.invoke(method: "InvokeWithArgs1VoidWithClientStream", 5, clientStream: stream) { error in
+            hubConnection.invoke(method: "InvokeWithArgs1VoidWithClientStream", arguments: 5, clientStream: stream) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationCompletion.fulfill()
                 hubConnection.stop()
@@ -481,7 +481,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
-            hubConnection.invoke(method: "InvokeWithArgs2VoidWithClientStream", 5, 2, clientStream: stream) { error in
+            hubConnection.invoke(method: "InvokeWithArgs2VoidWithClientStream", arguments: 5, 2, clientStream: stream) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationCompletion.fulfill()
                 hubConnection.stop()
@@ -517,7 +517,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
-            hubConnection.invoke(method: "InvokeWithArgs3VoidWithClientStream", 5, 2, 3, clientStream: stream) {
+            hubConnection.invoke(method: "InvokeWithArgs3VoidWithClientStream", arguments: 5, 2, 3, clientStream: stream) {
                 error in
                 XCTAssertNil(error)
                 didReceiveInvocationCompletion.fulfill()
@@ -554,7 +554,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
-            hubConnection.invoke(method: "InvokeWithArgs4VoidWithClientStream", 5, 2, 3, 1, clientStream: stream) {
+            hubConnection.invoke(method: "InvokeWithArgs4VoidWithClientStream", arguments: 5, 2, 3, 1, clientStream: stream) {
                 error in
                 XCTAssertNil(error)
                 didReceiveInvocationCompletion.fulfill()
