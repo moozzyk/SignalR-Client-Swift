@@ -625,7 +625,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
             hubConnection.invoke(
-                method: "InvokeWithArgs1WithClientStream", 2, clientStream: stream, resultType: Int.self
+                method: "InvokeWithArgs1WithClientStream", arguments: 2, clientStream: stream, resultType: Int.self
             ) {
                 result, error in
                 XCTAssertNil(error)
@@ -660,7 +660,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
             hubConnection.invoke(
-                method: "InvokeWithArgs2WithClientStream", 1, 2, clientStream: stream, resultType: Int.self
+                method: "InvokeWithArgs2WithClientStream", arguments: 1, 2, clientStream: stream, resultType: Int.self
             ) {
                 result, error in
                 XCTAssertNil(error)
@@ -695,7 +695,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
             hubConnection.invoke(
-                method: "InvokeWithArgs3WithClientStream", 1, 2, 3, clientStream: stream, resultType: Int.self
+                method: "InvokeWithArgs3WithClientStream", arguments: 1, 2, 3, clientStream: stream, resultType: Int.self
             ) {
                 result, error in
                 XCTAssertNil(error)
@@ -730,7 +730,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             let stream = createAsyncStream(items: [1, 2, 3, 4, 5], sleepMs: 5)
 
             hubConnection.invoke(
-                method: "InvokeWithArgs4WithClientStream", 1, 2, 3, 4, clientStream: stream, resultType: Int.self
+                method: "InvokeWithArgs4WithClientStream", arguments: 1, 2, 3, 4, clientStream: stream, resultType: Int.self
             ) {
                 result, error in
                 XCTAssertNil(error)
