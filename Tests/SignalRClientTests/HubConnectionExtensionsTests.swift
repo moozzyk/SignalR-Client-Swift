@@ -1176,7 +1176,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs1", 42) { error in
+            hubConnection.invoke(method: "InvokeManyArgs1", arguments: 42) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1214,7 +1214,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs2", 42, 84) { error in
+            hubConnection.invoke(method: "InvokeManyArgs2", arguments: 42, 84) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1253,7 +1253,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs3", 42, 84, 126) { error in
+            hubConnection.invoke(method: "InvokeManyArgs3", arguments: 42, 84, 126) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1293,7 +1293,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs4", 42, 84, 126, 168) { error in
+            hubConnection.invoke(method: "InvokeManyArgs4", arguments: 42, 84, 126, 168) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1334,7 +1334,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs5", "a", "b", "c", "d", "e") { error in
+            hubConnection.invoke(method: "InvokeManyArgs5", arguments: "a", "b", "c", "d", "e") { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1376,7 +1376,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs6", true, false, true, false, true, false) { error in
+            hubConnection.invoke(method: "InvokeManyArgs6", arguments: true, false, true, false, true, false) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1419,7 +1419,7 @@ class HubConnectionExtensionsTests: XCTestCase {
         hubConnectionDelegate.connectionDidOpenHandler = { hubConnection in
             didOpenExpectation.fulfill()
 
-            hubConnection.invoke(method: "InvokeManyArgs7", 42, 84, 126, 168, 210, 252, 294) { error in
+            hubConnection.invoke(method: "InvokeManyArgs7", arguments: 42, 84, 126, 168, 210, 252, 294) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
@@ -1464,7 +1464,7 @@ class HubConnectionExtensionsTests: XCTestCase {
             didOpenExpectation.fulfill()
 
             let arg5: String? = nil
-            hubConnection.invoke(method: "InvokeManyArgs8", "a", 2, "c", 4, arg5, 6, "g", true) { error in
+            hubConnection.invoke(method: "InvokeManyArgs8", arguments: "a", 2, "c", 4, arg5, 6, "g", true) { error in
                 XCTAssertNil(error)
                 didReceiveInvocationResult.fulfill()
                 hubConnection.stop()
