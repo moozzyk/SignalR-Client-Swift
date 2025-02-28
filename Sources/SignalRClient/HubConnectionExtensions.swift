@@ -392,7 +392,7 @@ extension HubConnection {
     }
 
     /**
-     Invokes a streaming server side hub method with parameter.
+     Invokes a streaming server side hub method with or without parameter.
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
@@ -423,7 +423,7 @@ extension HubConnection {
     
 
     /**
-     Invokes a streaming server side hub method with a client stream and parameters. It can be used for bidirectional streaming.
+     Invokes a streaming server side hub method with a client stream and with or without parameters. It can be used for bidirectional streaming.
 
      The `stream` method invokes a streaming server side hub method. It takes two callbacks
      - `streamItemReceived` - invoked each time a stream item is received
