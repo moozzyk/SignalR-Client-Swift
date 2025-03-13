@@ -61,36 +61,40 @@ public class HttpConnection: Connection {
     public func start() {
         logger.log(logLevel: .info, message: "Starting connection")
 
-        if changeState(from: .initial, to: .connecting) == nil {
-            logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
-            // the connection is already in use so the startDispatchGroup should not be touched to not affect it
-            failOpenWithError(error: SignalRError.invalidState, changeState: false, leaveStartDispatchGroup: false)
-            return
-        }
-
-        startDispatchGroup.enter()
-
-        if options.skipNegotiation {
-            transport = try! self.transportFactory.createTransport(availableTransports: [
-                TransportDescription(
-                    transportType: TransportType.webSockets,
-                    transferFormats: [TransferFormat.text, TransferFormat.binary])
-            ])
-            startTransport(connectionId: nil, connectionToken: nil)
-        } else {
-            negotiate(negotiateUrl: createNegotiateUrl(), accessToken: nil) { negotiationResponse in
-                do {
-                    self.transport = try self.transportFactory.createTransport(
-                        availableTransports: negotiationResponse.availableTransports)
-                } catch {
-                    self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
-                    self.failOpenWithError(error: error, changeState: true)
-                    return
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            if changeState(from: .initial, to: .connecting) == nil {
+                logger.log(logLevel: .error, message: "Starting connection failed - invalid state")
+                // the connection is already in use so the startDispatchGroup should not be touched to not affect it
+                failOpenWithError(error: SignalRError.invalidState, changeState: false, leaveStartDispatchGroup: false)
+                return
+            }
+            
+            startDispatchGroup.enter()
+            
+            if options.skipNegotiation {
+                transport = try! self.transportFactory.createTransport(availableTransports: [
+                    TransportDescription(
+                        transportType: TransportType.webSockets,
+                        transferFormats: [TransferFormat.text, TransferFormat.binary])
+                ])
+                startTransport(connectionId: nil, connectionToken: nil)
+            } else {
+                negotiate(negotiateUrl: createNegotiateUrl(), accessToken: nil) { negotiationResponse in
+                    do {
+                        self.transport = try self.transportFactory.createTransport(
+                            availableTransports: negotiationResponse.availableTransports)
+                    } catch {
+                        self.logger.log(logLevel: .error, message: "Creating transport failed: \(error)")
+                        self.failOpenWithError(error: error, changeState: true)
+                        return
+                    }
+                    
+                    self.startTransport(
+                        connectionId: negotiationResponse.connectionId, connectionToken: negotiationResponse.connectionToken
+                    )
                 }
-
-                self.startTransport(
-                    connectionId: negotiationResponse.connectionId, connectionToken: negotiationResponse.connectionToken
-                )
             }
         }
     }
