@@ -198,11 +198,21 @@ public class WebsocketsTransport: NSObject, Transport, URLSessionWebSocketDelega
             } else if components.scheme == "https" {
                 components.scheme = "wss"
             }
+
+            // ✅ Inject SessionId from original URL if present
+            if let originalQueryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems {
+                if components.queryItems == nil {
+                    components.queryItems = []
+                }
+                components.queryItems?.append(contentsOf: originalQueryItems)
+            }
+
             return components.url!
         }
 
         return url
     }
+
 
     @inline(__always) private func populateHeaders(headers: [String: String], request: inout URLRequest) {
         headers.forEach { (key, value) in
