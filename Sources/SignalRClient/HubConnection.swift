@@ -664,7 +664,9 @@ public class HubConnection {
             }
             logger.log(logLevel: .debug, message: "Resetting keep alive")
             keepAlivePingTask!.cancel()
-            keepAlivePingTask = DispatchWorkItem { self.sendKeepAlivePing() }
+            keepAlivePingTask = DispatchWorkItem {[weak self] in
+                self?.sendKeepAlivePing()
+            }
             hubConnectionQueue.asyncAfter(deadline: DispatchTime.now() + keepAliveInterval, execute: keepAlivePingTask!)
         }
     }
