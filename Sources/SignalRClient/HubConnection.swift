@@ -522,8 +522,8 @@ public class HubConnection {
                 callbackQueue.async {
                     self.delegate?.connectionDidOpen(hubConnection: self)
                 }
-                resetKeepAlive()
             }
+            resetKeepAlive()
         }
 
         do {
@@ -636,13 +636,18 @@ public class HubConnection {
     }
 
     fileprivate func connectionWillReconnect(error: Error) {
+        logger.log(logLevel: .debug, message: "Connection will reconnect error: \(String(describing: error))")
         handshakeStatus = .needsHandling(true)
+        hubConnectionQueue.sync {
+            cleanUpKeepAlive()
+        }
         callbackQueue.async {
             self.delegate?.connectionWillReconnect(error: error)
         }
     }
 
     fileprivate func connectionDidReconnect() {
+        logger.log(logLevel: .debug, message: "Connection did reconnect")
         initiateHandshake()
     }
 
