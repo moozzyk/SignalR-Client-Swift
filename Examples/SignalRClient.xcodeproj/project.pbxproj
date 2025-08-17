@@ -27,6 +27,8 @@
 		5ABD6A612439AE6B00BFA93D /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */; };
 		5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */; };
 		5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */; };
+		5AD06A4C2E51926F0015B8DB /* ClientStreamWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD06A4B2E51926F0015B8DB /* ClientStreamWorker.swift */; };
+		5AD06A4D2E51926F0015B8DB /* ClientStreamWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD06A4B2E51926F0015B8DB /* ClientStreamWorker.swift */; };
 		5AEC70F020310E3E00616DD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */; };
 		5AEC70F220310E3E00616DD2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEC70F120310E3E00616DD2 /* ViewController.swift */; };
 		5AEC70F520310E3E00616DD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AEC70F320310E3E00616DD2 /* Main.storyboard */; };
@@ -173,6 +175,7 @@
 		5AA9F0071E835AC200C5E248 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5ABD6A5E2439AE6B00BFA93D /* ReconnectPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
 		5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectableConnection.swift; sourceTree = "<group>"; };
+		5AD06A4B2E51926F0015B8DB /* ClientStreamWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientStreamWorker.swift; sourceTree = "<group>"; };
 		5AEC70ED20310E3E00616DD2 /* HubSamplePhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HubSamplePhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AEC70EF20310E3E00616DD2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5AEC70F120310E3E00616DD2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -344,6 +347,7 @@
 		7391A90622510170007BEF23 /* SignalRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5AD06A4B2E51926F0015B8DB /* ClientStreamWorker.swift */,
 				5AF2A1E52803939200715C2E /* HubConnectionOptions.swift */,
 				415F5B7124BCAC4C0071CE5C /* LongPollingTransport.swift */,
 				5ABD6A5F2439AE6B00BFA93D /* ReconnectableConnection.swift */,
@@ -620,6 +624,7 @@
 				7391A93F22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
 				5ABD6A632439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94722510170007BEF23 /* TransferFormat.swift in Sources */,
+				5AD06A4D2E51926F0015B8DB /* ClientStreamWorker.swift in Sources */,
 				7391A93B22510170007BEF23 /* TransportDelegate.swift in Sources */,
 				415F5B7324BCAC500071CE5C /* LongPollingTransport.swift in Sources */,
 				7391A92D22510170007BEF23 /* TransportType.swift in Sources */,
@@ -657,6 +662,7 @@
 				7391A93E22510170007BEF23 /* HandshakeProtocol.swift in Sources */,
 				5ABD6A622439AE6B00BFA93D /* ReconnectableConnection.swift in Sources */,
 				7391A94622510170007BEF23 /* TransferFormat.swift in Sources */,
+				5AD06A4C2E51926F0015B8DB /* ClientStreamWorker.swift in Sources */,
 				7391A93A22510170007BEF23 /* TransportDelegate.swift in Sources */,
 				415F5B7224BCAC4C0071CE5C /* LongPollingTransport.swift in Sources */,
 				7391A92C22510170007BEF23 /* TransportType.swift in Sources */,
