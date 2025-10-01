@@ -40,19 +40,6 @@ Then include `"SignalRClient"` in your target dependencies. For example:
 .target(name: "MySwiftPackage", dependencies: ["SignalRClient"]),
 ```
 
-### Carthage
-
-Add the following lines to your `Cartfile`:
-
-```
-github "moozzyk/SignalR-Client-Swift"
-```
-
-Then run:
-```sh
-carthage update
-```
-
 ## Usage
 
 Add `import SwiftSignalRClient` (or `import SignalRClient` if you are using Swift Package Manager) to swift files you would like to use the client in.
