@@ -25,4 +25,5 @@ public enum SignalRError: Error {
     case serverClose(message: String?)
     case noSupportedTransportAvailable
     case connectionIsReconnecting
+    case transportClosed
 }

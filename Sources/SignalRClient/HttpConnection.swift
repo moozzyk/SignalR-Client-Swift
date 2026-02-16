@@ -294,8 +294,11 @@ public class HttpConnection: Connection {
             startDispatchGroup.leave()
 
             logger.log(logLevel: .debug, message: "Invoking connectionDidFailToOpen")
+            let closeError =
+                self.stopError ?? error
+                ?? SignalRError.transportClosed
             options.callbackQueue.async {
-                self.delegate?.connectionDidFailToOpen(error: self.stopError ?? error!)
+                self.delegate?.connectionDidFailToOpen(error: closeError)
             }
         } else {
             logger.log(logLevel: .debug, message: "Invoking connectionDidClose (\(#function): \(#line))")

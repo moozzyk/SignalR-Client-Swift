@@ -724,6 +724,43 @@ class HttpConnectionTests: XCTestCase {
         waitForExpectations(timeout: 5 /*seconds*/)
     }
 
+    func testThatConnectionFailsToOpenIfTransportClosesWithoutError() {
+        class UnopenableTransport: TestTransport {
+            override func start(url: URL, options: HttpConnectionOptions) {
+                delegate?.transportDidClose(nil)
+            }
+        }
+
+        let didFailToOpenExpectation = expectation(description: "connection failed to open")
+
+        let httpConnectionOptions = HttpConnectionOptions()
+        let transport = UnopenableTransport()
+        let httpConnection = HttpConnection(
+            url: URL(string: "http://fakeuri.org/")!, options: httpConnectionOptions,
+            transportFactory: TestTransportFactory(transport), logger: PrintLogger())
+        let httpClient = TestHttpClient(postHandler: { _ in
+            return (HttpResponse(statusCode: 200, contents: self.negotiatePayload.data(using: .utf8)!), nil)
+        })
+        httpConnectionOptions.httpClientFactory = { options in httpClient }
+
+        let connectionDelegate = TestConnectionDelegate()
+        connectionDelegate.connectionDidFailToOpenHandler = { error in
+            switch error as? SignalRError {
+            case .transportClosed:
+                break
+            default:
+                XCTFail("Unexpected error: \(error)")
+            }
+            didFailToOpenExpectation.fulfill()
+        }
+
+        httpConnection.delegate = connectionDelegate
+
+        httpConnection.start()
+
+        waitForExpectations(timeout: 5 /*seconds*/)
+    }
+
     func testThatNegotiatePreservesQueryParameters() {
         let negotiateExpectation = expectation(description: "negotiate")
         let connectionDidFailToOpenExpectation = expectation(description: "failedToOpen")
